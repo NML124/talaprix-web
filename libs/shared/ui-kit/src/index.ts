@@ -1,2 +1,2 @@
-export * from './lib/button/button.component';
-export * from './lib/flowbite/flowbite.service';
+export * from './lib/button/button';
+export * from './lib/flowbite/flowbite-service';

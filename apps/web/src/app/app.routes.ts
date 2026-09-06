@@ -3,16 +3,16 @@ import { Route } from '@angular/router';
 export const appRoutes: Route[] = [
   {
     path: '',
-    loadChildren: () =>
+    loadComponent: () =>
       import('@talaprix/products/feature-web').then(
-        ({ productsFeatureWebRoutes }) => productsFeatureWebRoutes,
+        ({ ProductsFeatureWeb }) => ProductsFeatureWeb,
       ),
   },
   {
     path: 'auth',
-    loadChildren: () =>
+    loadComponent: () =>
       import('@talaprix/users/feature-auth').then(
-        ({ usersFeatureAuthRoutes }) => usersFeatureAuthRoutes,
+        ({ UsersFeatureAuth }) => UsersFeatureAuth,
       ),
   },
 ];

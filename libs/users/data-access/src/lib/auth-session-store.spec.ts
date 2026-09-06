@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AuthSessionStore, provideAuthDataAccess } from './auth-session.store';
+import { AuthSessionStore, provideAuthDataAccess } from './auth-session-store';
 
 describe('AuthSessionStore', () => {
   it('does not expose an authenticated session by default', () => {

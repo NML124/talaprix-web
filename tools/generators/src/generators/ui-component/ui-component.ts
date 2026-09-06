@@ -36,11 +36,11 @@ export async function uiComponentGenerator(
     prefix: options.prefix ?? 'tpx',
     standalone: true,
     changeDetection: 'OnPush',
+    inlineTemplate: false,
     style: 'none',
     displayBlock: false,
     export: true,
     skipTests: false,
-    type: 'component',
     skipFormat: true,
   });
 

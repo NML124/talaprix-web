@@ -4,25 +4,25 @@ import { adminGuard } from '@talaprix/users/data-access';
 export const appRoutes: Route[] = [
   {
     path: 'auth',
-    loadChildren: () =>
+    loadComponent: () =>
       import('@talaprix/users/feature-auth').then(
-        ({ usersFeatureAuthRoutes }) => usersFeatureAuthRoutes,
+        ({ UsersFeatureAuth }) => UsersFeatureAuth,
       ),
   },
   {
     path: 'products',
     canMatch: [adminGuard],
-    loadChildren: () =>
+    loadComponent: () =>
       import('@talaprix/products/feature-admin').then(
-        ({ productsFeatureAdminRoutes }) => productsFeatureAdminRoutes,
+        ({ ProductsFeatureAdmin }) => ProductsFeatureAdmin,
       ),
   },
   {
     path: 'scrapers',
     canMatch: [adminGuard],
-    loadChildren: () =>
+    loadComponent: () =>
       import('@talaprix/scrapers/feature-admin').then(
-        ({ scrapersFeatureAdminRoutes }) => scrapersFeatureAdminRoutes,
+        ({ ScrapersFeatureAdmin }) => ScrapersFeatureAdmin,
       ),
   },
   { path: '', pathMatch: 'full', redirectTo: 'products' },

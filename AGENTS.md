@@ -19,9 +19,11 @@ Nx tags enforce three independent boundaries in `eslint.config.mjs`: `scope:*`, 
 
 ## Coding Style & Naming Conventions
 
-Prettier uses single quotes. TypeScript strict mode, strict Angular templates, standalone components, Signal inputs/outputs, `inject()`, and `ChangeDetectionStrategy.OnPush` are the defaults. Use `@Service()` for root singletons and `@Service({ autoProvided: false })` plus an explicit provider for scoped services. Avoid `any`, constructor injection, framework imports in domain libraries, hard-coded secrets, and unsafe HTML bypasses.
+Prettier uses single quotes. TypeScript strict mode, strict Angular templates, standalone components, Signal inputs/outputs, `inject()`, and `ChangeDetectionStrategy.OnPush` are the defaults. Every component keeps its template in a separate `.html` file through `templateUrl`; inline templates are not allowed. Use concise kebab-case files such as `product.ts`, `product.html`, `product-service.ts`, and `product-store.ts`; do not use `.component.ts`, `.service.ts`, or `.store.ts` suffixes. Tooling files such as `app.config.ts`, `app.routes.ts`, and `*.spec.ts` keep their standard names. Use `@Service()` for root singletons and `@Service({ autoProvided: false })` plus an explicit provider for scoped services. Avoid `any`, constructor injection, framework imports in domain libraries, hard-coded secrets, and unsafe HTML bypasses.
 
 The UI is Tailwind-first. Components use utility classes in templates and do not get dedicated CSS/SCSS files. Use daisyUI for shared primitives, Flowbite only for DOM-driven complex interactions, and `@lucide/angular` for icons. Reusable tokens and the single global stylesheet belong in `libs/shared/ui-kit/src/styles/tailwind.css`. Flowbite must be initialized browser-side through `FlowbiteService` in SSR code.
+
+Use `loadComponent` for standalone leaf pages. A route still needs `path` to define its URL; reserve `loadChildren` for a feature that genuinely owns several child routes.
 
 ## Testing Guidelines
 

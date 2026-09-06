@@ -5,10 +5,10 @@ import { formatCurrency } from '@talaprix/shared/utils';
 @Component({
   selector: 'tpx-product-card',
   imports: [],
-  templateUrl: './product-card.component.html',
+  templateUrl: './product-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductCardComponent {
+export class ProductCard {
   readonly product = input.required<ProductSummary>();
 
   protected readonly formatPrice = formatCurrency;

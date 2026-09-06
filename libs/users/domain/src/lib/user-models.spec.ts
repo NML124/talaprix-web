@@ -1,4 +1,4 @@
-import type { UserIdentity } from './user.models';
+import type { UserIdentity } from './user-models';
 
 describe('UserIdentity', () => {
   it('supports explicit administrative roles', () => {

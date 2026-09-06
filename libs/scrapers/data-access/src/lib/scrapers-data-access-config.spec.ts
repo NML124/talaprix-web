@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import {
   provideScrapersDataAccess,
   SCRAPERS_DATA_ACCESS_CONFIG,
-} from './scrapers-data-access.config';
+} from './scrapers-data-access-config';
 
 describe('provideScrapersDataAccess', () => {
   it('provides the scraper API configuration', () => {

@@ -1,4 +1,4 @@
-import type { ApiResult } from './api.models';
+import type { ApiResult } from './api-models';
 
 describe('ApiResult', () => {
   it('preserves a typed successful payload', () => {

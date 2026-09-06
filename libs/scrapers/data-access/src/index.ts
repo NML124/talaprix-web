@@ -1,1 +1,1 @@
-export * from './lib/scrapers-data-access.config';
+export * from './lib/scrapers-data-access-config';

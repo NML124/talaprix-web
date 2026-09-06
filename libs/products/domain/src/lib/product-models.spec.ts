@@ -1,4 +1,4 @@
-import type { ProductSummary } from './product.models';
+import type { ProductSummary } from './product-models';
 
 describe('ProductSummary', () => {
   it('represents a product without an available offer', () => {

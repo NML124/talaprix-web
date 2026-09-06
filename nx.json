@@ -84,6 +84,7 @@
       "style": "none",
       "changeDetection": "OnPush",
       "displayBlock": false,
+      "inlineTemplate": false,
       "standalone": true
     }
   }

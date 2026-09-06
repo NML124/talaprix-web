@@ -197,7 +197,7 @@ Une faute historique du backend comme `adress` doit être absorbée ici par un D
 
 ### 3. `ui` — la présentation réutilisable
 
-Un composant UI reçoit ses données avec `input()`, émet une intention avec `output()` et ne déclenche pas directement de requête HTTP. `ProductCardComponent` est un exemple de cette couche.
+Un composant UI reçoit ses données avec `input()`, émet une intention avec `output()` et ne déclenche pas directement de requête HTTP. `ProductCard` est un exemple de cette couche.
 
 ### 4. `feature-*` — le cas d’usage
 
@@ -266,7 +266,7 @@ Une factory simple de singleton peut toutefois être définie directement avec `
 /            redirige vers /products
 ```
 
-Les routes sont lazy-loaded afin de découper les bundles et de ne charger une feature que lorsqu’elle est visitée. `adminGuard` protège la navigation côté client, mais l’API doit toujours refaire le contrôle du rôle et des permissions.
+Les pages standalone sont chargées avec `loadComponent` afin de découper les bundles et de ne télécharger une feature que lorsqu’elle est visitée. `path` reste nécessaire pour définir l’URL ; `loadChildren` sera réservé aux features qui possèdent réellement plusieurs routes enfants. `adminGuard` protège la navigation côté client, mais l’API doit toujours refaire le contrôle du rôle et des permissions.
 
 ## Cycle d’une donnée
 
@@ -349,6 +349,7 @@ Les composants métier ne doivent pas contenir de couleurs hexadécimales isolé
 ### Convention de composants
 
 - HTML sémantique avant les composants génériques ;
+- template obligatoirement séparé dans un fichier `.html` avec `templateUrl` ;
 - `ChangeDetectionStrategy.OnPush` partout ;
 - `input()` et `output()` plutôt que les décorateurs historiques ;
 - classes responsive pensées mobile-first ;

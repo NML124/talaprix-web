@@ -28,22 +28,25 @@ describe('ui-component generator', () => {
   it('should run successfully', async () => {
     await uiComponentGenerator(tree, options);
     expect(
-      tree.exists(
-        'libs/shared/ui-kit/src/lib/price-badge/price-badge.component.ts',
-      ),
+      tree.exists('libs/shared/ui-kit/src/lib/price-badge/price-badge.ts'),
     ).toBe(true);
+    expect(
+      tree.exists('libs/shared/ui-kit/src/lib/price-badge/price-badge.html'),
+    ).toBe(true);
+    expect(
+      tree.read(
+        'libs/shared/ui-kit/src/lib/price-badge/price-badge.ts',
+        'utf-8',
+      ),
+    ).toContain("templateUrl: './price-badge.html'");
     expect(tree.read('libs/shared/ui-kit/src/index.ts', 'utf-8')).toContain(
-      'price-badge.component',
+      'price-badge',
     );
     expect(
-      tree.exists(
-        'libs/shared/ui-kit/src/lib/price-badge/price-badge.component.scss',
-      ),
+      tree.exists('libs/shared/ui-kit/src/lib/price-badge/price-badge.scss'),
     ).toBe(false);
     expect(
-      tree.exists(
-        'libs/shared/ui-kit/src/lib/price-badge/price-badge.component.css',
-      ),
+      tree.exists('libs/shared/ui-kit/src/lib/price-badge/price-badge.css'),
     ).toBe(false);
   });
 });
