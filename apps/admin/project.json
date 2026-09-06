@@ -14,17 +14,14 @@
         "outputPath": "dist/apps/admin",
         "browser": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
+        "inlineStyleLanguage": "css",
         "assets": [
           {
             "glob": "**/*",
             "input": "apps/admin/public"
           }
         ],
-        "styles": [
-          "libs/shared/ui-kit/src/styles/tokens.css",
-          "apps/admin/src/styles.scss"
-        ]
+        "styles": ["libs/shared/ui-kit/src/styles/tailwind.css"]
       },
       "configurations": {
         "production": {

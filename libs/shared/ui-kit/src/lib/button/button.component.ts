@@ -6,7 +6,6 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
   selector: 'tpx-button',
   imports: [],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {

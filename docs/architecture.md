@@ -12,6 +12,8 @@ shared/utils -----------------> shared/models
 
 `domain` contient uniquement la vérité métier TypeScript. `data-access` adapte HTTP, stockage et état Signals. `ui` expose des composants de présentation sans accès réseau. `feature` orchestre une route et compose les trois couches. Les apps ne contiennent que le bootstrap, la configuration globale et le routage.
 
+Les services globaux utilisent `@Service()`. Les stores dont la durée de vie doit être contrôlée utilisent `@Service({ autoProvided: false })` et une fonction provider explicite. Cette différence rend le scope visible dans le code au lieu de transformer chaque store en singleton par défaut.
+
 Les contraintes sont encodées dans `eslint.config.mjs`, pas seulement documentées. Trois axes se combinent :
 
 | Axe        | Exemples                                                | But                                     |
@@ -31,5 +33,7 @@ Les contraintes sont encodées dans `eslint.config.mjs`, pas seulement document�
 ```bash
 npx nx g @talaprix/generators:ui-component button --project=shared-ui-kit
 ```
+
+Le composant généré est standalone, OnPush, exporté, testé et sans feuille de style dédiée. Le design est Tailwind-first et son point d’entrée global est `libs/shared/ui-kit/src/styles/tailwind.css`.
 
 Les prochains générateurs pertinents seront `feature-page` et `data-access-resource`, une fois les conventions d’API stabilisées. Il vaut mieux les écrire à partir de contrats réels que figer prématurément des endpoints ou DTOs supposés.

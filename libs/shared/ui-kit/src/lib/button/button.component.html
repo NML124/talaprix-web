@@ -1,13 +1,17 @@
 <button
-  class="button"
-  [class.button--secondary]="variant() === 'secondary'"
-  [class.button--ghost]="variant() === 'ghost'"
+  class="btn min-h-11 rounded-control font-semibold transition-transform duration-150 hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 motion-reduce:transform-none motion-reduce:transition-none"
+  [class.btn-primary]="variant() === 'primary'"
+  [class.btn-outline]="variant() === 'secondary'"
+  [class.btn-ghost]="variant() === 'ghost'"
   [attr.aria-busy]="loading()"
   [disabled]="disabled() || loading()"
   [type]="type()"
 >
-  <span class="button__content"><ng-content /></span>
+  <span><ng-content /></span>
   @if (loading()) {
-    <span class="button__spinner" aria-hidden="true"></span>
+    <span
+      class="loading loading-spinner loading-sm motion-reduce:animate-none"
+      aria-hidden="true"
+    ></span>
   }
 </button>

@@ -6,7 +6,6 @@ import { formatCurrency } from '@talaprix/shared/utils';
   selector: 'tpx-product-card',
   imports: [],
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {

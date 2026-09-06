@@ -1,7 +1,7 @@
 import {
   computed,
-  Injectable,
   makeEnvironmentProviders,
+  Service,
   signal,
   type EnvironmentProviders,
 } from '@angular/core';
@@ -11,7 +11,7 @@ export type AuthSessionState =
   | { readonly status: 'anonymous'; readonly user: null }
   | { readonly status: 'authenticated'; readonly user: UserIdentity };
 
-@Injectable()
+@Service({ autoProvided: false })
 export class AuthSessionStore {
   readonly #state = signal<AuthSessionState>({
     status: 'anonymous',

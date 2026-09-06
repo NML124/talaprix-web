@@ -69,7 +69,7 @@
     "@nx/angular:application": {
       "e2eTestRunner": "playwright",
       "linter": "eslint",
-      "style": "scss",
+      "style": "css",
       "strict": true,
       "unitTestRunner": "vitest-angular",
       "zoneless": true
@@ -77,13 +77,13 @@
     "@nx/angular:library": {
       "linter": "eslint",
       "strict": true,
-      "style": "scss",
+      "style": "none",
       "unitTestRunner": "vitest-analog"
     },
     "@nx/angular:component": {
-      "style": "scss",
+      "style": "none",
       "changeDetection": "OnPush",
-      "displayBlock": true,
+      "displayBlock": false,
       "standalone": true
     }
   }

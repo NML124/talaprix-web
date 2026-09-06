@@ -35,5 +35,15 @@ describe('ui-component generator', () => {
     expect(tree.read('libs/shared/ui-kit/src/index.ts', 'utf-8')).toContain(
       'price-badge.component',
     );
+    expect(
+      tree.exists(
+        'libs/shared/ui-kit/src/lib/price-badge/price-badge.component.scss',
+      ),
+    ).toBe(false);
+    expect(
+      tree.exists(
+        'libs/shared/ui-kit/src/lib/price-badge/price-badge.component.css',
+      ),
+    ).toBe(false);
   });
 });

@@ -20,10 +20,7 @@
             "input": "apps/web/public"
           }
         ],
-        "styles": [
-          "libs/shared/ui-kit/src/styles/tokens.css",
-          "apps/web/src/styles.css"
-        ],
+        "styles": ["libs/shared/ui-kit/src/styles/tailwind.css"],
         "server": "apps/web/src/main.server.ts",
         "ssr": {
           "entry": "apps/web/src/server.ts"
