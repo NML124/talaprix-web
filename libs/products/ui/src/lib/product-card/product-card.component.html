@@ -1,0 +1,13 @@
+<article class="product-card">
+  @if (product().imageUrl; as imageUrl) {
+    <img class="product-card__image" [src]="imageUrl" [alt]="product().name" />
+  }
+  <div class="product-card__body">
+    <h2 class="product-card__title">{{ product().name }}</h2>
+    @if (product().lowestPrice; as price) {
+      <p class="product-card__price">
+        {{ formatPrice(price.amount, price.currency) }}
+      </p>
+    }
+  </div>
+</article>

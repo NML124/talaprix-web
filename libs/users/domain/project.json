@@ -1,0 +1,18 @@
+{
+  "name": "users-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/users/domain/src",
+  "projectType": "library",
+  "tags": ["scope:users", "type:domain", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/users/domain"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/users/domain"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+:root {
+  --tpx-color-accent: #0066cc;
+  --tpx-color-on-accent: #ffffff;
+  --tpx-color-surface: #f5f5f7;
+  --tpx-color-surface-raised: #ffffff;
+  --tpx-color-text: #1d1d1f;
+  --tpx-color-text-muted: #6e6e73;
+  --tpx-color-border: #d2d2d7;
+  --tpx-radius-control: 0.75rem;
+  --tpx-radius-card: 1rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tpx-color-accent: #2997ff;
+    --tpx-color-on-accent: #ffffff;
+    --tpx-color-surface: #000000;
+    --tpx-color-surface-raised: #1d1d1f;
+    --tpx-color-text: #f5f5f7;
+    --tpx-color-text-muted: #a1a1a6;
+    --tpx-color-border: #424245;
+    color-scheme: dark;
+  }
+}

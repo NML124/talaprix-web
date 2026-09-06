@@ -1,0 +1,13 @@
+<button
+  class="button"
+  [class.button--secondary]="variant() === 'secondary'"
+  [class.button--ghost]="variant() === 'ghost'"
+  [attr.aria-busy]="loading()"
+  [disabled]="disabled() || loading()"
+  [type]="type()"
+>
+  <span class="button__content"><ng-content /></span>
+  @if (loading()) {
+    <span class="button__spinner" aria-hidden="true"></span>
+  }
+</button>

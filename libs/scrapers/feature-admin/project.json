@@ -1,0 +1,32 @@
+{
+  "name": "scrapers-feature-admin",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/scrapers/feature-admin/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:scrapers", "type:feature", "platform:admin"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/scrapers/feature-admin"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/scrapers/feature-admin"
+      }
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

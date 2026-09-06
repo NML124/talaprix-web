@@ -1,0 +1,32 @@
+{
+  "name": "products-feature-web",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/products/feature-web/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:products", "type:feature", "platform:web"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/products/feature-web"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/products/feature-web"
+      }
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "users-feature-auth",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/users/feature-auth/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:users", "type:feature", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/users/feature-auth"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/users/feature-auth"
+      }
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

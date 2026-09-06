@@ -1,0 +1,32 @@
+{
+  "name": "products-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/products/data-access/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:products", "type:data-access", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/products/data-access"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/products/data-access"
+      }
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        {
+          "externalDependencies": ["eslint"]
+        }
+      ]
+    }
+  }
+}

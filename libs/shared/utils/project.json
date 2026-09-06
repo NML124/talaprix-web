@@ -1,0 +1,18 @@
+{
+  "name": "shared-utils",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/utils/src",
+  "projectType": "library",
+  "tags": ["scope:shared", "type:util", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/shared/utils"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/shared/utils"
+      }
+    }
+  }
+}

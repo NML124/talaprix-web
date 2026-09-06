@@ -1,0 +1,18 @@
+{
+  "name": "shared-models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/models/src",
+  "projectType": "library",
+  "tags": ["scope:shared", "type:domain", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": [
+        "{projectRoot}/{options.coverage.reportsDirectory}",
+        "{workspaceRoot}/coverage/libs/shared/models"
+      ],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/shared/models"
+      }
+    }
+  }
+}
