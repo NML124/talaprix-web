@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-TalaPrix is an Nx 23 / Angular 22 monorepo. `apps/web` is the public SSR price-comparison app; `apps/admin` is the private SPA. Business code lives under `libs/<scope>/<type>`. Pure contracts belong in `domain`, HTTP and Signal stores in `data-access`, presentational components in `ui`, and routed orchestration in `feature-*`. Keep app projects limited to bootstrap, providers, and lazy routes. `tools/generators` contains local Nx generators.
+TalaPrix is an Nx 23 / Angular 22 monorepo. `apps/web` is the public SSR price-comparison app; `apps/admin` is the private SPA. Business code is grouped by domain in `libs/shared`, `libs/products`, `libs/users`, and `libs/scrapers`. Each domain exposes one public facade (`@talaprix/shared`, `@talaprix/products`, `@talaprix/users`, `@talaprix/scrapers`); its internal `domain`, `data-access`, `ui`, and `feature-*` folders separate responsibilities without adding import paths for every layer. Keep app projects limited to bootstrap, providers, and lazy routes. `tools/generators` contains local Nx generators.
 
 Nx tags enforce three independent boundaries in `eslint.config.mjs`: `scope:*`, `type:*`, and `platform:*`. Preserve all three when creating a project. Public code must never depend on `platform:admin`; domain libraries must remain Angular-free.
 

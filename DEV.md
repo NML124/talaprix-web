@@ -70,6 +70,27 @@ Le scope désigne généralement un domaine (`products`, `users`, `scrapers`, `s
 
 Une application (`apps/*`) assemble des routes et des providers. Elle ne contient pas la logique métier.
 
+### La règle simple à retenir
+
+Travaillez d’abord dans le domaine concerné, puis exposez ce qui doit être
+réutilisé depuis son index public :
+
+```text
+apps/web ou apps/admin
+        ↓ importe uniquement
+@talaprix/products | @talaprix/users | @talaprix/shared | @talaprix/scrapers
+        ↓ façade publique
+libs/<domaine>/src/lib/...
+        ├── modèles et règles pures
+        ├── services/stores et providers
+        ├── composants UI
+        └── pages routées
+```
+
+Vous n’avez donc pas à choisir entre cinq bibliothèques Nx pour une même
+fonctionnalité. Les sous-dossiers restent une organisation interne claire et
+peuvent être séparés plus tard si le domaine devient très volumineux.
+
 ```text
 app
 └── feature               page routée et orchestration
@@ -207,7 +228,7 @@ Un client API partagé par toute l’application est un vrai singleton :
 ```ts
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import type { ProductSummary } from '@talaprix/products/domain';
+import type { ProductSummary } from '@talaprix/products';
 
 @Service()
 export class ProductsApi {
@@ -226,7 +247,7 @@ Le composant reçoit ses données, émet les intentions de l’utilisateur et ne
 ```ts
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { LucideHeart } from '@lucide/angular';
-import type { ProductSummary } from '@talaprix/products/domain';
+import type { ProductSummary } from '@talaprix/products';
 
 @Component({
   selector: 'tpx-product-tile',
@@ -263,7 +284,7 @@ La feature injecte le data-access, gère les états chargement/erreur et passe d
 export const appRoutes: Route[] = [
   {
     path: 'products',
-    loadComponent: () => import('@talaprix/products/feature-web').then(({ ProductsFeatureWeb }) => ProductsFeatureWeb),
+    loadComponent: () => import('@talaprix/products').then(({ ProductsFeatureWeb }) => ProductsFeatureWeb),
   },
 ];
 ```
@@ -355,7 +376,7 @@ Flowbite accède au DOM. Dans l’application publique SSR, initialisez-le seule
 
 ```ts
 import { afterNextRender, Component, inject } from '@angular/core';
-import { FlowbiteService } from '@talaprix/shared/ui-kit';
+import { FlowbiteService } from '@talaprix/shared';
 
 @Component({
   /* ... */
@@ -420,7 +441,7 @@ Les templates inline sont interdits, même pour un composant très court. Cette 
 Pour le réutiliser dans une feature :
 
 ```ts
-import { PriceBadgeComponent } from '@talaprix/shared/ui-kit';
+import { PriceBadgeComponent } from '@talaprix/shared';
 
 @Component({
   imports: [PriceBadgeComponent],
@@ -609,7 +630,7 @@ Exportez `Login` depuis `libs/users/feature-auth/src/index.ts`, puis ajoutez dan
 {
   path: 'login',
   loadComponent: () =>
-    import('@talaprix/users/feature-auth').then(({ Login }) => Login),
+    import('@talaprix/users').then(({ Login }) => Login),
 }
 ```
 

@@ -28,7 +28,7 @@ Les contraintes sont encodées dans `eslint.config.mjs`, pas seulement document�
 
 ## Génération
 
-`@talaprix/generators:ui-component` est le premier générateur local. Il remplace l’usage de Mason pour les composants Angular :
+`@talaprix/generators:ui-component` est le premier générateur local. Il remplace l’usage de Mason(flutter) pour les composants Angular :
 
 ```bash
 npx nx g @talaprix/generators:ui-component button --project=shared-ui-kit
@@ -37,3 +37,21 @@ npx nx g @talaprix/generators:ui-component button --project=shared-ui-kit
 Le composant généré est standalone, OnPush, exporté, testé et sans feuille de style dédiée. Le design est Tailwind-first et son point d’entrée global est `libs/shared/ui-kit/src/styles/tailwind.css`.
 
 Les prochains générateurs pertinents seront `feature-page` et `data-access-resource`, une fois les conventions d’API stabilisées. Il vaut mieux les écrire à partir de contrats réels que figer prématurément des endpoints ou DTOs supposés.
+
+# Architecture simplifiée par domaine
+
+TalaPrix utilise quatre façades Nx stables : `@talaprix/shared`,
+`@talaprix/products`, `@talaprix/users` et `@talaprix/scrapers`. Une façade
+regroupe les modèles, services, stores, composants et pages d’un domaine.
+Les sous-dossiers internes gardent la séparation DDD sans imposer un projet Nx
+par couche.
+
+Les applications importent uniquement ces quatre façades. Exemple :
+
+```ts
+import { provideAuthDataAccess, Login } from '@talaprix/users';
+```
+
+`apps/web` et `apps/admin` restent des shells : bootstrap, providers globaux
+et routes. Une route standalone utilise `loadComponent`; `path` reste l’URL et
+ne constitue pas un second mécanisme de chargement.

@@ -4,14 +4,14 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('@talaprix/products/feature-web').then(
+      import('@talaprix/products').then(
         ({ ProductsFeatureWeb }) => ProductsFeatureWeb,
       ),
   },
   {
     path: 'auth',
     loadComponent: () =>
-      import('@talaprix/users/feature-auth').then(
+      import('@talaprix/users').then(
         ({ UsersFeatureAuth }) => UsersFeatureAuth,
       ),
   },

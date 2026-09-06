@@ -1,0 +1,11 @@
+{
+  "name": "scrapers",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/scrapers/src",
+  "projectType": "library",
+  "tags": ["scope:scrapers", "type:domain", "platform:shared"],
+  "targets": {
+    "lint": {},
+    "test": {}
+  }
+}

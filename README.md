@@ -96,28 +96,22 @@ talaprix-web/
 │   ├── admin/                   # Panneau privé SPA
 │   └── admin-e2e/               # Parcours Playwright admin
 ├── libs/
-│   ├── shared/
-│   │   ├── ui-kit/              # Design system et intégration UI
-│   │   ├── models/              # Contrats transversaux
-│   │   └── utils/               # Fonctions TypeScript pures
-│   ├── products/
-│   │   ├── domain/              # Modèles et règles Produit
-│   │   ├── data-access/         # API et état Produit
-│   │   ├── ui/                  # Cartes et vues de présentation
-│   │   ├── feature-web/         # Parcours Produit public
-│   │   └── feature-admin/       # Gestion Produit admin
-│   ├── users/
-│   │   ├── domain/              # Utilisateur, rôle et auth
-│   │   ├── data-access/         # Session, guards et futur client auth
-│   │   └── feature-auth/        # Pages d’authentification
-│   └── scrapers/
-│       ├── data-access/         # API de supervision
-│       └── feature-admin/       # Écrans réservés à l’admin
+│   ├── shared/                  # Contrats, UI-kit et utilitaires communs
+│   ├── products/                # Modèles, API, composants et pages Produit
+│   ├── users/                   # Authentification, session et pages Auth
+│   └── scrapers/                # Scrapers et écrans de supervision
 ├── tools/generators/            # Générateurs Nx locaux
 ├── docs/architecture.md         # Règles de dépendance détaillées
 ├── DEV.md                       # Guide de travail pas à pas
 └── SECURITY.md                  # Garde-fous sécurité
 ```
+
+Chaque domaine possède un seul point d’entrée (`@talaprix/products`,
+`@talaprix/users`, `@talaprix/shared`, `@talaprix/scrapers`). Les dossiers
+internes (`domain`, `data-access`, `ui`, `feature-*`) restent utiles pour
+séparer les responsabilités, mais ils ne sont plus des bibliothèques Nx à
+mémoriser ni des chemins d’import publics. Cette façade conserve la robustesse
+des frontières tout en réduisant la charge mentale au quotidien.
 
 Le flux attendu est :
 
@@ -138,7 +132,9 @@ Chaque projet possède trois tags complémentaires :
 | `type:*`     | `domain`, `util`, `data-access`, `ui`, `feature`, `app` | Quelle responsabilité porte-t-il ?           |
 | `platform:*` | `shared`, `web`, `admin`                                | Dans quelle application peut-il être livré ? |
 
-Exemple : `products-feature-web` est classé `scope:products`, `type:feature`, `platform:web`. Il peut consommer les bibliothèques partagées du domaine Produit, mais ne peut pas importer `products-feature-admin`.
+Exemple : l’application importe `@talaprix/products` et le routeur sélectionne
+la page web ou admin exportée par cette façade. Les détails internes restent
+encapsulés dans le domaine.
 
 ### Règles de dépendance
 

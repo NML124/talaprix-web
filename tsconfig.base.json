@@ -20,6 +20,10 @@
     "noPropertyAccessFromIndexSignature": true,
     "isolatedModules": true,
     "paths": {
+      "@talaprix/shared": ["./libs/shared/src/index.ts"],
+      "@talaprix/products": ["./libs/products/src/index.ts"],
+      "@talaprix/users": ["./libs/users/src/index.ts"],
+      "@talaprix/scrapers": ["./libs/scrapers/src/index.ts"],
       "@talaprix/shared/ui-kit": ["./libs/shared/ui-kit/src/index.ts"],
       "@talaprix/shared/models": ["./libs/shared/models/src/index.ts"],
       "@talaprix/shared/utils": ["./libs/shared/utils/src/index.ts"],

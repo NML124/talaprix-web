@@ -5,7 +5,7 @@ export const appRoutes: Route[] = [
   {
     path: 'auth',
     loadComponent: () =>
-      import('@talaprix/users/feature-auth').then(
+      import('@talaprix/users').then(
         ({ UsersFeatureAuth }) => UsersFeatureAuth,
       ),
   },
@@ -13,7 +13,7 @@ export const appRoutes: Route[] = [
     path: 'products',
     canMatch: [adminGuard],
     loadComponent: () =>
-      import('@talaprix/products/feature-admin').then(
+      import('@talaprix/products').then(
         ({ ProductsFeatureAdmin }) => ProductsFeatureAdmin,
       ),
   },
@@ -21,7 +21,7 @@ export const appRoutes: Route[] = [
     path: 'scrapers',
     canMatch: [adminGuard],
     loadComponent: () =>
-      import('@talaprix/scrapers/feature-admin').then(
+      import('@talaprix/scrapers').then(
         ({ ScrapersFeatureAdmin }) => ScrapersFeatureAdmin,
       ),
   },
