@@ -18,6 +18,11 @@
           {
             "glob": "**/*",
             "input": "apps/web/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "assets",
+            "output": "assets"
           }
         ],
         "styles": ["libs/shared/ui-kit/src/styles/tailwind.css"],

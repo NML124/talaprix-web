@@ -126,6 +126,92 @@ TalaPrix utilise des noms courts en kebab-case. Le rôle secondaire est séparé
 
 Les fichiers réservés à la configuration de l’outillage gardent leurs noms conventionnels : `app.config.ts`, `app.routes.ts`, `vite.config.mts`, `eslint.config.mjs` et `project.json`.
 
+### Deux niveaux d’organisation : commencer simple, grandir proprement
+
+Il existe deux formes valides dans ce dépôt. Elles ne se contredisent pas : la
+première est le point de départ d’un nouveau module ; la seconde est la forme
+à adopter quand le module devient important.
+
+#### Niveau 1 — petit module (recommandé au début)
+
+Pour commencer un panier, une wishlist ou une préférence utilisateur, garde un
+seul projet de domaine et quelques fichiers lisibles :
+
+```text
+libs/cart/
+└── src/
+    ├── index.ts                 # porte publique @talaprix/cart
+    └── lib/
+        ├── cart-models.ts       # interfaces et types
+        ├── cart-store.ts        # état Signals et actions locales
+        ├── cart-service.ts      # appels HTTP (si l’API existe)
+        └── cart-page/
+            ├── cart-page.ts     # page Angular standalone
+            └── cart-page.html   # template externe
+```
+
+Ce niveau est volontairement simple : chaque fichier a une responsabilité et
+tu peux comprendre le module en quelques minutes. N’ajoute pas de dossiers
+vides uniquement parce qu’un schéma DDD les mentionne.
+
+#### Niveau 2 — domaine mature
+
+Quand le module possède plusieurs pages, plusieurs composants ou plusieurs
+équipes, déplace les fichiers dans des sous-couches :
+
+```text
+libs/cart/
+└── src/lib/
+    ├── domain/                  # types et règles sans Angular
+    ├── data-access/             # services HTTP, stores, providers
+    ├── ui/                      # composants visuels réutilisables
+    └── feature-web/             # pages et parcours publics
+```
+
+La migration est mécanique : `cart-models.ts` va dans `domain`, le store et le
+service vont dans `data-access`, les composants vont dans `ui`, et la page va
+dans `feature-web`. L’index `src/index.ts` continue d’exposer une seule façade.
+
+#### Exemple pas à pas : faire apparaître `CartPage` dans `web`
+
+1. Créer `libs/cart/src/lib/cart-page/cart-page.ts` et son fichier
+   `cart-page.html`.
+2. Exporter la page depuis `libs/cart/src/index.ts` :
+
+   ```ts
+   export * from './lib/cart-page/cart-page';
+   ```
+
+3. Ajouter l’alias `@talaprix/cart` dans `tsconfig.base.json`.
+4. Ajouter la route dans `apps/web/src/app/app.routes.ts` :
+
+   ```ts
+   {
+     path: 'cart',
+     loadComponent: () =>
+       import('@talaprix/cart').then(({ CartPage }) => CartPage),
+   }
+   ```
+
+5. Ajouter `provideCart()` dans `apps/web/src/app/app.config.ts` uniquement si
+   le store doit être partagé au niveau de toute l’application.
+6. Démarrer avec `npm run start`, puis ouvrir `http://localhost:4200/cart`.
+
+`apps/web` ne contient donc pas le code du panier : il déclare seulement son
+URL et ses providers globaux. La page, les règles, l’état et les appels API
+restent dans `libs/cart`.
+
+#### Comment choisir le bon niveau ?
+
+- Une seule page et peu de logique : Niveau 1.
+- Plusieurs pages publiques : ajouter `feature-web`.
+- Plusieurs composants partagés : ajouter `ui`.
+- Règles métier testables sans Angular : ajouter `domain`.
+- API, cache ou état complexe : ajouter `data-access`.
+
+Commence toujours au niveau le plus petit qui reste clair. La robustesse vient
+de responsabilités bien séparées, pas du nombre de dossiers.
+
 ### Détail de `apps/web`
 
 ```text
@@ -714,3 +800,34 @@ Un import ou une initialisation s’exécute côté serveur. Passez par `Flowbit
 ### Le build fonctionne mais pas l’admin
 
 Vérifiez séparément `npx nx build admin` : `web` et `admin` ont des cibles et des environnements de rendu différents.
+
+### `nx reset` échoue avec `EPERM` sous Windows
+
+Le dossier `.nx/workspace-data` est encore verrouillé par un daemon Nx ou un
+serveur de développement ouvert. Arrêtez d’abord les terminaux qui exécutent
+`nx serve`, puis lancez :
+
+```powershell
+npx nx daemon --stop
+npx nx reset
+```
+
+Si Windows conserve le verrou, fermez VS Code/Codex et les autres terminaux du
+projet, puis relancez `npx nx reset`. Il n’est pas nécessaire de supprimer le
+dossier à la main tant qu’un processus Node l’utilise.
+
+Pour vider uniquement le cache des tâches sans toucher aux métadonnées
+verrouillées, utilisez la variante sûre :
+
+```powershell
+npx nx reset --onlyCache
+```
+
+### `transport invoke timed out` pendant `nx serve web`
+
+Le premier démarrage SSR peut dépasser 60 secondes pendant que Vite optimise
+les dépendances. Attendez la fin de `bundling dependencies`, puis rechargez
+`http://localhost:4200`. Si le timeout revient après un arrêt forcé, arrêtez le
+daemon Nx, supprimez uniquement `.angular/cache`, puis relancez `npx nx serve
+web` depuis la racine du dépôt. Le build de production reste le contrôle de
+référence : `npx nx build web --configuration=production`.
