@@ -147,6 +147,7 @@ encapsulés dans le domaine.
 | `feature`        | `domain`, `util`, `data-access`, `ui`     |
 | `shared`         | uniquement `shared`                       |
 | `products`       | `products`, `shared`                      |
+| `home`           | `home`, `products`, `users`, `shared`     |
 | `users`          | `users`, `shared`                         |
 | `scrapers`       | `scrapers`, `products`, `users`, `shared` |
 | `platform:web`   | `web`, `shared`                           |
@@ -247,7 +248,7 @@ Une factory simple de singleton peut toutefois être définie directement avec `
 ### Application publique `web`
 
 ```text
-/       → products/feature-web
+/       → home/feature-web
 /auth   → users/feature-auth
 ```
 

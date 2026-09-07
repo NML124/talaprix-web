@@ -1,1 +1,226 @@
-<p>UsersFeatureAuth works!</p>
+<section class="flex min-h-screen bg-white text-[#1d2422]">
+  <div
+    class="flex w-full flex-col justify-center px-8 py-12 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24"
+  >
+    <div class="mx-auto w-full max-w-sm">
+      <a
+        routerLink="/"
+        class="group mb-8 inline-flex items-center gap-2 rounded-lg text-sm font-bold text-[#6f7976] transition-colors hover:text-[#1d2422] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+      >
+        <svg
+          lucideArrowLeft
+          size="17"
+          class="transition-transform group-hover:-translate-x-1"
+          aria-hidden="true"
+        ></svg>
+        Retour à TalaPrix
+      </a>
+
+      <div class="mb-6">
+        <div class="mb-5 flex items-center gap-3">
+          <img
+            src="/assets/images/logo_app.png"
+            alt="TalaPrix"
+            class="h-10 w-10 object-contain"
+          />
+          <span
+            class="text-[13px] font-black uppercase tracking-[0.2em] text-[#087d6d]"
+            >TalaPrix</span
+          >
+        </div>
+        <h1
+          class="text-[28px] font-black leading-tight tracking-[-0.035em] text-[#1d2422]"
+        >
+          Content de vous revoir
+        </h1>
+        <p class="mt-1.5 text-sm leading-6 text-[#6b7471]">
+          Connectez-vous pour retrouver vos alertes et vos comparaisons.
+        </p>
+      </div>
+
+      @if (error()) {
+      <div
+        class="mb-4 rounded-xl border border-red-500/25 bg-red-50 px-4 py-2.5 text-sm leading-5 text-red-700"
+        role="alert"
+      >
+        {{ error() }}
+      </div>
+      } @if (info()) {
+      <div
+        class="mb-4 rounded-xl border border-[#9cd8ce] bg-[#edf9f7] px-4 py-2.5 text-sm leading-5 text-[#176a5e]"
+        role="status"
+      >
+        {{ info() }}
+      </div>
+      }
+
+      <form class="space-y-4" (ngSubmit)="submit()" novalidate>
+        <div class="relative">
+          <svg
+            lucideMail
+            size="17"
+            class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a9491] peer-focus:text-[#009f88]"
+            aria-hidden="true"
+          ></svg>
+          <input
+            id="auth-email"
+            type="email"
+            name="email"
+            placeholder=" "
+            autocomplete="email"
+            [(ngModel)]="email"
+            class="peer h-[48px] w-full rounded-xl border border-[#cfd6d3] bg-white pl-11 pr-4 pt-3.5 text-sm text-[#1d2422] outline-none transition-colors placeholder:text-transparent hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/10"
+            [class.border-red-400]="error()"
+          />
+          <label
+            for="auth-email"
+            class="pointer-events-none absolute left-10 top-1/2 origin-left -translate-y-1/2 bg-white px-1 text-sm text-[#77817e] transition-all duration-200 peer-focus:left-3.5 peer-focus:top-0 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#087d6d] peer-[:not(:placeholder-shown)]:left-3.5 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-[#087d6d]"
+            >Adresse email</label
+          >
+        </div>
+
+        <div>
+          <div class="relative">
+            <svg
+              lucideLockKeyhole
+              size="17"
+              class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a9491]"
+              aria-hidden="true"
+            ></svg>
+            <input
+              id="auth-password"
+              [type]="showPassword() ? 'text' : 'password'"
+              name="password"
+              placeholder=" "
+              autocomplete="current-password"
+              [(ngModel)]="password"
+              class="peer h-[48px] w-full rounded-xl border border-[#cfd6d3] bg-white pl-11 pr-12 pt-3.5 text-sm text-[#1d2422] outline-none transition-colors placeholder:text-transparent hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/10"
+              [class.border-red-400]="error()"
+            />
+            <label
+              for="auth-password"
+              class="pointer-events-none absolute left-10 top-1/2 origin-left -translate-y-1/2 bg-white px-1 text-sm text-[#77817e] transition-all duration-200 peer-focus:left-3.5 peer-focus:top-0 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#087d6d] peer-[:not(:placeholder-shown)]:left-3.5 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-[#087d6d]"
+              >Mot de passe</label
+            >
+            <button
+              type="button"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-[#77817e] transition-colors hover:text-[#1d2422] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+              [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+              (click)="togglePassword()"
+            >
+              @if (showPassword()) {
+              <svg lucideEyeOff size="18" aria-hidden="true"></svg>
+              } @else {
+              <svg lucideEye size="18" aria-hidden="true"></svg>
+              }
+            </button>
+          </div>
+          <button
+            type="button"
+            class="mt-1.5 rounded-md text-xs font-bold text-[#087d6d] hover:text-[#065f53] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+          >
+            Mot de passe oublié ?
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          class="flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#009f88] text-sm font-black text-white transition-colors hover:bg-[#008a76] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+          [disabled]="isSubmitting()"
+        >
+          @if (isSubmitting()) {
+          <span
+            class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
+          ></span>
+          Vérification… } @else { Se connecter
+          <svg lucideArrowRight size="17" aria-hidden="true"></svg>
+          }
+        </button>
+
+        <p class="text-center text-[11px] leading-5 text-[#7b8582]">
+          En créant un compte, vous acceptez nos
+          <a
+            href="#conditions-utilisation"
+            class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+            >Conditions d'utilisation</a
+          >
+          et notre
+          <a
+            href="#politique-confidentialite"
+            class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+            >Politique de confidentialité</a
+          >.
+        </p>
+      </form>
+
+      <div class="my-5 flex items-center gap-3" aria-hidden="true">
+        <span class="h-px flex-1 bg-[#e2e7e5]"></span>
+        <span class="text-xs text-[#8a9491]">ou</span>
+        <span class="h-px flex-1 bg-[#e2e7e5]"></span>
+      </div>
+
+      <button
+        type="button"
+        class="flex h-[44px] w-full items-center justify-center gap-3 rounded-xl border border-[#cfd6d3] bg-white text-sm font-bold text-[#26302d] transition-colors hover:bg-[#f4f8f7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+        (click)="startGoogleSignIn()"
+      >
+        <img
+          src="/assets/images/google_logo.png"
+          alt=""
+          class="h-4 w-4 object-contain"
+          aria-hidden="true"
+        />
+        Continuer avec Google
+      </button>
+
+      <p class="mt-4 text-center text-sm text-[#6b7471]">
+        Pas encore de compte ?
+        <a
+          href="https://ttk-services.agency/register"
+          class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+          >Créer un compte</a
+        >
+      </p>
+    </div>
+  </div>
+
+  <aside class="relative hidden overflow-hidden bg-[#0b2420] lg:block lg:w-1/2">
+    <img
+      src="/assets/images/bg-banner.jpg"
+      alt=""
+      class="absolute inset-0 h-full w-full scale-110 object-cover object-[center_24%] opacity-85"
+    />
+    <div
+      class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,159,136,0.52),transparent_31%),linear-gradient(140deg,rgba(3,20,18,0.8),rgba(3,20,18,0.17)_54%,rgba(3,20,18,0.58))]"
+    ></div>
+    <div
+      class="absolute bottom-10 left-10 right-10 rounded-[28px] border border-white/20 bg-white/12 p-7 text-white backdrop-blur-md xl:p-8"
+    >
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
+        Comparez en confiance
+      </p>
+      <h2
+        class="mt-3 max-w-md text-[32px] font-black leading-tight tracking-[-0.035em]"
+      >
+        Les bons prix, au bon endroit.
+      </h2>
+      <p class="mt-3 max-w-lg text-sm leading-6 text-white/75">
+        Retrouvez vos alertes et vos produits suivis, partout à Kinshasa.
+      </p>
+      <div class="mt-7 grid grid-cols-3 gap-4 text-sm">
+        <div>
+          <p class="text-2xl font-black">+500</p>
+          <p class="mt-1 text-white/65">offres suivies</p>
+        </div>
+        <div>
+          <p class="text-2xl font-black">24h</p>
+          <p class="mt-1 text-white/65">prix actualisés</p>
+        </div>
+        <div>
+          <p class="text-2xl font-black">100%</p>
+          <p class="mt-1 text-white/65">comparables</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+</section>

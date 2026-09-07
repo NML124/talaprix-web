@@ -1,1 +1,1 @@
-export * from './lib/products-feature-web/products-feature-web';
+// Intentionally empty: public product pages will be exported here as they are built.

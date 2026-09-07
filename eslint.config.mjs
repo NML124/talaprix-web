@@ -54,6 +54,15 @@ export default [
               onlyDependOnLibsWithTags: ['scope:products', 'scope:shared'],
             },
             {
+              sourceTag: 'scope:home',
+              onlyDependOnLibsWithTags: [
+                'scope:home',
+                'scope:products',
+                'scope:users',
+                'scope:shared',
+              ],
+            },
+            {
               sourceTag: 'scope:users',
               onlyDependOnLibsWithTags: ['scope:users', 'scope:shared'],
             },
