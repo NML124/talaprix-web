@@ -10,6 +10,7 @@ import {
 import {
   LucideCheck,
   LucideChevronDown,
+  LucideChevronRight,
   LucideCircleDollarSign,
   LucideGlobe2,
   LucideLanguages,
@@ -18,6 +19,7 @@ import {
   LucideSearch,
   LucideShoppingBasket,
   LucideUserRound,
+  LucideX,
 } from '@lucide/angular';
 import {
   getCountryDataList,
@@ -119,6 +121,7 @@ const DEFAULT_CURRENCY =
   imports: [
     LucideCheck,
     LucideChevronDown,
+    LucideChevronRight,
     LucideCircleDollarSign,
     LucideGlobe2,
     LucideLanguages,
@@ -127,18 +130,20 @@ const DEFAULT_CURRENCY =
     LucideSearch,
     LucideShoppingBasket,
     LucideUserRound,
+    LucideX,
   ],
   templateUrl: './home-navbar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeNavbar {
   private readonly localeSettings =
-    viewChild.required<ElementRef<HTMLElement>>('localeSettings');
+    viewChild<ElementRef<HTMLElement>>('localeSettings');
 
   protected readonly countries = COUNTRY_OPTIONS;
   protected readonly currencies = CURRENCY_OPTIONS;
   protected readonly languages = LANGUAGE_OPTIONS;
   protected readonly isLocaleOpen = signal(false);
+  protected readonly isMobileMenuOpen = signal(false);
   protected readonly activeSettingsTab = signal<SettingsTab>('country');
   protected readonly selectedCountry = signal<CountryOption>(DEFAULT_COUNTRY);
   protected readonly selectedLanguage = signal<LanguageCode>('FR');
@@ -177,6 +182,10 @@ export class HomeNavbar {
     this.isLocaleOpen.update((isOpen) => !isOpen);
   }
 
+  protected toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((isOpen) => !isOpen);
+  }
+
   protected setActiveTab(tab: SettingsTab): void {
     this.activeSettingsTab.set(tab);
   }
@@ -211,9 +220,11 @@ export class HomeNavbar {
 
   @HostListener('document:pointerdown', ['$event'])
   protected closeWhenClickingOutside(event: PointerEvent): void {
+    const localeElem = this.localeSettings()?.nativeElement;
     if (
       this.isLocaleOpen() &&
-      !this.localeSettings().nativeElement.contains(event.target as Node)
+      localeElem &&
+      !localeElem.contains(event.target as Node)
     ) {
       this.isLocaleOpen.set(false);
     }
@@ -222,6 +233,7 @@ export class HomeNavbar {
   @HostListener('document:keydown.escape')
   protected closeWithEscape(): void {
     this.isLocaleOpen.set(false);
+    this.isMobileMenuOpen.set(false);
   }
 
   private normalize(value: string): string {

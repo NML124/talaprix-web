@@ -34,7 +34,7 @@
           Content de vous revoir
         </h1>
         <p class="mt-1.5 text-sm leading-6 text-[#6b7471]">
-          Connectez-vous pour retrouver vos alertes et vos comparaisons.
+          Entrez votre adresse email pour recevoir votre code de vérification (OTP).
         </p>
       </div>
 
@@ -79,50 +79,6 @@
           >
         </div>
 
-        <div>
-          <div class="relative">
-            <svg
-              lucideLockKeyhole
-              size="17"
-              class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a9491]"
-              aria-hidden="true"
-            ></svg>
-            <input
-              id="auth-password"
-              [type]="showPassword() ? 'text' : 'password'"
-              name="password"
-              placeholder=" "
-              autocomplete="current-password"
-              [(ngModel)]="password"
-              class="peer h-[48px] w-full rounded-xl border border-[#cfd6d3] bg-white pl-11 pr-12 pt-3.5 text-sm text-[#1d2422] outline-none transition-colors placeholder:text-transparent hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/10"
-              [class.border-red-400]="error()"
-            />
-            <label
-              for="auth-password"
-              class="pointer-events-none absolute left-10 top-1/2 origin-left -translate-y-1/2 bg-white px-1 text-sm text-[#77817e] transition-all duration-200 peer-focus:left-3.5 peer-focus:top-0 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#087d6d] peer-[:not(:placeholder-shown)]:left-3.5 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-[#087d6d]"
-              >Mot de passe</label
-            >
-            <button
-              type="button"
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-[#77817e] transition-colors hover:text-[#1d2422] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
-              [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
-              (click)="togglePassword()"
-            >
-              @if (showPassword()) {
-              <svg lucideEyeOff size="18" aria-hidden="true"></svg>
-              } @else {
-              <svg lucideEye size="18" aria-hidden="true"></svg>
-              }
-            </button>
-          </div>
-          <button
-            type="button"
-            class="mt-1.5 rounded-md text-xs font-bold text-[#087d6d] hover:text-[#065f53] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
-          >
-            Mot de passe oublié ?
-          </button>
-        </div>
-
         <button
           type="submit"
           class="flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#009f88] text-sm font-black text-white transition-colors hover:bg-[#008a76] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
@@ -132,13 +88,13 @@
           <span
             class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
           ></span>
-          Vérification… } @else { Se connecter
+          Envoi du code… } @else { Recevoir le code OTP
           <svg lucideArrowRight size="17" aria-hidden="true"></svg>
           }
         </button>
 
         <p class="text-center text-[11px] leading-5 text-[#7b8582]">
-          En créant un compte, vous acceptez nos
+          En vous connectant, vous acceptez nos
           <a
             href="#conditions-utilisation"
             class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
@@ -172,15 +128,6 @@
         />
         Continuer avec Google
       </button>
-
-      <p class="mt-4 text-center text-sm text-[#6b7471]">
-        Pas encore de compte ?
-        <a
-          href="https://ttk-services.agency/register"
-          class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
-          >Créer un compte</a
-        >
-      </p>
     </div>
   </div>
 
