@@ -32,3 +32,13 @@ Vitest covers apps and libraries; Playwright covers `web-e2e` and `admin-e2e`. K
 ## Commit & Pull Request Guidelines
 
 History uses Conventional Commits such as `chore(root): ...`. Use `type(scope): summary`. PRs should identify affected Nx projects and report lint, test, and build results.
+
+## Agent Decision Protocol
+
+Do not make architectural, structural, naming, dependency, or UI decisions on
+the user's behalf. Before any non-trivial change, explain the proposed option,
+its impact, and alternatives; ask for confirmation when the choice changes the
+architecture or workflow. Never replace a requested modular implementation
+with a temporary monolithic file merely to make a build pass or demonstrate a
+screen. Preserve the user's conventions, including separate HTML templates,
+concise filenames, and explicit Angular composition.
