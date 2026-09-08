@@ -7,6 +7,10 @@ export interface ProductSummary {
   readonly imageUrl: string | null;
   readonly lowestPrice: Money | null;
   readonly offerCount: number;
+  /** Display-only information returned by a product listing when available. */
+  readonly verified?: boolean;
+  readonly merchantName?: string;
+  readonly stockStatus?: 'in-stock' | 'limited' | 'unavailable';
 }
 
 export interface Money {

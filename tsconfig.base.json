@@ -35,6 +35,7 @@
       "@talaprix/products/feature-web": [
         "./libs/products/feature-web/src/index.ts"
       ],
+      "@talaprix/home/feature-web": ["./libs/home/feature-web/src/index.ts"],
       "@talaprix/products/feature-admin": [
         "./libs/products/feature-admin/src/index.ts"
       ],

@@ -24,7 +24,9 @@
     "@angular/router": "~22.1.0",
     "@angular/ssr": "~22.1.0",
     "@lucide/angular": "^1.41.0",
+    "countries-list": "^3.4.1",
     "express": "^4.21.2",
+    "flag-icons": "^7.5.0",
     "flowbite": "^4.0.2",
     "rxjs": "~7.8.0"
   },

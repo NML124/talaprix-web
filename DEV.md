@@ -201,6 +201,39 @@ dans `feature-web`. L’index `src/index.ts` continue d’exposer une seule faç
 URL et ses providers globaux. La page, les règles, l’état et les appels API
 restent dans `libs/cart`.
 
+### Exemple réel : la home du comparateur
+
+La home actuelle applique cette composition dans
+`libs/home/feature-web/src/lib/home/` :
+
+```text
+home/
+├── home.ts              # conteneur de la page
+├── home.html            # assemble les composants enfants
+├── navbar/
+├── hero/
+├── categories/
+├── offers/
+├── trust/
+└── footer/
+```
+
+`home.html` ne contient pas le détail de la navbar ou du hero. Il compose
+simplement :
+
+```html
+<lib-home-navbar />
+<lib-home-hero />
+<lib-home-categories />
+<lib-home-offers />
+<lib-home-trust />
+<lib-home-footer />
+```
+
+Chaque dossier possède son fichier TypeScript et son template HTML. La route
+de `apps/web` ne charge que `Home` avec `loadComponent`; `Home` assemble les
+composants, et chaque composant garde son propre rendu.
+
 #### Comment choisir le bon niveau ?
 
 - Une seule page et peu de logique : Niveau 1.

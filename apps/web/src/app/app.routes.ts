@@ -4,9 +4,7 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('@talaprix/products').then(
-        ({ ProductsFeatureWeb }) => ProductsFeatureWeb,
-      ),
+      import('@talaprix/home/feature-web').then(({ Home }) => Home),
   },
   {
     path: 'auth',

@@ -42,3 +42,12 @@ architecture or workflow. Never replace a requested modular implementation
 with a temporary monolithic file merely to make a build pass or demonstrate a
 screen. Preserve the user's conventions, including separate HTML templates,
 concise filenames, and explicit Angular composition.
+
+For product and UI work, translate the requested user journey before coding.
+Never merge distinct concepts into one control: country, language, and currency,
+for example, require independent state and independent selection. Complete the
+interaction contract, including open/close behavior, outside click, Escape,
+loading or empty states when relevant, keyboard accessibility, and responsive
+behavior. Inspect the supplied visual references at their original resolution,
+reuse the approved design language and assets, and verify the finished interface
+in a real browser at desktop and mobile sizes before presenting it as complete.
