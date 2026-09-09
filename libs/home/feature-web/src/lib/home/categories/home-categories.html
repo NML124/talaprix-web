@@ -1,35 +1,105 @@
 <section id="categories" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-  <div class="flex items-end justify-between">
-    <div>
+  <div class="flex items-center justify-between gap-3 sm:items-end sm:gap-4">
+    <div class="min-w-0">
       <p class="text-sm font-bold uppercase tracking-[0.16em] text-[#009f88]">
         Explorez
       </p>
-      <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-900">
+      <h2
+        class="mt-2 text-xl font-black tracking-tight text-slate-900 sm:text-3xl"
+      >
         Qu'est-ce que vous cherchez ?
       </h2>
     </div>
     <a
-      href="#offres"
-      class="hidden items-center gap-1 text-sm font-bold text-[#008674] sm:flex"
-      >Toutes les catégories <svg lucideChevronRight size="17"></svg
-    ></a>
+      routerLink="/categories"
+      class="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-[#008674]"
+      ><span class="sm:hidden">Voir tout →</span
+      ><span class="hidden sm:inline">Toutes les catégories →</span></a
+    >
   </div>
-  <div class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-    @for (category of categories; track category) {<a
-      href="#offres"
-      class="group relative min-h-48 overflow-hidden rounded-2xl bg-slate-900"
-      ><img
-        src="/assets/images/logo_app.png"
-        [alt]="category"
-        class="absolute inset-0 h-full w-full object-contain bg-white/95 p-8 transition duration-500 group-hover:scale-105"
-      />
+  <div
+    #categoryRail
+    class="mt-8 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    role="region"
+    aria-label="Catégories disponibles"
+    tabindex="0"
+    (scroll)="updateActiveIndicator()"
+  >
+    <div class="flex w-max snap-x snap-mandatory gap-4">
+      @if (status() === 'loading') { @for (placeholder of [1, 2, 3, 4]; track
+      placeholder) {
       <div
-        class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"
+        class="h-24 w-56 shrink-0 snap-start animate-pulse rounded-2xl bg-slate-100 sm:min-h-48 sm:h-auto sm:w-60 lg:w-72 xl:w-[18.5rem]"
       ></div>
-      <div class="absolute bottom-0 p-4 text-white">
-        <h3 class="font-bold">{{ category }}</h3>
-        <p class="mt-1 text-xs text-slate-200">Trouvez les meilleurs prix</p>
-      </div></a
-    >}
+      } } @else { @for (category of categories(); track category.id) {
+      <a
+        data-category-card
+        [routerLink]="'/categories'"
+        [queryParams]="{ category: category.id }"
+        class="group relative h-24 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-slate-900 outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/50 focus-visible:ring-offset-4 sm:min-h-48 sm:h-auto sm:w-60 lg:w-72 xl:w-[18.5rem]"
+      >
+        @if (category.image) {
+        <img
+          [src]="category.image"
+          [alt]="category.name"
+          class="absolute inset-0 h-full w-full scale-105 object-cover transition duration-500 group-hover:scale-110"
+        />
+        } @else {
+        <img
+          src="/assets/images/logo_app.png"
+          [alt]="category.name"
+          class="absolute inset-0 h-full w-full bg-white/95 p-8 object-contain transition duration-500 group-hover:scale-105"
+        />
+        }
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"
+        ></div>
+        <div class="absolute bottom-0 p-3 text-white sm:p-4">
+          <h3 class="font-bold">{{ category.name }}</h3>
+          <p class="mt-1 hidden text-xs text-slate-200 sm:block">
+            Trouvez les meilleurs prix
+          </p>
+        </div>
+      </a>
+      } }
+    </div>
   </div>
+  @if (status() === 'error') {
+  <div class="mt-5 flex items-center gap-3 text-sm text-slate-600" role="alert">
+    <span>{{ error() }}</span>
+    <button
+      type="button"
+      class="font-bold text-[#008674] underline underline-offset-4"
+      (click)="retry()"
+    >
+      Réessayer
+    </button>
+  </div>
+  } @else if (status() === 'empty') {
+  <p class="mt-5 text-sm text-slate-500">
+    Aucune catégorie n’est disponible pour le moment.
+  </p>
+  } @if (status() === 'success') {
+  <div
+    class="mt-6 flex items-center justify-center gap-1.5"
+    aria-label="Navigation des catégories"
+  >
+    @for (category of categories(); track category.id; let index = $index) {
+    <button
+      #indicator
+      type="button"
+      [attr.aria-label]="'Voir la catégorie ' + category.name"
+      [attr.aria-current]="activeIndex() === index ? 'true' : null"
+      class="h-2.5 rounded-full transition-[width,background-color,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88] focus-visible:ring-offset-2"
+      [class]="
+        activeIndex() === index
+          ? 'w-9 bg-[#009f88] shadow-[0_1px_3px_rgb(0_159_136_/_0.35)]'
+          : 'w-2 bg-[#a8bcb7]'
+      "
+      (click)="scrollToCategory(index)"
+      (keydown)="handleIndicatorKeydown($event, index)"
+    ></button>
+    }
+  </div>
+  }
 </section>

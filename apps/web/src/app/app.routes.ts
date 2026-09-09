@@ -13,4 +13,11 @@ export const appRoutes: Route[] = [
         ({ UsersFeatureAuth }) => UsersFeatureAuth,
       ),
   },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('@talaprix/products/feature-web').then(
+        ({ ProductsCategories }) => ProductsCategories,
+      ),
+  },
 ];

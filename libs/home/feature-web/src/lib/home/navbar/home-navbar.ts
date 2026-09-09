@@ -2,25 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
+  effect,
   HostListener,
+  inject,
+  PLATFORM_ID,
   signal,
   viewChild,
 } from '@angular/core';
-import {
-  LucideCheck,
-  LucideChevronDown,
-  LucideChevronRight,
-  LucideCircleDollarSign,
-  LucideGlobe2,
-  LucideLanguages,
-  LucideMenu,
-  LucideQrCode,
-  LucideSearch,
-  LucideShoppingBasket,
-  LucideUserRound,
-  LucideX,
-} from '@lucide/angular';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { HomeNavbarDesktop } from './desktop/home-navbar-desktop';
+import { HomeNavbarDrawer } from './drawer/home-navbar-drawer';
+import { HomeNavbarMobile } from './mobile/home-navbar-mobile';
 import {
   getCountryDataList,
   type TCountryCode,
@@ -118,41 +112,48 @@ const DEFAULT_CURRENCY =
 
 @Component({
   selector: 'lib-home-navbar',
-  imports: [
-    LucideCheck,
-    LucideChevronDown,
-    LucideChevronRight,
-    LucideCircleDollarSign,
-    LucideGlobe2,
-    LucideLanguages,
-    LucideMenu,
-    LucideQrCode,
-    LucideSearch,
-    LucideShoppingBasket,
-    LucideUserRound,
-    LucideX,
-  ],
+  imports: [HomeNavbarDesktop, HomeNavbarDrawer, HomeNavbarMobile],
   templateUrl: './home-navbar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeNavbar {
+  readonly #isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  readonly #document = inject(DOCUMENT);
+  readonly #destroyRef = inject(DestroyRef);
   private readonly localeSettings =
     viewChild<ElementRef<HTMLElement>>('localeSettings');
+  #lockedScrollY = 0;
+  #bodyStyleSnapshot: {
+    readonly overflow: string;
+    readonly position: string;
+    readonly top: string;
+    readonly width: string;
+  } | null = null;
 
-  protected readonly countries = COUNTRY_OPTIONS;
-  protected readonly currencies = CURRENCY_OPTIONS;
-  protected readonly languages = LANGUAGE_OPTIONS;
-  protected readonly isLocaleOpen = signal(false);
-  protected readonly isMobileMenuOpen = signal(false);
-  protected readonly activeSettingsTab = signal<SettingsTab>('country');
-  protected readonly selectedCountry = signal<CountryOption>(DEFAULT_COUNTRY);
-  protected readonly selectedLanguage = signal<LanguageCode>('FR');
-  protected readonly selectedCurrency =
-    signal<CurrencyOption>(DEFAULT_CURRENCY);
-  protected readonly countryQuery = signal('');
-  protected readonly currencyQuery = signal('');
+  public readonly countries = COUNTRY_OPTIONS;
+  public readonly currencies = CURRENCY_OPTIONS;
+  public readonly languages = LANGUAGE_OPTIONS;
+  public readonly isLocaleOpen = signal(false);
+  public readonly isMobileMenuOpen = signal(false);
+  public readonly activeSettingsTab = signal<SettingsTab>('country');
+  public readonly selectedCountry = signal<CountryOption>(DEFAULT_COUNTRY);
+  public readonly selectedLanguage = signal<LanguageCode>('FR');
+  public readonly selectedCurrency = signal<CurrencyOption>(DEFAULT_CURRENCY);
+  public readonly countryQuery = signal('');
+  public readonly currencyQuery = signal('');
+  public readonly isScrolled = signal(false);
+  readonly mobileMenuScrollLock = effect(() => {
+    if (!this.#isBrowser) return;
 
-  protected readonly filteredCountries = computed(() => {
+    if (this.isMobileMenuOpen()) {
+      this.lockPageScroll();
+      return;
+    }
+
+    this.restorePageScroll();
+  });
+
+  public readonly filteredCountries = computed(() => {
     const query = this.normalize(this.countryQuery());
 
     if (!query) {
@@ -164,7 +165,7 @@ export class HomeNavbar {
     );
   });
 
-  protected readonly filteredCurrencies = computed(() => {
+  public readonly filteredCurrencies = computed(() => {
     const query = this.normalize(this.currencyQuery());
 
     if (!query) {
@@ -178,31 +179,31 @@ export class HomeNavbar {
     );
   });
 
-  protected toggleLocale(): void {
+  public toggleLocale(): void {
     this.isLocaleOpen.update((isOpen) => !isOpen);
   }
 
-  protected toggleMobileMenu(): void {
+  public toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((isOpen) => !isOpen);
   }
 
-  protected setActiveTab(tab: SettingsTab): void {
+  public setActiveTab(tab: SettingsTab): void {
     this.activeSettingsTab.set(tab);
   }
 
-  protected selectCountry(country: CountryOption): void {
+  public selectCountry(country: CountryOption): void {
     this.selectedCountry.set(country);
   }
 
-  protected selectLanguage(language: LanguageCode): void {
+  public selectLanguage(language: LanguageCode): void {
     this.selectedLanguage.set(language);
   }
 
-  protected selectCurrency(currency: CurrencyOption): void {
+  public selectCurrency(currency: CurrencyOption): void {
     this.selectedCurrency.set(currency);
   }
 
-  protected updateCountryQuery(event: Event): void {
+  public updateCountryQuery(event: Event): void {
     const input = event.target;
 
     if (input instanceof HTMLInputElement) {
@@ -210,7 +211,7 @@ export class HomeNavbar {
     }
   }
 
-  protected updateCurrencyQuery(event: Event): void {
+  public updateCurrencyQuery(event: Event): void {
     const input = event.target;
 
     if (input instanceof HTMLInputElement) {
@@ -218,8 +219,13 @@ export class HomeNavbar {
     }
   }
 
+  @HostListener('window:scroll')
+  public updateScrollState(): void {
+    if (this.#isBrowser) this.isScrolled.set(window.scrollY > 8);
+  }
+
   @HostListener('document:pointerdown', ['$event'])
-  protected closeWhenClickingOutside(event: PointerEvent): void {
+  public closeWhenClickingOutside(event: PointerEvent): void {
     const localeElem = this.localeSettings()?.nativeElement;
     if (
       this.isLocaleOpen() &&
@@ -231,9 +237,40 @@ export class HomeNavbar {
   }
 
   @HostListener('document:keydown.escape')
-  protected closeWithEscape(): void {
+  public closeWithEscape(): void {
     this.isLocaleOpen.set(false);
     this.isMobileMenuOpen.set(false);
+  }
+
+  private lockPageScroll(): void {
+    if (this.#bodyStyleSnapshot) return;
+
+    const body = this.#document.body;
+    this.#lockedScrollY = window.scrollY;
+    this.#bodyStyleSnapshot = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    };
+    body.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${this.#lockedScrollY}px`;
+    body.style.width = '100%';
+    this.#destroyRef.onDestroy(() => this.restorePageScroll());
+  }
+
+  private restorePageScroll(): void {
+    const styleSnapshot = this.#bodyStyleSnapshot;
+    if (!styleSnapshot) return;
+
+    const body = this.#document.body;
+    body.style.overflow = styleSnapshot.overflow;
+    body.style.position = styleSnapshot.position;
+    body.style.top = styleSnapshot.top;
+    body.style.width = styleSnapshot.width;
+    this.#bodyStyleSnapshot = null;
+    window.scrollTo({ top: this.#lockedScrollY, behavior: 'instant' });
   }
 
   private normalize(value: string): string {

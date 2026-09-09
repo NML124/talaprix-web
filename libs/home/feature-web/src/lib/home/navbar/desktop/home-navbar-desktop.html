@@ -1,0 +1,85 @@
+<!-- Desktop Header -->
+<div
+  class="hidden h-[80px] items-center px-[clamp(72px,7vw,128px)] min-[1100px]:flex"
+>
+  <a
+    href="/"
+    class="flex shrink-0 items-center gap-3.5"
+    aria-label="TalaPrix, accueil"
+  >
+    <span
+      class="flex h-[52px] w-[52px] items-center justify-center overflow-hidden"
+    >
+      <img
+        src="/assets/images/logo_app.png"
+        alt=""
+        class="h-[52px] w-[52px] max-w-none scale-[1.65] object-contain"
+      />
+    </span>
+    <span class="h-11 w-px bg-[#cfcfcf]" aria-hidden="true"></span>
+    <span class="text-[22px] font-bold tracking-[-0.02em] text-[#202020]"
+      >Talaprix</span
+    >
+  </a>
+
+  <form
+    class="relative ml-[clamp(32px,4vw,68px)] mr-[clamp(18px,2vw,30px)] min-w-[270px] flex-1"
+    role="search"
+  >
+    <label class="sr-only" for="desktop-search">Rechercher un produit</label>
+    <input
+      id="desktop-search"
+      type="search"
+      placeholder="Rechercher un produit..."
+      class="h-10 w-full rounded-full border border-[#aeb3b2] bg-white pl-5 pr-[76px] text-[12px] text-[#242424] outline-none transition-colors placeholder:text-[#737776] hover:border-[#8e9392] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/15"
+    />
+    <button
+      type="submit"
+      class="absolute right-[3px] top-[3px] flex h-[34px] w-[68px] items-center justify-center rounded-full bg-[#009f88] text-white transition-colors hover:bg-[#008d79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2"
+      aria-label="Rechercher"
+    >
+      <svg lucideSearch size="16"></svg>
+    </button>
+  </form>
+
+  <div class="flex shrink-0 items-center gap-[clamp(16px,1.65vw,28px)]">
+    <a
+      href="#download"
+      class="flex shrink-0 items-center gap-2 text-[12px] font-medium leading-[1.15] text-[#555] transition-colors hover:text-[#151515] focus-visible:rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+    >
+      <svg lucideQrCode size="28" aria-hidden="true"></svg>
+      <span>Télécharger<br />l'application</span>
+    </a>
+
+    <lib-home-navbar-locale />
+
+    <button
+      type="button"
+      class="relative flex h-10 w-9 shrink-0 items-center justify-center rounded-lg text-[#191919] transition-colors hover:bg-[#f0f2f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+      aria-label="Panier, 2 articles"
+    >
+      <svg lucideShoppingBasket size="29"></svg>
+      <span
+        class="absolute right-[-1px] top-[-2px] rounded-full bg-[#009f88] px-[4px] text-[8px] font-bold text-white"
+        >2</span
+      >
+    </button>
+
+    <a
+      href="/auth"
+      class="flex shrink-0 items-center gap-2.5 rounded-xl py-1 text-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+    >
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e2e5e5] text-[#a5aaaa]"
+      >
+        <svg lucideUserRound size="28"></svg>
+      </span>
+      <span class="whitespace-nowrap">
+        <span class="text-[#087d6d] transition-colors hover:text-[#065f53]"
+          >Se connecter</span
+        ><br />
+        <b class="font-bold text-[#171717]">Profil</b>
+      </span>
+    </a>
+  </div>
+</div>

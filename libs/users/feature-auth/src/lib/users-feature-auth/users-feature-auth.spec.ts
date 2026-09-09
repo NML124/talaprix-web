@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { UsersFeatureAuth } from './users-feature-auth';
 
 describe('UsersFeatureAuth', () => {
@@ -8,6 +9,7 @@ describe('UsersFeatureAuth', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UsersFeatureAuth],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsersFeatureAuth);

@@ -25,6 +25,8 @@ The UI is Tailwind-first. Components use utility classes in templates and do not
 
 Use `loadComponent` for standalone leaf pages. A route still needs `path` to define its URL; reserve `loadChildren` for a feature that genuinely owns several child routes.
 
+Never allow a production `.ts` or `.html` file to exceed 300 lines. Extract a focused component or service by responsibility before reaching that limit; preserve external templates and public facades while doing so.
+
 ## Testing Guidelines
 
 Vitest covers apps and libraries; Playwright covers `web-e2e` and `admin-e2e`. Keep tests beside source as `*.spec.ts`. Update generated placeholder tests when replacing a scaffold.

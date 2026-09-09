@@ -1,0 +1,13 @@
+{
+  "name": "home-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/home/data-access/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:home", "type:data-access", "platform:shared"],
+  "targets": {
+    "lint": {
+      "inputs": ["default", "^default", "{workspaceRoot}/eslint.config.mjs"]
+    }
+  }
+}

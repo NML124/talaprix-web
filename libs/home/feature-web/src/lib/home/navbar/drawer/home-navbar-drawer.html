@@ -1,0 +1,229 @@
+<!-- Mobile Drawer Menu Overlay -->
+@if (isMobileMenuOpen()) {
+<div
+  class="fixed inset-0 z-50 touch-none overscroll-none bg-black/40 backdrop-blur-sm transition-opacity duration-300 min-[1100px]:hidden"
+  (click)="toggleMobileMenu()"
+  aria-hidden="true"
+></div>
+
+<aside
+  class="fixed bottom-0 right-0 top-0 z-50 flex w-[88%] max-w-[380px] flex-col justify-between overflow-y-auto overscroll-contain bg-white p-5 pt-[calc(1.25rem+env(safe-area-inset-top))] shadow-2xl transition-transform duration-300 [-webkit-overflow-scrolling:touch] min-[1100px]:hidden"
+>
+  <div class="space-y-5">
+    <div
+      class="flex items-center justify-between border-b border-[#f0f0f0] pb-3.5"
+    >
+      <div class="flex items-center gap-2.5">
+        <span
+          class="flex h-10 w-10 items-center justify-center overflow-hidden"
+        >
+          <img
+            src="/assets/images/logo_app.png"
+            alt=""
+            class="h-10 w-10 object-contain"
+          />
+        </span>
+        <span class="text-lg font-bold text-[#202020]">Menu</span>
+      </div>
+      <button
+        type="button"
+        class="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4f5f5] text-[#555] active:bg-[#e8eae0]"
+        aria-label="Fermer le menu"
+        (click)="toggleMobileMenu()"
+      >
+        <svg lucideX size="20"></svg>
+      </button>
+    </div>
+
+    <a
+      href="/auth"
+      class="flex items-center justify-between rounded-2xl bg-[#f7f9f9] p-3.5 transition-colors active:bg-[#edf1f0]"
+      (click)="toggleMobileMenu()"
+    >
+      <div class="flex items-center gap-3">
+        <span
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-[#e2e5e5] text-[#a5aaaa]"
+        >
+          <svg lucideUserRound size="24"></svg>
+        </span>
+        <div class="flex flex-col">
+          <span class="text-[12px] font-medium text-[#087d6d]"
+            >Se connecter</span
+          >
+          <span class="text-[14px] font-bold text-[#171717]">Mon Profil</span>
+        </div>
+      </div>
+      <svg lucideChevronRight size="18" class="text-[#a0a5a4]"></svg>
+    </a>
+
+    <!-- Preferences Section in Mobile Drawer -->
+    <div
+      class="space-y-3 rounded-2xl border border-[#eceeee] bg-[#fafbfb] p-3.5"
+    >
+      <p class="text-[11px] font-bold uppercase tracking-wider text-[#737776]">
+        Vos Préférences
+      </p>
+
+      <div class="grid grid-cols-3 rounded-xl bg-[#eef1f0] p-1" role="tablist">
+        <button
+          type="button"
+          class="flex h-8 items-center justify-center gap-1 rounded-lg text-[11px] font-bold transition-all"
+          [class.bg-white]="activeSettingsTab() === 'country'"
+          [class.text-[#0a7e6f]]="activeSettingsTab() === 'country'"
+          [class.shadow-sm]="activeSettingsTab() === 'country'"
+          [class.text-[#666b6a]]="activeSettingsTab() !== 'country'"
+          (click)="setActiveTab('country')"
+        >
+          <svg lucideGlobe2 size="13"></svg>
+          Pays
+        </button>
+        <button
+          type="button"
+          class="flex h-8 items-center justify-center gap-1 rounded-lg text-[11px] font-bold transition-all"
+          [class.bg-white]="activeSettingsTab() === 'language'"
+          [class.text-[#0a7e6f]]="activeSettingsTab() === 'language'"
+          [class.shadow-sm]="activeSettingsTab() === 'language'"
+          [class.text-[#666b6a]]="activeSettingsTab() !== 'language'"
+          (click)="setActiveTab('language')"
+        >
+          <svg lucideLanguages size="13"></svg>
+          Langue
+        </button>
+        <button
+          type="button"
+          class="flex h-8 items-center justify-center gap-1 rounded-lg text-[11px] font-bold transition-all"
+          [class.bg-white]="activeSettingsTab() === 'currency'"
+          [class.text-[#0a7e6f]]="activeSettingsTab() === 'currency'"
+          [class.shadow-sm]="activeSettingsTab() === 'currency'"
+          [class.text-[#666b6a]]="activeSettingsTab() !== 'currency'"
+          (click)="setActiveTab('currency')"
+        >
+          <svg lucideCircleDollarSign size="13"></svg>
+          Devise
+        </button>
+      </div>
+
+      <div class="pt-1">
+        @if (activeSettingsTab() === 'country') {
+        <div class="space-y-2">
+          <div class="relative">
+            <svg
+              lucideSearch
+              size="15"
+              class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#777c7b]"
+            ></svg>
+            <!-- Font 16px empêche le zoom automatique iOS -->
+            <input
+              type="search"
+              placeholder="Chercher un pays..."
+              class="h-9 w-full rounded-xl border border-[#d7dada] bg-white pl-9 pr-3 text-[16px] outline-none focus:border-[#009f88]"
+              [value]="countryQuery()"
+              (input)="updateCountryQuery($event)"
+            />
+          </div>
+          <div class="max-h-[160px] space-y-1 overflow-y-auto pr-1">
+            @for (country of filteredCountries(); track country.code) {
+            <button
+              type="button"
+              class="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-white"
+              (click)="selectCountry(country)"
+            >
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="flex h-5 w-7 shrink-0 items-center justify-center overflow-hidden rounded ring-1 ring-black/10"
+                >
+                  <img
+                    [src]="'/assets/flags/' + country.code.toLowerCase() + '.svg'"
+                    alt=""
+                    class="h-full w-full object-cover"
+                  />
+                </span>
+                <span class="truncate text-[12px] font-bold text-[#242727]"
+                  >{{ country.name }}</span
+                >
+              </div>
+              @if (selectedCountry().code === country.code) {
+              <svg lucideCheck size="14" class="text-[#009f88]"></svg>
+              }
+            </button>
+            }
+          </div>
+        </div>
+        } @if (activeSettingsTab() === 'language') {
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          @for (language of languages; track language.code) {
+          <button
+            type="button"
+            class="flex h-10 items-center justify-center gap-1.5 rounded-xl border text-[12px] font-bold transition-all"
+            [class.border-[#009f88]]="selectedLanguage() === language.code"
+            [class.bg-white]="selectedLanguage() === language.code"
+            [class.text-[#087d6d]]="selectedLanguage() === language.code"
+            [class.border-transparent]="selectedLanguage() !== language.code"
+            [class.text-[#697270]]="selectedLanguage() !== language.code"
+            (click)="selectLanguage(language.code)"
+          >
+            {{ language.name }} @if (selectedLanguage() === language.code) {
+            <svg lucideCheck size="13"></svg>
+            }
+          </button>
+          }
+        </div>
+        } @if (activeSettingsTab() === 'currency') {
+        <div class="space-y-2">
+          <div class="relative">
+            <svg
+              lucideSearch
+              size="15"
+              class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#777c7b]"
+            ></svg>
+            <!-- Font 16px empêche le zoom automatique iOS -->
+            <input
+              type="search"
+              placeholder="Chercher une devise..."
+              class="h-9 w-full rounded-xl border border-[#d7dada] bg-white pl-9 pr-3 text-[16px] outline-none focus:border-[#009f88]"
+              [value]="currencyQuery()"
+              (input)="updateCurrencyQuery($event)"
+            />
+          </div>
+          <div class="max-h-[160px] space-y-1 overflow-y-auto pr-1">
+            @for (currency of filteredCurrencies(); track currency.code) {
+            <button
+              type="button"
+              class="flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-white"
+              (click)="selectCurrency(currency)"
+            >
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="flex h-6 min-w-6 items-center justify-center rounded bg-[#eef3f2] px-1 text-[11px] font-bold text-[#354744]"
+                  >{{ currency.symbol }}</span
+                >
+                <span class="truncate text-[12px] font-bold text-[#242727]"
+                  >{{ currency.name }} ({{ currency.code }})</span
+                >
+              </div>
+              @if (selectedCurrency().code === currency.code) {
+              <svg lucideCheck size="14" class="text-[#009f88]"></svg>
+              }
+            </button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="mt-auto border-t border-[#f0f0f0] pt-4 pb-[env(safe-area-inset-bottom)]"
+  >
+    <a
+      href="#download"
+      class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#009f88] py-3.5 text-[13px] font-bold text-white shadow-sm transition-colors active:bg-[#008d79]"
+      (click)="toggleMobileMenu()"
+    >
+      <svg lucideQrCode size="20"></svg>
+      <span>Télécharger l'application</span>
+    </a>
+  </div>
+</aside>
+}

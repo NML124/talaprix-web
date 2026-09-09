@@ -6,7 +6,17 @@
   "sourceRoot": "apps/web/src",
   "tags": ["scope:app", "type:app", "platform:web"],
   "targets": {
+    "env": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/apps/web/src/environments/runtime-config.generated.ts"
+      ],
+      "options": {
+        "command": "node tools/scripts/write-runtime-config.mjs"
+      }
+    },
     "build": {
+      "dependsOn": ["env"],
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -56,11 +66,14 @@
         "development": {
           "optimization": false,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "ssr": false,
+          "outputMode": "static"
         }
       }
     },
     "serve": {
+      "dependsOn": ["env"],
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
