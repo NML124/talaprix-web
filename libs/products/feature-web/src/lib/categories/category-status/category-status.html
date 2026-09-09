@@ -1,0 +1,36 @@
+@if (status() === 'loading' || status() === 'idle') {
+<section class="mt-8">
+  <div class="h-7 w-48 animate-pulse rounded-lg bg-[#e9efed]"></div>
+  <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    @for (item of [1,2,3,4,5,6]; track item) {
+    <div class="h-[190px] animate-pulse rounded-[14px] bg-[#e9efed]"></div>
+    }
+  </div>
+</section>
+} @else if (status() === 'error') {
+<section
+  class="mt-8 rounded-[16px] border border-red-500/20 bg-red-50 px-5 py-8 text-center"
+  role="alert"
+>
+  <p class="text-sm font-medium text-red-800">{{ error() }}</p>
+  <button
+    type="button"
+    (click)="retry.emit()"
+    class="mt-4 rounded-full bg-red-600 px-5 py-2.5 text-xs font-bold text-white"
+  >
+    Réessayer
+  </button>
+</section>
+} @else if (status() === 'empty') {
+<section
+  class="mt-8 rounded-[16px] border border-[#e1e8e6] bg-white px-5 py-14 text-center"
+>
+  <img
+    src="/assets/images/logo_app.png"
+    alt=""
+    class="mx-auto h-14 w-14 object-contain opacity-60"
+  />
+  <h2 class="mt-4 text-lg font-black">Aucune catégorie disponible</h2>
+  <p class="mt-2 text-sm text-[#6e7a77]">Revenez un peu plus tard.</p>
+</section>
+}

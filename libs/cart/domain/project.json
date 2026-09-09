@@ -1,0 +1,7 @@
+{
+  "name": "cart-domain",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/cart/domain/src",
+  "projectType": "library",
+  "tags": ["scope:cart", "type:domain", "platform:shared"]
+}

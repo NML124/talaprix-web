@@ -1,0 +1,7 @@
+{
+  "name": "shops-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shops/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:shops", "type:data-access", "platform:shared"]
+}

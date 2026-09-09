@@ -5,16 +5,27 @@
         Explorez
       </p>
       <h2
-        class="mt-2 text-xl font-black tracking-tight text-slate-900 sm:text-3xl"
+        class="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:hidden"
+      >
+        <span class="block">Qu'est-ce que vous</span>
+        <span class="flex items-baseline justify-between gap-3"
+          >cherchez ?<a
+            routerLink="/categories"
+            class="text-sm font-bold text-[#008674]"
+            >Voir tout →</a
+          ></span
+        >
+      </h2>
+      <h2
+        class="mt-2 hidden text-3xl font-black tracking-tight text-slate-900 sm:block"
       >
         Qu'est-ce que vous cherchez ?
       </h2>
     </div>
     <a
       routerLink="/categories"
-      class="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-[#008674]"
-      ><span class="sm:hidden">Voir tout →</span
-      ><span class="hidden sm:inline">Toutes les catégories →</span></a
+      class="hidden shrink-0 items-center gap-1 text-sm font-bold text-[#008674] sm:inline-flex"
+      >Toutes les catégories →</a
     >
   </div>
   <div

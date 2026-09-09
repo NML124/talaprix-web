@@ -1,0 +1,18 @@
+<div
+  class="flex flex-wrap items-center justify-between gap-3 rounded-[18px] bg-white px-4 py-3"
+>
+  <p class="text-sm text-[#687572]">
+    <strong class="text-[#172522]">{{ count() }}</strong> produits trouvés
+  </p>
+  <label class="flex items-center gap-2 text-[12px] font-semibold"
+    >Trier par
+    <select
+      [value]="sort()"
+      (change)="updateSort($event)"
+      class="rounded-lg border border-[#dfe7e5] bg-white px-3 py-2 text-[12px] font-normal outline-none focus:border-[#009788]"
+    >
+      <option value="relevance">Pertinence</option>
+      <option value="price">Prix croissant</option>
+    </select>
+  </label>
+</div>

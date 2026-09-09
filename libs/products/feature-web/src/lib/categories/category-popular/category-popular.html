@@ -1,0 +1,45 @@
+<section class="mt-8 sm:mt-10">
+  <div>
+    <div>
+      <h2 class="text-[23px] font-black tracking-tight sm:text-[27px]">
+        Univers populaires
+      </h2>
+      <p class="mt-1.5 text-[12px] text-[#6b7774]">
+        Accédez rapidement aux principaux univers de TalaPrix.
+      </p>
+    </div>
+  </div>
+  <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    @for (category of categories().slice(0, 6); track category.id) {<a
+      [routerLink]="'/products'"
+      [queryParams]="{ category: category.id }"
+      class="group relative min-h-[180px] overflow-hidden rounded-[14px] border border-[#e1e8e6] bg-[#edf3f1] focus-visible:ring-2 focus-visible:ring-[#009788]"
+      >@if (category.image) {<img
+        [src]="category.image"
+        [alt]="category.name"
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />} @else {<img
+        src="/assets/images/logo_app.png"
+        [alt]="category.name"
+        class="absolute inset-0 h-full w-full bg-[#f2f6f5] p-9 object-contain opacity-50"
+      />}
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
+      ></div>
+      <div class="absolute inset-x-0 bottom-0 p-3.5 text-white">
+        <h3 class="line-clamp-2 text-[13px] font-bold">{{ category.name }}</h3>
+        <p class="mt-1 text-[10px] text-white/75">Explorer →</p>
+      </div></a
+    >}
+  </div>
+  <div
+    class="mt-8 flex gap-2 overflow-x-auto rounded-[14px] border border-[#dce8e5] bg-[#eaf8f5] p-4"
+  >
+    @for (category of categories().slice(0,8); track category.id) {<a
+      [routerLink]="'/products'"
+      [queryParams]="{ category: category.id }"
+      class="shrink-0 rounded-full border border-[#c9e6df] bg-white px-3.5 py-2 text-[11px] text-[#3d504b]"
+      >{{ category.name }}</a
+    >}
+  </div>
+</section>

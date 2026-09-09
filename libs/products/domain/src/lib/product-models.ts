@@ -11,6 +11,11 @@ export interface ProductSummary {
   readonly verified?: boolean;
   readonly merchantName?: string;
   readonly stockStatus?: 'in-stock' | 'limited' | 'unavailable';
+  readonly categoryId?: string;
+  readonly categoryName?: string;
+  readonly brandName?: string;
+  readonly oldPrice?: Money | null;
+  readonly description?: string;
 }
 
 export interface Money {
@@ -25,4 +30,20 @@ export interface PriceOffer {
   readonly price: Money;
   readonly inStock: boolean;
   readonly observedAt: string;
+}
+
+export interface ProductOffer {
+  readonly id: string;
+  readonly shopId: string;
+  readonly shopName: string;
+  readonly shopAddress: string | null;
+  readonly price: Money;
+  readonly oldPrice: Money | null;
+  readonly inStock: boolean;
+  readonly deliveryLabel: string | null;
+}
+
+export interface ProductDetail extends ProductSummary {
+  readonly gallery: readonly string[];
+  readonly offers: readonly ProductOffer[];
 }

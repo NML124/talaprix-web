@@ -11,7 +11,12 @@ import {
 } from '@talaprix/users/data-access';
 import { provideSupabaseConfig } from '@talaprix/shared/data-access';
 import { provideHomeDataAccess } from '@talaprix/home/data-access';
-import { provideCategoriesDataAccess } from '@talaprix/products/data-access';
+import { provideCartDataAccess } from '@talaprix/cart/data-access';
+import { provideShopDataAccess } from '@talaprix/shops/data-access';
+import {
+  provideCategoriesDataAccess,
+  provideProductDataAccess,
+} from '@talaprix/products/data-access';
 import { appRoutes } from './app.routes';
 import {
   provideClientHydration,
@@ -27,6 +32,9 @@ export const appConfig: ApplicationConfig = {
     provideSupabaseConfig(runtimeConfig),
     provideAuthDataAccess(),
     provideCategoriesDataAccess(),
+    provideProductDataAccess(),
+    provideCartDataAccess(),
+    provideShopDataAccess(),
     provideHomeDataAccess(),
     provideAppInitializer(() => inject(AuthSessionStore).initialize()),
   ],

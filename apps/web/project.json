@@ -67,7 +67,9 @@
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true,
+          "server": false,
           "ssr": false,
+          "prerender": false,
           "outputMode": "static"
         }
       }
