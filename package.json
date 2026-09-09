@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nx serve web",
     "start:admin": "nx serve admin --port=4300",
+    "env": "node tools/scripts/write-runtime-config.mjs",
     "build": "nx run-many -t build",
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
@@ -24,6 +25,7 @@
     "@angular/router": "~22.1.0",
     "@angular/ssr": "~22.1.0",
     "@lucide/angular": "^1.41.0",
+    "@supabase/supabase-js": "^2.116.0",
     "countries-list": "^3.4.1",
     "express": "^4.21.2",
     "flag-icons": "^7.5.0",

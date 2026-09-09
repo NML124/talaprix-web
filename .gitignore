@@ -46,6 +46,7 @@ Thumbs.db
 
 .angular
 .env
+apps/web/src/environments/runtime-config.generated.ts
 
 __screenshots__/
 

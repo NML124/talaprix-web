@@ -34,7 +34,8 @@
           Content de vous revoir
         </h1>
         <p class="mt-1.5 text-sm leading-6 text-[#6b7471]">
-          Entrez votre adresse email pour recevoir votre code de vérification (OTP).
+          Entrez votre adresse email pour recevoir votre code de vérification
+          (OTP).
         </p>
       </div>
 
@@ -52,8 +53,7 @@
       >
         {{ info() }}
       </div>
-      }
-
+      } @if (!otpRequested()) {
       <form class="space-y-4" (ngSubmit)="submit()" novalidate>
         <div class="relative">
           <svg
@@ -108,6 +108,47 @@
           >.
         </p>
       </form>
+      } @else {
+      <form class="space-y-4" (ngSubmit)="verifyOtp()" novalidate>
+        <label for="auth-otp-0" class="block text-sm font-bold text-[#38423f]"
+          >Code de vérification</label
+        >
+        <div class="flex justify-between gap-2" (paste)="pasteOtp($event)">
+          @for (digit of otpDigits(); track $index) {
+          <input
+            #otpInput
+            [id]="'auth-otp-' + $index"
+            type="text"
+            inputmode="numeric"
+            [autocomplete]="$index === 0 ? 'one-time-code' : 'off'"
+            maxlength="1"
+            [value]="digit"
+            [attr.aria-label]="'Chiffre ' + ($index + 1) + ' sur 6'"
+            class="h-12 min-w-0 flex-1 rounded-xl border border-[#cfd6d3] bg-white text-center text-lg font-black text-[#1d2422] outline-none transition-colors hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/20 disabled:cursor-wait disabled:bg-[#f4f8f7]"
+            [disabled]="isSubmitting()"
+            (input)="updateOtpDigit($index, $event)"
+            (keydown)="handleOtpKeydown($index, $event)"
+          />
+          }
+        </div>
+        <button
+          type="submit"
+          class="flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#009f88] text-sm font-black text-white transition-colors hover:bg-[#008a76] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+          [disabled]="isSubmitting()"
+        >
+          Vérifier le code
+          <svg lucideArrowRight size="17" aria-hidden="true"></svg>
+        </button>
+        <button
+          type="button"
+          class="w-full text-center text-sm font-bold text-[#087d6d] underline underline-offset-4"
+          (click)="submit()"
+          [disabled]="isSubmitting()"
+        >
+          Renvoyer un code
+        </button>
+      </form>
+      }
 
       <div class="my-5 flex items-center gap-3" aria-hidden="true">
         <span class="h-px flex-1 bg-[#e2e7e5]"></span>
@@ -128,6 +169,14 @@
         />
         Continuer avec Google
       </button>
+      <p class="mt-4 text-center text-sm text-[#6b7471]">
+        Pas encore de compte ?
+        <a
+          href="https://ttk-services.agency/register"
+          class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2"
+          >Créer un compte</a
+        >
+      </p>
     </div>
   </div>
 

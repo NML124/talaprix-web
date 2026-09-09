@@ -1,0 +1,65 @@
+<!-- Mobile Header -->
+<div class="bg-white min-[1100px]:hidden">
+  <div class="flex h-[72px] items-center justify-between px-5">
+    <a href="/" class="flex items-center gap-2">
+      <span class="flex h-12 w-12 items-center justify-center overflow-hidden">
+        <img
+          src="/assets/images/logo_app.png"
+          alt=""
+          class="h-14 w-14 max-w-none scale-[1.35] object-contain"
+        />
+      </span>
+      <span class="text-xl font-bold tracking-[-0.02em] text-[#202020]"
+        >Talaprix</span
+      >
+    </a>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        class="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors active:bg-[#f0f2f2]"
+        aria-label="Panier, 2 articles"
+      >
+        <svg lucideShoppingBasket size="28" class="text-[#202020]"></svg>
+        <span
+          class="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#009f88] px-1 text-[10px] font-extrabold leading-none text-white shadow-sm"
+          >2</span
+        >
+      </button>
+
+      <button
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-full text-[#202020] transition-colors active:bg-[#f0f2f2]"
+        [attr.aria-label]="isMobileMenuOpen() ? 'Fermer le menu' : 'Ouvrir le menu'"
+        [attr.aria-expanded]="isMobileMenuOpen()"
+        (click)="toggleMobileMenu()"
+      >
+        @if (isMobileMenuOpen()) {
+        <svg lucideX size="26"></svg>
+        } @else {
+        <svg lucideMenu size="26"></svg>
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="px-5 pb-3.5">
+    <form class="relative" role="search">
+      <label class="sr-only" for="mobile-search">Rechercher un produit</label>
+      <!-- Font 16px empêche le zoom automatique iOS -->
+      <input
+        id="mobile-search"
+        type="search"
+        placeholder="Que recherchez-vous ?"
+        class="h-10 w-full rounded-full border border-[#b8bcbb] bg-white pl-4 pr-12 text-[16px] outline-none focus:border-[#009f88]"
+      />
+      <button
+        type="submit"
+        class="absolute right-1 top-1 flex h-8 w-10 items-center justify-center rounded-full bg-[#009f88] text-white"
+        aria-label="Rechercher"
+      >
+        <svg lucideSearch size="17"></svg>
+      </button>
+    </form>
+  </div>
+</div>

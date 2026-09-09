@@ -1,0 +1,16 @@
+{
+  "name": "shared-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/data-access/src",
+  "projectType": "library",
+  "tags": ["scope:shared", "type:data-access", "platform:shared"],
+  "targets": {
+    "test": {
+      "outputs": ["{projectRoot}/{options.coverage.reportsDirectory}"],
+      "options": {
+        "coverage.reportsDirectory": "../../../coverage/libs/shared/data-access"
+      }
+    },
+    "lint": {}
+  }
+}

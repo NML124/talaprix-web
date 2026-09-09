@@ -44,6 +44,12 @@
       sans-serif;
   }
 
+  *,
+  ::before,
+  ::after {
+    font-family: inherit;
+  }
+
   button,
   a {
     -webkit-tap-highlight-color: transparent;
