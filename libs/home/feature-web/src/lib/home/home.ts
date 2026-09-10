@@ -3,11 +3,12 @@ import { HomeCategories } from './categories/home-categories';
 import { FooterNewsletter } from './footer/newsletter/footer-newsletter';
 import { HomeHero } from './hero/home-hero';
 import { HomeOffers } from './offers/home-offers';
-import { HomeTrust } from './trust/home-trust';
+import { NearbyProducts } from './nearby-products/nearby-products';
+
 
 @Component({
   selector: 'lib-home',
-  imports: [HomeHero, HomeCategories, HomeOffers, HomeTrust, FooterNewsletter],
+  imports: [HomeHero, HomeCategories, NearbyProducts, HomeOffers, FooterNewsletter],
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

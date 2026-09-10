@@ -1,55 +1,12 @@
 <section id="offers" class="border-y border-slate-200/80 bg-white">
   <div class="mx-auto max-w-7xl space-y-16 px-4 py-16 sm:px-6 lg:px-8">
+    
     <section>
       <div class="flex items-end justify-between gap-4">
         <div>
-          <p
-            class="text-sm font-bold uppercase tracking-[0.16em] text-[#009f88]"
-          >
-            À découvrir
-          </p>
-          <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-900">
-            Proche de chez vous
-          </h2>
-          <p class="mt-2 text-sm text-slate-500">
-            Des offres proposées par nos boutiques partenaires à Kinshasa.
-          </p>
-        </div>
-        <a
-          routerLink="/products"
-          class="hidden shrink-0 text-sm font-bold text-[#008674] sm:inline"
-          >Voir les produits →</a
-        >
-      </div>
-      @if (status() === 'loading' || status() === 'idle') {
-      <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-        @for (item of [1, 2, 3]; track item) {
-        <div class="h-72 animate-pulse rounded-2xl bg-slate-100"></div>
-        }
-      </div>
-      } @else {
-      <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-        @for (product of nearbyProducts(); track product.id) {<tpx-product-card
-          [product]="product"
-          (viewDetails)="openProduct($event)"
-        />}
-      </div>
-      }
-    </section>
-    <section>
-      <div class="flex items-end justify-between gap-4">
-        <div>
-          <p
-            class="text-sm font-bold uppercase tracking-[0.16em] text-[#009f88]"
-          >
-            Catalogue
-          </p>
           <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-900">
             Nouveaux produits
           </h2>
-          <p class="mt-2 text-sm text-slate-500">
-            Comparez les prix avant d’acheter.
-          </p>
         </div>
         <a
           routerLink="/products"

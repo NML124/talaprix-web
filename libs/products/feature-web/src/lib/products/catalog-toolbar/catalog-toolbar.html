@@ -1,18 +1,256 @@
-<div
-  class="flex flex-wrap items-center justify-between gap-3 rounded-[18px] bg-white px-4 py-3"
+<section
+  class="space-y-3 [font-family:'Lato',sans-serif]"
 >
-  <p class="text-sm text-[#687572]">
-    <strong class="text-[#172522]">{{ count() }}</strong> produits trouvés
-  </p>
-  <label class="flex items-center gap-2 text-[12px] font-semibold"
-    >Trier par
-    <select
-      [value]="sort()"
-      (change)="updateSort($event)"
-      class="rounded-lg border border-[#dfe7e5] bg-white px-3 py-2 text-[12px] font-normal outline-none focus:border-[#009788]"
+  <!-- =========================================================
+       APPLIED FILTERS
+  ========================================================== -->
+  <div
+    class="rounded-[18px] border border-[#e3e9e7] bg-white px-4 py-3.5"
+  >
+    <div
+      class="flex flex-wrap items-center justify-between gap-2"
     >
-      <option value="relevance">Pertinence</option>
-      <option value="price">Prix croissant</option>
-    </select>
-  </label>
-</div>
+      <h2
+        class="text-[13px] font-bold text-[#172522]"
+      >
+        Filtres appliqués
+
+        @if (
+          activeFilters().length
+        ) {
+        <span
+          class="ml-1 font-medium text-[#7d8885]"
+        >
+          ({{
+            activeFilters().length
+          }})
+        </span>
+        }
+      </h2>
+
+      <p
+        class="text-[10px] text-[#7d8885] sm:text-[11px]"
+      >
+        {{ count() }}
+        produits trouvés
+      </p>
+    </div>
+
+
+    <div
+      class="mt-3 flex flex-wrap items-center gap-2"
+    >
+      @if (
+        activeFilters().length
+      ) {
+
+      @for (
+        filter of activeFilters();
+        track filter.key
+      ) {
+      <button
+        type="button"
+        (click)="remove(filter.key)"
+        class="group inline-flex h-[32px] items-center gap-2 rounded-full border border-[#d5ebe6] bg-[#eaf8f5] px-3 text-[10px] font-medium text-[#167166] transition hover:border-[#b9ddd5] hover:bg-[#e0f4ef] sm:text-[11px]"
+      >
+        <span
+          class="max-w-[190px] truncate"
+        >
+          {{ filter.label }}
+        </span>
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="h-3.5 w-3.5 shrink-0 transition-transform group-hover:scale-110"
+        >
+          <path
+            d="M18 6 6 18"
+          ></path>
+
+          <path
+            d="m6 6 12 12"
+          ></path>
+        </svg>
+      </button>
+      }
+
+
+      <button
+        type="button"
+        (click)="clear()"
+        class="ml-auto text-[10px] font-semibold text-[#008b7b] underline underline-offset-3 transition hover:text-[#006f64] sm:text-[11px]"
+      >
+        Tout effacer
+      </button>
+
+      } @else {
+
+      <p
+        class="text-[11px] text-[#8a9592]"
+      >
+        Aucun filtre appliqué
+      </p>
+
+      }
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       SORT / VIEW
+  ========================================================== -->
+  <div
+    class="flex flex-wrap items-center justify-between gap-3 px-1"
+  >
+    <p
+      class="text-[12px] text-[#687572] sm:text-[13px]"
+    >
+      <strong
+        class="font-bold text-[#172522]"
+      >
+        {{ count() }}
+      </strong>
+
+      produits trouvés
+    </p>
+
+
+    <div
+      class="ml-auto flex items-center gap-2"
+    >
+      <!-- SORT -->
+      <label
+        class="flex items-center gap-2 text-[11px] font-semibold text-[#5f6c68]"
+      >
+        <span
+          class="hidden sm:inline"
+        >
+          Trier par :
+        </span>
+
+        <div
+          class="relative"
+        >
+          <select
+            [value]="sort()"
+            (change)="updateSort($event)"
+            class="h-[38px] min-w-[145px] appearance-none rounded-[9px] border border-[#dfe7e5] bg-white pl-3 pr-8 text-[11px] font-normal text-[#303d39] outline-none transition focus:border-[#009788] focus:ring-2 focus:ring-[#009788]/10"
+          >
+            <option
+              value="relevance"
+            >
+              Pertinence
+            </option>
+
+            <option
+              value="price"
+            >
+              Prix croissant
+            </option>
+          </select>
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6c7874]"
+          >
+            <path
+              d="m6 9 6 6 6-6"
+            ></path>
+          </svg>
+        </div>
+      </label>
+
+
+      <!-- GRID -->
+      <button
+        type="button"
+        aria-label="Vue grille"
+        (click)="setViewMode('grid')"
+        class="grid h-[38px] w-[38px] place-items-center rounded-[9px] border transition"
+        [class.border-[#009788]]="viewMode() === 'grid'"
+        [class.bg-[#009788]]="viewMode() === 'grid'"
+        [class.text-white]="viewMode() === 'grid'"
+        [class.border-[#e1e6e4]]="viewMode() !== 'grid'"
+        [class.bg-[#f2f4f3]]="viewMode() !== 'grid'"
+        [class.text-[#3f4b47]]="viewMode() !== 'grid'"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="h-4 w-4"
+        >
+          <rect
+            x="3"
+            y="3"
+            width="7"
+            height="7"
+            rx="1"
+          ></rect>
+
+          <rect
+            x="14"
+            y="3"
+            width="7"
+            height="7"
+            rx="1"
+          ></rect>
+
+          <rect
+            x="3"
+            y="14"
+            width="7"
+            height="7"
+            rx="1"
+          ></rect>
+
+          <rect
+            x="14"
+            y="14"
+            width="7"
+            height="7"
+            rx="1"
+          ></rect>
+        </svg>
+      </button>
+
+
+      <!-- LIST -->
+      <button
+        type="button"
+        aria-label="Vue liste"
+        (click)="setViewMode('list')"
+        class="grid h-[38px] w-[38px] place-items-center rounded-[9px] border transition"
+        [class.border-[#009788]]="viewMode() === 'list'"
+        [class.bg-[#009788]]="viewMode() === 'list'"
+        [class.text-white]="viewMode() === 'list'"
+        [class.border-[#e1e6e4]]="viewMode() !== 'list'"
+        [class.bg-[#f2f4f3]]="viewMode() !== 'list'"
+        [class.text-[#3f4b47]]="viewMode() !== 'list'"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="h-[17px] w-[17px]"
+        >
+          <path d="M8 6h13"></path>
+          <path d="M8 12h13"></path>
+          <path d="M8 18h13"></path>
+
+          <path d="M3 6h.01"></path>
+          <path d="M3 12h.01"></path>
+          <path d="M3 18h.01"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>

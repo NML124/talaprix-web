@@ -1,0 +1,446 @@
+<section
+  class="border-y border-slate-200/80 bg-white [font-family:'Lato',sans-serif]"
+>
+  <div
+    class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"
+  >
+    <div
+      class="relative overflow-hidden rounded-[28px] border border-[#e4eee9] bg-gradient-to-br from-[#fbfffc] via-[#f3fff8] to-[#edfbf3]"
+    >
+      <!-- =====================================================
+           DECORATION
+      ====================================================== -->
+      <div
+        class="pointer-events-none absolute -bottom-40 -left-32 h-[420px] w-[420px] rounded-full bg-[#dff7e9]/60 blur-3xl"
+      ></div>
+
+      <div
+        class="pointer-events-none absolute -right-28 -top-32 h-[360px] w-[360px] rounded-full bg-white/80 blur-3xl"
+      ></div>
+
+
+      <!-- =====================================================
+           CONTENT
+      ====================================================== -->
+      <div
+        class="relative grid min-h-[560px] gap-10 px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[0.92fr_1.35fr] lg:items-center lg:gap-12 lg:px-12 lg:py-12 xl:min-h-[590px]"
+      >
+        <!-- ===================================================
+             LEFT SIDE
+        ==================================================== -->
+        <div
+          class="relative z-10 max-w-[560px]"
+        >
+          <!-- TITLE -->
+          <h2
+            class="max-w-[560px] text-[36px] font-black leading-[1.05] tracking-[-0.035em] text-[#101514] sm:text-[44px] lg:text-[48px] xl:text-[52px]"
+          >
+            Trouvez les meilleurs produits
+            <span class="text-[#087967]">
+              autour de vous
+            </span>
+          </h2>
+
+
+          <!-- DESCRIPTION -->
+          <p
+            class="mt-6 max-w-[540px] text-[14px] leading-7 text-[#626e6a] sm:text-[15px]"
+          >
+            Découvrez les offres disponibles près de chez vous, comparez les
+            prix locaux et achetez plus intelligemment auprès des boutiques de
+            votre quartier.
+          </p>
+
+
+          <!-- =================================================
+               BENEFITS
+          ================================================== -->
+          <div
+            class="mt-8 flex flex-wrap items-center gap-x-9 gap-y-5"
+          >
+            <!-- BOUTIQUES -->
+            <div
+              class="flex items-center gap-3"
+            >
+              <span
+                class="grid h-[40px] w-[40px] shrink-0 place-items-center rounded-full bg-[#e5f6ed] text-[#22965b]"
+              >
+                <svg
+                  lucideMapPin
+                  size="20"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                ></svg>
+              </span>
+
+              <p
+                class="text-[11px] font-bold uppercase leading-[16px] tracking-[0.01em] text-[#1f2926] sm:text-[12px]"
+              >
+                Boutiques
+                <span class="block">
+                  proches
+                </span>
+              </p>
+            </div>
+
+
+            <!-- PRIX -->
+            <div
+              class="flex items-center gap-3"
+            >
+              <span
+                class="grid h-[40px] w-[40px] shrink-0 place-items-center rounded-full bg-[#e5f6ed] text-[#22965b]"
+              >
+                <svg
+                  lucideTag
+                  size="20"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                ></svg>
+              </span>
+
+              <p
+                class="text-[11px] font-bold uppercase leading-[16px] tracking-[0.01em] text-[#1f2926] sm:text-[12px]"
+              >
+                Prix
+                <span class="block">
+                  comparés
+                </span>
+              </p>
+            </div>
+          </div>
+
+
+          <!-- =================================================
+               ACTIONS
+          ================================================== -->
+          <div
+            class="mt-9 flex flex-wrap items-center gap-3"
+          >
+            <!-- PRIMARY -->
+            <a
+              routerLink="/products"
+              [queryParams]="{ nearby: true }"
+              class="group inline-flex h-[44px] items-center justify-center gap-2.5 rounded-full bg-[#25964d] px-6 text-[13px] font-bold text-white transition duration-300 hover:bg-[#1f8544] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25964d]/30"
+            >
+              Voir les offres
+
+              <svg
+                lucideArrowRight
+                size="16"
+                class="transition-transform duration-200 group-hover:translate-x-1"
+                aria-hidden="true"
+              ></svg>
+            </a>
+
+
+            <!-- SECONDARY -->
+            <a
+              routerLink="/products"
+              class="inline-flex h-[44px] items-center justify-center rounded-full border border-[#27332f] bg-white/50 px-7 text-[13px] font-bold text-[#202825] transition hover:bg-white"
+            >
+              Explorer
+            </a>
+          </div>
+        </div>
+
+
+        <!-- ===================================================
+             RIGHT SIDE
+        ==================================================== -->
+        <div
+          class="relative min-w-0"
+          (mouseenter)="setPaused(true)"
+          (mouseleave)="setPaused(false)"
+          (focusin)="setPaused(true)"
+          (focusout)="setPaused(false)"
+        >
+          @if (displayedProducts().length) {
+
+          <!-- =================================================
+               PRODUCT PANELS
+          ================================================== -->
+          <div
+            class="relative flex h-[390px] w-full gap-2 sm:h-[430px] sm:gap-3 lg:h-[450px]"
+          >
+            @for (
+              product of displayedProducts();
+              track product.id;
+              let index = $index
+            ) {
+            <button
+              type="button"
+              class="group/panel relative h-full min-w-0 overflow-hidden rounded-[24px] bg-[#d9dfdc] text-left outline-none transition-[flex,transform,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-2 focus-visible:ring-[#009788] sm:block"
+              [class.hidden]="activeIndex() !== index"
+              [class.shadow-[0_18px_45px_rgba(17,38,32,0.16)]]="
+                activeIndex() === index
+              "
+              [style.flex]="
+                activeIndex() === index
+                  ? '5 1 0%'
+                  : '0 0 55px'
+              "
+              [attr.aria-label]="'Afficher ' + product.name"
+              [attr.aria-pressed]="activeIndex() === index"
+              (click)="selectProduct(index)"
+            >
+              <!-- =============================================
+                   COVER
+              ============================================== -->
+              @if (product.coverUrl) {
+              <img
+                [src]="product.coverUrl"
+                [alt]="product.name"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover/panel:scale-[1.025]"
+              />
+              } @else {
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-[#e4e0d8] via-[#d8d4cc] to-[#bdb9b1]"
+              ></div>
+
+              <img
+                [src]="product.imageUrl"
+                [alt]="product.name"
+                class="absolute inset-0 h-full w-full object-contain p-10 transition-transform duration-1000 group-hover/panel:scale-[1.035]"
+              />
+              }
+
+
+              <!-- =============================================
+                   OVERLAY
+              ============================================== -->
+              <div
+                class="absolute inset-0 transition duration-500"
+                [class.bg-black/10]="activeIndex() !== index"
+                [class.bg-gradient-to-t]="activeIndex() === index"
+                [class.from-black/80]="activeIndex() === index"
+                [class.via-black/10]="activeIndex() === index"
+                [class.to-black/5]="activeIndex() === index"
+              ></div>
+
+
+              <!-- =============================================
+                   ACTIVE CONTENT
+              ============================================== -->
+              @if (activeIndex() === index) {
+
+              <!-- DISTANCE -->
+              <div
+                class="absolute right-4 top-4 inline-flex h-[36px] items-center gap-2 rounded-full bg-[#102922]/90 px-3.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-md sm:right-5 sm:top-5"
+              >
+                <svg
+                  lucideMapPin
+                  size="14"
+                  aria-hidden="true"
+                ></svg>
+
+                {{ product.distanceLabel }}
+              </div>
+
+
+              <!-- PRICE -->
+              @if (product.price; as price) {
+              <div
+                class="absolute right-4 top-[42%] hidden min-w-[100px] rounded-[14px] border border-white/40 bg-white/95 p-3 text-center shadow-[0_12px_30px_rgba(0,0,0,0.12)] backdrop-blur-md md:block"
+              >
+                <span
+                  class="inline-flex rounded-full bg-[#2a9049] px-2.5 py-1 text-[9px] font-bold text-white"
+                >
+                  Bon prix
+                </span>
+
+                <p
+                  class="mt-2 whitespace-nowrap text-[18px] font-black tracking-[-0.03em] text-[#141917]"
+                >
+                  {{ formatPrice(price.amount, price.currency) }}
+                </p>
+              </div>
+              }
+
+
+              <!-- BOTTOM CONTENT -->
+              <div
+                class="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6"
+              >
+                <div
+                  class="flex items-end gap-3"
+                >
+                  <span
+                    class="grid h-[44px] w-[44px] shrink-0 place-items-center rounded-[13px] bg-black/45 text-white backdrop-blur-md"
+                  >
+                    <svg
+                      lucideShoppingBag
+                      size="20"
+                      aria-hidden="true"
+                    ></svg>
+                  </span>
+
+                  <div
+                    class="min-w-0"
+                  >
+                    <p
+                      class="truncate text-[17px] font-black leading-tight sm:text-[20px]"
+                    >
+                      {{ product.name }}
+                    </p>
+
+                    <p
+                      class="mt-1 truncate text-[11px] text-white/75 sm:text-[12px]"
+                    >
+                      {{ product.shopName }}
+                    </p>
+                  </div>
+                </div>
+
+
+                <div
+                  class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-white/80 sm:text-[11px]"
+                >
+                  <span
+                    class="inline-flex items-center gap-1.5"
+                  >
+                    <svg
+                      lucideMapPin
+                      size="13"
+                      aria-hidden="true"
+                    ></svg>
+
+                    {{ product.area }}
+                  </span>
+
+                  @if (product.distanceLabel) {
+                  <span
+                    class="text-white/35"
+                  >
+                    •
+                  </span>
+
+                  <span>
+                    {{ product.distanceLabel }}
+                  </span>
+                  }
+                </div>
+              </div>
+
+              }
+            </button>
+            }
+          </div>
+
+
+          <!-- =================================================
+               MOBILE NAVIGATION
+          ================================================== -->
+          <div
+            class="mt-4 flex items-center justify-between sm:hidden"
+          >
+            <button
+              type="button"
+              class="grid h-9 w-9 place-items-center rounded-full border border-[#dce5e1] bg-white text-[#26322f]"
+              aria-label="Produit précédent"
+              (click)="previousProduct()"
+            >
+              <svg
+                lucideChevronLeft
+                size="17"
+                aria-hidden="true"
+              ></svg>
+            </button>
+
+
+            <div
+              class="flex items-center gap-1.5"
+            >
+              @for (
+                product of displayedProducts();
+                track product.id;
+                let index = $index
+              ) {
+              <button
+                type="button"
+                class="h-[5px] rounded-full transition-all duration-300"
+                [class.w-6]="activeIndex() === index"
+                [class.bg-[#249653]]="activeIndex() === index"
+                [class.w-[5px]]="activeIndex() !== index"
+                [class.bg-[#cbd7d2]]="activeIndex() !== index"
+                [attr.aria-label]="'Afficher le produit ' + (index + 1)"
+                (click)="selectProduct(index)"
+              ></button>
+              }
+            </div>
+
+
+            <button
+              type="button"
+              class="grid h-9 w-9 place-items-center rounded-full border border-[#dce5e1] bg-white text-[#26322f]"
+              aria-label="Produit suivant"
+              (click)="nextProduct()"
+            >
+              <svg
+                lucideChevronRight
+                size="17"
+                aria-hidden="true"
+              ></svg>
+            </button>
+          </div>
+
+
+          <!-- =================================================
+               DESKTOP PROGRESS
+          ================================================== -->
+          <div
+            class="mt-5 hidden items-center justify-center gap-1.5 sm:flex"
+          >
+            @for (
+              product of displayedProducts();
+              track product.id;
+              let index = $index
+            ) {
+            <button
+              type="button"
+              class="h-[5px] rounded-full transition-all duration-300"
+              [class.w-7]="activeIndex() === index"
+              [class.bg-[#25964d]]="activeIndex() === index"
+              [class.w-[6px]]="activeIndex() !== index"
+              [class.bg-[#d5e2dd]]="activeIndex() !== index"
+              [attr.aria-label]="'Afficher ' + product.name"
+              (click)="selectProduct(index)"
+            ></button>
+            }
+          </div>
+
+          } @else {
+
+          <!-- =================================================
+               EMPTY
+          ================================================== -->
+          <div
+            class="flex h-[430px] items-center justify-center rounded-[24px] border border-dashed border-[#cedbd5] bg-white/50 p-6 text-center"
+          >
+            <div>
+              <svg
+                lucideMapPin
+                size="28"
+                class="mx-auto text-[#25964d]"
+              ></svg>
+
+              <p
+                class="mt-3 text-[14px] font-bold text-[#27312e]"
+              >
+                Aucun produit proche pour le moment
+              </p>
+
+              <p
+                class="mt-1 text-[12px] text-[#7a8582]"
+              >
+                Les produits disponibles près de vous apparaîtront ici.
+              </p>
+            </div>
+          </div>
+
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
