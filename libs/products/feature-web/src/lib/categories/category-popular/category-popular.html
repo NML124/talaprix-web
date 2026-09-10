@@ -4,9 +4,6 @@
       <h2 class="text-[23px] font-black tracking-tight sm:text-[27px]">
         Univers populaires
       </h2>
-      <p class="mt-1.5 text-[12px] text-[#6b7774]">
-        Accédez rapidement aux principaux univers de TalaPrix.
-      </p>
     </div>
   </div>
   <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -30,16 +27,6 @@
         <h3 class="line-clamp-2 text-[13px] font-bold">{{ category.name }}</h3>
         <p class="mt-1 text-[10px] text-white/75">Explorer →</p>
       </div></a
-    >}
-  </div>
-  <div
-    class="mt-8 flex gap-2 overflow-x-auto rounded-[14px] border border-[#dce8e5] bg-[#eaf8f5] p-4"
-  >
-    @for (category of categories().slice(0,8); track category.id) {<a
-      [routerLink]="'/products'"
-      [queryParams]="{ category: category.id }"
-      class="shrink-0 rounded-full border border-[#c9e6df] bg-white px-3.5 py-2 text-[11px] text-[#3d504b]"
-      >{{ category.name }}</a
     >}
   </div>
 </section>

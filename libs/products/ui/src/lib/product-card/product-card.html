@@ -1,5 +1,5 @@
 <article
-  class="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-[18px] border border-[#e3e8e6] bg-white transition hover:border-[#c9d9d5] hover:shadow-[0_6px_22px_rgba(21,45,40,0.07)]"
+  class="group flex h-full w-full max-w-[315px] cursor-pointer flex-col overflow-hidden rounded-[24px] border border-[#e7ebea] bg-white p-1 text-left [font-family:'Lato',sans-serif] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-[#d6dfdc] hover:shadow-[0_10px_28px_rgba(19,38,35,0.07)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009788] motion-reduce:transform-none motion-reduce:transition-none"
   tabindex="0"
   role="button"
   [attr.aria-label]="'Voir les offres de ' + product().name"
@@ -8,14 +8,14 @@
   (keydown.space)="open()"
 >
   <figure
-    class="relative flex aspect-[1.12] items-center justify-center overflow-hidden bg-white"
+    class="relative flex aspect-[1.08] w-full shrink-0 items-center justify-center overflow-hidden rounded-[20px] bg-[#d9d9d9]"
   >
     @if (product().imageUrl; as imageUrl) {
     <img
       [src]="imageUrl"
       [alt]="product().name"
       loading="lazy"
-      class="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-[1.03]"
+      class="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-[1.04] sm:p-6 motion-reduce:transition-none"
     />
     } @else {
     <img
@@ -24,54 +24,75 @@
       aria-hidden="true"
       class="h-20 w-20 object-contain opacity-40"
     />
-    } @if (discount(); as discount) {
+    } @if (product().verified) {
     <span
-      class="absolute left-2.5 top-2.5 rounded-lg bg-[#f11f2f] px-2 py-1 text-[10px] font-bold text-white"
-      >-{{ discount }}%</span
+      class="absolute right-3 top-3 inline-flex h-8 items-center gap-1.5 rounded-full bg-white/95 px-3 text-[11px] font-bold text-[#263330] shadow-[0_2px_8px_rgba(0,0,0,0.05)] backdrop-blur-sm"
     >
+      <span
+        class="grid h-[18px] w-[18px] place-items-center rounded-full bg-[#009788] text-white"
+      >
+        <svg lucideCheck size="12" strokeWidth="3" aria-hidden="true"></svg>
+      </span>
+      Vérifié
+    </span>
     }
-    <button
-      type="button"
-      aria-label="Ajouter aux favoris"
-      (click)="keepCardActionLocal($event)"
-      class="absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-white/95 text-[#6b7774] transition hover:text-[#009788]"
-    >
-      <span aria-hidden="true" class="text-lg leading-none">♡</span>
-    </button>
   </figure>
-  <div class="flex flex-1 flex-col px-3.5 pb-3.5 pt-2.5">
+  <div class="flex flex-1 flex-col px-3.5 pb-3.5 pt-4 sm:px-4 sm:pb-4">
     <h2
-      class="line-clamp-2 min-h-[38px] text-[13px] font-bold leading-[19px] text-[#202825] sm:text-[14px]"
+      class="line-clamp-2 text-[17px] font-bold leading-[1.25] tracking-[-0.01em] text-[#172522] sm:text-[18px]"
     >
       {{ product().name }}
     </h2>
-    @if (product().description) {
-    <p class="mt-0.5 line-clamp-1 text-[11px] text-[#77817f]">
-      {{ product().description }}
-    </p>
-    } @if (product().lowestPrice; as price) {
-    <div class="mt-2 flex flex-wrap items-end gap-x-2 gap-y-1">
-      <p class="text-[15px] font-black text-[#008d7d]">
-        {{ formatPrice(price.amount, price.currency) }}
-      </p>
-      @if (product().oldPrice; as oldPrice) {
-      <p class="text-[11px] text-[#9ba3a1] line-through">
-        {{ formatPrice(oldPrice.amount, oldPrice.currency) }}
-      </p>
-      }
-    </div>
-    }
-    <p class="mt-2 truncate text-[11px] text-[#384542]">
-      {{ product().merchantName ?? 'Marchand partenaire' }}
-    </p>
-    <div class="mt-auto pt-3">
-      <button
-        type="button"
-        (click)="open($event)"
-        class="flex h-[38px] w-full items-center justify-center rounded-[9px] bg-[#009788] px-3 text-[12px] font-semibold text-white transition hover:bg-[#008477]"
+
+    <div class="mt-4 flex items-center gap-3">
+      <span
+        class="grid h-[42px] w-[42px] shrink-0 place-items-center rounded-full bg-[#102522] text-white"
       >
-        Voir l'offre <span aria-hidden="true" class="ml-2">→</span>
-      </button>
+        <svg lucideStore size="19" aria-hidden="true"></svg>
+      </span>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-[13px] font-bold text-[#202a27] sm:text-[14px]">
+          {{ product().merchantName ?? 'Marchand partenaire' }}
+        </p>
+        <p class="mt-0.5 text-[10px] text-[#8a9491] sm:text-[11px]">
+          Fournisseur
+        </p>
+      </div>
+      <svg
+        lucideChevronRight
+        size="18"
+        class="shrink-0 text-[#7b8683] transition-transform duration-200 group-hover:translate-x-0.5"
+        aria-hidden="true"
+      ></svg>
+    </div>
+
+    <div class="my-4 h-px w-full bg-[#e6eae9]"></div>
+
+    <div class="mt-auto flex items-end justify-between gap-3">
+      <div class="flex min-w-0 items-center gap-2 pb-0.5">
+        <span
+          class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#e7f7f3] text-[#009788]"
+        >
+          <svg lucideMapPin size="16" aria-hidden="true"></svg>
+        </span>
+        <p
+          class="line-clamp-2 text-[10px] leading-[14px] text-[#707c79] sm:text-[11px]"
+        >
+          Près de chez vous
+        </p>
+      </div>
+      @if (product().lowestPrice; as price) {
+      <div class="shrink-0 text-right">
+        <p class="text-[10px] leading-none text-[#7f8a87] sm:text-[11px]">
+          à partir de
+        </p>
+        <p
+          class="mt-1 whitespace-nowrap text-[17px] font-black leading-none tracking-[-0.02em] text-[#009788] sm:text-[19px]"
+        >
+          {{ formatPrice(price.amount, price.currency) }}
+        </p>
+      </div>
+      }
     </div>
   </div>
 </article>

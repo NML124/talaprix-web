@@ -1,0 +1,206 @@
+[
+  {
+    "id": "high-tech",
+    "name": "High-Tech",
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Smartphones",
+      "Téléphones",
+      "Ordinateurs",
+      "Tablettes",
+      "Télévisions",
+      "Casques audio",
+      "Montres connectées",
+      "Accessoires mobiles",
+      "Consoles de jeux",
+      "Appareils photo"
+    ]
+  },
+  {
+    "id": "informatique",
+    "name": "Informatique & bureau",
+    "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Ordinateurs portables",
+      "Ordinateurs de bureau",
+      "Imprimantes",
+      "Écrans",
+      "Claviers",
+      "Souris",
+      "Disques de stockage",
+      "Réseau & Wi-Fi",
+      "Logiciels",
+      "Fournitures de bureau"
+    ]
+  },
+  {
+    "id": "maison",
+    "name": "Maison & décoration",
+    "image": "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Salon",
+      "Chambre",
+      "Cuisine",
+      "Salle de bain",
+      "Rangement",
+      "Luminaires",
+      "Rideaux",
+      "Tapis",
+      "Décoration murale",
+      "Literie"
+    ]
+  },
+  {
+    "id": "electromenager",
+    "name": "Électroménager",
+    "image": "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Réfrigérateurs",
+      "Cuisinières",
+      "Micro-ondes",
+      "Machines à laver",
+      "Climatiseurs",
+      "Ventilateurs",
+      "Aspirateurs",
+      "Mixeurs",
+      "Fers à repasser",
+      "Petit électroménager"
+    ]
+  },
+  {
+    "id": "mode",
+    "name": "Mode & beauté",
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Vêtements femme",
+      "Vêtements homme",
+      "Chaussures",
+      "Sacs",
+      "Montres",
+      "Bijoux",
+      "Maquillage",
+      "Soins du visage",
+      "Parfums",
+      "Coiffure"
+    ]
+  },
+  {
+    "id": "alimentation",
+    "name": "Alimentation",
+    "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Fruits et légumes",
+      "Produits laitiers",
+      "Viandes et poissons",
+      "Boissons",
+      "Céréales",
+      "Huiles et matières grasses",
+      "Épicerie",
+      "Boulangerie",
+      "Surgelés",
+      "Produits pour bébé"
+    ]
+  },
+  {
+    "id": "jardin",
+    "name": "Jardin & bricolage",
+    "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Mobilier de jardin",
+      "Outils de jardin",
+      "Tondeuses",
+      "Barbecue",
+      "Éclairage extérieur",
+      "Peinture",
+      "Quincaillerie",
+      "Plomberie",
+      "Sécurité maison",
+      "Matériaux de construction"
+    ]
+  },
+  {
+    "id": "auto",
+    "name": "Auto & moto",
+    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Pièces automobiles",
+      "Pneus",
+      "Batteries",
+      "Huiles moteur",
+      "Accessoires auto",
+      "Casques moto",
+      "Équipements moto",
+      "Entretien automobile",
+      "Audio auto",
+      "Navigation GPS"
+    ]
+  },
+  {
+    "id": "enfants",
+    "name": "Bébé & enfants",
+    "image": "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Poussettes",
+      "Vêtements bébé",
+      "Jouets",
+      "Jeux éducatifs",
+      "Fournitures scolaires",
+      "Mobilier enfant",
+      "Couches",
+      "Alimentation bébé",
+      "Sécurité enfant",
+      "Sport enfant"
+    ]
+  },
+  {
+    "id": "sport",
+    "name": "Sport & loisirs",
+    "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Fitness",
+      "Football",
+      "Basketball",
+      "Vélos",
+      "Camping",
+      "Pêche",
+      "Instruments de musique",
+      "Livres",
+      "Films & séries",
+      "Jeux de société"
+    ]
+  },
+  {
+    "id": "sante",
+    "name": "Santé & bien-être",
+    "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Pharmacie",
+      "Vitamines",
+      "Hygiène",
+      "Soins capillaires",
+      "Matériel médical",
+      "Lunettes",
+      "Massage",
+      "Produits bio",
+      "Soins du corps",
+      "Protection solaire"
+    ]
+  },
+  {
+    "id": "pro",
+    "name": "Professionnels",
+    "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=720&q=80",
+    "items": [
+      "Matériel de chantier",
+      "Matériel de restaurant",
+      "Équipements de sécurité",
+      "Machines industrielles",
+      "Équipements de magasin",
+      "Emballage",
+      "Fournitures d'entreprise",
+      "Énergie solaire",
+      "Générateurs",
+      "Téléphonie professionnelle"
+    ]
+  }
+]

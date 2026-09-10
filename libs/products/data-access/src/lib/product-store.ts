@@ -21,6 +21,8 @@ export class ProductStore {
   readonly newest = computed(() => this.#items().slice(0, 6));
 
   async load(): Promise<void> {
+    if (this.#status() === 'loading' || this.#status() === 'success') return;
+
     this.#status.set('loading');
     this.#error.set('');
     // TODO(api): remplacer cette source par get-search-products / get-products.

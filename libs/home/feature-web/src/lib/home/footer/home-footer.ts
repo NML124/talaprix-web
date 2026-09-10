@@ -3,18 +3,11 @@ import { FooterBottom } from './bottom/footer-bottom';
 import { FooterBrand } from './brand/footer-brand';
 import { FooterDownload } from './download/footer-download';
 import { FooterLink, FooterLinks } from './links/footer-links';
-import { FooterNewsletter } from './newsletter/footer-newsletter';
 
 @Component({
   selector: 'lib-home-footer',
   templateUrl: './home-footer.html',
-  imports: [
-    FooterNewsletter,
-    FooterBrand,
-    FooterLinks,
-    FooterDownload,
-    FooterBottom,
-  ],
+  imports: [FooterBrand, FooterLinks, FooterDownload, FooterBottom],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeFooter {
