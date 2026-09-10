@@ -1,0 +1,42 @@
+<aside
+  class="self-start rounded-[18px] border border-[#e3e9e7] bg-white lg:sticky lg:top-24"
+>
+  <header
+    class="flex items-center justify-between border-b border-[#edf0ef] px-4 py-4"
+  >
+    <h2 class="flex items-center gap-2 text-[15px] font-bold">
+      <svg lucideSlidersHorizontal size="17" class="text-[#009788]"></svg
+      >Filtres
+    </h2>
+    <button
+      type="button"
+      (click)="select(null)"
+      class="text-[11px] font-semibold text-[#008b7b] hover:underline"
+    >
+      Réinitialiser
+    </button>
+  </header>
+  <section class="px-4 py-4">
+    <h3 class="text-[13px] font-bold">Catégories</h3>
+    <div class="mt-3 space-y-2">
+      <button
+        type="button"
+        (click)="select(null)"
+        class="block text-left text-[12px]"
+        [class.font-bold]="selectedCategory() === null"
+        [class.text-[#009788]]="selectedCategory() === null"
+      >
+        Toutes les catégories
+      </button>
+      @for (category of categories(); track category) {<button
+        type="button"
+        (click)="select(category)"
+        class="block text-left text-[12px] text-[#4d5a57] transition hover:text-[#009788]"
+        [class.font-bold]="selectedCategory() === category"
+        [class.text-[#009788]]="selectedCategory() === category"
+      >
+        {{ category }}</button
+      >}
+    </div>
+  </section>
+</aside>

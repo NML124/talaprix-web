@@ -10,6 +10,7 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "preserve",
+    "resolveJsonModule": true,
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -43,6 +44,14 @@
       "@talaprix/products/feature-admin": [
         "./libs/products/feature-admin/src/index.ts"
       ],
+      "@talaprix/cart": ["./libs/cart/src/index.ts"],
+      "@talaprix/cart/domain": ["./libs/cart/domain/src/index.ts"],
+      "@talaprix/cart/data-access": ["./libs/cart/data-access/src/index.ts"],
+      "@talaprix/cart/feature-web": ["./libs/cart/feature-web/src/index.ts"],
+      "@talaprix/shops": ["./libs/shops/src/index.ts"],
+      "@talaprix/shops/domain": ["./libs/shops/domain/src/index.ts"],
+      "@talaprix/shops/data-access": ["./libs/shops/data-access/src/index.ts"],
+      "@talaprix/shops/feature-web": ["./libs/shops/feature-web/src/index.ts"],
       "@talaprix/users/domain": ["./libs/users/domain/src/index.ts"],
       "@talaprix/users/data-access": ["./libs/users/data-access/src/index.ts"],
       "@talaprix/users/feature-auth": [

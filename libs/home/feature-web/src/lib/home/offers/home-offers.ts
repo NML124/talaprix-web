@@ -1,17 +1,32 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LucideArrowRight, LucideHeart, LucideStar } from '@lucide/angular';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { ProductStore } from '@talaprix/products/data-access';
+import type { ProductSummary } from '@talaprix/products/domain';
+import { ProductCard } from '@talaprix/products/ui';
 
 @Component({
   selector: 'lib-home-offers',
-  imports: [LucideArrowRight, LucideHeart, LucideStar],
+  imports: [RouterLink, ProductCard],
   templateUrl: './home-offers.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeOffers {
-  protected readonly products = [
-    'Apple iPhone 15 128 Go',
-    'Casque Sony WH-1000XM5',
-    'Machine à café automatique',
-    'Nike Air Max 270',
-  ];
+  readonly #store = inject(ProductStore);
+  readonly #router = inject(Router);
+  protected readonly products = this.#store.newest;
+  protected readonly nearbyProducts = computed(() =>
+    this.products().slice(0, 3),
+  );
+  protected readonly status = this.#store.status;
+  readonly loadAfterRender = afterNextRender(() => void this.#store.load());
+
+  protected openProduct(product: ProductSummary): void {
+    void this.#router.navigate(['/products', product.id]);
+  }
 }

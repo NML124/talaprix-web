@@ -1,0 +1,47 @@
+<div class="flex min-w-0 flex-col">
+  <p class="text-[13px] font-black uppercase tracking-[.12em] text-[#008674]">
+    {{ product().brandName ?? 'Talaprix' }}
+  </p>
+  <h1
+    class="mt-2 text-[28px] font-black leading-[1.08] tracking-tight sm:text-[36px]"
+  >
+    {{ product().name }}
+  </h1>
+  <div class="mt-3 flex flex-wrap gap-3 text-[12px] text-[#5e6a67]">
+    <span class="text-[#ffb400]">★★★★★</span
+    ><span class="font-semibold text-[#008674]">Produit comparé</span
+    ><span>{{ product().offerCount }} offres</span>
+  </div>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <span
+      class="rounded-md bg-[#e3f5f1] px-3 py-1.5 text-[11px] font-bold text-[#007f70]"
+      >Comparé par Talaprix</span
+    ><span
+      class="rounded-md bg-[#e9f7ee] px-3 py-1.5 text-[11px] font-bold text-[#18894b]"
+      >Offres vérifiées</span
+    >
+  </div>
+  <p class="mt-4 text-[14px] leading-6 text-[#596764]">
+    {{ product().description }}
+  </p>
+  <dl
+    class="mt-5 grid grid-cols-2 gap-3 border-y border-[#e6ecea] py-4 text-[11px] sm:grid-cols-4"
+  >
+    <div>
+      <dt class="font-bold">{{ product().offerCount }} offres</dt>
+      <dd class="text-[#687572]">Comparées</dd>
+    </div>
+    <div>
+      <dt class="font-bold">Boutiques</dt>
+      <dd class="text-[#687572]">Partenaires</dd>
+    </div>
+    <div>
+      <dt class="font-bold">Kinshasa</dt>
+      <dd class="text-[#687572]">Prix locaux</dd>
+    </div>
+    <div>
+      <dt class="font-bold">Comparaison</dt>
+      <dd class="text-[#687572]">Transparente</dd>
+    </div>
+  </dl>
+</div>

@@ -1,0 +1,48 @@
+<section class="rounded-[18px] border border-[#e1e8e6] bg-white p-4 sm:p-5">
+  <h2 class="text-[20px] font-black">
+    Comparer les offres
+    <span class="text-sm font-semibold text-[#606e6a]"
+      >({{ product().offerCount }} boutiques)</span
+    >
+  </h2>
+  <p class="mt-1 text-sm text-[#6b7774]">
+    Trouvez le meilleur prix près de chez vous
+  </p>
+  <div class="mt-4 space-y-2">
+    @for (offer of product().offers; track offer.id; let first = $first) {
+    <article
+      class="grid gap-3 rounded-[10px] border border-[#e2e9e7] px-3 py-3 sm:grid-cols-[1.1fr_.8fr_1fr_auto] sm:items-center"
+    >
+      <div>
+        <p class="text-[13px] font-bold">
+          {{ offer.shopName }} @if (first) {<span
+            class="ml-1 rounded-full bg-[#009788] px-2 py-0.5 text-[9px] text-white"
+            >Meilleur prix</span
+          >}
+        </p>
+        <p class="text-[11px] text-[#7b8683]">
+          {{ offer.shopAddress ?? 'Adresse à confirmer' }}
+        </p>
+      </div>
+      <p class="text-[15px] font-black text-[#008c7c]">
+        {{ formatPrice(offer.price.amount, offer.price.currency) }}
+      </p>
+      <p class="text-[11px] text-[#5f6d69]">
+        {{ offer.inStock ? 'En stock · ' : 'Indisponible · ' }}{{
+        offer.deliveryLabel ?? 'À confirmer' }}
+      </p>
+      <a
+        routerLink="/cart"
+        class="rounded-[8px] bg-[#009788] px-4 py-2 text-center text-[11px] font-semibold text-white"
+        >Voir l'offre</a
+      >
+    </article>
+    }
+  </div>
+  <section
+    class="mt-4 rounded-[10px] bg-[#e9f8f4] p-4 text-[12px] text-[#17685e]"
+  >
+    <strong>À propos de ce produit</strong>
+    <p class="mt-2">{{ product().description }}</p>
+  </section>
+</section>

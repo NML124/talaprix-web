@@ -3,5 +3,6 @@
 /coverage
 /.nx/cache
 /.nx/workspace-data
+/workspace-data
 package-lock.json
 .angular

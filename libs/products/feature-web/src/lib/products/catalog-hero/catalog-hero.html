@@ -1,0 +1,35 @@
+<section
+  class="relative mt-4 overflow-hidden rounded-[24px] bg-[#132b29] bg-cover bg-center sm:mt-6"
+  style="
+    background-image:
+      linear-gradient(rgba(11, 37, 34, 0.82), rgba(11, 37, 34, 0.82)),
+      url('/assets/images/bg-banner.jpg');
+  "
+>
+  <div
+    class="min-h-[190px] px-5 py-8 text-white sm:min-h-[220px] sm:px-9 sm:py-10"
+  >
+    <p class="text-xs font-bold uppercase tracking-[.18em] text-[#8be6d7]">
+      Comparateur TalaPrix
+    </p>
+    <h1 class="mt-3 text-[36px] font-black tracking-tight sm:text-[48px]">
+      Produits
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-white/85 sm:text-base">
+      Comparez les prix et trouvez les meilleures offres près de chez vous.
+    </p>
+    <label
+      class="mt-6 flex max-w-xl items-center gap-3 rounded-xl bg-white px-4 py-3 text-[#172522] shadow-sm"
+      for="catalog-search"
+    >
+      <svg lucideSearch size="18" class="text-[#009788]"></svg>
+      <input
+        id="catalog-search"
+        [value]="query()"
+        (input)="updateQuery($event)"
+        class="w-full border-0 bg-transparent p-0 text-sm outline-none placeholder:text-slate-400"
+        placeholder="Rechercher un produit, une marque..."
+      />
+    </label>
+  </div>
+</section>

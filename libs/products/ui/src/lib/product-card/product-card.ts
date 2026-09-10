@@ -5,9 +5,9 @@ import {
   output,
 } from '@angular/core';
 import {
-  LucideBadgeCheck,
-  LucideBoxes,
-  LucidePackageCheck,
+  LucideCheck,
+  LucideChevronRight,
+  LucideMapPin,
   LucideStore,
 } from '@lucide/angular';
 import type { ProductSummary } from '@talaprix/products/domain';
@@ -15,28 +15,17 @@ import { formatCurrency } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'tpx-product-card',
-  imports: [LucideBadgeCheck, LucideBoxes, LucidePackageCheck, LucideStore],
+  imports: [LucideCheck, LucideChevronRight, LucideMapPin, LucideStore],
   templateUrl: './product-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
   readonly product = input.required<ProductSummary>();
   readonly viewDetails = output<ProductSummary>();
-
   protected readonly formatPrice = formatCurrency;
 
-  protected viewProduct(): void {
+  protected open(event?: Event): void {
+    event?.stopPropagation();
     this.viewDetails.emit(this.product());
-  }
-
-  protected stockLabel(): string {
-    switch (this.product().stockStatus) {
-      case 'limited':
-        return 'Stock limité';
-      case 'unavailable':
-        return 'Indisponible';
-      default:
-        return 'En stock';
-    }
   }
 }

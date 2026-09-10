@@ -4,14 +4,19 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
   AuthSessionStore,
   provideAuthDataAccess,
 } from '@talaprix/users/data-access';
 import { provideSupabaseConfig } from '@talaprix/shared/data-access';
 import { provideHomeDataAccess } from '@talaprix/home/data-access';
-import { provideCategoriesDataAccess } from '@talaprix/products/data-access';
+import { provideCartDataAccess } from '@talaprix/cart/data-access';
+import { provideShopDataAccess } from '@talaprix/shops/data-access';
+import {
+  provideCategoriesDataAccess,
+  provideProductDataAccess,
+} from '@talaprix/products/data-access';
 import { appRoutes } from './app.routes';
 import {
   provideClientHydration,
@@ -23,10 +28,19 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(appRoutes),
+    provideRouter(
+      appRoutes,
+      withInMemoryScrolling({
+        anchorScrolling: 'enabled',
+        scrollPositionRestoration: 'top',
+      }),
+    ),
     provideSupabaseConfig(runtimeConfig),
     provideAuthDataAccess(),
     provideCategoriesDataAccess(),
+    provideProductDataAccess(),
+    provideCartDataAccess(),
+    provideShopDataAccess(),
     provideHomeDataAccess(),
     provideAppInitializer(() => inject(AuthSessionStore).initialize()),
   ],

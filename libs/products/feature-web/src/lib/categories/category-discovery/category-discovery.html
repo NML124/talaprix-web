@@ -1,0 +1,79 @@
+<section class="mt-12">
+  <h2 class="text-[23px] font-black tracking-tight sm:text-[27px]">
+    Explorez autrement
+  </h2>
+  <p class="mt-1.5 text-[12px] text-[#6c7875]">
+    Vous ne savez pas encore exactement quoi chercher ?
+  </p>
+  <div class="mt-5 grid gap-3 md:grid-cols-3">
+    <a
+      routerLink="/products"
+      class="relative min-h-[190px] overflow-hidden rounded-[15px] bg-[#103d37] p-5 text-white"
+      ><h3 class="mt-8 text-lg font-black">Meilleures offres</h3>
+      <p class="mt-2 text-[12px] leading-5 text-white/70">
+        Découvrez les produits proposés aux prix les plus intéressants.
+      </p>
+      <span class="mt-5 inline-flex text-[11px] font-semibold text-[#91ddd1]"
+        >Voir les offres →</span
+      ></a
+    ><a
+      routerLink="/shops"
+      class="min-h-[190px] rounded-[15px] border border-[#e1e8e6] bg-white p-5"
+      ><h3 class="mt-8 text-lg font-black">Acheter par boutique</h3>
+      <p class="mt-2 text-[12px] leading-5 text-[#6f7b78]">
+        Comparez les produits proposés par différents commerces partenaires.
+      </p>
+      <span class="mt-5 inline-flex text-[11px] font-semibold text-[#008b7b]"
+        >Explorer les boutiques →</span
+      ></a
+    ><a
+      routerLink="/products"
+      class="min-h-[190px] rounded-[15px] border border-[#d8e9e5] bg-[#edf8f5] p-5"
+      ><h3 class="mt-8 text-lg font-black">Près de chez vous</h3>
+      <p class="mt-2 text-[12px] leading-5 text-[#5f716d]">
+        Trouvez des prix et des offres disponibles dans votre zone.
+      </p>
+      <span class="mt-5 inline-flex text-[11px] font-semibold text-[#008b7b]"
+        >Voir les produits proches →</span
+      ></a
+    >
+  </div>
+  <div
+    class="mt-10 rounded-[15px] border border-[#e1e8e6] bg-white px-4 py-5 sm:px-6"
+  >
+    <h2 class="text-[17px] font-black">Recherches populaires</h2>
+    <div class="mt-4 flex flex-wrap gap-2">
+      @for (term of ['Smartphones', 'Ordinateurs', 'Télévisions',
+      'Électroménager', 'Chaussures', 'Mode', 'Maison', 'Alimentation']; track
+      term) {<a
+        routerLink="/products"
+        [queryParams]="{ q: term }"
+        class="rounded-full border border-[#dce5e2] bg-[#fafcfc] px-3.5 py-2 text-[11px] text-[#4b5955]"
+        >{{ term }}</a
+      >}
+    </div>
+  </div>
+  <section
+    class="mt-10 rounded-[16px] bg-[#0e2925] px-5 py-7 text-white sm:px-7 lg:flex lg:items-center lg:justify-between"
+  >
+    <div>
+      <p
+        class="text-[11px] font-semibold uppercase tracking-[.15em] text-[#75d6c8]"
+      >
+        Vous savez déjà ce que vous cherchez ?
+      </p>
+      <h2 class="mt-2 text-[22px] font-black sm:text-[26px]">
+        Comparez directement tous les produits.
+      </h2>
+      <p class="mt-2 max-w-xl text-[12px] leading-5 text-white/65">
+        Utilisez les filtres par catégorie, boutique, prix et localisation pour
+        trouver rapidement l'offre qui vous convient.
+      </p>
+    </div>
+    <a
+      routerLink="/products"
+      class="mt-5 inline-flex h-11 items-center rounded-full bg-[#009788] px-5 text-[12px] font-bold text-white lg:mt-0"
+      >Voir tous les produits →</a
+    >
+  </section>
+</section>

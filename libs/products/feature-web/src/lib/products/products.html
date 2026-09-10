@@ -1,0 +1,26 @@
+<main class="min-h-screen bg-[#f8faf9] pb-16 text-[#172522]">
+  <div class="mx-auto max-w-[1536px] px-3 sm:px-5 lg:px-6">
+    <tpx-catalog-hero [query]="query()" (queryChange)="updateQuery($event)" />
+    <section
+      class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[265px_minmax(0,1fr)]"
+    >
+      <tpx-catalog-filters
+        [categories]="categories()"
+        [selectedCategory]="category()"
+        (filtersChange)="updateFilters($event)"
+      />
+      <div>
+        <tpx-catalog-toolbar
+          [count]="products().length"
+          [sort]="sort()"
+          (sortChange)="updateSort($event)"
+        />
+        <tpx-catalog-grid
+          [products]="products()"
+          [status]="status()"
+          (productOpen)="openProduct($event)"
+        />
+      </div>
+    </section>
+  </div>
+</main>

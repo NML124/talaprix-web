@@ -63,6 +63,22 @@ export default [
               ],
             },
             {
+              sourceTag: 'scope:cart',
+              onlyDependOnLibsWithTags: [
+                'scope:cart',
+                'scope:products',
+                'scope:shared',
+              ],
+            },
+            {
+              sourceTag: 'scope:shops',
+              onlyDependOnLibsWithTags: [
+                'scope:shops',
+                'scope:products',
+                'scope:shared',
+              ],
+            },
+            {
               sourceTag: 'scope:users',
               onlyDependOnLibsWithTags: ['scope:users', 'scope:shared'],
             },

@@ -1,0 +1,22 @@
+<main class="min-h-screen bg-[#f7faf9] px-4 py-8 sm:px-6 lg:px-10">
+  <div class="mx-auto max-w-7xl">
+    <tpx-shop-hero (queryChange)="updateQuery($event)" />
+    <section class="mt-8">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-2xl font-black text-slate-900">
+          Boutiques disponibles
+        </h2>
+        <p class="text-sm text-slate-500">{{ shops().length }} résultats</p>
+      </div>
+      @if (shops().length) {
+      <div class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        @for (shop of shops(); track shop.id) {<tpx-shop-card [shop]="shop" />}
+      </div>
+      } @else {
+      <p class="mt-6 rounded-2xl bg-white p-8 text-center text-slate-500">
+        Aucune boutique ne correspond à votre recherche.
+      </p>
+      }
+    </section>
+  </div>
+</main>
