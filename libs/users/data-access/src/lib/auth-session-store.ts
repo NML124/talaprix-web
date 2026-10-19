@@ -36,16 +36,33 @@ export class AuthSessionStore {
     const client = this.#supabase.client;
     if (!client) return;
     const { data } = await client.auth.getSession();
-    if (data.session?.user)
-      this.authenticate(this.toIdentity(data.session.user));
+    if (data.session?.user) await this.authenticateWithRole(data.session.user);
     client.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session?.user) this.clear();
-      else this.authenticate(this.toIdentity(session.user));
+      else if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')
+        void this.authenticateWithRole(session.user);
     });
   }
 
   authenticate(user: UserIdentity): void {
     this.#state.set({ status: 'authenticated', user });
+  }
+
+  private async authenticateWithRole(user: User): Promise<void> {
+    const identity = this.toIdentity(user);
+    this.authenticate(identity);
+    const client = this.#supabase.client;
+    if (!client) return;
+    try {
+      const { data, error } = await client.functions.invoke<{
+        subscription?: { title?: string };
+      }>('user-profile');
+      if (error || !data || user.id !== this.user()?.id) return;
+      const role = data.subscription?.title === 'admin' ? 'admin' : 'customer';
+      this.authenticate({ ...identity, roles: [role] });
+    } catch {
+      // A profile lookup failure keeps the session authenticated but denies admin UI access.
+    }
   }
 
   clear(): void {
@@ -56,12 +73,37 @@ export class AuthSessionStore {
     return {
       id: user.id,
       email: user.email ?? '',
-      displayName:
-        typeof user.user_metadata['name'] === 'string'
-          ? user.user_metadata['name']
-          : (user.email ?? ''),
+      displayName: this.userDisplayName(user),
       roles: ['customer'],
+      avatarUrl: this.avatarUrl(user),
     };
+  }
+
+  private userDisplayName(user: User): string {
+    const name =
+      this.metadataString(user, 'full_name') ??
+      this.metadataString(user, 'name');
+    return name || user.email || '';
+  }
+
+  private avatarUrl(user: User): string | undefined {
+    const avatar =
+      this.metadataString(user, 'avatar_url') ??
+      this.metadataString(user, 'picture');
+    return avatar && this.isHttpsUrl(avatar) ? avatar : undefined;
+  }
+
+  private metadataString(user: User, key: string): string | undefined {
+    const value: unknown = user.user_metadata[key];
+    return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+  }
+
+  private isHttpsUrl(value: string): boolean {
+    try {
+      return new URL(value).protocol === 'https:';
+    } catch {
+      return false;
+    }
   }
 }
 

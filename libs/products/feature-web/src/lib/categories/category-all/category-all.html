@@ -4,7 +4,6 @@
       <h2 class="text-[23px] font-black tracking-tight sm:text-[27px]">
         Toutes les catégories
       </h2>
-
     </div>
   </div>
   <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -33,7 +32,7 @@
         @for (category of family.categories.slice(0, 4); track category.id) {
         <a
           [routerLink]="'/products'"
-          [queryParams]="{ category: category.id }"
+          [queryParams]="{ category: category.name }"
           class="group block min-w-0 rounded-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008f82] focus-visible:ring-offset-2"
         >
           <div

@@ -11,7 +11,7 @@
     <img [src]="imagePath(value().image)" alt="" />
   </div>
   <p class="muted small" style="margin: 12px 0">
-    {{value().dates}} · {{value().status}} · données de conception
+    {{value().dates}} · {{value().status}}
   </p>
   @if(mode()!=='preview'){ @if(error()){
   <p class="dialog-error" role="alert">{{error()}}</p>

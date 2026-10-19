@@ -12,103 +12,24 @@ import {
   viewChild,
 } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
+import { FavoritesStore, ProductStore } from '@talaprix/products/data-access';
+import { AuthSessionStore } from '@talaprix/users/data-access';
 import { HomeNavbarDesktop } from './desktop/home-navbar-desktop';
 import { HomeNavbarDrawer } from './drawer/home-navbar-drawer';
 import { HomeNavbarMobile } from './mobile/home-navbar-mobile';
 import {
-  getCountryDataList,
-  type TCountryCode,
-  type TCurrencyCode,
-} from 'countries-list';
-import { getCurrency } from 'countries-list/currencies';
-
-type SettingsTab = 'country' | 'language' | 'currency';
-type LanguageCode = 'FR' | 'EN';
-
-interface CountryOption {
-  readonly code: TCountryCode;
-  readonly name: string;
-}
-
-interface CurrencyOption {
-  readonly code: TCurrencyCode;
-  readonly name: string;
-  readonly symbol: string;
-}
-
-interface LanguageOption {
-  readonly code: LanguageCode;
-  readonly name: string;
-  readonly description: string;
-}
-
-interface DisplayNames {
-  of(code: string): string | undefined;
-}
-
-interface DisplayNamesConstructor {
-  new (
-    locales: readonly string[],
-    options: { readonly type: 'region' | 'currency' },
-  ): DisplayNames;
-}
-
-const displayNamesConstructor = (
-  Intl as unknown as { readonly DisplayNames?: DisplayNamesConstructor }
-).DisplayNames;
-const frenchRegionNames = displayNamesConstructor
-  ? new displayNamesConstructor(['fr'], { type: 'region' })
-  : undefined;
-const frenchCurrencyNames = displayNamesConstructor
-  ? new displayNamesConstructor(['fr'], { type: 'currency' })
-  : undefined;
-
-const countryData = getCountryDataList();
-const COUNTRY_OPTIONS: readonly CountryOption[] = countryData
-  .map((country) => ({
-    code: country.iso2,
-    name: frenchRegionNames?.of(country.iso2) ?? country.name,
-  }))
-  .sort((first, second) => first.name.localeCompare(second.name, 'fr'));
-
-const currencyCodes = new Set<TCurrencyCode>();
-for (const country of countryData) {
-  for (const currency of country.currency) {
-    currencyCodes.add(currency);
-  }
-}
-
-const CURRENCY_OPTIONS: readonly CurrencyOption[] = [...currencyCodes]
-  .map((code) => {
-    const currency = getCurrency(code);
-
-    return {
-      code,
-      name: frenchCurrencyNames?.of(code) ?? currency.native ?? currency.name,
-      symbol: currency.symbolNative || currency.symbol || code,
-    };
-  })
-  .sort((first, second) => first.name.localeCompare(second.name, 'fr'));
-
-const LANGUAGE_OPTIONS: readonly LanguageOption[] = [
-  {
-    code: 'FR',
-    name: 'Français',
-    description: 'Interface en français',
-  },
-  {
-    code: 'EN',
-    name: 'English',
-    description: 'Interface in English',
-  },
-];
-
-const DEFAULT_COUNTRY =
-  COUNTRY_OPTIONS.find((country) => country.code === 'CD') ??
-  COUNTRY_OPTIONS[0];
-const DEFAULT_CURRENCY =
-  CURRENCY_OPTIONS.find((currency) => currency.code === 'CDF') ??
-  CURRENCY_OPTIONS[0];
+  COUNTRY_OPTIONS,
+  CURRENCY_OPTIONS,
+  DEFAULT_COUNTRY,
+  DEFAULT_CURRENCY,
+  LANGUAGE_OPTIONS,
+  normalizeSearch,
+  type CountryOption,
+  type CurrencyOption,
+  type LanguageCode,
+  type SettingsTab,
+} from './navbar-locale-options';
 
 @Component({
   selector: 'lib-home-navbar',
@@ -120,6 +41,10 @@ export class HomeNavbar {
   readonly #isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   readonly #document = inject(DOCUMENT);
   readonly #destroyRef = inject(DestroyRef);
+  readonly #router = inject(Router);
+  readonly #auth = inject(AuthSessionStore);
+  readonly #products = inject(ProductStore);
+  readonly #favorites = inject(FavoritesStore);
   private readonly localeSettings =
     viewChild<ElementRef<HTMLElement>>('localeSettings');
   #lockedScrollY = 0;
@@ -134,6 +59,8 @@ export class HomeNavbar {
   public readonly currencies = CURRENCY_OPTIONS;
   public readonly languages = LANGUAGE_OPTIONS;
   public readonly isLocaleOpen = signal(false);
+  public readonly isSearchOpen = signal(false);
+  public readonly isDownloadOpen = signal(false);
   public readonly isMobileMenuOpen = signal(false);
   public readonly activeSettingsTab = signal<SettingsTab>('country');
   public readonly selectedCountry = signal<CountryOption>(DEFAULT_COUNTRY);
@@ -142,6 +69,29 @@ export class HomeNavbar {
   public readonly countryQuery = signal('');
   public readonly currencyQuery = signal('');
   public readonly isScrolled = signal(false);
+  public readonly searchQuery = signal('');
+  public readonly favoriteCount = this.#favorites.count;
+  public readonly user = this.#auth.user;
+  public readonly isAuthenticated = this.#auth.isAuthenticated;
+  public readonly userDisplayName = computed(
+    () => this.user()?.displayName || 'Se connecter',
+  );
+  public readonly avatarUrl = computed(() => {
+    const candidate = this.user()?.avatarUrl;
+    return candidate && this.isHttpsUrl(candidate) ? candidate : null;
+  });
+  public readonly searchSuggestions = computed(() => {
+    const query = normalizeSearch(this.searchQuery().trim());
+    const products = this.#products.items();
+    if (!query) return products.slice(0, 4);
+    return products
+      .filter((product) =>
+        normalizeSearch(
+          `${product.name} ${product.brandName ?? ''} ${product.categoryName ?? ''}`,
+        ).includes(query),
+      )
+      .slice(0, 5);
+  });
   readonly mobileMenuScrollLock = effect(() => {
     if (!this.#isBrowser) return;
 
@@ -154,37 +104,79 @@ export class HomeNavbar {
   });
 
   public readonly filteredCountries = computed(() => {
-    const query = this.normalize(this.countryQuery());
+    const query = normalizeSearch(this.countryQuery());
 
     if (!query) {
       return this.countries;
     }
 
     return this.countries.filter((country) =>
-      this.normalize(`${country.name} ${country.code}`).includes(query),
+      normalizeSearch(`${country.name} ${country.code}`).includes(query),
     );
   });
 
   public readonly filteredCurrencies = computed(() => {
-    const query = this.normalize(this.currencyQuery());
+    const query = normalizeSearch(this.currencyQuery());
 
     if (!query) {
       return this.currencies;
     }
 
     return this.currencies.filter((currency) =>
-      this.normalize(
+      normalizeSearch(
         `${currency.name} ${currency.code} ${currency.symbol}`,
       ).includes(query),
     );
   });
 
   public toggleLocale(): void {
+    this.closeSearch();
+    this.closeDownload();
     this.isLocaleOpen.update((isOpen) => !isOpen);
   }
 
   public toggleMobileMenu(): void {
+    this.closePopovers();
     this.isMobileMenuOpen.update((isOpen) => !isOpen);
+  }
+
+  public openSearch(): void {
+    this.isLocaleOpen.set(false);
+    this.closeDownload();
+    this.isSearchOpen.set(true);
+    void this.#products.load();
+  }
+
+  public closeSearch(): void {
+    this.isSearchOpen.set(false);
+  }
+
+  public updateSearchQuery(event: Event): void {
+    const input = event.target;
+    if (input instanceof HTMLInputElement) this.searchQuery.set(input.value);
+  }
+
+  public submitSearch(): void {
+    const query = this.searchQuery().trim();
+    this.closeSearch();
+    void this.#router.navigate(['/products'], {
+      queryParams: query ? { query } : undefined,
+    });
+  }
+
+  public openProduct(productId: string): void {
+    this.closeSearch();
+    void this.#router.navigate(['/products', productId]);
+  }
+
+  public toggleDownload(): void {
+    this.isLocaleOpen.set(false);
+    this.closeSearch();
+    this.isDownloadOpen.update((isOpen) => !isOpen);
+  }
+
+  public closeDownload(): void {
+    this.isDownloadOpen.set(false);
   }
 
   public setActiveTab(tab: SettingsTab): void {
@@ -238,8 +230,14 @@ export class HomeNavbar {
 
   @HostListener('document:keydown.escape')
   public closeWithEscape(): void {
-    this.isLocaleOpen.set(false);
+    this.closePopovers();
     this.isMobileMenuOpen.set(false);
+  }
+
+  private closePopovers(): void {
+    this.isLocaleOpen.set(false);
+    this.closeSearch();
+    this.closeDownload();
   }
 
   private lockPageScroll(): void {
@@ -273,10 +271,11 @@ export class HomeNavbar {
     window.scrollTo({ top: this.#lockedScrollY, behavior: 'instant' });
   }
 
-  private normalize(value: string): string {
-    return value
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLocaleLowerCase('fr');
+  private isHttpsUrl(value: string): boolean {
+    try {
+      return new URL(value).protocol === 'https:';
+    } catch {
+      return false;
+    }
   }
 }

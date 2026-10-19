@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideCategoriesDataAccess } from '@talaprix/products/data-access';
+import { provideRouter } from '@angular/router';
+import {
+  provideCategoriesDataAccess,
+  provideProductDataAccess,
+} from '@talaprix/products/data-access';
 import { Home } from './home';
 
 describe('Home', () => {
@@ -9,7 +13,11 @@ describe('Home', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
-      providers: [provideCategoriesDataAccess()],
+      providers: [
+        provideRouter([]),
+        provideCategoriesDataAccess(),
+        provideProductDataAccess(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Home);

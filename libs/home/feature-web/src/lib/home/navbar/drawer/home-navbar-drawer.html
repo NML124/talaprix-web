@@ -36,23 +36,69 @@
     </div>
 
     <a
-      href="/auth"
+      routerLink="/auth"
       class="flex items-center justify-between rounded-2xl bg-[#f7f9f9] p-3.5 transition-colors active:bg-[#edf1f0]"
       (click)="toggleMobileMenu()"
     >
       <div class="flex items-center gap-3">
+        @if (avatarUrl(); as avatarUrl) {
+        <img
+          [src]="avatarUrl"
+          alt=""
+          referrerpolicy="no-referrer"
+          class="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-black/5"
+        />
+        } @else {
         <span
           class="flex h-11 w-11 items-center justify-center rounded-full bg-[#e2e5e5] text-[#a5aaaa]"
         >
           <svg lucideUserRound size="24"></svg>
         </span>
+        }
         <div class="flex flex-col">
           <span class="text-[12px] font-medium text-[#087d6d]"
-            >Se connecter</span
+            >{{ userDisplayName() }}</span
           >
           <span class="text-[14px] font-bold text-[#171717]">Mon Profil</span>
         </div>
       </div>
+      <svg lucideChevronRight size="18" class="text-[#a0a5a4]"></svg>
+    </a>
+
+    <a
+      routerLink="/favorites"
+      (click)="toggleMobileMenu()"
+      class="flex items-center justify-between rounded-2xl border border-[#e5ece9] bg-white p-3.5 text-[#172522]"
+    >
+      <span class="flex items-center gap-3 text-sm font-bold">
+        <svg lucideHeart size="19" class="text-[#008b7b]"></svg>
+        Mes favoris
+      </span>
+      <span class="flex items-center gap-2 text-xs font-bold text-[#008b7b]">
+        {{ favoriteCount() }}
+        <svg lucideChevronRight size="18" class="text-[#a0a5a4]"></svg>
+      </span>
+    </a>
+
+    <div
+      class="flex items-center justify-between rounded-2xl border border-[#e5ece9] bg-white p-3.5"
+    >
+      <span class="flex items-center gap-3 text-sm font-bold text-[#172522]">
+        <svg lucideBell size="19" class="text-[#008b7b]"></svg>
+        Notifications
+      </span>
+      <span class="text-xs text-[#6f7b78]">À jour</span>
+    </div>
+
+    <a
+      routerLink="/cart"
+      (click)="toggleMobileMenu()"
+      class="flex items-center justify-between rounded-2xl border border-[#e5ece9] bg-white p-3.5 text-[#172522]"
+    >
+      <span class="flex items-center gap-3 text-sm font-bold">
+        <svg lucideShoppingBasket size="19" class="text-[#008b7b]"></svg>
+        Ma sélection
+      </span>
       <svg lucideChevronRight size="18" class="text-[#a0a5a4]"></svg>
     </a>
 
@@ -216,14 +262,7 @@
   <div
     class="mt-auto border-t border-[#f0f0f0] pt-4 pb-[env(safe-area-inset-bottom)]"
   >
-    <a
-      href="#download"
-      class="flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#009f88] py-3.5 text-[13px] font-bold text-white shadow-sm transition-colors active:bg-[#008d79]"
-      (click)="toggleMobileMenu()"
-    >
-      <svg lucideQrCode size="20"></svg>
-      <span>Télécharger l'application</span>
-    </a>
+    <lib-home-navbar-download variant="drawer" />
   </div>
 </aside>
 }

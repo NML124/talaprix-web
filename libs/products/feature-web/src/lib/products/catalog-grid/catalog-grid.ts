@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import type { ProductStatus } from '@talaprix/products/data-access';
 import type { ProductSummary } from '@talaprix/products/domain';
+import type { CatalogViewMode } from '../catalog-toolbar/catalog-toolbar';
 import { ProductCard } from '@talaprix/products/ui';
 
 @Component({
@@ -17,5 +18,8 @@ import { ProductCard } from '@talaprix/products/ui';
 export class CatalogGrid {
   readonly products = input<readonly ProductSummary[]>([]);
   readonly status = input<ProductStatus>('idle');
+  readonly viewMode = input<CatalogViewMode>('grid');
+  readonly favoriteIds = input<readonly string[]>([]);
   readonly productOpen = output<ProductSummary>();
+  readonly favoriteChange = output<ProductSummary>();
 }

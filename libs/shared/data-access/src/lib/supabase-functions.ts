@@ -82,6 +82,8 @@ export class SupabaseFunctions {
       ? value['message']
       : typeof value['error'] === 'string'
         ? value['error']
-        : undefined;
+        : typeof value['detail'] === 'string'
+          ? value['detail']
+          : undefined;
   }
 }

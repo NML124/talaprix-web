@@ -43,6 +43,13 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'favorites',
+        loadComponent: () =>
+          import('@talaprix/products/feature-web').then(
+            ({ Favorites }) => Favorites,
+          ),
+      },
+      {
         path: 'cart',
         loadComponent: () =>
           import('@talaprix/cart/feature-web').then(({ CartPage }) => CartPage),

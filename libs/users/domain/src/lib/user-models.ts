@@ -10,6 +10,8 @@ export interface UserIdentity {
   readonly displayName: string;
   readonly email: string;
   readonly roles: readonly UserRole[];
+  /** A validated HTTPS profile image when the identity provider supplies one. */
+  readonly avatarUrl?: string;
 }
 
 export interface LoginCommand {

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import type { ProductDetail } from '@talaprix/products/domain';
 import { PRODUCT_FIXTURES } from './product-fixtures';
+import { FavoritesStore } from './favorites-store';
 
 export type ProductStatus = 'idle' | 'loading' | 'success' | 'empty' | 'error';
 
@@ -18,7 +19,7 @@ export class ProductStore {
   readonly items = this.#items.asReadonly();
   readonly status = this.#status.asReadonly();
   readonly error = this.#error.asReadonly();
-  readonly newest = computed(() => this.#items().slice(0, 6));
+  readonly newest = computed(() => this.#items().slice(0, 10));
 
   async load(): Promise<void> {
     if (this.#status() === 'loading' || this.#status() === 'success') return;
@@ -41,5 +42,5 @@ export class ProductStore {
 }
 
 export function provideProductDataAccess(): EnvironmentProviders {
-  return makeEnvironmentProviders([ProductStore]);
+  return makeEnvironmentProviders([ProductStore, FavoritesStore]);
 }

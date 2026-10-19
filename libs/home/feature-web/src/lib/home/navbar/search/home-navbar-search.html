@@ -1,0 +1,125 @@
+<div class="relative" [class.w-full]="variant() === 'mobile'">
+  <form
+    class="relative"
+    role="search"
+    (submit)="submit($event)"
+    (focusin)="openSearch()"
+  >
+    <label class="sr-only" [for]="searchId()">Rechercher un produit</label>
+    <input
+      [id]="searchId()"
+      type="search"
+      autocomplete="off"
+      placeholder="Rechercher un produit, une marque, une boutique..."
+      class="w-full border border-[#aeb3b2] bg-white text-[#242424] outline-none transition-colors placeholder:text-[#737776] hover:border-[#8e9392] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/15"
+      [class.h-11]="variant() === 'desktop'"
+      [class.rounded-[22px]]="variant() === 'desktop'"
+      [class.bg-[#fbfcfc]]="variant() === 'desktop'"
+      [class.pl-5]="variant() === 'desktop'"
+      [class.pr-[76px]]="variant() === 'desktop'"
+      [class.text-[13px]]="variant() === 'desktop'"
+      [class.h-12]="variant() === 'mobile'"
+      [class.rounded-[20px]]="variant() === 'mobile'"
+      [class.pl-4]="variant() === 'mobile'"
+      [class.pr-14]="variant() === 'mobile'"
+      [class.text-[16px]]="variant() === 'mobile'"
+      role="combobox"
+      aria-autocomplete="list"
+      [attr.aria-controls]="suggestionsId()"
+      [attr.aria-expanded]="isSearchOpen()"
+      [attr.aria-activedescendant]="
+        activeIndex() >= 0 ? suggestionsId() + '-' + activeIndex() : null
+      "
+      [value]="searchQuery()"
+      (input)="onInput($event)"
+      (keydown)="onKeydown($event)"
+    />
+    <button
+      type="submit"
+      class="absolute flex items-center justify-center rounded-full bg-[#009f88] text-white transition-colors hover:bg-[#008d79] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2"
+      [class.right-1]="variant() === 'desktop'"
+      [class.top-1]="variant() === 'desktop'"
+      [class.h-9]="variant() === 'desktop'"
+      [class.w-[62px]]="variant() === 'desktop'"
+      [class.right-[5px]]="variant() === 'mobile'"
+      [class.top-[5px]]="variant() === 'mobile'"
+      [class.h-[38px]]="variant() === 'mobile'"
+      [class.w-11]="variant() === 'mobile'"
+      aria-label="Rechercher"
+    >
+      <svg lucideSearch [size]="variant() === 'mobile' ? 17 : 16"></svg>
+    </button>
+  </form>
+
+  @if (isSearchOpen()) {
+  <section
+    [id]="suggestionsId()"
+    class="absolute left-0 right-0 top-[calc(100%+8px)] z-50 overflow-hidden rounded-2xl border border-[#dbe3e0] bg-white shadow-[0_12px_30px_rgba(15,32,29,0.12)]"
+    role="listbox"
+    aria-label="Suggestions de recherche"
+  >
+    <header
+      class="flex items-center justify-between border-b border-[#edf1ef] px-4 py-3"
+    >
+      <p
+        class="text-[11px] font-bold uppercase tracking-[0.09em] text-[#697370]"
+      >
+        @if (searchQuery().trim()) { Résultats suggérés } @else { Produits à
+        découvrir }
+      </p>
+      <button
+        type="button"
+        class="flex h-7 w-7 items-center justify-center rounded-lg text-[#6b7572] hover:bg-[#f1f4f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+        aria-label="Fermer les suggestions"
+        (click)="closeSearch()"
+      >
+        <svg lucideX size="16"></svg>
+      </button>
+    </header>
+    @if (searchSuggestions().length) {
+    <div class="p-1.5">
+      @for (product of searchSuggestions(); track product.id; let index =
+      $index) {
+      <button
+        type="button"
+        [id]="suggestionsId() + '-' + index"
+        role="option"
+        [attr.aria-selected]="activeIndex() === index"
+        class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-[#f1f8f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+        [class.bg-[#eaf7f4]]="activeIndex() === index"
+        (mouseenter)="activeIndex.set(index)"
+        (click)="chooseProduct(product.id)"
+      >
+        <span
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#eef3f1] text-[#008b7b]"
+        >
+          <svg lucideStore size="17"></svg>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate text-[13px] font-bold text-[#1c2825]"
+            >{{ product.name }}</span
+          >
+          <span class="mt-0.5 block truncate text-[11px] text-[#74807c]">
+            {{ product.brandName ?? product.categoryName ?? 'Produit TalaPrix'
+            }}
+          </span>
+        </span>
+        @if (product.lowestPrice; as price) {
+        <span class="text-[12px] font-black text-[#008b7b]"
+          >{{ price.amount | number: '1.0-0' }} {{ price.currency }}</span
+        >
+        }
+      </button>
+      }
+    </div>
+    } @else {
+    <div class="px-4 py-8 text-center">
+      <p class="text-[13px] font-bold text-[#34413e]">Aucun produit trouvé</p>
+      <p class="mt-1 text-[11px] text-[#77817e]">
+        Essayez une marque ou un autre mot-clé.
+      </p>
+    </div>
+    }
+  </section>
+  }
+</div>
