@@ -1,0 +1,90 @@
+@if (product(); as row) {
+<tp-admin-dialog
+  [title]="mode() === 'delete' ? 'Supprimer le produit' : mode() === 'archive' ? 'Arrêter la publication' : mode() === 'restore' ? 'Republier le produit' : (row.name || 'Nouveau produit')"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (mode() === 'delete') {
+  <p>
+    Supprimer <strong>{{ row.name }}</strong> du catalogue de démonstration ?
+    Cette action retire la fiche de la liste.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-danger" (click)="removed.emit()">
+      Confirmer la suppression
+    </button>
+  </div>
+  } @else if (mode() === 'archive') {
+  <p>
+    Arrêter la publication de <strong>{{ row.name }}</strong> ? Le produit
+    restera dans l’onglet Archivés et dans l’historique.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-danger" (click)="archived.emit()">
+      Confirmer l’archivage
+    </button>
+  </div>
+  } @else if (mode() === 'restore') {
+  <p>
+    Republier <strong>{{ row.name }}</strong> dans le catalogue de démonstration
+    ?
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-primary" (click)="restored.emit()">
+      Confirmer
+    </button>
+  </div>
+  } @else {
+  <tp-admin-product-images
+    [images]="row.images ?? (row.image ? [row.image] : [])"
+    (imagesChanged)="imagesChanged.emit($event)"
+  />
+  <div class="form-stack">
+    <label class="field">Nom du produit<input [(ngModel)]="row.name" /></label>
+    <label class="field"
+      >Description<textarea
+        [(ngModel)]="row.description"
+        placeholder="Ajouter une description courte"
+      ></textarea>
+    </label>
+    <div class="grid-2">
+      <label class="field"
+        >Catégorie<select [(ngModel)]="row.category">
+          @for (item of categories().slice(1); track item) {
+          <option>{{ item }}</option>
+          }
+        </select></label
+      >
+      <label class="field">Unité / poids<input [(ngModel)]="row.unit" /></label>
+    </div>
+    <label class="field"
+      >Boutique<select [(ngModel)]="row.shop">
+        @for (item of shops().slice(1); track item) {
+        <option>{{ item }}</option>
+        }
+      </select></label
+    >
+    <label class="field"
+      >Prix public (FC)<input type="number" min="1" [(ngModel)]="row.price"
+    /></label>
+  </div>
+  <p class="muted small dialog-section">
+    Dernière modification : Joël Kabeya · {{ row.updated }}
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-primary" (click)="saved.emit()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

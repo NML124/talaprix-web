@@ -1,0 +1,137 @@
+@if (shop(); as row) {
+<tp-admin-dialog
+  [title]="mode() === 'delete' ? 'Supprimer la boutique' : mode() === 'suspend' ? (row.status === 'Suspendue' ? 'Réactiver la boutique' : 'Suspendre la boutique') : (row.name || 'Nouvelle boutique')"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (mode() === 'delete') {
+  <p>
+    Supprimer <strong>{{ row.name }}</strong> de cette maquette ? Ses produits
+    liés seront archivés pour éviter des offres sans boutique.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-danger" (click)="removed.emit()">
+      Confirmer la suppression
+    </button>
+  </div>
+  } @else if (mode() === 'suspend') {
+  <p>
+    Confirmer {{ row.status === 'Suspendue' ? 'la réactivation' : 'la
+    suspension' }} de <strong>{{ row.name }}</strong> ?
+  </p>
+  <p class="muted small">
+    La boutique reste dans la liste et l’action est inscrite dans le journal
+    d’audit de démonstration.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-danger" (click)="suspended.emit()">
+      Confirmer
+    </button>
+  </div>
+  } @else {
+  <div class="shop-location-summary">
+    <span class="location-mark"
+      ><svg lucideMapPin size="19" aria-hidden="true"></svg
+    ></span>
+    <span
+      ><strong>Position de la boutique</strong
+      ><small
+        >{{ row.address || 'Adresse à renseigner' }} · {{ row.commune ||
+        'Commune à confirmer' }}</small
+      ></span
+    >
+  </div>
+  <div class="toolbar shop-dialog-summary">
+    <tp-status-dot [label]="row.status" [tone]="tone(row.status)" />
+    <span class="muted small">★ {{ row.rating }} · {{ row.commune }}</span>
+    <span class="muted small"
+      >Position indicative · {{ row.lat ?? '—' }} ; {{ row.lon ?? '—' }}</span
+    >
+  </div>
+  <div class="form-stack">
+    <label class="field">Nom<input [(ngModel)]="row.name" /></label>
+    <label class="field">Adresse<input [(ngModel)]="row.address" /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Téléphone<input [(ngModel)]="row.phone" placeholder="À renseigner"
+      /></label>
+      <label class="field"
+        >Contact<input [(ngModel)]="row.contact" placeholder="À renseigner"
+      /></label>
+    </div>
+    <label class="field"
+      >Email<input
+        type="email"
+        [(ngModel)]="row.email"
+        placeholder="À renseigner"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Latitude<input
+          type="number"
+          step="any"
+          [(ngModel)]="row.lat"
+          placeholder="À confirmer"
+      /></label>
+      <label class="field"
+        >Longitude<input
+          type="number"
+          step="any"
+          [(ngModel)]="row.lon"
+          placeholder="À confirmer"
+      /></label>
+    </div>
+  </div>
+  <section class="dialog-section">
+    <h3>Produits liés à cette boutique</h3>
+    @if (products().length) { @for (product of products(); track product.id) {
+    <div class="item-row">
+      <img class="thumb" [src]="imagePath(product.image)" alt="" />
+      <span class="grow"
+        ><strong>{{ product.name }}</strong
+        ><small>{{ product.unit }}</small></span
+      >
+      <span class="number">{{ fc(product.price) }}</span>
+    </div>
+    } } @else {
+    <p class="muted small">Aucun produit lié dans cet aperçu.</p>
+    }
+  </section>
+  <section class="dialog-section">
+    <h3>Responsables</h3>
+    <div class="item-row">
+      <span class="avatar">BN</span
+      ><span class="grow"
+        ><strong>Brigitte Ndala</strong
+        ><small>Administration · suivi partenaire</small></span
+      >
+    </div>
+    <div class="item-row">
+      <span class="avatar">JK</span
+      ><span class="grow"
+        ><strong>Joël Kabeya</strong
+        ><small>Modérateur · relevés de prix</small></span
+      >
+    </div>
+    <p class="muted small shop-dialog-updated">
+      Dernière mise à jour : Brigitte Ndala · 03 oct., 15:12
+    </p>
+  </section>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-primary" (click)="saved.emit()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

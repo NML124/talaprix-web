@@ -1,0 +1,14 @@
+<div class="flagged-review-list">
+  @for (review of reviews; track review.product) {
+  <div class="flagged-review-row">
+    <span class="flagged-review-mark" aria-hidden="true">!</span>
+    <div class="flagged-review-copy">
+      <div class="flagged-review-title">
+        <strong>{{ review.product }}</strong>
+        <span class="review-rating">{{ review.rating }}</span>
+      </div>
+      <p>{{ review.reason }} · {{ review.author }} · {{ review.date }}</p>
+    </div>
+  </div>
+  }
+</div>

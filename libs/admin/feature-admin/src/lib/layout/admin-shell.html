@@ -1,0 +1,145 @@
+<div class="admin-app" [attr.data-theme]="resolvedTheme()">
+  <div class="shell">
+    <aside
+      class="sidebar"
+      [class.mobile-open]="mobileMenuOpen()"
+      (document:keydown.escape)="mobileMenuOpen.set(false)"
+    >
+      <button
+        class="mobile-menu-toggle btn btn-secondary btn-icon"
+        type="button"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Ouvrir ou fermer la navigation"
+        (click)="mobileMenuOpen.set(!mobileMenuOpen())"
+      >
+        @if(mobileMenuOpen()){<svg lucideX size="19" aria-hidden="true"></svg
+        >}@else{<svg lucideMenu size="19" aria-hidden="true"></svg>}
+      </button>
+      <nav
+        aria-label="Navigation principale"
+        class="sidebar-nav"
+        style="flex: 1; gap: 14px"
+      >
+        <div class="brandline">
+          <img src="/admin-assets/logo-talaprix.png" alt="" /><span
+            >TalaPrix</span
+          >
+        </div>
+        <button
+          class="space-picker"
+          type="button"
+          aria-label="Espace Administration, Kinshasa Global"
+        >
+          <span
+            ><strong>Administration</strong
+            ><small>Kinshasa · Global</small></span
+          ><svg lucideChevronsUpDown size="15" aria-hidden="true"></svg>
+        </button>
+        <div class="nav-groups">
+          @for (section of sections; track section.label) {
+          <div>
+            <button
+              type="button"
+              class="group-toggle"
+              [attr.aria-expanded]="isOpen(section.label)"
+              (click)="toggle(section.label)"
+            >
+              @switch(section.icon) { @case('grid') {
+              <svg lucideLayoutGrid size="17" aria-hidden="true"></svg> }
+              @case('package') {
+              <svg lucidePackage size="17" aria-hidden="true"></svg> }
+              @case('megaphone') {
+              <svg lucideMegaphone size="17" aria-hidden="true"></svg> }
+              @case('scraping') {
+              <svg lucideScanSearch size="17" aria-hidden="true"></svg> }
+              @case('users') {
+              <svg lucideUsers size="17" aria-hidden="true"></svg> } @default {
+              <svg lucideShieldCheck size="17" aria-hidden="true"></svg> } }
+              <span>{{ section.label }}</span>@if(section.count){<small
+                >{{ section.count }}</small
+              >} @if(isOpen(section.label)){<svg
+                lucideChevronUp
+                size="15"
+                aria-hidden="true"
+              ></svg
+              >}@else{<svg lucideChevronDown size="15" aria-hidden="true"></svg
+              >}
+            </button>
+            @if(isOpen(section.label)) {
+            <div class="nav-children">
+              @for(page of section.pages; track page.label){
+              <div class="nav-child">
+                <a
+                  [routerLink]="page.path"
+                  [queryParams]="page.query ? {tab:page.query}:null"
+                  [attr.aria-current]="isActive(page)?'page':null"
+                  ><span>{{page.label}}</span>@if(page.count){<span
+                    class="nav-count"
+                    >{{page.count}}</span
+                  >}</a
+                >
+              </div>
+              }
+            </div>
+            }
+          </div>
+          }
+        </div>
+        <a class="profile-link" routerLink="/admin/profil"
+          ><span class="avatar brand">AM</span
+          ><span
+            ><strong>Aline Mukendi</strong
+            ><small>Super administrateur</small></span
+          ><svg lucideChevronRight size="15" aria-hidden="true"></svg
+        ></a>
+      </nav>
+    </aside>
+    <main
+      class="main"
+      (scroll)="onMainScroll($event)"
+      (window:scroll)="onWindowScroll()"
+    >
+      <div class="topbar" [class.scrolled]="scrolled()">
+        <label class="search topbar-search"
+          ><svg lucideSearch size="15" aria-hidden="true"></svg
+          ><span class="sr-only">Rechercher dans TalaPrix</span
+          ><input
+            type="search"
+            placeholder="Rechercher un produit, une boutique…"
+        /></label>
+        <div class="toolbar">
+          <span class="badge info">Données de conception</span>
+          <label class="theme-picker">
+            <svg lucideMoon size="16" aria-hidden="true"></svg>
+            <span class="sr-only">Thème du panneau</span>
+            <select
+              aria-label="Thème du panneau"
+              [value]="theme()"
+              (change)="onThemeChange($event)"
+            >
+              <option value="system">Système</option>
+              <option value="light">Clair</option>
+              <option value="dark">Sombre</option>
+            </select>
+          </label>
+          <a
+            class="btn btn-secondary btn-icon"
+            routerLink="/admin/marketing"
+            [queryParams]="{tab:'notifications'}"
+            aria-label="Notifications, 3 non lues"
+            style="position: relative"
+            ><svg lucideBell size="17" aria-hidden="true"></svg
+            ><span class="notification-count" aria-hidden="true">3</span></a
+          >
+        </div>
+      </div>
+      <div class="main-inner">
+        <router-outlet />
+        <footer class="footer">
+          <span>TalaPrix Administration · Données de conception</span
+          ><span>Kinshasa (UTC+1) · FC / CDF</span>
+        </footer>
+      </div>
+    </main>
+  </div>
+</div>

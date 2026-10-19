@@ -21,6 +21,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "isolatedModules": true,
     "paths": {
+      "@talaprix/admin": ["./libs/admin/feature-admin/src/index.ts"],
       "@talaprix/shared": ["./libs/shared/src/index.ts"],
       "@talaprix/products": ["./libs/products/src/index.ts"],
       "@talaprix/users": ["./libs/users/src/index.ts"],

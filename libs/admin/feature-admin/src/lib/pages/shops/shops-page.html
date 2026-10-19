@@ -1,0 +1,156 @@
+<tp-admin-page-header
+  title="Boutiques"
+  subtitle="Les partenaires, leurs points de vente et la qualité de leurs informations. 28 suivis à Kinshasa."
+  ><button type="button" class="btn btn-primary" (click)="add()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Ajouter une boutique
+  </button></tp-admin-page-header
+>
+<div class="toolbar">
+  @for(item of filters;track item.label){<button
+    type="button"
+    class="btn"
+    [class.btn-filter-active]="filter()===item.label"
+    [class.btn-secondary]="filter()!==item.label"
+    [attr.aria-pressed]="filter()===item.label"
+    (click)="filter.set(item.label)"
+  >
+    {{item.label}} <span class="number">{{item.count}}</span></button
+  >}<span class="toolbar-spacer"></span
+  ><label class="search"
+    ><span class="sr-only">Rechercher un partenaire</span
+    ><input
+      type="search"
+      placeholder="Rechercher un partenaire"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)"
+  /></label>
+</div>
+@if(toast()){
+<div class="toast" role="status">{{toast()}}</div>
+}@if(error()){
+<div class="toast error" role="alert">
+  {{error()}}
+  <button class="link" type="button" (click)="load()">Réessayer</button>
+</div>
+}
+<div class="admin-stack">
+  <section class="card">
+    <div class="card-head">
+      <h2>Liste des boutiques</h2>
+      <span class="muted small"
+        >Gérez une boutique depuis la colonne Actions</span
+      >
+    </div>
+    @if(loading()){@for(item of [1,2,3,4];track item){
+    <div class="skeleton" style="height: 58px; margin-bottom: 9px"></div>
+    }} @else if(!filtered().length){
+    <tp-empty-state
+      title="Aucune boutique trouvée"
+      message="Essayez une autre recherche ou un autre filtre."
+    />
+    } @else {
+    <div class="table-wrap">
+      <table class="shops-table">
+        <thead>
+          <tr>
+            <th>Boutique</th>
+            <th>Commune</th>
+            <th class="number">Produits</th>
+            <th>Note</th>
+            <th>Prix à jour</th>
+            <th>État</th>
+            <th>Profil</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(row of visible();track row.id){
+          <tr [class.selected]="selected()?.id===row.id">
+            <td>
+              <button
+                class="table-row-button"
+                type="button"
+                (click)="select(row)"
+                [attr.aria-label]="'Voir la boutique '+row.name"
+              >
+                @if(row.logo){<img
+                  class="thumb"
+                  [src]="imagePath(row.logo)"
+                  alt=""
+                />} @else{<span class="avatar">{{row.name.slice(0,2)}}</span>}
+                <span
+                  ><strong>{{row.name}}</strong
+                  ><small>{{row.address}}</small></span
+                >
+              </button>
+            </td>
+            <td>{{row.commune}}</td>
+            <td class="number">{{row.products}}</td>
+            <td class="number">★ {{row.rating}}</td>
+            <td class="number">{{row.fresh}} %</td>
+            <td>
+              <tp-status-dot [label]="row.status" [tone]="tone(row.status)" />
+            </td>
+            <td class="number">{{row.completion}} %</td>
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="'Modifier '+row.name"
+                  title="Modifier"
+                  (click)="select(row, 'edit')"
+                >
+                  <svg lucidePencil size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="(row.status==='Suspendue'?'Réactiver ':'Suspendre ')+row.name"
+                  [title]="row.status==='Suspendue'?'Réactiver':'Suspendre'"
+                  (click)="select(row, 'suspend')"
+                >
+                  @if(row.status==='Suspendue'){<svg
+                    lucidePlay
+                    size="16"
+                    aria-hidden="true"
+                  ></svg
+                  >}@else{<svg lucidePause size="16" aria-hidden="true"></svg>}
+                </button>
+                <button
+                  type="button"
+                  class="table-action danger"
+                  [attr.aria-label]="'Supprimer '+row.name"
+                  title="Supprimer"
+                  (click)="select(row, 'delete')"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+    <tp-admin-pagination
+      [total]="filtered().length"
+      [page]="currentPage()"
+      [pageSize]="pageSize"
+      (pageChanged)="changePage($event)"
+    />
+  </section>
+  @if(selected();as row){
+  <tp-shop-dialog
+    [shop]="row"
+    [products]="relatedProducts()"
+    [mode]="dialogMode()"
+    [error]="error()"
+    (closed)="selected.set(null)"
+    (saved)="save()"
+    (suspended)="suspend()"
+    (removed)="remove()"
+  />
+  }
+</div>

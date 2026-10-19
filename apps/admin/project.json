@@ -21,7 +21,10 @@
             "input": "apps/admin/public"
           }
         ],
-        "styles": ["libs/shared/ui-kit/src/styles/tailwind.css"]
+        "styles": [
+          "libs/shared/ui-kit/src/styles/tailwind.css",
+          "apps/admin/src/admin.css"
+        ]
       },
       "configurations": {
         "production": {

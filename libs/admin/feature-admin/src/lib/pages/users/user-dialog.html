@@ -1,0 +1,90 @@
+@if (user(); as row) {
+<tp-admin-dialog
+  [title]="mode() === 'delete' ? 'Supprimer le compte' : mode() === 'suspend' ? (row.status === 'Actif' ? 'Suspendre le compte' : 'Réactiver le compte') : row.name"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (mode() === 'delete') {
+  <p>
+    Supprimer <strong>{{ row.name }}</strong> de la liste de démonstration ?
+    Cette action n’affecte aucun compte réel.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-danger" (click)="removed.emit()">
+      Confirmer la suppression
+    </button>
+  </div>
+  } @else if (mode() === 'suspend') {
+  <p>
+    {{ row.status === 'Actif' ? 'Suspendre' : 'Réactiver' }}
+    <strong>{{ row.name }}</strong> ? Ses contributions restent dans
+    l’historique.
+  </p>
+  @if (row.status === 'Actif') {
+  <label class="field"
+    >Motif de suspension<textarea
+      [ngModel]="reason()"
+      (ngModelChange)="reasonChanged.emit($event)"
+    ></textarea>
+  </label>
+  }
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-danger" (click)="suspended.emit()">
+      Confirmer
+    </button>
+  </div>
+  } @else {
+  <div class="user-dialog-summary">
+    <span class="avatar">{{ row.initials }}</span>
+    <div>
+      <strong>{{ row.name }}</strong
+      ><small>{{ row.phone }} · {{ row.commune }}</small>
+    </div>
+    <tp-status-dot
+      [label]="row.status"
+      [tone]="row.status === 'Actif' ? 'success' : 'danger'"
+    />
+  </div>
+  <div class="form-stack">
+    <label class="field">Nom<input [(ngModel)]="row.name" /></label>
+    <div class="grid-2">
+      <label class="field">Téléphone<input [(ngModel)]="row.phone" /></label>
+      <label class="field">Commune<input [(ngModel)]="row.commune" /></label>
+    </div>
+  </div>
+  <section class="dialog-section">
+    <h3>Activité</h3>
+    <p class="muted small">
+      {{ row.points }} points · membre depuis le {{ row.joined }} · dernière
+      activité {{ row.activity }}
+    </p>
+    @if (row.id === 1) {
+    <div class="item-row">
+      <span class="grow"
+        ><strong>Prix proposé · Pain de mie</strong
+        ><small>2 500 FC · Maison Galaxy</small></span
+      ><span class="badge warning">En attente</span>
+    </div>
+    <div class="item-row">
+      <span class="grow"
+        ><strong>Note publiée · Chips Lay's</strong
+        ><small>4/5 · 02 oct.</small></span
+      >
+    </div>
+    }
+  </section>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button type="button" class="btn btn-primary" (click)="saved.emit()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

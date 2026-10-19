@@ -1,0 +1,33 @@
+<nav class="pager" aria-label="Pagination">
+  <span class="muted small">{{ first() }}–{{ last() }} sur {{ total() }}</span>
+  <div class="pager-pages">
+    <button
+      type="button"
+      aria-label="Page précédente"
+      [disabled]="page() === 1"
+      (click)="select(page() - 1)"
+    >
+      ‹
+    </button>
+    @for (item of visiblePages(); track $index) { @if (item === '…') {
+    <span class="muted" aria-hidden="true">…</span>
+    } @else {
+    <button
+      type="button"
+      [attr.aria-label]="'Page ' + item"
+      [attr.aria-current]="page() === item ? 'page' : null"
+      (click)="select(item)"
+    >
+      {{ item }}
+    </button>
+    } }
+    <button
+      type="button"
+      aria-label="Page suivante"
+      [disabled]="page() === pageCount()"
+      (click)="select(page() + 1)"
+    >
+      ›
+    </button>
+  </div>
+</nav>

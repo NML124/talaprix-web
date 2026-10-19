@@ -1,0 +1,267 @@
+<tp-admin-page-header
+  title="Promotions"
+  subtitle="Des offres utiles et des messages adressés à la bonne audience."
+  ><button type="button" class="btn btn-secondary" (click)="newMessage()">
+    Créer un message</button
+  ><button class="btn btn-primary" type="button" (click)="newPromotion()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une promotion
+  </button></tp-admin-page-header
+>
+<tp-segmented-tabs
+  [items]="tabs"
+  [selected]="selected()"
+  (selectTab)="changeTab($event)"
+/>
+@if(toast()){
+<div class="toast" role="status">{{toast()}}</div>
+} @if(selected()==='Promotions & publicités'){
+<tp-promo-cards
+  [promotions]="promotions()"
+  (preview)="openPromotion($event,'preview')"
+  (edit)="openPromotion($event,'edit')"
+/>
+} @if(promotionDialog();as current){
+<tp-promo-dialog
+  [promotion]="current.promotion"
+  [mode]="current.mode"
+  (closed)="promotionDialog.set(null)"
+  (saved)="savePromotion($event)"
+/>
+}
+<div class="admin-stack">
+  <section class="card">
+    <div class="card-head">
+      <h2>Campagnes</h2>
+      <span class="muted small">Diffusion et audience</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Audience</th>
+            <th>Diffusion</th>
+            <th>État</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(row of visibleCampaigns();track row.id){
+          <tr>
+            <td>
+              <strong>{{row.name}}</strong
+              ><small class="muted" style="display: block"
+                >{{row.channel}}</small
+              >
+            </td>
+            <td>{{row.audience}}</td>
+            <td>{{row.date}}</td>
+            <td>
+              <tp-status-dot [label]="row.status" [tone]="tone(row.status)" />
+            </td>
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="'Modifier '+row.name"
+                  title="Modifier"
+                  (click)="editCampaign(row)"
+                >
+                  <svg lucidePencil size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="'Mettre en pause '+row.name"
+                  title="Mettre en pause"
+                  [disabled]="row.status==='Envoyée'||row.status==='En pause'"
+                  (click)="confirmCampaign(row, 'pause')"
+                >
+                  <svg lucidePause size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  type="button"
+                  class="table-action danger"
+                  [attr.aria-label]="'Supprimer '+row.name"
+                  title="Supprimer"
+                  (click)="confirmCampaign(row, 'delete')"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <tp-admin-pagination
+      [total]="campaigns().length"
+      [page]="page()"
+      [pageSize]="pageSize"
+      (pageChanged)="page.set($event)"
+    />
+  </section>
+  <section class="card campaign-performance">
+    <div class="card-head">
+      <div>
+        <h2>Résultats de diffusion</h2>
+        <p class="muted small">
+          Exemple de campagne · « Vos favoris » · données fictives
+        </p>
+      </div>
+      <span class="badge info">Simulation</span>
+    </div>
+    <div class="campaign-performance-grid">
+      <div>
+        <strong class="number">3 198</strong
+        ><small class="muted">Messages délivrés</small>
+      </div>
+      <div>
+        <strong class="number">42,8 %</strong
+        ><small class="muted">Taux d’ouverture</small>
+      </div>
+      <div>
+        <strong class="number">62</strong
+        ><small class="muted">Non délivrés</small>
+      </div>
+    </div>
+  </section>
+  @if(messageOpen()){
+  <tp-admin-dialog
+    [title]="activeCampaign()?.name ?? 'Nouvelle notification'"
+    (closed)="messageOpen.set(false)"
+  >
+    @if(formError()){
+    <p class="dialog-error" role="alert">{{formError()}}</p>
+    }
+    <div
+      style="
+        background: #24292e;
+        color: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 18px;
+      "
+    >
+      <div
+        style="text-align: center; font-size: 32px; font-weight: 600"
+        class="number"
+      >
+        09:41
+      </div>
+      <div style="text-align: center; font-size: 12px; opacity: 0.8">
+        lundi 5 octobre
+      </div>
+      <div
+        style="
+          background: #f4f4f4;
+          color: #171717;
+          border-radius: 12px;
+          padding: 12px;
+          margin-top: 25px;
+        "
+      >
+        <div class="toolbar">
+          <img
+            src="/admin-assets/logo-talaprix.png"
+            width="24"
+            height="24"
+            alt=""
+          /><strong style="font-size: 12px">TalaPrix</strong
+          ><small class="muted" style="margin-left: auto">maintenant</small>
+        </div>
+        <strong style="display: block; font-size: 13px; margin-top: 6px"
+          >{{title()}}</strong
+        ><span style="font-size: 12px">{{message()}}</span>
+      </div>
+    </div>
+    <div class="form-stack">
+      <label class="field"
+        >Titre<input
+          maxlength="50"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)" /></label
+      ><label class="field"
+        >Message<textarea
+          maxlength="140"
+          [ngModel]="message()"
+          (ngModelChange)="message.set($event)"
+        ></textarea
+        ><small>{{message().length}} / 140 caractères</small></label
+      >
+      <div>
+        <span class="small muted">Canal</span
+        ><tp-segmented-tabs
+          [items]="['Push','In-app','Push + in-app']"
+          [selected]="channel()"
+          (selectTab)="channel.set($event)"
+        />
+      </div>
+      <label class="field"
+        >Audience<select
+          [ngModel]="commune()"
+          (ngModelChange)="commune.set($event)"
+        >
+          <option>Gombe</option>
+          <option>Limete</option>
+          <option>Toutes les communes</option>
+        </select></label
+      ><label class="field"
+        >Destinataires<input readonly value="1 840 personnes"
+      /></label>
+      <div class="grid-2">
+        <label class="field"
+          >Date<input
+            type="date"
+            [ngModel]="date()"
+            (ngModelChange)="date.set($event)" /></label
+        ><label class="field"
+          >Heure · Kinshasa<input
+            type="time"
+            [ngModel]="hour()"
+            (ngModelChange)="hour.set($event)"
+        /></label>
+      </div>
+    </div>
+    <p class="notice notice-compact">
+      <strong>Envoi soumis au consentement</strong>
+      <span>Personnes consentantes uniquement · aucun message envoyé.</span>
+    </p>
+    <div class="toolbar">
+      <button type="button" class="btn btn-secondary" (click)="save(false)">
+        Enregistrer</button
+      ><button type="button" class="btn btn-primary" (click)="save(true)">
+        Programmer
+      </button>
+    </div>
+  </tp-admin-dialog>
+  } @if(confirmation();as action){
+  <tp-admin-dialog
+    [title]="action==='delete'?'Supprimer la campagne':'Mettre la campagne en pause'"
+    (closed)="confirmation.set(null)"
+  >
+    <p>
+      Confirmer {{action==='delete'?'la suppression':'la mise en pause'}} de
+      <strong>{{activeCampaign()?.name}}</strong> ?
+    </p>
+    <div class="toolbar dialog-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="confirmation.set(null)"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="applyCampaignAction()"
+      >
+        Confirmer
+      </button>
+    </div>
+  </tp-admin-dialog>
+  }
+</div>
