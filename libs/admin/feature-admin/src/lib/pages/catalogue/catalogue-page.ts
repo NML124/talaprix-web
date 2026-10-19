@@ -1,0 +1,209 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  LucidePause,
+  LucidePencil,
+  LucidePlay,
+  LucidePlus,
+  LucideTrash2,
+} from '@lucide/angular';
+import { AdminMockApi } from '../../services/admin-mock-api';
+import { PageHeader } from '../../ui/page-header';
+import { SegmentedTabs } from '../../ui/segmented-tabs';
+import { StatusDot } from '../../ui/status-dot';
+import { EmptyState } from '../../ui/empty-state';
+import { Pagination } from '../../ui/pagination';
+import { fc, imagePath } from '../../mocks/catalogue';
+import type { Product } from '../../mocks/models';
+import { ProductDialog } from './product-dialog';
+
+@Component({
+  selector: 'tp-catalogue-page',
+  imports: [
+    FormsModule,
+    PageHeader,
+    SegmentedTabs,
+    StatusDot,
+    EmptyState,
+    Pagination,
+    LucidePlus,
+    LucidePencil,
+    LucidePause,
+    LucidePlay,
+    LucideTrash2,
+    ProductDialog,
+  ],
+  templateUrl: './catalogue-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CataloguePage {
+  private readonly api = inject(AdminMockApi);
+  protected readonly products = signal<Product[]>([]);
+  protected readonly selected = signal<Product | null>(null);
+  protected readonly dialogMode = signal<
+    'edit' | 'archive' | 'restore' | 'delete'
+  >('edit');
+  protected readonly tab = signal('Publiés 2 486');
+  protected readonly query = signal('');
+  protected readonly category = signal('Toutes les catégories');
+  protected readonly shop = signal('Toutes les boutiques');
+  protected readonly loading = signal(true);
+  protected readonly error = signal('');
+  protected readonly toast = signal('');
+  protected readonly page = signal(1);
+  protected readonly pageSize = 10;
+  protected readonly fc = fc;
+  protected readonly imagePath = imagePath;
+  protected readonly tabs = ['Publiés 2 486', 'Brouillons 38', 'Archivés 124'];
+  protected readonly categories = [
+    'Toutes les catégories',
+    'Boulangerie',
+    'Épicerie',
+    'Mode',
+    'Accessoires',
+  ];
+  protected readonly shops = [
+    'Toutes les boutiques',
+    'Kin Marché',
+    'S&K',
+    'Maison Galaxy',
+    'Swiss Mart',
+  ];
+  protected readonly filtered = computed(() =>
+    this.products().filter((row) => {
+      const group = this.tab().startsWith('Publiés')
+        ? row.status === 'Publié' || row.status === 'À revoir'
+        : this.tab().startsWith('Brouillons')
+          ? row.status === 'Brouillon'
+          : row.status === 'Archivé';
+      return (
+        group &&
+        `${row.name} ${row.shop}`
+          .toLowerCase()
+          .includes(this.query().toLowerCase()) &&
+        (this.category() === 'Toutes les catégories' ||
+          row.category === this.category()) &&
+        (this.shop() === 'Toutes les boutiques' || row.shop === this.shop())
+      );
+    }),
+  );
+  protected readonly currentPage = computed(() =>
+    Math.min(
+      this.page(),
+      Math.max(1, Math.ceil(this.filtered().length / this.pageSize)),
+    ),
+  );
+  protected readonly visible = computed(() =>
+    this.filtered().slice(
+      (this.currentPage() - 1) * this.pageSize,
+      this.currentPage() * this.pageSize,
+    ),
+  );
+
+  constructor() {
+    void this.load();
+  }
+  protected async load(): Promise<void> {
+    this.loading.set(true);
+    this.error.set('');
+    try {
+      const rows = await this.api.listProducts();
+      this.products.set(rows);
+    } catch {
+      this.error.set('Le catalogue ne peut pas être chargé.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+  protected select(
+    row: Product,
+    mode: 'edit' | 'archive' | 'restore' | 'delete' = 'edit',
+  ): void {
+    this.selected.set(structuredClone(row));
+    this.dialogMode.set(mode);
+    this.toast.set('');
+    this.error.set('');
+  }
+  protected add(): void {
+    this.dialogMode.set('edit');
+    this.selected.set({
+      id: Date.now(),
+      name: '',
+      category: 'Boulangerie',
+      unit: '',
+      shop: 'Kin Marché',
+      price: 0,
+      status: 'Brouillon',
+      updated: 'Aujourd’hui',
+      image: '',
+      images: [],
+      description: '',
+    });
+  }
+  protected updateImages(images: string[]): void {
+    const row = this.selected();
+    if (!row) return;
+    this.selected.set({ ...row, images, image: images[0] ?? '' });
+  }
+  protected async save(): Promise<void> {
+    const row = this.selected();
+    if (!row?.name.trim() || row.price <= 0 || !row.image) {
+      this.error.set(
+        'Renseignez un nom, un prix valide et au moins une photo.',
+      );
+      return;
+    }
+    this.error.set('');
+    try {
+      await this.api.saveProduct(row);
+      this.products.set(await this.api.listProducts());
+      this.toast.set('Produit enregistré. Action ajoutée au journal d’audit.');
+      this.selected.set(null);
+    } catch {
+      this.error.set('Enregistrement impossible. Réessayez.');
+    }
+  }
+  protected async archive(): Promise<void> {
+    const row = this.selected();
+    if (!row) return;
+    row.status = 'Archivé';
+    await this.api.saveProduct(row);
+    this.products.set(await this.api.listProducts());
+    this.selected.set(null);
+    this.toast.set('Produit archivé. Action ajoutée au journal d’audit.');
+  }
+  protected async restore(): Promise<void> {
+    const row = this.selected();
+    if (!row) return;
+    row.status = 'Publié';
+    await this.api.saveProduct(row);
+    this.products.set(await this.api.listProducts());
+    this.selected.set(null);
+    this.toast.set('Produit republié dans la maquette.');
+  }
+  protected async remove(): Promise<void> {
+    const row = this.selected();
+    if (!row) return;
+    try {
+      await this.api.deleteProduct(row.id);
+      this.products.set(await this.api.listProducts());
+      this.selected.set(null);
+      this.toast.set('Produit supprimé de la maquette et action auditée.');
+    } catch {
+      this.error.set('Suppression impossible.');
+    }
+  }
+  protected statusTone(value: string): 'success' | 'warning' | 'neutral' {
+    return value === 'Publié'
+      ? 'success'
+      : value === 'À revoir'
+        ? 'warning'
+        : 'neutral';
+  }
+}

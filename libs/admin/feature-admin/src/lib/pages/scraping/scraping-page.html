@@ -1,0 +1,167 @@
+<tp-admin-page-header
+  title="Collecte web"
+  subtitle="Suivez la découverte de vendeurs et d’offres, puis vérifiez chaque candidat avant toute suite."
+>
+  <span class="badge warning">Maquette · données fictives</span>
+</tp-admin-page-header>
+
+<section class="card scrape-run-card" aria-labelledby="run-title">
+  <div class="scrape-run-head">
+    <div>
+      <p class="eyebrow">Démonstration de pipeline</p>
+      <h2 id="run-title">Kinshasa · électronique</h2>
+      <p class="muted small">
+        Apify collecte → préparation et rapprochement → Gemini suggère → revue
+        humaine
+      </p>
+    </div>
+    <div class="scrape-run-state">
+      <span
+        class="scrape-live-mark"
+        [class.is-running]="runStatus()==='running'"
+      ></span>
+      <strong
+        >{{runStatus()==='running'?'Cycle simulé':'En attente de
+        revue'}}</strong
+      >
+      <button type="button" class="btn btn-secondary" (click)="runDemo()">
+        Rejouer la démo
+      </button>
+    </div>
+  </div>
+  <ol class="scrape-stage-list">
+    @for(label of stages;track label;let index=$index){
+    <li
+      [class.current]="stage()===index&&runStatus()==='running'"
+      [class.complete]="stage()>index||runStatus()==='waiting'"
+    >
+      <span class="scrape-stage-index"
+        >{{stage()>index||runStatus()==='waiting'?'✓':index+1}}</span
+      >
+      <div><strong>{{label}}</strong><small>{{stageText(index)}}</small></div>
+    </li>
+    }
+  </ol>
+  <div class="scrape-run-foot">
+    <span><strong>3</strong> candidats de démonstration</span>
+    <span><strong>2</strong> offres · <strong>1</strong> vendeur</span>
+    <span>Dernier run simulé · aujourd’hui, 09:42</span>
+  </div>
+  <p class="muted small scrape-demo-note">
+    Le suivi des jobs, les compteurs et l’animation sont fictifs : l’API
+    actuelle ne fournit pas encore de routes de lancement ni de statistiques de
+    run.
+  </p>
+</section>
+
+@if(notice()){
+<div class="toast" role="status">{{notice()}}</div>
+}
+
+<section class="scrape-kpis" aria-label="Indicateurs de revue simulés">
+  <article class="card">
+    <small>À examiner</small><strong>{{pendingCount()}}</strong
+    ><span>candidats non publiés</span>
+  </article>
+  <article class="card">
+    <small>Prix non établis</small><strong>{{unknownPriceCount()}}</strong
+    ><span>aucune devise devinée</span>
+  </article>
+  <article class="card">
+    <small>Médias staged</small><strong>{{mediaCount()}}</strong
+    ><span>aperçus fictifs privés</span>
+  </article>
+  <article class="card">
+    <small>Décisions dans cette session</small
+    ><strong>{{decidedCount()}}</strong><span>sans publication catalogue</span>
+  </article>
+</section>
+
+<section class="card">
+  <div class="card-head scrape-queue-head">
+    <div>
+      <h2>File de validation</h2>
+      <p class="muted small">
+        Les correspondances restent des suggestions. Examinez la source avant de
+        décider.
+      </p>
+    </div>
+    <div class="toolbar">
+      <button
+        type="button"
+        class="btn"
+        [class.btn-primary]="filter()==='needs_review'"
+        [class.btn-secondary]="filter()!=='needs_review'"
+        (click)="filter.set('needs_review')"
+      >
+        À examiner
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [class.btn-primary]="filter()==='all'"
+        [class.btn-secondary]="filter()!=='all'"
+        (click)="filter.set('all')"
+      >
+        Tous
+      </button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Découverte</th>
+          <th>Vendeur</th>
+          <th>Prix</th>
+          <th>Source</th>
+          <th>Revue</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(row of visibleRows();track row.candidate_id){
+        <tr>
+          <td>
+            <button class="scrape-row-open" type="button" (click)="open(row)">
+              <strong>{{row.product_name||row.seller_name}}</strong
+              ><small
+                >{{row.candidate_kind==='seller'?'Vendeur':'Offre'}} ·
+                {{row.candidate_id}}</small
+              >
+            </button>
+          </td>
+          <td>{{row.seller_name||'À identifier'}}</td>
+          <td>{{displayPrice(row)}}</td>
+          <td><small>{{row.source_actor}}</small></td>
+          <td>
+            <tp-status-dot
+              [label]="stateLabel(row.review_state)"
+              [tone]="tone(row.review_state)"
+            />
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5">
+            <p class="empty-state">Aucun candidat dans ce filtre.</p>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small scrape-contract-note">
+    Format raccordable : candidate_id · candidate_kind ·
+    seller/product/offer_data · evidence · media_data · matches · text_analysis
+    · version. Décisions attendues : approved ou rejected avec motif obligatoire
+    au rejet.
+  </p>
+</section>
+
+@if(selected();as candidate){
+<tp-scraping-review-dialog
+  [candidate]="candidate"
+  (closed)="selected.set(null)"
+  (decided)="decide($event)"
+/>
+}

@@ -1,0 +1,155 @@
+<tp-admin-page-header
+  title="Utilisateurs"
+  subtitle="La communauté TalaPrix, ses profils et ses contributions. Les administrateurs ont un espace distinct."
+  ><button class="btn btn-secondary" type="button">
+    Exporter la liste
+  </button></tp-admin-page-header
+>
+<div class="toolbar">
+  <tp-segmented-tabs
+    [items]="tabs"
+    [selected]="tab()"
+    (selectTab)="tab.set($event)"
+  /><span class="toolbar-spacer"></span
+  ><label class="search"
+    ><span class="sr-only">Rechercher un utilisateur</span
+    ><input
+      type="search"
+      placeholder="Nom ou numéro +243"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)" /></label
+  ><label class="field"
+    ><span class="sr-only">Commune</span
+    ><select [ngModel]="commune()" (ngModelChange)="commune.set($event)">
+      @for(value of communes;track value){
+      <option>{{value}}</option>
+      }
+    </select></label
+  >
+</div>
+@if(toast()){
+<div class="toast" role="status">{{toast()}}</div>
+}@if(error()){
+<div class="toast error" role="alert">
+  {{error()}}
+  <button class="link" type="button" (click)="load()">Réessayer</button>
+</div>
+}
+<div class="admin-stack">
+  <section class="card">
+    <div class="card-head">
+      <h2>Communauté</h2>
+      <span class="muted small">Tri : activité récente</span>
+    </div>
+    @if(loading()){
+    <div class="admin-stack">
+      @for(item of [1,2,3,4];track item){
+      <div class="skeleton" style="height: 54px"></div>
+      }
+    </div>
+    } @else if(!filtered().length){<tp-empty-state
+      title="Aucun utilisateur trouvé"
+      message="Essayez d’autres filtres."
+    />} @else{
+    <div class="table-wrap">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Commune</th>
+            <th style="text-align: right">Points</th>
+            <th>État</th>
+            <th>Activité</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(row of visible();track row.id){
+          <tr>
+            <td>
+              <button
+                type="button"
+                class="item-row"
+                style="border: 0; padding: 4px 0"
+                (click)="select(row, 'edit')"
+              >
+                <span class="avatar" style="width: 34px; height: 34px"
+                  >{{row.initials}}</span
+                ><span class="grow"
+                  ><strong>{{row.name}}</strong
+                  ><small>{{row.phone}}</small></span
+                >
+              </button>
+            </td>
+            <td>{{row.commune}}</td>
+            <td class="number" style="text-align: right">{{row.points}}</td>
+            <td>
+              <tp-status-dot
+                [label]="row.status"
+                [tone]="row.status==='Actif'?'success':'danger'"
+              />
+            </td>
+            <td class="small muted">{{row.activity}}</td>
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="'Modifier '+row.name"
+                  title="Modifier"
+                  (click)="select(row, 'edit')"
+                >
+                  <svg lucidePencil size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  type="button"
+                  class="table-action"
+                  [attr.aria-label]="(row.status==='Actif'?'Suspendre ':'Réactiver ')+row.name"
+                  [title]="row.status==='Actif'?'Suspendre':'Réactiver'"
+                  (click)="select(row, 'suspend')"
+                >
+                  @if(row.status==='Actif'){<svg
+                    lucidePause
+                    size="16"
+                    aria-hidden="true"
+                  ></svg
+                  >}@else{<svg lucidePlay size="16" aria-hidden="true"></svg>}
+                </button>
+                <button
+                  type="button"
+                  class="table-action danger"
+                  [attr.aria-label]="'Supprimer '+row.name"
+                  title="Supprimer"
+                  (click)="select(row, 'delete')"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+    <tp-admin-pagination
+      [total]="filtered().length"
+      [page]="currentPage()"
+      [pageSize]="pageSize"
+      (pageChanged)="page.set($event)"
+    />
+  </section>
+  @if(selected();as row){
+  <tp-user-dialog
+    [user]="row"
+    [mode]="dialogMode()"
+    [reason]="reason()"
+    [error]="error()"
+    (reasonChanged)="reason.set($event)"
+    (closed)="selected.set(null)"
+    (saved)="saveProfile()"
+    (suspended)="toggleStatus()"
+    (removed)="remove()"
+  />
+  }
+</div>

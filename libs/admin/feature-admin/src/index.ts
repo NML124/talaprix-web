@@ -1,0 +1,12 @@
+export { AdminShell } from './lib/layout/admin-shell';
+export { OverviewPage } from './lib/pages/overview/overview-page';
+export { CataloguePage } from './lib/pages/catalogue/catalogue-page';
+export { ModerationPage } from './lib/pages/moderation/moderation-page';
+export { ShopsPage } from './lib/pages/shops/shops-page';
+export { MarketingPage } from './lib/pages/marketing/marketing-page';
+export { UsersPage } from './lib/pages/users/users-page';
+export { ReportsPage } from './lib/pages/reports/reports-page';
+export { ScrapingPage } from './lib/pages/scraping/scraping-page';
+export { TeamPage } from './lib/pages/team/team-page';
+export { RolesPage } from './lib/pages/roles/roles-page';
+export { ProfilePage } from './lib/pages/profile/profile-page';

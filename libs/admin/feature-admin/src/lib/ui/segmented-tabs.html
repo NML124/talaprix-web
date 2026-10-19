@@ -1,0 +1,11 @@
+<div class="tabs" role="group" aria-label="Filtrer la liste">
+  @for (item of items(); track item) {
+  <button
+    type="button"
+    [attr.aria-pressed]="selected() === item"
+    (click)="selectTab.emit(item)"
+  >
+    {{ item }}
+  </button>
+  }
+</div>

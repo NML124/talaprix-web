@@ -1,0 +1,173 @@
+<tp-admin-page-header
+  title="Bonjour Aline"
+  [subtitle]="overview()?.stats?.subtitle ?? ''"
+>
+  <button type="button" class="btn btn-secondary">
+    {{overview()?.stats?.period ?? ''}} ▾
+  </button>
+  <a class="btn btn-primary" routerLink="/admin/catalogue"
+    ><svg lucidePlus size="15" aria-hidden="true"></svg>Ajouter un produit</a
+  >
+</tp-admin-page-header>
+@if(overview();as data){
+<section class="card kpi-band" aria-label="Indicateurs de septembre">
+  @for(kpi of data.kpis; track kpi.label){
+  <div class="kpi">
+    <small>{{kpi.label}}</small><strong class="number">{{kpi.value}}</strong
+    ><small [class.positive]="kpi.positive">{{kpi.detail}}</small>
+  </div>
+  }
+</section>
+<div class="split">
+  <section class="card wide">
+    <div class="card-head">
+      <h2>Économies estimées</h2>
+      <span class="muted small"
+        ><strong class="number" style="color: var(--text)"
+          >{{data.stats.visits}}</strong
+        >
+        consultations ce mois-ci</span
+      >
+    </div>
+    <div class="toolbar" style="align-items: baseline">
+      <strong class="hero-number number">{{data.stats.heroSavings}}</strong
+      ><span class="positive small">{{data.stats.savingsChange}}</span>
+    </div>
+    <div
+      class="bar-chart"
+      role="img"
+      aria-label="Économies estimées de 3,1 millions de FC en avril à 12,8 millions en septembre 2026, supérieures à la période précédente."
+    >
+      @for(month of data.savings; track month.month){
+      <div class="bar-group">
+        <span
+          class="bar"
+          [style.height]="barHeight(month.current)"
+          [attr.aria-label]="month.current+' millions de FC'"
+        ></span
+        ><span class="bar" [style.height]="barHeight(month.previous)"></span
+        ><small class="bar-label">{{month.month}}</small>
+      </div>
+      }
+    </div>
+    <div class="metric-strip small">
+      <span
+        ><span class="legend-swatch current" aria-hidden="true"></span> 2026
+        &nbsp;
+        <span class="legend-swatch previous" aria-hidden="true"></span> Période
+        précédente</span
+      ><span class="muted"
+        >Estimation sur les produits consultés, sans achat confirmé.</span
+      >
+    </div>
+  </section>
+  <section class="card narrow">
+    <div class="card-head">
+      <h2>À traiter</h2>
+      <span class="muted small">{{data.stats.actions}}</span>
+    </div>
+    @for(action of data.actions; track action.title){<a
+      class="item-row"
+      [routerLink]="action.link"
+      ><strong class="number" style="width: 30px; font-size: 20px"
+        >{{action.count}}</strong
+      ><span class="grow"
+        ><strong>{{action.title}}</strong><small>{{action.detail}}</small></span
+      ><svg lucideChevronRight size="16" aria-hidden="true"></svg></a
+    >}
+    <div style="padding-top: 18px">
+      <span class="status warning">{{data.stats.stalePrices}}</span>
+      <p class="muted small" style="margin: 5px 0 6px 14px">
+        {{data.stats.stalePriority}}
+      </p>
+      <a routerLink="/admin/moderation" class="link"
+        >Ouvrir les prix périmés →</a
+      >
+    </div>
+  </section>
+</div>
+<div class="split">
+  <section class="card wide">
+    <div class="card-head">
+      <h2>Produits tendances</h2>
+      <tp-segmented-tabs
+        [items]="['Favoris','Consultations']"
+        [selected]="activeTab()"
+        (selectTab)="activeTab.set($event)"
+      />
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>{{activeTab()}}</th>
+            <th style="text-align: right">Prix min.</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(row of visibleTrending(); track row.name){
+          <tr>
+            <td>
+              <div class="product-cell">
+                <img
+                  class="thumb"
+                  style="width: 36px; height: 36px"
+                  [src]="imagePath(row.image)"
+                  alt=""
+                /><span
+                  ><strong>{{row.name}}</strong
+                  ><small>{{row.detail}}</small></span
+                >
+              </div>
+            </td>
+            <td>
+              <strong class="number"
+                >{{activeTab()==='Favoris'?row.favorites:row.views}}</strong
+              >
+              <div class="progress" style="margin-top: 5px">
+                <span
+                  [style.width]="barWidth(activeTab()==='Favoris'?row.favorites:row.views)"
+                ></span>
+              </div>
+            </td>
+            <td class="number" style="text-align: right">{{fc(row.price)}}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <tp-admin-pagination
+      [total]="data.trending.length"
+      [page]="page()"
+      [pageSize]="pageSize"
+      (pageChanged)="page.set($event)"
+    />
+    <a routerLink="/admin/catalogue" class="link">Voir tout le catalogue →</a>
+  </section>
+  <section class="card narrow">
+    <div class="card-head">
+      <h2>Activité de l'équipe</h2>
+      <span class="muted small">Aujourd'hui</span>
+    </div>
+    @for(entry of data.activity; track entry.time){
+    <div class="item-row">
+      <span class="avatar">{{entry.initials}}</span
+      ><span class="grow"
+        ><strong
+          >{{entry.actor}}
+          <span style="font-weight: 400">{{entry.action}}</span></strong
+        ><small>{{entry.detail}}</small></span
+      ><small class="muted number">{{entry.time}}</small>
+    </div>
+    }
+    <a routerLink="/admin/equipe" class="link">Journal d'audit →</a>
+  </section>
+</div>
+} @else {
+<div class="card admin-stack" aria-label="Chargement des indicateurs">
+  @for(item of [1,2,3,4];track item){
+  <div class="skeleton" style="height: 60px"></div>
+  }
+</div>
+}

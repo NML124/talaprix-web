@@ -1,0 +1,142 @@
+<tp-admin-page-header
+  title="Rôles & permissions"
+  subtitle="Le bon niveau d'accès, pour chaque responsabilité."
+  ><span class="badge success"
+    >Super administrateur · accès global</span
+  ></tp-admin-page-header
+>
+@if(toast()){
+<div role="status" class="toast">{{toast()}}</div>
+}
+<div class="split">
+  <div class="narrow admin-stack">
+    <section class="card">
+      <h2 style="margin-bottom: 14px">Rôles de l'équipe</h2>
+      @for(role of roles;track role.name){<button
+        type="button"
+        class="item-row"
+        [class.selected]="selected()===role.name"
+        (click)="select(role.name)"
+      >
+        <span
+          style="width: 8px; height: 8px; border-radius: 50%"
+          [style.background]="role.color"
+        ></span
+        ><span class="grow"
+          ><strong>{{role.name}}</strong
+          ><small>{{role.description}}</small></span
+        ><span class="muted small"
+          >{{role.members}} {{role.members===1?'membre':'membres'}}</span
+        ></button
+      >}<button
+        type="button"
+        class="btn btn-secondary"
+        style="margin-top: 16px"
+      >
+        + Nouveau rôle
+      </button>
+    </section>
+    <section class="card">
+      <h2>Droits sensibles</h2>
+      <p class="muted small" style="margin: 10px 0 0">
+        Inviter ou désactiver un administrateur, attribuer un rôle, changer un
+        périmètre et modifier cette matrice : réservé au super administrateur.
+        Chaque changement est inscrit au journal d'audit.
+      </p>
+    </section>
+  </div>
+  <section class="card wide">
+    <div class="card-head">
+      <div>
+        <h2 style="font-size: 22px">{{selected()}}</h2>
+        <span class="muted small"
+          >{{selected()==='Super administrateur'?'Rôle système · non
+          modifiable':changes()+' modifications non enregistrées'}}</span
+        >
+      </div>
+      <span class="status success">Rôle sélectionné</span>
+    </div>
+    <div class="grid-2">
+      <label class="field"
+        >Nom du rôle<input
+          [ngModel]="roleName()"
+          (ngModelChange)="roleName.set($event)"
+          [disabled]="selected()==='Super administrateur'" /></label
+      ><label class="field"
+        >Périmètre autorisé<input
+          [ngModel]="scope()"
+          (ngModelChange)="scope.set($event)"
+          [disabled]="selected()==='Super administrateur'"
+      /></label>
+    </div>
+    @if(selected()==='Administrateur'||selected()==='Analyste'){
+    <p class="notice">
+      Valeurs proposées par la maquette ; à confirmer par l'équipe produit avant
+      toute connexion réelle.
+    </p>
+    }
+    <div class="table-wrap" style="margin-top: 20px">
+      <table class="permission-table">
+        <thead>
+          <tr>
+            <th>Domaine</th>
+            @for(action of actions;track action){
+            <th>{{action}}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for(domain of domains;track domain){
+          <tr>
+            <td>
+              <strong>{{domain}}</strong>@if(isReserved(domain)){<span
+                class="muted small"
+              >
+                · réservé</span
+              >}
+            </td>
+            @for(action of actions;track action){
+            <td>
+              <button
+                type="button"
+                class="permission-check"
+                role="checkbox"
+                [attr.aria-label]="domain+', '+action"
+                [attr.aria-checked]="checked(domain,action)"
+                [disabled]="selected()==='Super administrateur'||isReserved(domain)"
+                (click)="toggle(domain,action)"
+              >
+                {{checked(domain,action)?'✓':isReserved(domain)?'×':''}}
+              </button>
+            </td>
+            }
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted small" style="margin: 16px 0">
+      ● Autorisé &nbsp; ○ Non autorisé &nbsp; × Droit réservé
+    </p>
+    <div class="notice">
+      Validation = approuver ou rejeter une proposition de prix, publier ou
+      masquer un avis avec justification. La lecture des utilisateurs n'autorise
+      pas la suspension d'un compte.
+    </div>
+    <p class="muted small" style="margin: 16px 0">
+      Dernière modification : Aline · 12 sept. 2026
+    </p>
+    <div class="toolbar">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Annuler</button
+      ><button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="selected()==='Super administrateur'||!changes()"
+        (click)="save()"
+      >
+        Enregistrer les permissions
+      </button>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,57 @@
+<tp-admin-dialog
+  [title]="mode()==='create'?'Créer une promotion':mode()==='edit'?'Modifier la promotion':'Aperçu de la promotion'"
+  (closed)="closed.emit()"
+>
+  <div class="promo-art" [class.bread]="value().style==='bread'">
+    <div>
+      <small>{{value().tagline}}</small>
+      <h3 style="font-size: 20px; margin: 12px 0">{{value().title}}</h3>
+      <span class="small">{{value().detail}}</span>
+    </div>
+    <img [src]="imagePath(value().image)" alt="" />
+  </div>
+  <p class="muted small" style="margin: 12px 0">
+    {{value().dates}} · {{value().status}} · données de conception
+  </p>
+  @if(mode()!=='preview'){ @if(error()){
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <div class="form-stack">
+    <label class="field"
+      >Visuel de démonstration
+      <select [ngModel]="value().image" (ngModelChange)="changeImage($event)">
+        <option value="chipsbig.png">Chips Lay's</option>
+        <option value="painbig.png">Pain de mie</option>
+      </select>
+    </label>
+    <label class="field"
+      >Titre<input
+        [ngModel]="value().title"
+        (ngModelChange)="change('title',$event)"
+    /></label>
+    <label class="field"
+      >Accroche<input
+        [ngModel]="value().tagline"
+        (ngModelChange)="change('tagline',$event)"
+    /></label>
+    <label class="field"
+      >Détail<input
+        [ngModel]="value().detail"
+        (ngModelChange)="change('detail',$event)"
+    /></label>
+    <label class="field"
+      >Dates affichées<input
+        [ngModel]="value().dates"
+        (ngModelChange)="change('dates',$event)"
+    /></label>
+  </div>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save()">
+      Enregistrer dans la maquette
+    </button>
+  </div>
+  }
+</tp-admin-dialog>

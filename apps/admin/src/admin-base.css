@@ -1,0 +1,284 @@
+.admin-app {
+  --brand: #009788;
+  --brand-hover: #00867a;
+  --brand-soft: #9ed8d2;
+  --brand-tint: #e6f5f3;
+  --bg: #f6f6f6;
+  --surface: #fff;
+  --surface-muted: #f6f6f6;
+  --input-bg: #f2f2f5;
+  --text: #171717;
+  --text-2: #6b6b6b;
+  --text-3: #8a8a8a;
+  --line: #ebebeb;
+  --line-soft: #f3f3f3;
+  --tree: #d9d9d9;
+  --selected-row: #f4f4f4;
+  --success: #0a6b52;
+  --warning: #a84b05;
+  --danger: #b42318;
+  --info: #0a5cb8;
+  --neutral: #48484a;
+  font:
+    400 14px/1.5 'Plus Jakarta Sans',
+    system-ui,
+    sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.admin-app * {
+  box-sizing: border-box;
+}
+.admin-app button,
+.admin-app input,
+.admin-app textarea,
+.admin-app select {
+  font: inherit;
+}
+.admin-app button {
+  cursor: pointer;
+}
+.admin-app a {
+  text-decoration: none;
+  color: inherit;
+}
+.admin-app :is(button, a, input, textarea, select):focus-visible {
+  outline: 3px solid rgba(0, 151, 136, 0.35);
+  outline-offset: 2px;
+}
+.admin-app h1,
+.admin-app h2,
+.admin-app h3,
+.admin-app p {
+  margin-top: 0;
+}
+.admin-app h1 {
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.admin-app h2 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin-bottom: 0;
+}
+.admin-app .muted {
+  color: var(--text-2);
+}
+.admin-app .small {
+  font-size: 12.5px;
+}
+.admin-app .number {
+  font-variant-numeric: tabular-nums;
+}
+.admin-app .card {
+  background: var(--surface);
+  border: 0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  min-width: 0;
+  box-shadow: none;
+}
+.admin-app .card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.admin-app .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 15px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  box-shadow: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.admin-app .btn-primary {
+  background: var(--brand);
+  color: white;
+}
+.admin-app .btn-primary:hover {
+  background: var(--brand-hover);
+}
+.admin-app .btn-secondary {
+  background: #fff;
+  border-color: #e3e3e3;
+  color: var(--text);
+}
+.admin-app .btn-secondary:hover {
+  background: #fafafa;
+}
+.admin-app .btn-filter-active {
+  background: var(--surface-muted);
+  color: var(--text);
+  border-color: var(--line);
+}
+.admin-app .btn-filter-active:hover {
+  background: var(--selected-row);
+}
+.admin-app .btn-ghost {
+  background: #f2f2f2;
+  color: var(--text);
+}
+.admin-app .btn-danger {
+  background: #fdecec;
+  color: var(--danger);
+}
+.admin-app .btn-icon {
+  width: 40px;
+  padding: 0;
+}
+.admin-app .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.admin-app .toolbar-spacer {
+  flex: 1;
+}
+.admin-app .tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: #f2f2f2;
+  flex-wrap: wrap;
+}
+.admin-app .tabs button {
+  border: 0;
+  background: transparent;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+.admin-app .tabs button[aria-pressed='true'] {
+  background: #fff;
+  color: var(--text);
+  font-weight: 600;
+}
+.admin-app tp-status-dot {
+  display: inline-flex;
+  flex: none;
+}
+.admin-app .status {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: auto;
+  height: auto;
+  aspect-ratio: auto;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--text);
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.admin-app .status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--neutral);
+}
+.admin-app .status.success::before {
+  background: var(--success);
+}
+.admin-app .status.warning::before {
+  background: #d97706;
+}
+.admin-app .status.danger::before {
+  background: #dc2626;
+}
+.admin-app .status.info::before {
+  background: var(--info);
+}
+.admin-app .badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #efeff2;
+  color: var(--neutral);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid #e3e3e7;
+}
+.admin-app .badge.success {
+  background: #e3f4ec;
+  color: var(--success);
+  border-color: #bce5d0;
+}
+.admin-app .badge.warning {
+  background: #fff1e0;
+  color: var(--warning);
+  border-color: #f3d2a7;
+}
+.admin-app .badge.danger {
+  background: #fdecec;
+  color: var(--danger);
+  border-color: #f4c4c0;
+}
+.admin-app .badge.info {
+  background: #e8f1fd;
+  color: var(--info);
+  border-color: #c5dbfa;
+}
+.admin-app .notice {
+  display: block;
+  width: 100%;
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid #c5dbfa;
+  border-radius: 12px;
+  background: #e8f1fd;
+  color: #144d8f;
+  font-size: 12.5px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.admin-app .notice.warning {
+  border-color: #f3d2a7;
+  background: #fff8eb;
+  color: #89430b;
+}
+.admin-app .notice.success {
+  border-color: #bce5d0;
+  background: #edf8f2;
+  color: var(--success);
+}
+.admin-app .notice-compact {
+  display: grid;
+  gap: 2px;
+  margin: 10px 0;
+  padding: 9px 11px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.admin-app .notice-compact strong {
+  font-size: 12px;
+  font-weight: 600;
+}

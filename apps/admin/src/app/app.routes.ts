@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { adminGuard } from '@talaprix/users/data-access';
+import { adminPreviewGuard } from './admin-preview-guard';
 
 export const appRoutes: Route[] = [
   {
@@ -10,20 +10,70 @@ export const appRoutes: Route[] = [
       ),
   },
   {
-    path: 'products',
-    canMatch: [adminGuard],
+    path: 'admin',
+    canMatch: [adminPreviewGuard],
     loadComponent: () =>
-      import('@talaprix/products').then(
-        ({ ProductsFeatureAdmin }) => ProductsFeatureAdmin,
-      ),
+      import('@talaprix/admin').then(({ AdminShell }) => AdminShell),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ OverviewPage }) => OverviewPage),
+      },
+      {
+        path: 'rapports',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ ReportsPage }) => ReportsPage),
+      },
+      {
+        path: 'scraping',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ ScrapingPage }) => ScrapingPage),
+      },
+      {
+        path: 'catalogue',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ CataloguePage }) => CataloguePage),
+      },
+      {
+        path: 'moderation',
+        loadComponent: () =>
+          import('@talaprix/admin').then(
+            ({ ModerationPage }) => ModerationPage,
+          ),
+      },
+      {
+        path: 'boutiques',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ ShopsPage }) => ShopsPage),
+      },
+      {
+        path: 'marketing',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ MarketingPage }) => MarketingPage),
+      },
+      {
+        path: 'utilisateurs',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ UsersPage }) => UsersPage),
+      },
+      {
+        path: 'equipe',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ TeamPage }) => TeamPage),
+      },
+      {
+        path: 'roles',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ RolesPage }) => RolesPage),
+      },
+      {
+        path: 'profil',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ ProfilePage }) => ProfilePage),
+      },
+    ],
   },
-  {
-    path: 'scrapers',
-    canMatch: [adminGuard],
-    loadComponent: () =>
-      import('@talaprix/scrapers').then(
-        ({ ScrapersFeatureAdmin }) => ScrapersFeatureAdmin,
-      ),
-  },
-  { path: '', pathMatch: 'full', redirectTo: 'products' },
+  { path: '', pathMatch: 'full', redirectTo: 'admin' },
 ];

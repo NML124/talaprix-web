@@ -1,0 +1,227 @@
+<tp-admin-page-header
+  title="Administrateurs"
+  subtitle="Une équipe identifiée. Des accès maîtrisés. Chaque action attribuée."
+  ><span class="badge info"
+    >Gestion réservée au super administrateur</span
+  ></tp-admin-page-header
+>
+<tp-segmented-tabs
+  [items]="tabs"
+  [selected]="tab()"
+  (selectTab)="tab.set($event)"
+/>
+@if(toast()){
+<div class="toast" role="status">{{toast()}}</div>
+}@if(error()){
+<div class="toast error" role="alert">
+  {{error()}}
+  <button type="button" class="link" (click)="load()">Réessayer</button>
+</div>
+}
+<div class="split">
+  <div class="wide admin-stack">
+    <section class="card">
+      <div class="card-head">
+        <h2>Équipe d'administration</h2>
+        <span class="muted small">5 actifs · 1 désactivé</span>
+      </div>
+      @if(loading()){@for(item of [1,2,3,4];track item){
+      <div class="skeleton" style="height: 53px; margin: 10px 0"></div>
+      }} @else if(tab()==="Journal d'audit"){@for(entry of audit();track
+      entry.id){
+      <div class="item-row">
+        <span class="number muted small">{{entry.time}}</span
+        ><span class="grow"
+          ><strong>{{entry.actor}} · {{entry.action}}</strong
+          ><small>{{entry.detail}}</small></span
+        >
+      </div>
+      }} @else if(tab()==='Invitations 2'){@for(invite of invitations();track
+      invite.name){
+      <div class="item-row">
+        <span class="avatar">{{invite.name.slice(0,2).toUpperCase()}}</span
+        ><span class="grow"
+          ><strong>{{invite.name}}</strong
+          ><small
+            >{{invite.role}} · envoyée le {{invite.sent}} · expire le
+            {{invite.expires}}</small
+          ></span
+        ><button
+          class="link"
+          type="button"
+          style="border: 0; background: transparent"
+          (click)="cancelInvite(invite.name)"
+        >
+          Annuler
+        </button>
+      </div>
+      }} @else{@for(row of members();track row.id){<button
+        type="button"
+        class="item-row"
+        [class.selected]="selectedId()===row.id"
+        [style.opacity]="row.active?1:.6"
+        (click)="select(row)"
+      >
+        <span class="avatar"
+          >{{row.name.split(' ')[0][0]}}{{row.name.split(' ')[1][0]}}</span
+        ><span class="grow"
+          ><strong>{{row.name}} {{row.id===1?'· vous':''}}</strong
+          ><small>{{row.email}}</small></span
+        ><span class="badge">{{row.role}}</span
+        ><span class="muted small">{{row.scope}}</span
+        ><tp-status-dot
+          [label]="row.active?'Actif':'Désactivé'"
+          [tone]="row.active?'success':'neutral'"
+        /><span class="muted small number">{{row.activity}}</span></button
+      >}}
+      <p class="muted small" style="margin: 14px 0 0">
+        Un accès désactivé ne supprime pas l'historique. Les utilisateurs de
+        l'application ne figurent pas dans cette liste.
+      </p>
+    </section>
+    <section class="card">
+      <div class="card-head">
+        <h2>Activité auditée</h2>
+        <span class="muted small">Aujourd'hui</span>
+      </div>
+      @for(entry of audit().slice(0,4);track entry.id){
+      <div class="item-row">
+        <span class="number muted small">{{entry.time}}</span
+        ><span class="grow"
+          ><strong>{{entry.actor}} · {{entry.action}}</strong
+          ><small>{{entry.detail}}</small></span
+        >
+      </div>
+      }<button
+        type="button"
+        class="link"
+        style="background: transparent; border: 0; margin-top: 12px"
+        (click)="tab.set('Journal d\'audit')"
+      >
+        Consulter le journal complet →
+      </button>
+    </section>
+  </div>
+  <aside class="narrow admin-stack">
+    @if(selected();as row){
+    <section class="card">
+      <h2>Accès de {{row.name}}</h2>
+      <div class="toolbar" style="margin: 15px 0">
+        <span class="avatar" style="width: 52px; height: 52px; font-size: 17px"
+          >{{row.name.slice(0,1)}}</span
+        ><span
+          ><strong>{{row.role}}</strong
+          ><small class="muted" style="display: block"
+            >{{row.scope}}</small
+          ></span
+        >
+      </div>
+      @if(row.id===1){
+      <p class="notice">
+        C'est votre compte. Votre rôle et votre périmètre ne sont pas
+        modifiables ici.
+      </p>
+      }
+      <label class="field"
+        >Rôle<select
+          [ngModel]="editRole()"
+          (ngModelChange)="editRole.set($event)"
+          [disabled]="row.id===1"
+        >
+          <option>Administrateur</option>
+          <option>Modérateur</option>
+          <option>Analyste</option>
+        </select></label
+      ><label class="field" style="margin-top: 14px"
+        >Boutiques assignées<input
+          [ngModel]="editScope()"
+          (ngModelChange)="editScope.set($event)"
+          [disabled]="row.id===1"
+      /></label>
+      <p class="muted small" style="margin: 12px 0">
+        Le périmètre limite les boutiques gérées par ce membre.
+      </p>
+      <div class="toolbar">
+        <button
+          class="btn btn-danger"
+          type="button"
+          [disabled]="row.id===1"
+          (click)="confirm.set(true)"
+        >
+          {{row.active?'Désactiver':'Réactiver'}}</button
+        ><button
+          class="btn btn-primary"
+          type="button"
+          [disabled]="row.id===1"
+          (click)="save()"
+        >
+          Enregistrer
+        </button>
+      </div>
+      @if(confirm()){
+      <div class="confirm" style="margin-top: 14px">
+        <strong>Confirmer ce changement d'accès ?</strong>
+        <div class="toolbar">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="confirm.set(false)"
+          >
+            Annuler</button
+          ><button type="button" class="btn btn-danger" (click)="toggle()">
+            Confirmer
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+    }
+    <section class="card">
+      <h2 style="margin-bottom: 14px">Inviter un membre</h2>
+      <div class="form-stack">
+        <label class="field"
+          >Email professionnel<input
+            type="email"
+            placeholder="prenom@talaprix.cd"
+            [ngModel]="invitationEmail()"
+            (ngModelChange)="invitationEmail.set($event)" /></label
+        ><label class="field"
+          >Rôle<select
+            [ngModel]="invitationRole()"
+            (ngModelChange)="invitationRole.set($event)"
+          >
+            <option>Administrateur</option>
+            <option>Modérateur</option>
+            <option>Analyste</option>
+          </select></label
+        ><label class="field"
+          >Périmètre<input
+            [ngModel]="invitationScope()"
+            (ngModelChange)="invitationScope.set($event)"
+        /></label>
+      </div>
+      <p class="muted small" style="margin: 12px 0">
+        L'invitation expire après 7 jours. La double authentification sera
+        exigée à l'activation.
+      </p>
+      <button type="button" class="btn btn-primary" (click)="invite()">
+        Envoyer l'invitation
+      </button>
+      @for(invite of invitations();track invite.name){
+      <div class="item-row">
+        <span class="grow"
+          ><strong>{{invite.name}}</strong
+          ><small>{{invite.role}} · expire le {{invite.expires}}</small></span
+        ><button
+          type="button"
+          class="link"
+          style="border: 0; background: transparent"
+          (click)="cancelInvite(invite.name)"
+        >
+          Annuler
+        </button>
+      </div>
+      }
+    </section>
+  </aside>
+</div>

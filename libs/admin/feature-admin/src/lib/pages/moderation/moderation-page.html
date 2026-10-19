@@ -1,0 +1,253 @@
+<tp-admin-page-header
+  title="Prix & modération"
+  subtitle="Vérifier les contributions. Préserver la confiance."
+  ><button type="button" class="btn btn-secondary">
+    Règles de modération
+  </button></tp-admin-page-header
+>
+<div class="toolbar">
+  <tp-segmented-tabs
+    [items]="tabs"
+    [selected]="tab()"
+    (selectTab)="tab.set($event)"
+  /><span class="toolbar-spacer"></span
+  ><label class="search"
+    ><span class="sr-only">Rechercher</span
+    ><input
+      type="search"
+      placeholder="Produit, boutique ou contributeur"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)" /></label
+  ><button class="btn btn-secondary" type="button">
+    Toutes les boutiques ▾
+  </button>
+</div>
+@if(toast()){
+<div role="status" class="toast">{{toast()}}</div>
+} @if(error()){
+<div role="alert" class="toast error">
+  {{error()}}
+  <button type="button" class="link" (click)="load()">Réessayer</button>
+</div>
+}
+<div class="admin-stack">
+  <div class="admin-stack">
+    <section class="card">
+      <div class="card-head">
+        <h2>À examiner</h2>
+        <span class="muted small">Les plus anciennes d'abord</span>
+      </div>
+      @if(loading()){@for(item of [1,2,3];track item){
+      <div class="skeleton" style="height: 65px; margin: 12px 0"></div>
+      }} @else if(tab().startsWith('Propositions')){
+      @if(!filtered().length){<tp-empty-state
+        title="Tout est à jour"
+        message="Aucune proposition ne correspond à votre recherche."
+      />} @for(row of visible();track row.id){<button
+        class="item-row"
+        [class.selected]="selectedId()===row.id"
+        type="button"
+        (click)="openProposal(row)"
+      >
+        <img class="thumb" [src]="imagePath(row.image)" alt="" /><span
+          class="grow"
+          ><strong>{{row.product}} · {{row.unit}}</strong
+          ><small class="proposal-detail"
+            ><span>{{row.shop}} · {{row.contributor}}</span>
+            <span aria-hidden="true">|</span>
+            <span class="number"
+              >{{fc(row.current)}} → {{fc(row.proposed)}}</span
+            ></small
+          ></span
+        ><span
+          ><span
+            class="badge"
+            [class.warning]="variationHigh(row)"
+            [class.success]="!variationHigh(row)&&row.proposed<row.current"
+            [class.danger]="row.proposed>row.current"
+            >{{row.change}}</span
+          ><small
+            class="muted"
+            style="display: block; text-align: right; margin-top: 5px"
+            >{{row.time}}</small
+          ></span
+        ></button
+      >}
+      <tp-admin-pagination
+        [total]="filtered().length"
+        [page]="currentPage()"
+        [pageSize]="pageSize"
+        (pageChanged)="page.set($event)"
+      />
+      } @else if(tab().startsWith('Avis')) {
+      <tp-flagged-reviews />
+      } @else if (tab().startsWith('Prix')) {
+      <tp-empty-state
+        title="186 prix périmés"
+        message="Ces prix n’ont pas été revus depuis plus de 30 jours."
+      />
+      } @else {
+      <p>42 alertes attendent un prix validé pour notifier les abonnés.</p>
+      }
+    </section>
+    @if(tab().startsWith('Propositions')) {
+    <section class="card flagged-review-card">
+      <div class="card-head">
+        <h2>Avis signalés</h2>
+        <span class="badge warning">6 en attente</span>
+      </div>
+      <tp-flagged-reviews />
+      <button
+        type="button"
+        class="btn btn-secondary flagged-review-action"
+        (click)="tab.set('Avis signalés 6')"
+      >
+        Voir les avis signalés
+      </button>
+    </section>
+    }
+  </div>
+  @if(tab().startsWith('Propositions') && detailOpen()){ @if(selected();as row){
+  <tp-admin-dialog
+    [title]="row.product + ' · ' + row.unit"
+    (closed)="detailOpen.set(false)"
+  >
+    <div class="toolbar" style="margin-bottom: 16px">
+      <img
+        class="thumb"
+        style="width: 64px; height: 64px"
+        [src]="imagePath(row.image)"
+        alt=""
+      />
+      <div>
+        <h2>{{row.product}}</h2>
+        <span class="muted small">{{row.shop}}</span>
+        <div><span class="badge warning">En attente</span></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div style="background: #f6f6f6; border-radius: 10px; padding: 14px">
+        <span class="small muted">Prix actuel</span
+        ><strong
+          class="number"
+          style="display: block; text-decoration: line-through"
+          >{{fc(row.current)}}</strong
+        >
+      </div>
+      <div style="background: #e3f4ec; border-radius: 10px; padding: 14px">
+        <span class="small">Prix proposé · {{row.change}}</span
+        ><strong class="number" style="display: block; font-size: 21px"
+          >{{fc(row.proposed)}}</strong
+        >
+      </div>
+    </div>
+    @if(variationHigh(row)){
+    <p class="notice warning">
+      Variation supérieure à 20 %. Confirmez le conditionnement avec la boutique
+      avant de valider.
+    </p>
+    }
+    <div class="item-row">
+      <span class="avatar">{{row.contributor.slice(0,1)}}</span
+      ><span class="grow"
+        ><strong>{{row.contributor}}</strong
+        ><small
+          >{{row.validated}} prix validés · {{row.points}} points</small
+        ></span
+      ><span class="badge" [class.danger]="row.suspended"
+        >{{row.suspended?'Compte suspendu':'Fiable'}}</span
+      >
+    </div>
+    @if(row.note){
+    <blockquote
+      style="
+        margin: 14px 0;
+        padding: 12px;
+        border-radius: 10px;
+        background: #e8f1fd;
+        color: #0a5cb8;
+        font-size: 13px;
+      "
+    >
+      « {{row.note}} »
+    </blockquote>
+    }
+    <h2 style="margin: 20px 0 8px">Historique des prix</h2>
+    @if(row.id===1){
+    <div class="item-row">
+      <span class="grow">28 sept. · Joël Kabeya</span
+      ><strong>{{fc(2800)}}</strong>
+    </div>
+    <div class="item-row">
+      <span class="grow">14 sept. · Aline Mukendi</span
+      ><strong>{{fc(2700)}}</strong>
+    </div>
+    <div class="item-row">
+      <span class="grow">01 sept. · Joël Kabeya</span
+      ><strong>{{fc(2500)}}</strong>
+    </div>
+    }@else{
+    <p class="muted small">Aucun historique antérieur dans cet aperçu.</p>
+    }
+    <label class="field" style="margin-top: 18px"
+      >Justification de la décision<textarea
+        placeholder="Obligatoire en cas de rejet"
+        [ngModel]="reason()"
+        (ngModelChange)="reason.set($event)"
+      ></textarea>
+    </label>
+    <p class="muted small moderation-audit-note">
+      La décision est attribuée à votre compte dans le journal d'audit.
+    </p>
+    @if(confirmation()){
+    <div class="confirm">
+      <strong
+        >{{confirmation()==='validée'?'Valider ce prix ?':'Rejeter cette
+        proposition ?'}}</strong
+      >
+      <div class="toolbar">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="confirmation.set(null)"
+        >
+          Annuler</button
+        ><button
+          type="button"
+          class="btn"
+          [class.btn-danger]="confirmation()==='rejetée'"
+          [class.btn-primary]="confirmation()==='validée'"
+          (click)="decide()"
+        >
+          Confirmer
+        </button>
+      </div>
+    </div>
+    } @else{
+    <div class="toolbar">
+      <button
+        class="btn btn-danger"
+        type="button"
+        (click)="confirmation.set('rejetée')"
+      >
+        Rejeter</button
+      ><button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="row.suspended"
+        (click)="confirmation.set('validée')"
+      >
+        Valider le prix
+      </button>
+    </div>
+    }
+  </tp-admin-dialog>
+  } }
+</div>
+<div class="notice notice-compact warning">
+  <strong>186 prix périmés · plus de 30 jours</strong>
+  <span
+    >42 alertes attendent un prix validé. La validation déclenchera les
+    notifications aux abonnés.</span
+  >
+</div>

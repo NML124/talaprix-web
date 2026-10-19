@@ -1,0 +1,22 @@
+<dialog
+  #dialog
+  class="admin-dialog"
+  [attr.aria-label]="title()"
+  (close)="closed.emit()"
+  (click)="dismissBackdrop($event)"
+>
+  <div class="admin-dialog-panel">
+    <header class="admin-dialog-head">
+      <h2>{{ title() }}</h2>
+      <button
+        type="button"
+        class="btn btn-secondary btn-icon"
+        aria-label="Fermer"
+        (click)="dismiss()"
+      >
+        <svg lucideX size="17" aria-hidden="true"></svg>
+      </button>
+    </header>
+    <div class="admin-dialog-body"><ng-content /></div>
+  </div>
+</dialog>

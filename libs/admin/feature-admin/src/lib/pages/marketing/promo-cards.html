@@ -1,0 +1,51 @@
+<section class="card">
+  <div class="card-head">
+    <h2>Promotions</h2>
+    <span class="muted small">Aperçu de conception</span>
+  </div>
+  <div class="grid-2">
+    @for(row of promotions();track $index){
+    <article>
+      <div class="promo-art" [class.bread]="row.style==='bread'">
+        <div>
+          <small style="font-size: 11px; letter-spacing: 0.07em"
+            >{{row.tagline}}</small
+          >
+          <h3 style="font-size: 20px; margin: 12px 0">{{row.title}}</h3>
+          <span class="small">{{row.detail}}</span>
+        </div>
+        <img [src]="imagePath(row.image)" alt="" />
+      </div>
+      <div
+        class="toolbar"
+        style="justify-content: space-between; padding: 12px 0"
+      >
+        <span class="muted small">{{row.dates}}</span>
+        <tp-status-dot
+          [label]="row.status"
+          [tone]="row.status==='Active'?'success':'info'"
+        />
+      </div>
+      <div class="toolbar">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="preview.emit(row)"
+        >
+          <svg lucideEye size="16" aria-hidden="true"></svg>Voir l'aperçu
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="edit.emit(row)"
+        >
+          <svg lucidePencil size="16" aria-hidden="true"></svg>Modifier
+        </button>
+      </div>
+    </article>
+    }
+  </div>
+  <p class="muted small" style="margin: 12px 0 0">
+    Emplacements : accueil mobile · bannière · notification boutique.
+  </p>
+</section>

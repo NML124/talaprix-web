@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="switch"
+  role="switch"
+  [attr.aria-label]="label()"
+  [attr.aria-checked]="checked()"
+  (click)="changed.emit(!checked())"
+></button>

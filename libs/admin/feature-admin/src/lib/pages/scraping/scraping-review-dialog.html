@@ -1,0 +1,154 @@
+<tp-admin-dialog
+  [title]="'Revue · ' + candidate().candidate_id"
+  (closed)="closed.emit()"
+>
+  <div class="scrape-detail-meta">
+    <span class="badge info"
+      >{{candidate().candidate_kind==='seller'?'Vendeur':'Offre'}}</span
+    >
+    <span class="muted small"
+      >Version {{candidate().version}} · reçue le {{candidate().last_seen_at |
+      date:'dd MMM, HH:mm'}}</span
+    >
+  </div>
+  <section class="dialog-section scrape-detail-grid">
+    <div>
+      <small class="muted">Vendeur</small
+      ><strong>{{candidate().seller_name||'À identifier'}}</strong>
+    </div>
+    <div>
+      <small class="muted">Produit</small
+      ><strong>{{candidate().product_name||'Aucune offre associée'}}</strong>
+    </div>
+    <div>
+      <small class="muted">Prix extrait</small
+      ><strong
+        >{{candidate().price&&candidate().currency?candidate().price+'
+        '+candidate().currency:'Non établi'}}</strong
+      >
+    </div>
+    <div>
+      <small class="muted">Source</small
+      ><a [href]="candidate().source_url" target="_blank" rel="noreferrer"
+        >Ouvrir la publication</a
+      >
+    </div>
+  </section>
+  <section class="dialog-section">
+    <h3>Texte observé</h3>
+    <blockquote class="scrape-evidence">
+      {{candidate().evidence['post_text']||'Aucun texte public disponible.'}}
+    </blockquote>
+    <p class="muted small">
+      Le prix reste vide si la publication ne donne pas une valeur et une devise
+      suffisamment claires.
+    </p>
+  </section>
+  <section class="dialog-section">
+    <h3>Médias en staging privé · maquette</h3>
+    @if(candidate().staged_media.length){
+    <div class="scrape-media-grid">
+      @for(media of candidate().staged_media;track media.media_id){
+      <figure>
+        <div class="scrape-media-visual" aria-label="Aperçu média non fourni">
+          Média simulé
+        </div>
+        <figcaption>
+          {{media.width}} × {{media.height}} · {{media.review_state}}
+        </figcaption>
+      </figure>
+      }
+    </div>
+    } @else {
+    <p class="empty-state">Aucun média staged pour ce candidat.</p>
+    }
+    <p class="muted small">
+      Les vrais aperçus nécessitent une URL R2 signée de courte durée. Aucune
+      URL privée n’est simulée ici.
+    </p>
+  </section>
+  <section class="dialog-section">
+    <h3>Analyse texte · simulation Gemini</h3>
+    @if(candidate().text_analysis;as analysis){
+    <div class="scrape-suggestions">
+      @for(suggestion of analysis.suggestions;track suggestion.field){
+      <div>
+        <span>{{suggestion.field}}</span><strong>{{suggestion.value}}</strong
+        ><small>{{suggestion.confidence}} · suggestion</small>
+      </div>
+      }
+    </div>
+    } @else {
+    <p class="muted">
+      Analyse non disponible. L’absence d’analyse ne bloque pas la revue
+      humaine.
+    </p>
+    }
+  </section>
+  <section class="dialog-section">
+    <h3>Correspondances possibles · suggestions uniquement</h3>
+    @if(candidate().matches.length){
+    <ul class="scrape-match-list">
+      @for(match of candidate().matches;track match.name){
+      <li>
+        <span>{{match.entity}}</span><strong>{{match.name}}</strong
+        ><small>{{match.confidence*100|number:'1.0-0'}} % · à vérifier</small>
+      </li>
+      }
+    </ul>
+    } @else {
+    <p class="muted">Aucune correspondance proposée.</p>
+    }
+  </section>
+  @if(decision()==='rejected'){ @if(error()){
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <label class="field"
+    >Motif du rejet<textarea
+      maxlength="2000"
+      [ngModel]="reason()"
+      (ngModelChange)="reason.set($event);error.set('')"
+      placeholder="Expliquez brièvement la décision"
+    ></textarea>
+  </label>
+  }
+  <p class="notice notice-compact scrape-no-publish">
+    <strong>Décision de revue uniquement</strong
+    ><span
+      >Approuver ne publie rien dans le catalogue TalaPrix. Aucun endpoint de
+      publication n’existe à ce stade.</span
+    >
+  </p>
+  <div class="toolbar dialog-actions">
+    @if(decision()==='rejected'){
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="decision.set(null)"
+    >
+      Retour
+    </button>
+    <button type="button" class="btn btn-danger" (click)="confirmReject()">
+      Confirmer le rejet
+    </button>
+    } @else {
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Fermer
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="askDecision('rejected')"
+    >
+      Rejeter
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="askDecision('approved')"
+    >
+      Approuver · garder en revue
+    </button>
+    }
+  </div>
+</tp-admin-dialog>
