@@ -1,0 +1,49 @@
+<main class="min-h-screen bg-[#f8faf9] pb-16 pt-6 text-[#172522]">
+  <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-bold text-[#008b7b]">Votre sélection</p>
+        <h1 class="mt-1 text-3xl font-black tracking-tight">Mes favoris</h1>
+        <p class="mt-2 text-sm text-[#697572]">
+          Retrouvez les produits que vous souhaitez comparer plus tard.
+        </p>
+      </div>
+      <a
+        routerLink="/products"
+        class="shrink-0 rounded-full border border-[#cfe4df] px-4 py-2 text-sm font-bold text-[#007d6e] hover:bg-[#eef8f5]"
+      >
+        Voir les produits
+      </a>
+    </div>
+
+    @if (items().length) {
+    <div
+      class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5"
+    >
+      @for (product of items(); track product.id) {
+      <tpx-product-card
+        [product]="product"
+        [favorite]="true"
+        (viewDetails)="open($event)"
+        (favoriteChange)="toggle($event)"
+      />
+      }
+    </div>
+    } @else {
+    <div
+      class="mt-8 rounded-[22px] border border-dashed border-[#cbded9] bg-white px-6 py-16 text-center"
+    >
+      <h2 class="text-xl font-black">Aucun favori pour le moment</h2>
+      <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-[#687572]">
+        Ajoutez un produit avec le cœur pour le retrouver ici.
+      </p>
+      <a
+        routerLink="/products"
+        class="mt-6 inline-flex rounded-full bg-[#009788] px-5 py-3 text-sm font-bold text-white hover:bg-[#008477]"
+      >
+        Explorer les produits
+      </a>
+    </div>
+    }
+  </section>
+</main>

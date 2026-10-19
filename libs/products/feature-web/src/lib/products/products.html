@@ -6,19 +6,28 @@
     >
       <tpx-catalog-filters
         [categories]="categories()"
-        [selectedCategory]="category()"
-        (filtersChange)="updateFilters($event)"
+        [selection]="draftFilters()"
+        (selectionChange)="updateDraft($event)"
+        (applyFilters)="applyFilters($event)"
       />
       <div>
         <tpx-catalog-toolbar
           [count]="products().length"
           [sort]="sort()"
+          [viewMode]="viewMode()"
+          [activeFilters]="activeFilters()"
           (sortChange)="updateSort($event)"
+          (viewModeChange)="updateViewMode($event)"
+          (removeFilter)="removeFilter($event)"
+          (clearFilters)="clearFilters()"
         />
         <tpx-catalog-grid
           [products]="products()"
           [status]="status()"
+          [viewMode]="viewMode()"
+          [favoriteIds]="favoriteIds()"
           (productOpen)="openProduct($event)"
+          (favoriteChange)="toggleFavorite($event)"
         />
       </div>
     </section>

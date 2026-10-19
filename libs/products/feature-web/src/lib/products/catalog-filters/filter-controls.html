@@ -1,0 +1,38 @@
+<div class="[font-family:'Lato',sans-serif]">
+  <div class="flex items-center justify-between px-5 pb-2 pt-5">
+    <h2 class="text-[18px] font-bold text-[#111817]">Filtres</h2>
+    <button
+      type="button"
+      (click)="resetRequested.emit()"
+      class="rounded-lg px-2 py-1 text-[13px] font-bold text-[#008b7b] hover:bg-[#edf7f5] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009788]"
+    >
+      Réinitialiser
+    </button>
+  </div>
+  <tpx-filter-categories
+    [categories]="categories()"
+    [selected]="selection().categories"
+    (selectedChange)="updateCategories($event)"
+  /><tpx-filter-price
+    [minPrice]="selection().minPrice"
+    [maxPrice]="selection().maxPrice"
+    (rangeChange)="updatePrice($event)"
+  /><tpx-filter-facets
+    [shops]="shops"
+    [locations]="locations"
+    [selectedShops]="selection().shops"
+    [selectedLocations]="selection().locations"
+    [promotionOnly]="selection().promotionOnly"
+    [availableOnly]="selection().availableOnly"
+    (selectionChange)="updateFacets($event)"
+  />
+  <footer class="sticky bottom-0 mt-3 border-t border-[#edf0ef] bg-white p-4">
+    <button
+      type="button"
+      (click)="applyRequested.emit()"
+      class="h-11 w-full rounded-xl bg-[#009788] text-sm font-bold text-white hover:bg-[#008477] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009788]"
+    >
+      Appliquer les filtres
+    </button>
+  </footer>
+</div>

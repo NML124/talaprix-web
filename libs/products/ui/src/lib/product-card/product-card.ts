@@ -39,9 +39,11 @@ export class ProductCard {
 
   readonly viewDetails = output<ProductSummary>();
 
-  protected readonly formatPrice = formatCurrency;
+  readonly favoriteChange = output<ProductSummary>();
 
-  protected readonly isFavorite = signal(false);
+  readonly favorite = input(false);
+
+  protected readonly formatPrice = formatCurrency;
 
   protected readonly cartQuantity = signal(0);
 
@@ -54,7 +56,7 @@ export class ProductCard {
   protected toggleFavorite(event: Event): void {
     event.stopPropagation();
 
-    this.isFavorite.update((value) => !value);
+    this.favoriteChange.emit(this.product());
   }
 
   protected addToCart(event: Event): void {
@@ -66,9 +68,7 @@ export class ProductCard {
   protected increaseQuantity(event: Event): void {
     event.stopPropagation();
 
-    this.cartQuantity.update(
-      (quantity) => quantity + 1,
-    );
+    this.cartQuantity.update((quantity) => quantity + 1);
   }
 
   protected decreaseQuantity(event: Event): void {

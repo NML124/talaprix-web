@@ -1,24 +1,29 @@
 <section id="offers" class="border-y border-slate-200/80 bg-white">
   <div class="mx-auto max-w-7xl space-y-16 px-4 py-16 sm:px-6 lg:px-8">
-    
     <section>
       <div class="flex items-end justify-between gap-4">
         <div>
-          <h2 class="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          <h2
+            class="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl"
+          >
             Nouveaux produits
           </h2>
         </div>
         <a
           routerLink="/products"
-          class="shrink-0 text-sm font-bold text-[#008674]"
-          >Voir tout →</a
-        >
+          class="inline-flex shrink-0 items-center gap-0.5 text-sm font-bold text-[#008674]"
+          >Voir tout <svg lucideChevronRight size="16" aria-hidden="true"></svg
+        ></a>
       </div>
       @if (status() === 'success') {
-      <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      >
         @for (product of products(); track product.id) {<tpx-product-card
           [product]="product"
+          [favorite]="favoriteIds().includes(product.id)"
           (viewDetails)="openProduct($event)"
+          (favoriteChange)="toggleFavorite($event)"
         />}
       </div>
       }

@@ -439,4 +439,7 @@
   .admin-app .search {
     width: 100%;
   }
+  .admin-app :is(input[type='search'], .search input) {
+    font-size: 16px;
+  }
 }

@@ -98,7 +98,7 @@ export class AdminShell {
     {
       label: 'Découverte',
       icon: 'scraping',
-      pages: [{ label: 'Collecte web', path: '/admin/scraping' }],
+      pages: [{ label: 'Scraping', path: '/admin/scraping' }],
     },
     {
       label: 'Catalogue & prix',
@@ -150,9 +150,11 @@ export class AdminShell {
         this.theme.set(saved);
       const media = window.matchMedia('(prefers-color-scheme: dark)');
       this.systemDark.set(media.matches);
-      media.addEventListener('change', (event) =>
-        this.systemDark.set(event.matches),
-      );
+      this.syncBrowserTheme();
+      media.addEventListener('change', (event) => {
+        this.systemDark.set(event.matches);
+        if (this.theme() === 'system') this.syncBrowserTheme();
+      });
     });
     this.router.events
       .pipe(
@@ -202,6 +204,7 @@ export class AdminShell {
   protected setTheme(value: string): void {
     if (value !== 'system' && value !== 'light' && value !== 'dark') return;
     this.theme.set(value);
+    this.syncBrowserTheme();
     try {
       localStorage.setItem('talaprix-admin-theme', value);
     } catch {
@@ -210,6 +213,14 @@ export class AdminShell {
   }
   protected onThemeChange(event: Event): void {
     this.setTheme((event.target as HTMLSelectElement).value);
+  }
+  private syncBrowserTheme(): void {
+    const color = this.resolvedTheme() === 'dark' ? '#111718' : '#f6f6f6';
+    document
+      .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+      ?.setAttribute('content', color);
+    document.documentElement.style.backgroundColor = color;
+    document.body.style.backgroundColor = color;
   }
   private initialOpen(): string[] {
     try {

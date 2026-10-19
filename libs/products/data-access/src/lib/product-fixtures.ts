@@ -1,110 +1,60 @@
 import type { ProductDetail } from '@talaprix/products/domain';
+import fixtureRowsJson from './product-fixtures.json';
+
+interface ProductFixtureRow {
+  readonly id: string;
+  readonly name: string;
+  readonly brandName: string;
+  readonly categoryName: string;
+  readonly amount: number;
+  readonly oldAmount: number | null;
+  readonly offerCount: number;
+  readonly shopName: string;
+  readonly location: string;
+}
 
 const currency = 'CDF';
+const fixtureRows = fixtureRowsJson as readonly ProductFixtureRow[];
 
-export const PRODUCT_FIXTURES: readonly ProductDetail[] = [
-  product(
-    'galaxy-a54',
-    'Samsung Galaxy A54',
-    'Samsung',
-    'Téléphones',
-    680000,
-    740000,
-    4,
-  ),
-  product(
-    'iphone-14',
-    'iPhone 14 128 Go',
-    'Apple',
-    'Téléphones',
-    1320000,
-    1500000,
-    3,
-  ),
-  product(
-    'hp-pavilion',
-    'HP Pavilion 15',
-    'HP',
-    'Informatique',
-    1250000,
-    1350000,
-    3,
-  ),
-  product('airpods-pro', 'AirPods Pro 2', 'Apple', 'Audio', 420000, 480000, 2),
-  product(
-    'dell-inspiron',
-    'Dell Inspiron 14',
-    'Dell',
-    'Informatique',
-    720000,
-    780000,
-    3,
-  ),
-  product(
-    'logitech-mx',
-    'Logitech MX Master 3S',
-    'Logitech',
-    'Informatique',
-    99000,
-    117000,
-    2,
-  ),
-  product(
-    'samsung-monitor',
-    'Samsung 24 pouces FHD',
-    'Samsung',
-    'TV & Audio',
-    180000,
-    209000,
-    3,
-  ),
-  product(
-    'lenovo-bag',
-    'Sac à dos Lenovo',
-    'Lenovo',
-    'Accessoires',
-    45000,
-    null,
-    2,
-  ),
-];
+/** Local fake API payload; replace this adapter when the products endpoint is ready. */
+export const PRODUCT_FIXTURES: readonly ProductDetail[] = fixtureRows.map(
+  (row) => toProduct(row),
+);
 
-function product(
-  id: string,
-  name: string,
-  brandName: string,
-  categoryName: string,
-  amount: number,
-  oldAmount: number | null,
-  offerCount: number,
-): ProductDetail {
-  const price = { amount, currency };
-  const oldPrice = oldAmount === null ? null : { amount: oldAmount, currency };
+function toProduct(row: ProductFixtureRow): ProductDetail {
+  const price = { amount: row.amount, currency };
+  const oldPrice =
+    row.oldAmount === null ? null : { amount: row.oldAmount, currency };
+
   return {
-    id,
-    name,
-    brandName,
-    categoryName,
-    categoryId: categoryName.toLowerCase().replace(/ /g, '-'),
+    id: row.id,
+    name: row.name,
+    brandName: row.brandName,
+    categoryName: row.categoryName,
+    categoryId: row.categoryName.toLowerCase().replace(/[^a-z0-9]+/gi, '-'),
     imageUrl: null,
     gallery: [],
     lowestPrice: price,
     oldPrice,
-    offerCount,
-    merchantName: 'Boutiques partenaires',
+    offerCount: row.offerCount,
+    merchantName: row.shopName,
     stockStatus: 'in-stock',
     verified: true,
-    description: `${name} : comparez les offres des boutiques partenaires à Kinshasa.`,
-    offers: Array.from({ length: offerCount }, (_, index) => ({
-      id: `${id}-offer-${index + 1}`,
+    description: `${row.name} : comparez les offres des boutiques partenaires à Kinshasa.`,
+    offers: Array.from({ length: row.offerCount }, (_, index) => ({
+      id: `${row.id}-offer-${index + 1}`,
       shopId: `shop-${index + 1}`,
       shopName:
-        ['Afrimarket', 'Jumia', 'Technomarket', 'Vodacom Shop'][index] ??
-        'Partenaire',
-      shopAddress: ['Gombe', 'Kinshasa', 'Ngaliema'][index] ?? null,
-      price: { amount: amount + index * 20000, currency },
+        index === 0
+          ? row.shopName
+          : ['Jumia', 'Afrimarket', 'CongoTech'][index % 3],
+      shopAddress:
+        index === 0
+          ? row.location
+          : ['Gombe', 'Kinshasa', 'Ngaliema'][index % 3],
+      price: { amount: row.amount + index * 20_000, currency },
       oldPrice: index === 0 ? oldPrice : null,
-      inStock: index !== offerCount - 1,
+      inStock: index !== row.offerCount - 1,
       deliveryLabel:
         index === 1 ? 'Retrait en boutique' : 'Livraison disponible',
     })),

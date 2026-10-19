@@ -6,7 +6,17 @@
   "sourceRoot": "apps/admin/src",
   "tags": ["scope:app", "type:app", "platform:admin"],
   "targets": {
+    "env": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/apps/admin/src/environments/runtime-config.generated.ts"
+      ],
+      "options": {
+        "command": "node tools/scripts/write-runtime-config.mjs"
+      }
+    },
     "build": {
+      "dependsOn": ["env"],
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",

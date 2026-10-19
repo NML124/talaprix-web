@@ -1,0 +1,46 @@
+<section
+  class="overflow-hidden rounded-[18px] border border-[#dce8e4] bg-white"
+>
+  <button
+    type="button"
+    class="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-[#f8fcfa] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#009788]"
+    (click)="toggle()"
+    [attr.aria-expanded]="expanded()"
+  >
+    <span
+      class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#e9f8f4] text-[#008674]"
+      ><svg lucideStore size="18"></svg
+    ></span>
+    <span class="min-w-0 flex-1">
+      <span class="flex items-center justify-between gap-3">
+        <strong class="truncate text-sm text-[#172522]"
+          >{{ group().shopName }}</strong
+        >
+        <strong class="shrink-0 text-sm text-[#172522]"
+          >{{ formatPrice(group().subtotal, 'CDF') }}</strong
+        >
+      </span>
+      <span class="mt-0.5 flex items-center gap-1 text-xs text-[#687572]"
+        ><svg lucideMapPin size="12"></svg>{{ group().area }} · {{
+        group().itemCount }} article{{ group().itemCount > 1 ? 's' : '' }}</span
+      >
+    </span>
+    <svg
+      lucideChevronDown
+      size="18"
+      class="shrink-0 text-[#60706c] transition-transform duration-200 motion-reduce:transition-none"
+      [class.rotate-180]="expanded()"
+    ></svg>
+  </button>
+  @if (expanded()) {
+  <div class="divide-y divide-[#edf2f0] border-t border-[#edf2f0] px-4">
+    @for (item of group().items; track item.id) {
+    <tpx-cart-line
+      [item]="item"
+      (quantityChange)="quantityChange.emit({ item, delta: $event })"
+      (itemRemove)="itemRemove.emit(item)"
+    />
+    }
+  </div>
+  }
+</section>

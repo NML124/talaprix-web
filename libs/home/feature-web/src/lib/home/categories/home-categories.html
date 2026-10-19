@@ -5,16 +5,16 @@
         Explorez
       </p>
       <h2
-        class="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:hidden"
+        class="mt-2 text-xl font-black tracking-tight text-slate-900 sm:hidden"
       >
         <span class="block">Qu'est-ce que vous</span>
         <span class="flex items-baseline justify-between gap-3"
           >cherchez ?<a
             routerLink="/categories"
-            class="text-sm font-bold text-[#008674]"
-            >Voir tout →</a
-          ></span
-        >
+            class="inline-flex items-center gap-0.5 text-sm font-bold text-[#008674]"
+            >Voir tout
+            <svg lucideChevronRight size="15" aria-hidden="true"></svg></a
+        ></span>
       </h2>
       <h2
         class="mt-2 hidden text-3xl font-black tracking-tight text-slate-900 sm:block"
@@ -25,8 +25,9 @@
     <a
       routerLink="/categories"
       class="hidden shrink-0 items-center gap-1 text-sm font-bold text-[#008674] sm:inline-flex"
-      >Toutes les catégories →</a
-    >
+      >Toutes les catégories
+      <svg lucideChevronRight size="16" aria-hidden="true"></svg
+    ></a>
   </div>
   <div
     #categoryRail
@@ -45,8 +46,8 @@
       } } @else { @for (category of categories(); track category.id) {
       <a
         data-category-card
-        [routerLink]="'/categories'"
-        [queryParams]="{ category: category.id }"
+        routerLink="/products"
+        [queryParams]="{ category: category.name }"
         class="group relative h-24 w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-slate-900 outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/50 focus-visible:ring-offset-4 sm:min-h-48 sm:h-auto sm:w-60 lg:w-72 xl:w-[18.5rem]"
       >
         @if (category.image) {

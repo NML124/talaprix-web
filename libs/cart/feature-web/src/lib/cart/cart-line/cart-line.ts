@@ -6,9 +6,11 @@ import {
 } from '@angular/core';
 import type { CartItem } from '@talaprix/cart/domain';
 import { formatCurrency } from '@talaprix/shared/utils';
+import { LucideMinus, LucidePlus, LucideTrash2 } from '@lucide/angular';
 
 @Component({
   selector: 'tpx-cart-line',
+  imports: [LucideMinus, LucidePlus, LucideTrash2],
   templateUrl: './cart-line.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -9,7 +9,7 @@
   <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
     @for (category of categories().slice(0, 6); track category.id) {<a
       [routerLink]="'/products'"
-      [queryParams]="{ category: category.id }"
+      [queryParams]="{ category: category.name }"
       class="group relative min-h-[180px] overflow-hidden rounded-[14px] border border-[#e1e8e6] bg-[#edf3f1] focus-visible:ring-2 focus-visible:ring-[#009788]"
       >@if (category.image) {<img
         [src]="category.image"

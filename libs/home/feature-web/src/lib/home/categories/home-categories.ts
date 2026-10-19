@@ -9,11 +9,12 @@ import {
   viewChildren,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LucideChevronRight } from '@lucide/angular';
 import { CategoryStore } from '@talaprix/products/data-access';
 
 @Component({
   selector: 'lib-home-categories',
-  imports: [RouterLink],
+  imports: [RouterLink, LucideChevronRight],
   templateUrl: './home-categories.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

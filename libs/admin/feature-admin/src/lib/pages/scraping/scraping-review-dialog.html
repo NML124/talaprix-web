@@ -7,10 +7,15 @@
       >{{candidate().candidate_kind==='seller'?'Vendeur':'Offre'}}</span
     >
     <span class="muted small"
-      >Version {{candidate().version}} · reçue le {{candidate().last_seen_at |
-      date:'dd MMM, HH:mm'}}</span
+      >Version {{candidate().version}} · collecté le {{candidate().last_seen_at
+      | date:'dd MMM yyyy, HH:mm'}}</span
     >
+    @if(candidate().review_state!=='needs_review'){<span class="badge success"
+      >{{candidate().review_state==='approved'?'Approuvé · non
+      publié':'Rejeté'}}</span
+    >}
   </div>
+
   <section class="dialog-section scrape-detail-grid">
     <div>
       <small class="muted">Vendeur</small
@@ -21,84 +26,121 @@
       ><strong>{{candidate().product_name||'Aucune offre associée'}}</strong>
     </div>
     <div>
-      <small class="muted">Prix extrait</small
+      <small class="muted">Prix / devise reçus</small
       ><strong
         >{{candidate().price&&candidate().currency?candidate().price+'
-        '+candidate().currency:'Non établi'}}</strong
+        '+candidate().currency:'Non établis'}}</strong
       >
     </div>
     <div>
       <small class="muted">Source</small
-      ><a [href]="candidate().source_url" target="_blank" rel="noreferrer"
-        >Ouvrir la publication</a
+      ><a
+        [href]="candidate().source_url"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Ouvrir l’annonce</a
       >
     </div>
+    <div>
+      <small class="muted">Première collecte</small
+      ><strong
+        >{{candidate().first_seen_at | date:'dd MMM yyyy, HH:mm'}}</strong
+      >
+    </div>
+    <div>
+      <small class="muted">Dernière collecte</small
+      ><strong>{{candidate().last_seen_at | date:'dd MMM yyyy, HH:mm'}}</strong>
+    </div>
+  </section>
+
+  <section class="dialog-section">
+    <h3>Données vendeur</h3>
+    <pre class="scrape-raw-data">{{json(candidate().seller_data)}}</pre>
+  </section>
+  @if(candidate().candidate_kind==='offer'){
+  <section class="dialog-section">
+    <h3>Données produit</h3>
+    <pre class="scrape-raw-data">{{json(candidate().product_data)}}</pre>
   </section>
   <section class="dialog-section">
-    <h3>Texte observé</h3>
-    <blockquote class="scrape-evidence">
-      {{candidate().evidence['post_text']||'Aucun texte public disponible.'}}
-    </blockquote>
-    <p class="muted small">
-      Le prix reste vide si la publication ne donne pas une valeur et une devise
-      suffisamment claires.
-    </p>
+    <h3>Données de l’offre</h3>
+    <pre class="scrape-raw-data">{{json(candidate().offer_data)}}</pre>
+  </section>
+  }
+  <section class="dialog-section">
+    <h3>Preuves de la source</h3>
+    <pre class="scrape-raw-data">{{json(candidate().evidence)}}</pre>
   </section>
   <section class="dialog-section">
-    <h3>Médias en staging privé · maquette</h3>
+    <details class="scrape-source-raw">
+      <summary>
+        Objet brut reçu d’Apify · exécution {{candidate().source_run_id}} ·
+        ligne {{candidate().source_item_index + 1}}
+      </summary>
+      <p class="muted small">
+        Hash du contenu : {{candidate().content_sha256}}
+      </p>
+      <pre class="scrape-raw-data">{{json(candidate().raw_observation)}}</pre>
+    </details>
+  </section>
+  <section class="dialog-section">
+    <h3>Médias collectés</h3>
     @if(candidate().staged_media.length){
     <div class="scrape-media-grid">
       @for(media of candidate().staged_media;track media.media_id){
       <figure>
-        <div class="scrape-media-visual" aria-label="Aperçu média non fourni">
-          Média simulé
-        </div>
+        @if(candidate().mediaPreviewUrls?.[media.media_id]){<img
+          [src]="candidate().mediaPreviewUrls?.[media.media_id]"
+          alt="Média privé du candidat"
+          referrerpolicy="no-referrer"
+          loading="lazy"
+        />} @else{
+        <div class="scrape-media-visual">Aperçu expiré ou indisponible</div>
+        }
         <figcaption>
-          {{media.width}} × {{media.height}} · {{media.review_state}}
+          {{media.width}} × {{media.height}} · {{media.review_state}} ·
+          {{media.staged_at | date:'dd MMM, HH:mm'}}
         </figcaption>
       </figure>
       }
     </div>
     } @else {
-    <p class="empty-state">Aucun média staged pour ce candidat.</p>
+    <p class="empty-state">Aucun média privé prêt à afficher.</p>
+    } @if(candidate().media_data.length){
+    <details>
+      <summary>Informations reçues sur les médias</summary>
+      <pre class="scrape-raw-data">{{json(candidate().media_data)}}</pre>
+    </details>
     }
-    <p class="muted small">
-      Les vrais aperçus nécessitent une URL R2 signée de courte durée. Aucune
-      URL privée n’est simulée ici.
-    </p>
   </section>
   <section class="dialog-section">
-    <h3>Analyse texte · simulation Gemini</h3>
+    <h3>Analyse automatique · suggestion uniquement</h3>
     @if(candidate().text_analysis;as analysis){
-    <div class="scrape-suggestions">
-      @for(suggestion of analysis.suggestions;track suggestion.field){
-      <div>
-        <span>{{suggestion.field}}</span><strong>{{suggestion.value}}</strong
-        ><small>{{suggestion.confidence}} · suggestion</small>
-      </div>
-      }
-    </div>
-    } @else {
-    <p class="muted">
-      Analyse non disponible. L’absence d’analyse ne bloque pas la revue
-      humaine.
+    <p class="muted small">
+      {{analysis.model}} · prompt {{analysis.prompt_version}} ·
+      {{analysis.analyzed_at | date:'dd MMM yyyy, HH:mm'}}
     </p>
+    <pre class="scrape-raw-data">{{json(analysis.suggestions)}}</pre>
+    } @else {
+    <p class="muted">Aucune analyse associée au contenu le plus récent.</p>
     }
   </section>
   <section class="dialog-section">
-    <h3>Correspondances possibles · suggestions uniquement</h3>
-    @if(candidate().matches.length){
-    <ul class="scrape-match-list">
-      @for(match of candidate().matches;track match.name){
-      <li>
-        <span>{{match.entity}}</span><strong>{{match.name}}</strong
-        ><small>{{match.confidence*100|number:'1.0-0'}} % · à vérifier</small>
-      </li>
-      }
-    </ul>
-    } @else {
-    <p class="muted">Aucune correspondance proposée.</p>
-    }
+    <h3>Rapprochements existants</h3>
+    <dl class="scrape-id-list">
+      <div>
+        <dt>Boutique</dt>
+        <dd>{{candidate().matched_shop_id||'Aucune'}}</dd>
+      </div>
+      <div>
+        <dt>Produit</dt>
+        <dd>{{candidate().matched_product_id||'Aucun'}}</dd>
+      </div>
+      <div>
+        <dt>Offre</dt>
+        <dd>{{candidate().matched_offer_id||'Aucune'}}</dd>
+      </div>
+    </dl>
   </section>
   @if(decision()==='rejected'){ @if(error()){
   <p class="dialog-error" role="alert">{{error()}}</p>
@@ -113,10 +155,10 @@
   </label>
   }
   <p class="notice notice-compact scrape-no-publish">
-    <strong>Décision de revue uniquement</strong
+    <strong>Revue et audit seulement</strong
     ><span
-      >Approuver ne publie rien dans le catalogue TalaPrix. Aucun endpoint de
-      publication n’existe à ce stade.</span
+      >Cette décision ne publie aucune boutique, aucun produit et aucune offre
+      dans le catalogue.</span
     >
   </p>
   <div class="toolbar dialog-actions">
@@ -125,20 +167,33 @@
       type="button"
       class="btn btn-secondary"
       (click)="decision.set(null)"
+      [disabled]="saving()"
     >
       Retour
-    </button>
-    <button type="button" class="btn btn-danger" (click)="confirmReject()">
-      Confirmer le rejet
-    </button>
-    } @else {
-    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
-      Fermer
     </button>
     <button
       type="button"
       class="btn btn-danger"
+      (click)="confirmReject()"
+      [disabled]="saving()"
+    >
+      {{saving()?'Enregistrement…':'Confirmer le rejet'}}
+    </button>
+    } @else {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="closed.emit()"
+      [disabled]="saving()"
+    >
+      Fermer
+    </button>
+    @if(candidate().review_state==='needs_review'){
+    <button
+      type="button"
+      class="btn btn-danger"
       (click)="askDecision('rejected')"
+      [disabled]="saving()"
     >
       Rejeter
     </button>
@@ -146,9 +201,10 @@
       type="button"
       class="btn btn-primary"
       (click)="askDecision('approved')"
+      [disabled]="saving()"
     >
-      Approuver · garder en revue
+      {{saving()?'Enregistrement…':'Approuver · garder en revue'}}
     </button>
-    }
+    } }
   </div>
 </tp-admin-dialog>

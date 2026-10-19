@@ -5,19 +5,20 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminDialog } from '../../ui/admin-dialog';
-import type { CandidateDetail, ReviewState } from './scraping-mock';
+import type { CandidateDetail, ReviewState } from './scraping-review.models';
 
 @Component({
   selector: 'tp-scraping-review-dialog',
-  imports: [AdminDialog, FormsModule, DatePipe, DecimalPipe],
+  imports: [AdminDialog, FormsModule, DatePipe],
   templateUrl: './scraping-review-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingReviewDialog {
   readonly candidate = input.required<CandidateDetail>();
+  readonly saving = input(false);
   readonly closed = output<void>();
   readonly decided = output<{
     candidateId: string;
@@ -27,6 +28,10 @@ export class ScrapingReviewDialog {
   protected readonly decision = signal<'approved' | 'rejected' | null>(null);
   protected readonly reason = signal('');
   protected readonly error = signal('');
+
+  protected json(value: unknown): string {
+    return JSON.stringify(value, null, 2);
+  }
 
   protected askDecision(value: 'approved' | 'rejected'): void {
     if (value === 'approved') {
