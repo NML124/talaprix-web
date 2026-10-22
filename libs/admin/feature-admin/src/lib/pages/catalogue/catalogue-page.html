@@ -2,7 +2,7 @@
   title="Catalogue"
   subtitle="Un catalogue fiable, du produit à son prix en boutique. 12 catégories · 28 boutiques."
 >
-  <button class="btn btn-secondary" type="button">Catégories</button
+  <a class="btn btn-secondary" routerLink="/admin/categories">Catégories</a
   ><button class="btn btn-primary" type="button" (click)="add()">
     <svg lucidePlus size="15" aria-hidden="true"></svg>Ajouter un produit
   </button>
@@ -20,21 +20,17 @@
       placeholder="Rechercher un produit"
       [ngModel]="query()"
       (ngModelChange)="query.set($event)" /></label
-  ><label class="field"
-    ><span class="sr-only">Catégorie</span
-    ><select [ngModel]="category()" (ngModelChange)="category.set($event)">
-      @for(item of categories;track item){
-      <option>{{item}}</option>
-      }
-    </select></label
-  ><label class="field"
-    ><span class="sr-only">Boutique</span
-    ><select [ngModel]="shop()" (ngModelChange)="shop.set($event)">
-      @for(item of shops;track item){
-      <option>{{item}}</option>
-      }
-    </select></label
-  >
+  ><tp-admin-select
+    [options]="categories()"
+    [selected]="category()"
+    ariaLabel="Filtrer par catégorie"
+    (changed)="category.set($event)"
+  /><tp-admin-select
+    [options]="shops"
+    [selected]="shop()"
+    ariaLabel="Filtrer par boutique"
+    (changed)="shop.set($event)"
+  />
 </div>
 @if(toast()){
 <div class="toast" role="status">{{toast()}}</div>
@@ -153,7 +149,7 @@
   @if(selected();as row){
   <tp-product-dialog
     [product]="row"
-    [categories]="categories"
+    [categories]="categories()"
     [shops]="shops"
     [mode]="dialogMode()"
     [error]="error()"

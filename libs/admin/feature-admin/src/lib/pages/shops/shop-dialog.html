@@ -7,8 +7,8 @@
   <p class="dialog-error" role="alert">{{ error() }}</p>
   } @if (mode() === 'delete') {
   <p>
-    Supprimer <strong>{{ row.name }}</strong> de cette maquette ? Ses produits
-    liés seront archivés pour éviter des offres sans boutique.
+    Supprimer <strong>{{ row.name }}</strong> ? Ses offres liées seront
+    archivées pour éviter des offres sans boutique.
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
@@ -25,7 +25,7 @@
   </p>
   <p class="muted small">
     La boutique reste dans la liste et l’action est inscrite dans le journal
-    d’audit de démonstration.
+    d’audit.
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
@@ -56,73 +56,60 @@
     >
   </div>
   <div class="form-stack">
-    <label class="field">Nom<input [(ngModel)]="row.name" /></label>
-    <label class="field">Adresse<input [(ngModel)]="row.address" /></label>
-    <div class="grid-2">
-      <label class="field"
-        >Téléphone<input [(ngModel)]="row.phone" placeholder="À renseigner"
-      /></label>
-      <label class="field"
-        >Contact<input [(ngModel)]="row.contact" placeholder="À renseigner"
-      /></label>
-    </div>
-    <label class="field"
-      >Email<input
-        type="email"
-        [(ngModel)]="row.email"
-        placeholder="À renseigner"
-    /></label>
-    <div class="grid-2">
-      <label class="field"
-        >Latitude<input
-          type="number"
-          step="any"
-          [(ngModel)]="row.lat"
-          placeholder="À confirmer"
-      /></label>
-      <label class="field"
-        >Longitude<input
-          type="number"
-          step="any"
-          [(ngModel)]="row.lon"
-          placeholder="À confirmer"
-      /></label>
+    <div class="grid gap-3 sm:grid-cols-2">
+      @for(field of shopFields; track field.key) {
+      <div
+        class="relative rounded-xl border border-[var(--line)] bg-[var(--surface)] p-3"
+      >
+        <span class="text-xs text-[var(--text-2)]">{{field.label}}</span>
+        @if(isEditing(field.key)) {
+        <input
+          class="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-2 py-2 text-sm text-[var(--text-1)] focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]/20"
+          [type]="field.type"
+          [step]="field.type==='number'?'any':null"
+          [attr.aria-label]="field.label"
+          [ngModel]="fieldValue(row,field.key)"
+          (ngModelChange)="setField(row,field.key,$event)"
+        />
+        } @else {
+        <p class="mt-1 min-h-6 pr-8 text-sm text-[var(--text-1)]">
+          {{fieldValue(row,field.key) || 'Non renseigné'}}
+        </p>
+        <button
+          type="button"
+          class="absolute right-2 top-2 grid size-8 place-items-center rounded-lg text-[var(--text-2)] hover:bg-[var(--surface-muted)] hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
+          [attr.aria-label]="'Modifier '+field.label"
+          (click)="edit(field.key)"
+        >
+          <svg lucidePencil size="15" aria-hidden="true"></svg>
+        </button>
+        }
+      </div>
+      }
     </div>
   </div>
   <section class="dialog-section">
-    <h3>Produits liés à cette boutique</h3>
+    <h3>Offres de la boutique</h3>
     @if (products().length) { @for (product of products(); track product.id) {
     <div class="item-row">
       <img class="thumb" [src]="imagePath(product.image)" alt="" />
       <span class="grow"
         ><strong>{{ product.name }}</strong
-        ><small>{{ product.unit }}</small></span
+        ><small
+          >{{ product.unit }} · actualisé {{ product.updated }}</small
+        ></span
       >
-      <span class="number">{{ fc(product.price) }}</span>
+      <span class="toolbar">
+        <tp-status-dot
+          [label]="product.status"
+          [tone]="productTone(product.status)"
+        />
+        <strong class="number">{{ fc(product.price) }}</strong>
+      </span>
     </div>
     } } @else {
     <p class="muted small">Aucun produit lié dans cet aperçu.</p>
     }
-  </section>
-  <section class="dialog-section">
-    <h3>Responsables</h3>
-    <div class="item-row">
-      <span class="avatar">BN</span
-      ><span class="grow"
-        ><strong>Brigitte Ndala</strong
-        ><small>Administration · suivi partenaire</small></span
-      >
-    </div>
-    <div class="item-row">
-      <span class="avatar">JK</span
-      ><span class="grow"
-        ><strong>Joël Kabeya</strong
-        ><small>Modérateur · relevés de prix</small></span
-      >
-    </div>
-    <p class="muted small shop-dialog-updated">
-      Dernière mise à jour : Brigitte Ndala · 03 oct., 15:12
-    </p>
   </section>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">

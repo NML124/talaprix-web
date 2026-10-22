@@ -1,0 +1,71 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">DIFFUSION</p>
+    <h1>Visibilité</h1>
+    <p>Suivez les mises en avant de votre boutique sur TalaPrix.</p>
+  </div>
+</header>
+<section class="shop-feature-band">
+  <div>
+    <p class="shop-eyebrow">MISE EN AVANT ACTUELLE</p>
+    <strong
+      >{{ placements().length ? placements()[0].title : 'Aucune campagne en
+      cours' }}</strong
+    ><span
+      >{{ placements().length ? placements()[0].surface : 'Vos futures campagnes
+      apparaîtront ici.' }}</span
+    >
+  </div>
+  <span class="badge success"
+    >{{ placements().length ? placements()[0].status : 'À venir' }}</span
+  >
+</section>
+<section class="card">
+  <div class="card-head">
+    <h2>Mes placements</h2>
+    <span class="muted small">Campagnes et emplacements</span>
+  </div>
+  @if (placements().length) {
+  <div class="table-wrap">
+    <table class="shop-table">
+      <thead>
+        <tr>
+          <th>Campagne</th>
+          <th>Emplacement</th>
+          <th>Période</th>
+          <th>État</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of visiblePlacements(); track row.id) {
+        <tr>
+          <td><strong>{{ row.title }}</strong></td>
+          <td>{{ row.surface }}</td>
+          <td>{{ row.period }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.success]="row.status === 'En diffusion'"
+              [class.info]="row.status === 'Programmée'"
+              [class.warning]="row.status === 'À valider'"
+              >{{ row.status }}</span
+            >
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <tp-admin-pagination
+    [total]="placements().length"
+    [page]="currentPage()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  } @else {
+  <div class="shop-empty">
+    <strong>Aucune mise en avant</strong>
+    <p>Les emplacements réservés à votre boutique apparaîtront ici.</p>
+  </div>
+  }
+</section>

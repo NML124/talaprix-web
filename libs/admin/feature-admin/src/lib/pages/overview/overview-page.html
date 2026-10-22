@@ -10,7 +10,7 @@
   >
 </tp-admin-page-header>
 @if(overview();as data){
-<section class="card kpi-band" aria-label="Indicateurs de septembre">
+<section class="kpi-band" aria-label="Indicateurs de septembre">
   @for(kpi of data.kpis; track kpi.label){
   <div class="kpi">
     <small>{{kpi.label}}</small><strong class="number">{{kpi.value}}</strong
@@ -18,18 +18,67 @@
   </div>
   }
 </section>
+<section class="card admin-engagement" aria-labelledby="engagement-heading">
+  <div class="card-head">
+    <div>
+      <h2 id="engagement-heading">Intérêt pour les vendeurs</h2>
+      <p class="muted small">{{ engagement.period }}</p>
+    </div>
+  </div>
+  <div class="admin-engagement-metrics">
+    <div>
+      <small>Contacter le vendeur</small
+      ><strong class="number">{{ engagement.contactPeople }}</strong
+      ><span>personnes distinctes</span>
+    </div>
+    <div>
+      <small>Localiser le vendeur</small
+      ><strong class="number">{{ engagement.locatePeople }}</strong
+      ><span>personnes distinctes</span>
+    </div>
+    <div>
+      <small>Ajouter une offre en favoris</small
+      ><strong class="number">{{ engagement.favoritePeople }}</strong
+      ><span>personnes distinctes</span>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Boutique</th>
+          <th>Contacts</th>
+          <th>Itinéraires</th>
+          <th>Favoris</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (shop of engagement.shops; track shop.name) {
+        <tr>
+          <td><strong>{{ shop.name }}</strong></td>
+          <td class="number">{{ shop.contactPeople }}</td>
+          <td class="number">{{ shop.locatePeople }}</td>
+          <td class="number">{{ shop.favoritePeople }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">
+    Chaque total global déduplique les personnes entre boutiques. Les lignes par
+    boutique ne s’additionnent pas.
+  </p>
+</section>
 <div class="split">
-  <section class="card wide">
+  <section class="card wide overview-savings">
     <div class="card-head">
       <h2>Économies estimées</h2>
       <span class="muted small"
-        ><strong class="number" style="color: var(--text)"
-          >{{data.stats.visits}}</strong
-        >
+        ><strong class="number overview-visits">{{data.stats.visits}}</strong>
         consultations ce mois-ci</span
       >
     </div>
-    <div class="toolbar" style="align-items: baseline">
+    <div class="toolbar overview-savings-total">
       <strong class="hero-number number">{{data.stats.heroSavings}}</strong
       ><span class="positive small">{{data.stats.savingsChange}}</span>
     </div>
@@ -61,7 +110,7 @@
       >
     </div>
   </section>
-  <section class="card narrow">
+  <section class="card narrow overview-actions">
     <div class="card-head">
       <h2>À traiter</h2>
       <span class="muted small">{{data.stats.actions}}</span>
@@ -69,15 +118,14 @@
     @for(action of data.actions; track action.title){<a
       class="item-row"
       [routerLink]="action.link"
-      ><strong class="number" style="width: 30px; font-size: 20px"
-        >{{action.count}}</strong
+      ><strong class="number overview-action-count">{{action.count}}</strong
       ><span class="grow"
         ><strong>{{action.title}}</strong><small>{{action.detail}}</small></span
       ><svg lucideChevronRight size="16" aria-hidden="true"></svg></a
     >}
-    <div style="padding-top: 18px">
+    <div class="overview-stale-prices">
       <span class="status warning">{{data.stats.stalePrices}}</span>
-      <p class="muted small" style="margin: 5px 0 6px 14px">
+      <p class="muted small overview-stale-detail">
         {{data.stats.stalePriority}}
       </p>
       <a routerLink="/admin/moderation" class="link"
@@ -86,9 +134,65 @@
     </div>
   </section>
 </div>
-<div class="split">
+<div class="split overview-geography items-start">
   <section class="card wide">
-    <div class="card-head">
+    <div class="card-head mb-3">
+      <div>
+        <h2>Zones les plus actives</h2>
+        <p class="muted small mt-1">Communes uniquement · septembre 2026</p>
+      </div>
+    </div>
+    <div class="border-t border-[var(--line)]">
+      @for(zone of usageZones; track zone.zone; let rank = $index){
+      <div
+        class="grid grid-cols-[22px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[var(--line-soft)] py-3"
+      >
+        <span class="muted number">{{rank + 1}}</span>
+        <span class="grid min-w-0"
+          ><strong class="font-semibold">{{zone.zone}}</strong
+          ><small class="text-[var(--text-2)]">{{zone.city}}</small></span
+        >
+        <strong class="number">{{zone.users.toLocaleString('fr-FR')}}</strong>
+      </div>
+      }
+    </div>
+    <p class="muted small mt-3 leading-[1.4]">
+      Utilisateurs actifs agrégés par commune. Aucune adresse ou position
+      individuelle.
+    </p>
+  </section>
+  <section class="card narrow">
+    <div class="card-head mb-3">
+      <div>
+        <h2>Prix les plus bas</h2>
+        <p class="muted small mt-1">Boutiques · échantillon comparable</p>
+      </div>
+    </div>
+    <div class="border-t border-[var(--line)]">
+      @for(shop of lowestPriceShops; track shop.shop; let rank = $index){
+      <div
+        class="grid grid-cols-[22px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[var(--line-soft)] py-3"
+      >
+        <span class="muted number">{{rank + 1}}</span>
+        <span class="grid min-w-0"
+          ><strong class="font-semibold">{{shop.shop}}</strong
+          ><small class="text-[var(--text-2)]"
+            >Ex. {{shop.example}}</small
+          ></span
+        >
+        <strong class="number">{{shop.wins}}</strong>
+      </div>
+      }
+    </div>
+    <p class="muted small mt-3 leading-[1.4]">
+      Nombre de prix minimum sur {{comparableProductCount}} produits identiques,
+      à unité et devise égales. Ex æquo inclus.
+    </p>
+  </section>
+</div>
+<div class="split overview-trending-pair items-start">
+  <section class="card wide overview-trending">
+    <div class="card-head border-b border-[var(--line)] pb-3">
       <h2>Produits tendances</h2>
       <tp-segmented-tabs
         [items]="['Favoris','Consultations']"
@@ -96,13 +200,21 @@
         (selectTab)="activeTab.set($event)"
       />
     </div>
-    <div class="table-wrap">
+    <p class="muted small hidden max-[560px]:block">
+      Favoris et prix → faites glisser le tableau
+    </p>
+    <div
+      class="table-wrap overflow-x-auto"
+      role="region"
+      aria-label="Produits tendances, tableau défilant horizontalement"
+      tabindex="0"
+    >
       <table>
         <thead>
           <tr>
             <th>Produit</th>
             <th>{{activeTab()}}</th>
-            <th style="text-align: right">Prix min.</th>
+            <th class="align-right">Prix min.</th>
           </tr>
         </thead>
         <tbody>
@@ -110,12 +222,7 @@
           <tr>
             <td>
               <div class="product-cell">
-                <img
-                  class="thumb"
-                  style="width: 36px; height: 36px"
-                  [src]="imagePath(row.image)"
-                  alt=""
-                /><span
+                <img class="thumb" [src]="imagePath(row.image)" alt="" /><span
                   ><strong>{{row.name}}</strong
                   ><small>{{row.detail}}</small></span
                 >
@@ -125,49 +232,59 @@
               <strong class="number"
                 >{{activeTab()==='Favoris'?row.favorites:row.views}}</strong
               >
-              <div class="progress" style="margin-top: 5px">
+              <div class="progress overview-progress">
                 <span
                   [style.width]="barWidth(activeTab()==='Favoris'?row.favorites:row.views)"
                 ></span>
               </div>
             </td>
-            <td class="number" style="text-align: right">{{fc(row.price)}}</td>
+            <td class="number align-right">{{fc(row.price)}}</td>
           </tr>
           }
         </tbody>
       </table>
     </div>
-    <tp-admin-pagination
+    @if(data.trending.length > pageSize){<tp-admin-pagination
       [total]="data.trending.length"
       [page]="page()"
       [pageSize]="pageSize"
       (pageChanged)="page.set($event)"
-    />
-    <a routerLink="/admin/catalogue" class="link">Voir tout le catalogue →</a>
+    />}
   </section>
-  <section class="card narrow">
-    <div class="card-head">
+  <section class="card narrow overview-activity">
+    <div class="card-head mb-3 border-b border-[var(--line)] pb-3">
       <h2>Activité de l'équipe</h2>
       <span class="muted small">Aujourd'hui</span>
     </div>
-    @for(entry of data.activity; track entry.time){
-    <div class="item-row">
-      <span class="avatar">{{entry.initials}}</span
-      ><span class="grow"
-        ><strong
-          >{{entry.actor}}
-          <span style="font-weight: 400">{{entry.action}}</span></strong
-        ><small>{{entry.detail}}</small></span
-      ><small class="muted number">{{entry.time}}</small>
+    <div class="overview-audit-preview">
+      @for(entry of audit().slice(0,4); track entry.id){
+      <div
+        class="grid grid-cols-[43px_minmax(0,1fr)] gap-3 border-b border-[var(--line-soft)] py-3"
+      >
+        <time class="number muted small">{{entry.time}}</time>
+        <span class="grid min-w-0 gap-0.5"
+          ><strong class="font-semibold">{{entry.actor}}</strong
+          ><small class="leading-[1.35] text-[var(--text-2)]"
+            >{{entry.action}} · {{entry.detail}}</small
+          ></span
+        >
+      </div>
+      } @empty {
+      <p class="muted small">Aucune activité récente.</p>
+      }
     </div>
-    }
-    <a routerLink="/admin/equipe" class="link">Journal d'audit →</a>
+    <a
+      routerLink="/admin/equipe"
+      [queryParams]="{tab:'audit'}"
+      class="link mt-4 inline-block"
+      >Journal d'audit →</a
+    >
   </section>
 </div>
 } @else {
 <div class="card admin-stack" aria-label="Chargement des indicateurs">
   @for(item of [1,2,3,4];track item){
-  <div class="skeleton" style="height: 60px"></div>
+  <div class="skeleton overview-skeleton"></div>
   }
 </div>
 }

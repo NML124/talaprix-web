@@ -7,8 +7,8 @@
   <p class="dialog-error" role="alert">{{ error() }}</p>
   } @if (mode() === 'delete') {
   <p>
-    Supprimer <strong>{{ row.name }}</strong> de la liste de démonstration ?
-    Cette action n’affecte aucun compte réel.
+    Supprimer le compte de <strong>{{ row.name }}</strong> ? Cette action
+    n’affecte aucun compte réel.
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
@@ -43,7 +43,7 @@
     <span class="avatar">{{ row.initials }}</span>
     <div>
       <strong>{{ row.name }}</strong
-      ><small>{{ row.phone }} · {{ row.commune }}</small>
+      ><small>{{ row.phoneMasked }} · {{ row.commune }}</small>
     </div>
     <tp-status-dot
       [label]="row.status"
@@ -53,9 +53,12 @@
   <div class="form-stack">
     <label class="field">Nom<input [(ngModel)]="row.name" /></label>
     <div class="grid-2">
-      <label class="field">Téléphone<input [(ngModel)]="row.phone" /></label>
+      <label class="field">Téléphone<span>{{ row.phoneMasked }}</span></label>
       <label class="field">Commune<input [(ngModel)]="row.commune" /></label>
     </div>
+    <p class="muted small">
+      Les coordonnées privées ne sont pas affichées dans la communauté.
+    </p>
   </div>
   <section class="dialog-section">
     <h3>Activité</h3>

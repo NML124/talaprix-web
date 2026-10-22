@@ -1,0 +1,260 @@
+/* Shared rhythm and surface language for the private admin and shop spaces. */
+.admin-app .main-inner {
+  gap: var(--space-6);
+}
+.admin-app
+  .main-inner
+  :is(tp-overview-page, tp-reports-page, tp-scraping-page) {
+  gap: var(--space-8);
+}
+.admin-app .card {
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.admin-app .card-head {
+  margin-bottom: var(--space-5);
+}
+.admin-app .page-header {
+  padding: var(--space-2) 0 var(--space-1);
+}
+.admin-app .page-header h1 {
+  font-size: clamp(var(--type-page), 2.5vw, var(--type-metric));
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.admin-app .btn {
+  border-radius: var(--radius-md);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+.admin-app .btn-secondary {
+  background: var(--surface);
+  border-color: var(--line);
+}
+.admin-app .btn-secondary:hover {
+  background: var(--surface-muted);
+}
+.admin-app .btn-ghost,
+.admin-app .tabs {
+  background: var(--surface-muted);
+}
+.admin-app .tabs button[aria-pressed='true'] {
+  background: var(--surface);
+}
+.admin-app .topbar.scrolled {
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 0 var(--line);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.admin-app[data-theme='dark'] .topbar.scrolled {
+  background: rgba(27, 36, 37, 0.96);
+}
+.admin-app .align-right {
+  text-align: right;
+}
+
+/* Overview: distinct indicators and calm, consistent working surfaces. */
+.admin-app .kpi-band {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.admin-app .kpi {
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+}
+.admin-app .kpi strong {
+  font-size: clamp(var(--type-page), 2.3vw, var(--type-metric));
+  font-weight: 600;
+  margin: var(--space-2) 0 var(--space-1);
+}
+.admin-app .kpi small {
+  font-size: var(--type-caption);
+}
+.admin-app .split {
+  gap: var(--space-6);
+}
+.admin-app .overview-savings {
+  border: 1px solid var(--line-soft);
+}
+.admin-app .overview-actions,
+.admin-app .overview-activity {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.admin-app .overview-actions .item-row,
+.admin-app .overview-activity .item-row {
+  padding: var(--space-4) 0;
+}
+.admin-app .overview-visits {
+  color: var(--text);
+}
+.admin-app .overview-savings-total {
+  align-items: baseline;
+}
+.admin-app .overview-action-count {
+  width: 30px;
+  font-size: var(--type-section);
+}
+.admin-app .overview-stale-prices {
+  padding-top: var(--space-5);
+}
+.admin-app .overview-stale-detail {
+  margin: 5px 0 6px 14px;
+}
+.admin-app .overview-trending {
+  border: 1px solid var(--line-soft);
+}
+.admin-app .overview-trending .thumb,
+.admin-app .report-lower .thumb {
+  width: var(--thumb-compact);
+  height: var(--thumb-compact);
+}
+.admin-app .overview-progress {
+  margin-top: 5px;
+}
+.admin-app .overview-activity-action {
+  font-weight: 400;
+}
+.admin-app .overview-skeleton {
+  height: 60px;
+}
+
+/* Reports: a summary strip leads into one large chart and quieter lists. */
+.admin-app .report-preview-label,
+.admin-app .scrape-review-policy,
+.admin-app .shop-attention-count {
+  color: var(--text-2);
+  font-size: var(--type-caption);
+  font-weight: 600;
+}
+.admin-app .report-preview-label {
+  margin-left: auto;
+  font-weight: 500;
+}
+.admin-app .report-summary {
+  gap: 0;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+}
+.admin-app .report-summary > section {
+  min-width: 0;
+  padding: var(--space-5) var(--space-6);
+  border-left: 1px solid var(--line);
+}
+.admin-app .report-summary > section:first-child {
+  border-left: 0;
+}
+.admin-app .report-lead-stat {
+  border-top: 2px solid var(--brand);
+}
+.admin-app .report-lead-stat .report-stat-value {
+  color: var(--brand-hover);
+}
+.admin-app[data-theme='dark'] .report-lead-stat .report-stat-value {
+  color: var(--brand);
+}
+.admin-app .report-summary small {
+  display: block;
+  color: var(--text-2);
+  font-size: var(--type-caption);
+}
+.admin-app .report-stat-value {
+  display: block;
+  margin: var(--space-2) 0;
+  font-size: clamp(var(--type-page), 2.3vw, var(--type-metric));
+  font-weight: 600;
+}
+.admin-app .report-stat-denominator {
+  font-size: var(--type-emphasis);
+}
+.admin-app .report-main > .card {
+  border: 1px solid var(--line-soft);
+}
+.admin-app .report-chart {
+  display: block;
+  width: 100%;
+  height: 200px;
+}
+.admin-app .report-chart-fill {
+  fill: var(--chart-fill);
+}
+.admin-app .report-chart-previous {
+  stroke: var(--chart-previous);
+}
+.admin-app .report-chart-current {
+  stroke: var(--brand);
+}
+.admin-app .report-chart-point {
+  fill: var(--brand);
+}
+.admin-app .report-chart-label {
+  fill: var(--chart-label);
+  font-size: var(--type-caption);
+}
+.admin-app .report-insights {
+  gap: 0;
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+.admin-app .report-insight {
+  padding: var(--space-4) 0 0;
+  border-radius: 0;
+  background: transparent;
+}
+.admin-app .report-insight + .report-insight {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--line);
+}
+.admin-app .report-insight-detail {
+  display: block;
+}
+.admin-app .report-method,
+.admin-app .report-schedule-note {
+  margin: var(--space-4) 0 0;
+}
+.admin-app .report-footnote {
+  margin: var(--space-3) 0 0;
+}
+.admin-app .report-lower > section {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.admin-app .report-lower {
+  gap: var(--space-6);
+}
+.admin-app .report-lower .card-head {
+  min-height: 32px;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+.admin-app .report-lower .item-row {
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-app .report-lower .item-row:last-of-type {
+  border-bottom: 0;
+}
+.admin-app .report-lower .report-footnote,
+.admin-app .report-lower .report-schedule-note {
+  margin: var(--space-4) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}

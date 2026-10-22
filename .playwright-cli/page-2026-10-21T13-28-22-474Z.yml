@@ -1,0 +1,135 @@
+- generic [ref=f13e5]:
+  - complementary [ref=f13e6]:
+    - navigation "Navigation principale" [ref=f13e7]:
+      - generic [ref=f13e8]: TalaPrix
+      - button "Espace Administration, Kinshasa Global" [ref=f13e10] [cursor=pointer]:
+        - generic [ref=f13e11]:
+          - strong [ref=f13e12]: Administration
+          - generic [ref=f13e13]: Kinshasa · Global
+      - generic [ref=f13e17]:
+        - generic [ref=f13e18]:
+          - button "Pilotage" [expanded] [ref=f13e19] [cursor=pointer]
+          - generic [ref=f13e28]:
+            - link "Vue d’ensemble" [ref=f13e30] [cursor=pointer]:
+              - /url: /admin
+            - link "Rapports" [ref=f13e33] [cursor=pointer]:
+              - /url: /admin/rapports
+        - button "Découverte" [ref=f13e36] [cursor=pointer]
+        - generic [ref=f13e47]:
+          - button "Catalogue & prix 24" [expanded] [ref=f13e48] [cursor=pointer]:
+            - generic [ref=f13e53]: Catalogue & prix
+            - generic [ref=f13e54]: "24"
+          - generic [ref=f13e57]:
+            - link "Produits" [ref=f13e59] [cursor=pointer]:
+              - /url: /admin/catalogue
+            - link "Catégories" [ref=f13e62] [cursor=pointer]:
+              - /url: /admin/categories
+            - link "Prix & modération 24" [ref=f13e65] [cursor=pointer]:
+              - /url: /admin/moderation
+              - generic [ref=f13e66]: Prix & modération
+              - generic [ref=f13e67]: "24"
+            - link "Boutiques 4" [ref=f13e69] [cursor=pointer]:
+              - /url: /admin/boutiques
+              - generic [ref=f13e70]: Boutiques
+              - generic [ref=f13e71]: "4"
+        - button "Marketing" [ref=f13e73] [cursor=pointer]
+        - button "Communauté" [ref=f13e81] [cursor=pointer]
+        - button "Équipe & accès" [ref=f13e91] [cursor=pointer]
+      - link "AM Aline Mukendi Super administrateur" [ref=f13e98] [cursor=pointer]:
+        - /url: /admin/profil
+        - generic [ref=f13e99]: AM
+        - generic [ref=f13e100]:
+          - strong [ref=f13e101]: Aline Mukendi
+          - generic [ref=f13e102]: Super administrateur
+  - main [ref=f13e105]:
+    - generic [ref=f13e106]:
+      - generic [ref=f13e109]:
+        - generic [ref=f13e113]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f13e114]
+      - generic [ref=f13e115]:
+        - generic [ref=f13e116]:
+          - generic [ref=f13e119]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f13e120] [cursor=pointer]:
+            - option "Système"
+            - option "Clair"
+            - option "Sombre" [selected]
+        - link "Notifications, 3 non lues" [ref=f13e121] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f13e125]: "3"
+    - generic [ref=f13e127]:
+      - generic "Catégories" [ref=f13e128]:
+        - generic [ref=f13e129]:
+          - generic [ref=f13e130]:
+            - heading "Catégories" [level=1] [ref=f13e131]
+            - paragraph [ref=f13e132]: Organisez le catalogue indépendamment des fiches produits.
+          - button "Ajouter une catégorie" [ref=f13e134] [cursor=pointer]
+      - generic [ref=f13e136]:
+        - generic [ref=f13e137]:
+          - generic [ref=f13e141]: Rechercher une catégorie
+          - searchbox "Rechercher une catégorie" [ref=f13e142]
+        - generic [ref=f13e143]: 4 catégorie(s) affichée(s) · démonstration
+      - region "Liste des catégories" [ref=f13e144]:
+        - generic [ref=f13e145]:
+          - heading "Catégories du catalogue" [level=2] [ref=f13e146]
+          - generic [ref=f13e147]: Une catégorie peut être retirée si aucun produit actif ne l’utilise.
+        - table [ref=f13e149]:
+          - rowgroup [ref=f13e150]:
+            - row [ref=f13e151]:
+              - columnheader "Catégorie" [ref=f13e152]
+              - columnheader "Description" [ref=f13e153]
+              - columnheader "Produits actifs" [ref=f13e154]
+              - columnheader "Actions" [ref=f13e155]
+          - rowgroup [ref=f13e156]:
+            - row [ref=f13e157]:
+              - cell [ref=f13e158]:
+                - strong [ref=f13e159]: Boulangerie
+              - cell "Pains et produits de boulangerie" [ref=f13e160]
+              - cell "4" [ref=f13e161]
+              - cell [ref=f13e162]:
+                - generic [ref=f13e163]:
+                  - button "Modifier Boulangerie" [ref=f13e164] [cursor=pointer]
+                  - button "Supprimer Boulangerie" [disabled] [ref=f13e168]
+            - row [ref=f13e172]:
+              - cell [ref=f13e173]:
+                - strong [ref=f13e174]: Épicerie
+              - cell "Alimentation et produits du quotidien" [ref=f13e175]
+              - cell "3" [ref=f13e176]
+              - cell [ref=f13e177]:
+                - generic [ref=f13e178]:
+                  - button "Modifier Épicerie" [ref=f13e179] [cursor=pointer]
+                  - button "Supprimer Épicerie" [disabled] [ref=f13e183]
+            - row [ref=f13e187]:
+              - cell [ref=f13e188]:
+                - strong [ref=f13e189]: Mode
+              - cell "Vêtements et chaussures" [ref=f13e190]
+              - cell "3" [ref=f13e191]
+              - cell [ref=f13e192]:
+                - generic [ref=f13e193]:
+                  - button "Modifier Mode" [ref=f13e194] [cursor=pointer]
+                  - button "Supprimer Mode" [disabled] [ref=f13e198]
+            - row [ref=f13e202]:
+              - cell [ref=f13e203]:
+                - strong [ref=f13e204]: Accessoires
+              - cell "Sacs et accessoires personnels" [ref=f13e205]
+              - cell "2" [ref=f13e206]
+              - cell [ref=f13e207]:
+                - generic [ref=f13e208]:
+                  - button "Modifier Accessoires" [ref=f13e209] [cursor=pointer]
+                  - button "Supprimer Accessoires" [disabled] [ref=f13e213]
+      - dialog "Nouvelle catégorie" [ref=f13e217]:
+        - generic [ref=f13e218]:
+          - generic [ref=f13e219]:
+            - heading "Nouvelle catégorie" [level=2] [ref=f13e220]
+            - button "Fermer" [active] [ref=f13e221] [cursor=pointer]
+          - generic [ref=f13e225]:
+            - generic [ref=f13e226]:
+              - generic [ref=f13e227]:
+                - text: Nom
+                - textbox "Nom" [ref=f13e228]
+              - generic [ref=f13e229]:
+                - text: Description
+                - textbox "Description" [ref=f13e230]
+            - paragraph [ref=f13e231]: Le renommage actualise les produits liés dans cette démonstration.
+            - generic [ref=f13e232]:
+              - button "Annuler" [ref=f13e233] [cursor=pointer]
+              - button "Enregistrer" [ref=f13e234] [cursor=pointer]

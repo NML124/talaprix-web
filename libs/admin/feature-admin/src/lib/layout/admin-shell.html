@@ -86,10 +86,14 @@
           }
         </div>
         <a class="profile-link" routerLink="/admin/profil"
-          ><span class="avatar brand">AM</span
+          ><span class="avatar brand"
+            >{{(session.user()?.displayName || 'A').slice(0,1)}}</span
           ><span
-            ><strong>Aline Mukendi</strong
-            ><small>Super administrateur</small></span
+            ><strong>{{session.user()?.displayName || 'Administrateur'}}</strong
+            ><small
+              >{{session.user()?.roles?.[0] === 'admin' ? 'Administration' :
+              'Accès administrateur'}}</small
+            ></span
           ><svg lucideChevronRight size="15" aria-hidden="true"></svg
         ></a>
       </nav>
@@ -100,44 +104,42 @@
       (window:scroll)="onWindowScroll()"
     >
       <div class="topbar" [class.scrolled]="scrolled()">
-        <label class="search topbar-search"
-          ><svg lucideSearch size="15" aria-hidden="true"></svg
-          ><span class="sr-only">Rechercher dans TalaPrix</span
-          ><input
-            type="search"
-            placeholder="Rechercher un produit, une boutique…"
-        /></label>
+        <tp-admin-global-search />
         <div class="toolbar">
-          <label class="theme-picker">
+          <div class="flex items-center gap-2">
             <svg lucideMoon size="16" aria-hidden="true"></svg>
-            <span class="sr-only">Thème du panneau</span>
-            <select
-              aria-label="Thème du panneau"
-              [value]="theme()"
-              (change)="onThemeChange($event)"
-            >
-              <option value="system">Système</option>
-              <option value="light">Clair</option>
-              <option value="dark">Sombre</option>
-            </select>
-          </label>
+            <tp-admin-select
+              [options]="['Système','Clair','Sombre']"
+              [selected]="themeLabel()"
+              ariaLabel="Thème du panneau"
+              (changed)="setTheme($event)"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-secondary btn-icon"
+            aria-label="Se déconnecter"
+            title="Se déconnecter"
+            (click)="logout()"
+          >
+            <svg lucideLogOut size="17" aria-hidden="true"></svg>
+          </button>
           <a
             class="btn btn-secondary btn-icon"
-            routerLink="/admin/marketing"
-            [queryParams]="{tab:'notifications'}"
-            aria-label="Notifications, 3 non lues"
+            routerLink="/admin/notifications"
+            [attr.aria-label]="'Notifications, ' + notifications.unreadCount() + ' non lues'"
             style="position: relative"
             ><svg lucideBell size="17" aria-hidden="true"></svg
-            ><span class="notification-count" aria-hidden="true">3</span></a
+            >@if(notifications.unreadCount()){<span
+              class="notification-count"
+              aria-hidden="true"
+              >{{notifications.unreadCount()}}</span
+            >}</a
           >
         </div>
       </div>
       <div class="main-inner">
         <router-outlet />
-        <footer class="footer">
-          <span>TalaPrix Administration</span
-          ><span>Kinshasa (UTC+1) · FC / CDF</span>
-        </footer>
       </div>
     </main>
   </div>

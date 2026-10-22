@@ -1,0 +1,43 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">RÉPUTATION</p>
+    <h1>Avis clients</h1>
+    <p>Les retours associés à vos offres et leur suivi.</p>
+  </div>
+</header>
+<section class="card">
+  <div class="card-head">
+    <h2>Retours récents</h2>
+    <span class="muted small">{{ reviews().length }} avis</span>
+  </div>
+  @if (reviews().length) {
+  <div class="shop-reviews-list">
+    @for (review of visibleReviews(); track review.id) {
+    <article class="shop-review-row">
+      <div class="shop-review-top">
+        <strong>{{ review.author }}</strong
+        ><span
+          class="shop-review-stars"
+          [attr.aria-label]="review.rating+' étoiles sur 5'"
+          >{{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating)
+          }}</span
+        ><small>{{ review.date }}</small>
+      </div>
+      <p class="muted small">{{ review.product }}</p>
+      <p>{{ review.comment }}</p>
+    </article>
+    }
+  </div>
+  <tp-admin-pagination
+    [total]="reviews().length"
+    [page]="currentPage()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  } @else {
+  <div class="shop-empty">
+    <strong>Aucun avis</strong>
+    <p>Les avis reçus sur votre boutique apparaîtront ici.</p>
+  </div>
+  }
+</section>

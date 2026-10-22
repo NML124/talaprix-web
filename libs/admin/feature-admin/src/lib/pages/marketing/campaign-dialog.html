@@ -1,0 +1,68 @@
+<tp-admin-dialog
+  [title]="campaign()?.name ?? 'Nouveau message client'"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
+  <div class="form-stack">
+    <label class="field"
+      >Titre<input
+        maxlength="50"
+        [ngModel]="value().title"
+        (ngModelChange)="change('title', $event)"
+    /></label>
+    <label class="field"
+      >Message<textarea
+        maxlength="140"
+        [ngModel]="value().message"
+        (ngModelChange)="change('message', $event)"
+      ></textarea
+      ><small>{{ value().message.length }} / 140 caractères</small></label
+    >
+    <div>
+      <span class="small muted">Canal</span>
+      <tp-segmented-tabs
+        [items]="['Push', 'In-app', 'Push + in-app', 'Email']"
+        [selected]="value().channel"
+        (selectTab)="change('channel', $event)"
+      />
+    </div>
+    <label class="field"
+      >Audience<tp-admin-select
+        [options]="['Gombe','Limete','Toutes les communes']"
+        [selected]="value().commune"
+        ariaLabel="Audience"
+        (changed)="change('commune', $event)"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Date<input
+          type="date"
+          [ngModel]="value().date"
+          (ngModelChange)="change('date', $event)"
+      /></label>
+      <label class="field"
+        >Heure · Kinshasa<input
+          type="time"
+          [ngModel]="value().hour"
+          (ngModelChange)="change('hour', $event)"
+      /></label>
+    </div>
+  </div>
+  <p class="notice notice-compact">
+    <strong>Canaux et consentement</strong>
+    <span
+      >Les destinataires, consentements et états de livraison seront fournis par
+      l’API.</span
+    >
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-primary" (click)="submit()">
+      Programmer
+    </button>
+  </div>
+</tp-admin-dialog>

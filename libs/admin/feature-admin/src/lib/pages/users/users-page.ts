@@ -18,8 +18,9 @@ import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { StatusDot } from '../../ui/status-dot';
 import { EmptyState } from '../../ui/empty-state';
 import { Pagination } from '../../ui/pagination';
-import type { User } from '../../mocks/models';
+import type { CommunityUserView } from '../../mocks/models';
 import { UserDialog } from './user-dialog';
+import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-users-page',
@@ -35,14 +36,15 @@ import { UserDialog } from './user-dialog';
     LucidePlay,
     LucideTrash2,
     UserDialog,
+    AdminSelect,
   ],
   templateUrl: './users-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersPage {
   private readonly api = inject(AdminMockApi);
-  protected readonly users = signal<User[]>([]);
-  protected readonly selected = signal<User | null>(null);
+  protected readonly users = signal<CommunityUserView[]>([]);
+  protected readonly selected = signal<CommunityUserView | null>(null);
   protected readonly dialogMode = signal<'edit' | 'suspend' | 'delete'>('edit');
   protected readonly tab = signal('Tous 12 680');
   protected readonly tabs = ['Tous 12 680', 'Actifs 12 542', 'Suspendus 138'];
@@ -70,9 +72,7 @@ export class UsersPage {
         (this.tab().startsWith('Tous') ||
           row.status ===
             (this.tab().startsWith('Actifs') ? 'Actif' : 'Suspendu')) &&
-        `${row.name} ${row.phone}`
-          .toLowerCase()
-          .includes(this.query().toLowerCase()) &&
+        this.matchesQuery(row.name, row.phoneMasked, this.query()) &&
         (this.commune() === 'Toutes les communes' ||
           row.commune === this.commune()),
     ),
@@ -103,11 +103,21 @@ export class UsersPage {
       this.loading.set(false);
     }
   }
-  protected select(row: User, mode: 'edit' | 'suspend' | 'delete'): void {
+  protected select(
+    row: CommunityUserView,
+    mode: 'edit' | 'suspend' | 'delete',
+  ): void {
     this.selected.set(structuredClone(row));
     this.dialogMode.set(mode);
     this.reason.set('');
     this.error.set('');
+  }
+  private matchesQuery(name: string, phone: string, query: string): boolean {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return true;
+    if (name.toLowerCase().includes(normalized)) return true;
+    const suffix = normalized.replace(/\D/g, '');
+    return suffix.length >= 3 && phone.replace(/\D/g, '').endsWith(suffix);
   }
   protected async saveProfile(): Promise<void> {
     const row = this.selected();
@@ -120,7 +130,7 @@ export class UsersPage {
       await this.api.updateUserProfile(row);
       this.users.set(await this.api.listUsers());
       this.selected.set(null);
-      this.toast.set('Profil enregistré dans la maquette.');
+      this.toast.set('Profil enregistré.');
     } catch {
       this.error.set('Modification impossible.');
     }
@@ -128,15 +138,12 @@ export class UsersPage {
   protected async toggleStatus(): Promise<void> {
     const row = this.selected();
     if (!row) return;
-    const updated = {
-      ...row,
-      status: row.status === 'Actif' ? 'Suspendu' : 'Actif',
-    } as User;
+    const status = row.status === 'Actif' ? 'Suspendu' : 'Actif';
     try {
-      await this.api.saveUser(updated, this.reason());
+      await this.api.saveUser(row.id, status, this.reason());
       this.users.set(await this.api.listUsers());
       this.toast.set(
-        `Compte ${updated.status === 'Actif' ? 'réactivé' : 'suspendu'} ; action inscrite au journal d’audit.`,
+        `Compte ${status === 'Actif' ? 'réactivé' : 'suspendu'} ; action inscrite au journal d’audit.`,
       );
       this.selected.set(null);
       this.reason.set('');
@@ -154,7 +161,7 @@ export class UsersPage {
       await this.api.deleteUser(row.id);
       this.users.set(await this.api.listUsers());
       this.selected.set(null);
-      this.toast.set('Compte supprimé de la maquette.');
+      this.toast.set('Compte supprimé.');
     } catch {
       this.error.set('Suppression impossible.');
     }

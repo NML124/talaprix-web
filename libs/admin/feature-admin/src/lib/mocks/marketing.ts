@@ -1,5 +1,42 @@
 import type { Campaign } from './models';
 
+export interface OfferDiscount {
+  id: number;
+  offer: string;
+  shop: string;
+  oldPrice: number;
+  newPrice: number;
+  currency: 'CDF' | 'USD';
+  validFrom: string;
+  validUntil: string;
+  status: 'Active' | 'Programmée' | 'Terminée';
+}
+
+export const offerDiscounts: OfferDiscount[] = [
+  {
+    id: 1,
+    offer: "Chips Lay's · 90 g",
+    shop: 'S&K',
+    oldPrice: 4500,
+    newPrice: 3800,
+    currency: 'CDF',
+    validFrom: '2026-10-16',
+    validUntil: '2026-10-24',
+    status: 'Active',
+  },
+  {
+    id: 2,
+    offer: 'Pain de mie · 500 g',
+    shop: 'Kin Marché',
+    oldPrice: 2800,
+    newPrice: 2500,
+    currency: 'CDF',
+    validFrom: '2026-10-22',
+    validUntil: '2026-10-29',
+    status: 'Programmée',
+  },
+];
+
 const promotionDate = new Intl.DateTimeFormat('fr-FR', {
   day: '2-digit',
   month: 'short',
@@ -20,6 +57,7 @@ export const campaigns: Campaign[] = [
   {
     id: 1,
     name: 'Les prix baissent près de vous',
+    message: 'Découvrez les nouveaux prix de vos produits favoris à Gombe.',
     channel: 'Notification plateforme',
     audience: 'Gombe · 1 840',
     date: `${promotionDate.format(shiftedDate(5))} · 09:00`,
@@ -29,6 +67,7 @@ export const campaigns: Campaign[] = [
   {
     id: 2,
     name: 'Vos favoris au meilleur prix',
+    message: 'Vos produits favoris sont disponibles à prix réduit.',
     channel: 'Email',
     audience: '3 260 abonnés',
     date: '03 oct. · 10:00',

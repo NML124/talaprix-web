@@ -1,6 +1,6 @@
 <tp-admin-page-header
   title="Mon profil"
-  subtitle="Vos informations et préférences dans cette maquette."
+  subtitle="Informations personnelles et préférences de votre compte."
   ><button type="button" class="btn btn-primary" (click)="save()">
     Enregistrer les modifications
   </button></tp-admin-page-header
@@ -39,15 +39,9 @@
             (ngModelChange)="phone.set($event)"
         /></label>
       </div>
-      <p class="muted small" style="margin: 18px 0 0">
-        Le rôle et le périmètre ne sont pas modifiables depuis votre profil.
-      </p>
     </section>
     <section class="card">
-      <h2 style="margin-bottom: 14px">Préférences de conception</h2>
-      <p class="muted small">
-        Ces choix sont simulés : aucun message ni rapport n'est envoyé.
-      </p>
+      <h2 style="margin-bottom: 14px">Préférences du compte</h2>
       <div class="settings-list">
         <div class="settings-row">
           <span
@@ -96,28 +90,26 @@
     <section class="card">
       <div class="card-head">
         <h2>Sécurité de connexion</h2>
-        <span class="badge info">Aperçu</span>
       </div>
       <p class="notice notice-compact">
-        Paramètres de sécurité indisponibles dans cette maquette. Aucun
-        changement n'est enregistré.
+        Les méthodes de connexion et la gestion des sessions sont contrôlées par
+        le service d’authentification TalaPrix.
       </p>
     </section>
     <section class="card">
       <div class="card-head">
-        <h2>Exemples de sessions</h2>
-        <small class="muted">Données fictives</small>
+        <h2>Sessions</h2>
       </div>
       @for(row of sessions();track row.name){
       <div class="item-row">
         <span class="grow"
           ><strong>{{row.name}}</strong><small>{{row.detail}}</small></span
-        >@if(row.current){<span class="badge info">Exemple actuel</span>}
+        >@if(row.current){<span class="badge info">Appareil actuel</span>}
       </div>
       }
     </section>
     <section class="card">
-      <h2>Exemple d'historique</h2>
+      <h2>Historique de sécurité</h2>
       <div class="item-row">
         <span class="grow"
           ><strong>Connexion réussie · MacBook Pro</strong

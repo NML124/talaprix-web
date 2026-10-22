@@ -1,0 +1,158 @@
+- generic [ref=e5]:
+  - complementary [ref=e6]:
+    - navigation "Navigation boutique" [ref=e7]:
+      - generic [ref=e8]: TalaPrix
+      - generic [ref=e10]:
+        - generic [aria-hidden] [ref=e11]: AK
+        - generic [ref=e12]:
+          - strong [ref=e13]: Atelier Kin
+          - generic [ref=e14]: Espace boutique
+      - generic [ref=e15]:
+        - link "Vue d’ensemble" [ref=e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Offres" [ref=e23] [cursor=pointer]:
+          - /url: /shop/offres
+        - link "Réductions" [ref=e29] [cursor=pointer]:
+          - /url: /shop/reductions
+        - link "Visibilité" [ref=e34] [cursor=pointer]:
+          - /url: /shop/visibilite
+        - link "Analyses" [ref=e39] [cursor=pointer]:
+          - /url: /shop/analyses
+        - link "Avis" [ref=e43] [cursor=pointer]:
+          - /url: /shop/avis
+        - link "Paramètres" [ref=e47] [cursor=pointer]:
+          - /url: /shop/parametres
+      - generic [ref=e52]:
+        - generic [ref=e53]: Boutique active
+        - generic [ref=e54]: Dernière mise à jour · Aujourd’hui, 09:42
+  - main [ref=e55]:
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - strong [ref=e58]: Espace boutique
+        - generic [ref=e59]: Données de démonstration
+      - generic [ref=e60]:
+        - generic [ref=e63]: Thème du panneau
+        - combobox "Thème du panneau" [ref=e64] [cursor=pointer]:
+          - option "Système" [selected]
+          - option "Clair"
+          - option "Sombre"
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - paragraph [ref=e69]: CATALOGUE BOUTIQUE
+          - heading "Mes offres" [level=1] [ref=e70]
+          - paragraph [ref=e71]: Prix, disponibilité et fraîcheur de vos annonces.
+        - generic [ref=e72]: Démonstration locale
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - group "Filtrer les offres" [ref=e75]:
+            - button "Toutes" [pressed] [ref=e76] [cursor=pointer]
+            - button "Visibles" [ref=e77] [cursor=pointer]
+            - button "Masquées" [ref=e78] [cursor=pointer]
+            - button "Épuisées" [ref=e79] [cursor=pointer]
+            - button "Brouillons" [ref=e80] [cursor=pointer]
+          - generic [ref=e81]:
+            - generic [ref=e85]: Rechercher une offre
+            - searchbox "Rechercher une offre" [ref=e86]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row [ref=e90]:
+              - columnheader "Produit" [ref=e91]
+              - columnheader "Prix" [ref=e92]
+              - columnheader "Visibilité" [ref=e93]
+              - columnheader "Stock" [ref=e94]
+              - columnheader "Mis à jour" [ref=e95]
+              - columnheader "Consultations" [ref=e96]
+              - columnheader "Action" [ref=e97]
+          - rowgroup [ref=e98]:
+            - row [ref=e99]:
+              - cell "AirPods Pro 3 Audio" [ref=e100]:
+                - strong [ref=e101]: AirPods Pro 3
+                - generic [ref=e102]: Audio
+              - cell "618 345 FC" [ref=e103]
+              - cell "Visible" [ref=e104]
+              - cell "En stock" [ref=e106]
+              - cell "Aujourd’hui" [ref=e107]
+              - cell "284" [ref=e108]
+              - cell [ref=e109]:
+                - button "Gérer AirPods Pro 3" [ref=e110] [cursor=pointer]
+            - row [ref=e114]:
+              - cell "Imprimante Canon G2410 Bureautique" [ref=e115]:
+                - strong [ref=e116]: Imprimante Canon G2410
+                - generic [ref=e117]: Bureautique
+              - cell "410 000 FC" [ref=e118]
+              - cell "Visible" [ref=e119]
+              - cell "En stock" [ref=e121]
+              - cell "Hier" [ref=e122]
+              - cell "168" [ref=e123]
+              - cell [ref=e124]:
+                - button "Gérer Imprimante Canon G2410" [ref=e125] [cursor=pointer]
+            - row [ref=e129]:
+              - cell "Galaxy A55 · 128 Go Téléphones" [ref=e130]:
+                - strong [ref=e131]: Galaxy A55 · 128 Go
+                - generic [ref=e132]: Téléphones
+              - cell "590 000 FC" [ref=e133]
+              - cell "Visible" [ref=e134]
+              - cell "En stock" [ref=e136]
+              - cell "18 oct." [ref=e137]
+              - cell "417" [ref=e138]
+              - cell [ref=e139]:
+                - button "Gérer Galaxy A55 · 128 Go" [ref=e140] [cursor=pointer]
+            - row [ref=e144]:
+              - cell "Casque JBL Tune 520BT Audio" [ref=e145]:
+                - strong [ref=e146]: Casque JBL Tune 520BT
+                - generic [ref=e147]: Audio
+              - cell "145 000 FC" [ref=e148]
+              - cell "Brouillon" [ref=e149]
+              - cell "En stock" [ref=e151]
+              - cell "17 oct." [ref=e152]
+              - cell "0" [ref=e153]
+              - cell [ref=e154]:
+                - button "Gérer Casque JBL Tune 520BT" [ref=e155] [cursor=pointer]
+            - row [ref=e159]:
+              - cell "Chargeur USB-C 30 W Accessoires" [ref=e160]:
+                - strong [ref=e161]: Chargeur USB-C 30 W
+                - generic [ref=e162]: Accessoires
+              - cell "43 000 FC" [ref=e163]
+              - cell "Visible" [ref=e164]
+              - cell "Stock épuisé" [ref=e166]
+              - cell "15 oct." [ref=e167]
+              - cell "92" [ref=e168]
+              - cell [ref=e169]:
+                - button "Gérer Chargeur USB-C 30 W" [ref=e170] [cursor=pointer]
+      - dialog "AirPods Pro 3" [ref=e174]:
+        - generic [ref=e175]:
+          - generic [ref=e176]:
+            - heading "AirPods Pro 3" [level=2] [ref=e177]
+            - button "Fermer" [active] [ref=e178] [cursor=pointer]
+          - generic [ref=e182]:
+            - generic [ref=e183]:
+              - generic [ref=e184]:
+                - generic [ref=e185]: Prix actuel
+                - strong [ref=e186]: 618 345 FC
+              - generic [ref=e187]:
+                - generic [ref=e188]: Visibilité
+                - strong [ref=e189]: Visible
+              - generic [ref=e190]:
+                - generic [ref=e191]: Disponibilité
+                - strong [ref=e192]: En stock
+              - generic [ref=e193]:
+                - generic [ref=e194]: Dernière mise à jour
+                - strong [ref=e195]: Aujourd’hui
+              - generic [ref=e196]:
+                - generic [ref=e197]: Consultations
+                - strong [ref=e198]: "284"
+              - generic [ref=e199]:
+                - generic [ref=e200]: Contacts vendeur
+                - strong [ref=e201]: 27 personnes
+              - generic [ref=e202]:
+                - generic [ref=e203]: Itinéraires ouverts
+                - strong [ref=e204]: 19 personnes
+              - generic [ref=e205]:
+                - generic [ref=e206]: Favoris
+                - strong [ref=e207]: 43 personnes
+            - paragraph [ref=e208]: 30 derniers jours · chiffres fictifs. Une même personne peut apparaître dans plusieurs offres.
+            - generic "Gestion de l'offre" [ref=e209]:
+              - button "Masquer l’offre" [ref=e210] [cursor=pointer]
+              - button "Marquer stock épuisé" [ref=e211] [cursor=pointer]
+            - paragraph [ref=e212]: "Aperçu local : ces changements ne modifient pas l’application mobile."

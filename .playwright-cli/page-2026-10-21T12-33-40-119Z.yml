@@ -1,0 +1,116 @@
+- generic [ref=e5]:
+  - complementary [ref=e6]:
+    - navigation "Navigation boutique" [ref=e7]:
+      - generic [ref=e8]: TalaPrix
+      - generic [ref=e10]:
+        - generic [aria-hidden] [ref=e11]: AK
+        - generic [ref=e12]:
+          - strong [ref=e13]: Atelier Kin
+          - generic [ref=e14]: Espace boutique
+      - generic [ref=e15]:
+        - link "Vue d’ensemble" [ref=e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Offres" [ref=e23] [cursor=pointer]:
+          - /url: /shop/offres
+        - link "Réductions" [ref=e29] [cursor=pointer]:
+          - /url: /shop/reductions
+        - link "Visibilité" [ref=e34] [cursor=pointer]:
+          - /url: /shop/visibilite
+        - link "Analyses" [ref=e39] [cursor=pointer]:
+          - /url: /shop/analyses
+        - link "Avis" [ref=e43] [cursor=pointer]:
+          - /url: /shop/avis
+        - link "Paramètres" [ref=e47] [cursor=pointer]:
+          - /url: /shop/parametres
+      - generic [ref=e52]:
+        - generic [ref=e53]: Boutique active
+        - generic [ref=e54]: Dernière mise à jour · Aujourd’hui, 09:42
+  - main [ref=e55]:
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - strong [ref=e58]: Espace boutique
+        - generic [ref=e59]: Données de démonstration
+      - generic [ref=e60]:
+        - generic [ref=e63]: Thème du panneau
+        - combobox "Thème du panneau" [ref=e64] [cursor=pointer]:
+          - option "Système" [selected]
+          - option "Clair"
+          - option "Sombre"
+    - generic [ref=e324]:
+      - generic [ref=e325]:
+        - generic [ref=e326]:
+          - paragraph [ref=e327]: PERFORMANCE
+          - heading "Analyses" [level=1] [ref=e328]
+          - paragraph [ref=e329]: Une lecture simple des interactions avec vos offres.
+        - group "Période" [ref=e330]:
+          - button "7 jours" [active] [pressed] [ref=e331] [cursor=pointer]
+          - button "30 jours" [ref=e332] [cursor=pointer]
+      - generic [ref=e333]:
+        - strong [ref=e335]: Chiffres de démonstration
+        - paragraph [ref=e336]: Les données de cette interface sont fictives ; les métriques réelles seront raccordées à l’API.
+      - generic [ref=e337]:
+        - generic [ref=e338]:
+          - generic [ref=e339]: Consultations · 7 jours
+          - strong [ref=e340]: "231"
+          - generic [ref=e341]: Pages d’offre consultées
+        - generic [ref=e342]:
+          - generic [ref=e343]: Contacts vendeur
+          - strong [ref=e344]: "24"
+          - generic [ref=e345]: Personnes distinctes
+        - generic [ref=e346]:
+          - generic [ref=e347]: Itinéraires ouverts
+          - strong [ref=e348]: "18"
+          - generic [ref=e349]: Personnes distinctes
+        - generic [ref=e350]:
+          - generic [ref=e351]: Ajouts en favoris
+          - strong [ref=e352]: "39"
+          - generic [ref=e353]: Personnes distinctes
+      - generic [ref=e354]:
+        - generic [ref=e355]:
+          - heading "Engagement par offre" [level=2] [ref=e356]
+          - generic [ref=e357]: Démonstration · 7 jours
+        - table [ref=e359]:
+          - rowgroup [ref=e360]:
+            - row [ref=e361]:
+              - columnheader "Offre" [ref=e362]
+              - columnheader "Consultations" [ref=e363]
+              - columnheader "Contacts" [ref=e364]
+              - columnheader "Itinéraires" [ref=e365]
+              - columnheader "Favoris" [ref=e366]
+          - rowgroup [ref=e367]:
+            - row [ref=e404]:
+              - cell [ref=e369]:
+                - strong [ref=e370]: Galaxy A55 · 128 Go
+              - cell "98" [ref=e405]
+              - cell "12" [ref=e406]
+              - cell "9" [ref=e407]
+              - cell "19" [ref=e408]
+            - row [ref=e409]:
+              - cell [ref=e376]:
+                - strong [ref=e377]: AirPods Pro 3
+              - cell "67" [ref=e410]
+              - cell "8" [ref=e411]
+              - cell "6" [ref=e412]
+              - cell "12" [ref=e413]
+            - row [ref=e414]:
+              - cell [ref=e383]:
+                - strong [ref=e384]: Imprimante Canon G2410
+              - cell "41" [ref=e415]
+              - cell "5" [ref=e416]
+              - cell "4" [ref=e417]
+              - cell "7" [ref=e418]
+            - row [ref=e419]:
+              - cell [ref=e390]:
+                - strong [ref=e391]: Chargeur USB-C 30 W
+              - cell "25" [ref=e420]
+              - cell "1" [ref=e421]
+              - cell "0" [ref=e422]
+              - cell "3" [ref=e423]
+            - row [ref=e396]:
+              - cell [ref=e397]:
+                - strong [ref=e398]: Casque JBL Tune 520BT
+              - cell "0" [ref=e399]
+              - cell "0" [ref=e400]
+              - cell "0" [ref=e401]
+              - cell "0" [ref=e402]
+        - paragraph [ref=e403]: Chaque colonne « personnes » déduplique au niveau de l’offre et de la période. Les lignes ne s’additionnent pas pour obtenir des personnes uniques dans toute la boutique.

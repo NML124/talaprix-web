@@ -30,7 +30,7 @@ export const roles = [
     members: 2,
     description: 'Gestion opérationnelle hors équipe',
     color: '#6b3fb8',
-    scope: 'Boutiques assignées',
+    scope: 'TalaPrix · global',
   },
   {
     name: 'Modérateur',

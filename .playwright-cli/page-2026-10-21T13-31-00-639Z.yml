@@ -1,0 +1,87 @@
+- generic [ref=f13e5]:
+  - complementary [ref=f13e6]:
+    - navigation "Navigation principale" [ref=f13e7]:
+      - generic [ref=f13e8]: TalaPrix
+      - button "Espace Administration, Kinshasa Global" [ref=f13e10] [cursor=pointer]:
+        - generic [ref=f13e11]:
+          - strong [ref=f13e12]: Administration
+          - generic [ref=f13e13]: Kinshasa · Global
+      - generic [ref=f13e17]:
+        - generic [ref=f13e18]:
+          - button "Pilotage" [expanded] [ref=f13e19] [cursor=pointer]
+          - generic [ref=f13e28]:
+            - link "Vue d’ensemble" [ref=f13e30] [cursor=pointer]:
+              - /url: /admin
+            - link "Rapports" [ref=f13e33] [cursor=pointer]:
+              - /url: /admin/rapports
+        - button "Découverte" [ref=f13e36] [cursor=pointer]
+        - generic [ref=f13e47]:
+          - button "Catalogue & prix 24" [expanded] [ref=f13e48] [cursor=pointer]:
+            - generic [ref=f13e53]: Catalogue & prix
+            - generic [ref=f13e54]: "24"
+          - generic [ref=f13e57]:
+            - link "Produits" [ref=f13e59] [cursor=pointer]:
+              - /url: /admin/catalogue
+            - link "Catégories" [ref=f13e62] [cursor=pointer]:
+              - /url: /admin/categories
+            - link "Prix & modération 24" [ref=f13e65] [cursor=pointer]:
+              - /url: /admin/moderation
+              - generic [ref=f13e66]: Prix & modération
+              - generic [ref=f13e67]: "24"
+            - link "Boutiques 4" [ref=f13e69] [cursor=pointer]:
+              - /url: /admin/boutiques
+              - generic [ref=f13e70]: Boutiques
+              - generic [ref=f13e71]: "4"
+        - button "Marketing" [ref=f13e73] [cursor=pointer]
+        - button "Communauté" [ref=f13e81] [cursor=pointer]
+        - button "Équipe & accès" [ref=f13e91] [cursor=pointer]
+      - link "AM Aline Mukendi Super administrateur" [ref=f13e98] [cursor=pointer]:
+        - /url: /admin/profil
+        - generic [ref=f13e99]: AM
+        - generic [ref=f13e100]:
+          - strong [ref=f13e101]: Aline Mukendi
+          - generic [ref=f13e102]: Super administrateur
+  - main [ref=f13e105]:
+    - generic [ref=f13e106]:
+      - generic [ref=f13e109]:
+        - generic [ref=f13e113]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f13e262]
+      - generic [ref=f13e115]:
+        - generic [ref=f13e116]:
+          - generic [ref=f13e119]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f13e120] [cursor=pointer]:
+            - option "Système"
+            - option "Clair"
+            - option "Sombre" [selected]
+        - link "Notifications, 2 non lues" [ref=f13e297] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f13e125]: "2"
+    - generic [ref=f13e263]:
+      - generic "Notifications" [ref=f13e264]:
+        - generic [ref=f13e265]:
+          - generic [ref=f13e266]:
+            - heading "Notifications" [level=1] [ref=f13e267]
+            - paragraph [ref=f13e268]: Décisions et événements qui demandent votre attention.
+          - generic [ref=f13e269]: Démonstration
+      - status [ref=f13e352]: Demande acceptée dans la démonstration. Aucun compte boutique réel n’a été créé.
+      - region "Boîte de notifications" [ref=f13e271]:
+        - generic [ref=f13e272]:
+          - heading "À consulter" [level=2] [ref=f13e273]
+          - generic [ref=f13e274]: 2 non lue(s)
+        - button "Demande pour devenir boutique Ujisha · Gombe Aujourd’hui · 10:14 Acceptée" [ref=f13e353] [cursor=pointer]:
+          - generic [ref=f13e277]:
+            - strong [ref=f13e278]: Demande pour devenir boutique
+            - generic [ref=f13e279]: Ujisha · Gombe
+          - generic [ref=f13e280]:
+            - generic [ref=f13e281]: Aujourd’hui · 10:14
+            - generic [ref=f13e354]: Acceptée
+        - button "Prix à vérifier 3 propositions attendent une décision Aujourd’hui · 09:42" [ref=f13e283] [cursor=pointer]:
+          - generic [ref=f13e285]:
+            - strong [ref=f13e286]: Prix à vérifier
+            - generic [ref=f13e287]: 3 propositions attendent une décision
+          - generic [ref=f13e288]: Aujourd’hui · 09:42
+        - button "Collecte terminée Nouvelles annonces en attente de revue Hier · 18:30" [ref=f13e290] [cursor=pointer]:
+          - generic [ref=f13e292]:
+            - strong [ref=f13e293]: Collecte terminée
+            - generic [ref=f13e294]: Nouvelles annonces en attente de revue
+          - generic [ref=f13e295]: Hier · 18:30

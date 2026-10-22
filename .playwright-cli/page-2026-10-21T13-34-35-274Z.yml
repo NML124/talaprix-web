@@ -1,0 +1,34 @@
+- generic [ref=f15e5]:
+  - complementary [ref=f15e6]:
+    - button "Ouvrir ou fermer la navigation" [ref=f15e7] [cursor=pointer]
+    - navigation "Navigation principale" [ref=f15e9]:
+      - generic [ref=f15e10]: TalaPrix
+  - main [ref=f15e12]:
+    - generic [ref=f15e13]:
+      - generic [ref=f15e16]:
+        - generic [ref=f15e20]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f15e21]
+      - generic [ref=f15e22]:
+        - generic [ref=f15e23]:
+          - generic [ref=f15e26]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f15e27] [cursor=pointer]:
+            - option "Système"
+            - option "Clair"
+            - option "Sombre" [selected]
+        - link "Notifications, 3 non lues" [ref=f15e28] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f15e32]: "3"
+    - generic [ref=f15e330]:
+      - generic "Administrateurs" [ref=f15e331]:
+        - generic [ref=f15e332]:
+          - generic [ref=f15e333]:
+            - heading "Administrateurs" [level=1] [ref=f15e334]
+            - paragraph [ref=f15e335]: Une équipe identifiée. Des accès maîtrisés. Chaque action attribuée.
+          - generic [ref=f15e336]: Gestion réservée au super administrateur
+      - group "Filtrer la liste" [ref=f15e339]:
+        - button "Membres" [ref=f15e340] [cursor=pointer]
+        - button "Invitations" [ref=f15e341] [cursor=pointer]
+        - button "Journal d'audit" [pressed] [ref=f15e342] [cursor=pointer]
+      - generic [ref=f15e346]:
+        - heading "Journal d’audit" [level=2] [ref=f15e347]
+        - generic [ref=f15e348]: 4 entrées

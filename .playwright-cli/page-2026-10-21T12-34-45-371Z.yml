@@ -1,0 +1,31 @@
+- generic [ref=f1e5]:
+  - complementary [ref=f1e6]:
+    - button "Ouvrir ou fermer la navigation" [ref=f1e7] [cursor=pointer]
+    - navigation "Navigation principale" [ref=f1e9]:
+      - generic [ref=f1e10]: TalaPrix
+  - main [ref=f1e12]:
+    - generic [ref=f1e13]:
+      - generic [ref=f1e14]:
+        - generic [ref=f1e18]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f1e19]
+      - generic [ref=f1e20]:
+        - generic [ref=f1e21]:
+          - generic [ref=f1e24]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f1e25] [cursor=pointer]:
+            - option "Système" [selected]
+            - option "Clair"
+            - option "Sombre"
+        - link "Notifications, 3 non lues" [ref=f1e26] [cursor=pointer]:
+          - /url: /admin/marketing?tab=notifications
+          - generic [aria-hidden] [ref=f1e30]: "3"
+    - generic [ref=f1e32]:
+      - generic "Bonjour Aline" [ref=f1e33]:
+        - generic [ref=f1e34]:
+          - generic [ref=f1e35]:
+            - heading "Bonjour Aline" [level=1] [ref=f1e36]
+            - paragraph
+          - generic [ref=f1e37]:
+            - button "▾" [ref=f1e38] [cursor=pointer]
+            - link "Ajouter un produit" [ref=f1e39] [cursor=pointer]:
+              - /url: /admin/catalogue
+      - generic "Chargement des indicateurs" [ref=f1e41]

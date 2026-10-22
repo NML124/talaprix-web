@@ -1,0 +1,75 @@
+- generic [ref=f12e5]:
+  - complementary [ref=f12e6]:
+    - navigation "Navigation boutique" [ref=f12e7]:
+      - generic [ref=f12e8]: TalaPrix
+      - generic [ref=f12e10]:
+        - generic [aria-hidden] [ref=f12e11]: AK
+        - generic [ref=f12e12]:
+          - strong [ref=f12e13]: Atelier Kin
+          - generic [ref=f12e14]: Espace boutique
+      - generic [ref=f12e15]:
+        - link "Vue d’ensemble" [ref=f12e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Offres" [ref=f12e23] [cursor=pointer]:
+          - /url: /shop/offres
+        - link "Promotions" [ref=f12e29] [cursor=pointer]:
+          - /url: /shop/promotions
+        - link "Visibilité" [ref=f12e34] [cursor=pointer]:
+          - /url: /shop/visibilite
+        - link "Analyses" [ref=f12e39] [cursor=pointer]:
+          - /url: /shop/analyses
+        - link "Avis" [ref=f12e43] [cursor=pointer]:
+          - /url: /shop/avis
+        - link "Paramètres" [ref=f12e47] [cursor=pointer]:
+          - /url: /shop/parametres
+      - generic [ref=f12e52]:
+        - generic [ref=f12e53]: Boutique active
+        - generic [ref=f12e54]: Dernière mise à jour · Aujourd’hui, 09:42
+  - main [ref=f12e55]:
+    - generic [ref=f12e56]:
+      - generic [ref=f12e57]:
+        - strong [ref=f12e58]: Espace boutique
+        - generic [ref=f12e59]: Données de démonstration
+      - generic [ref=f12e60]:
+        - generic [ref=f12e63]: Thème du panneau
+        - combobox "Thème du panneau" [ref=f12e64] [cursor=pointer]:
+          - option "Système"
+          - option "Clair"
+          - option "Sombre" [selected]
+    - generic [ref=f12e66]:
+      - generic [ref=f12e67]:
+        - generic [ref=f12e68]:
+          - paragraph [ref=f12e69]: PRIX DES OFFRES
+          - heading "Promotions" [level=1] [ref=f12e70]
+          - paragraph [ref=f12e71]: Les offres à prix promotionnel, indépendamment des mises en avant.
+        - generic [ref=f12e72]: Aperçu des données
+      - generic [ref=f12e73]:
+        - strong [ref=f12e75]: Une promotion modifie temporairement le prix d’une offre.
+        - paragraph [ref=f12e76]: Une mise en avant concerne la visibilité publicitaire et se suit dans l’onglet Visibilité.
+      - generic [ref=f12e77]:
+        - generic [ref=f12e78]:
+          - heading "Promotions de la boutique" [level=2] [ref=f12e79]
+          - generic [ref=f12e80]: 2 enregistrées
+        - table [ref=f12e82]:
+          - rowgroup [ref=f12e83]:
+            - row [ref=f12e84]:
+              - columnheader "Offre" [ref=f12e85]
+              - columnheader "Prix habituel" [ref=f12e86]
+              - columnheader "Prix réduit" [ref=f12e87]
+              - columnheader "Période" [ref=f12e88]
+              - columnheader "État" [ref=f12e89]
+          - rowgroup [ref=f12e90]:
+            - row [ref=f12e91]:
+              - cell [ref=f12e92]:
+                - strong [ref=f12e93]: Galaxy A55 · 128 Go
+              - cell "620 000 FC" [ref=f12e94]
+              - cell "590 000 FC" [ref=f12e95]
+              - cell "15–31 octobre" [ref=f12e96]
+              - cell "Active" [ref=f12e97]
+            - row [ref=f12e99]:
+              - cell [ref=f12e100]:
+                - strong [ref=f12e101]: Imprimante Canon G2410
+              - cell "425 000 FC" [ref=f12e102]
+              - cell "399 000 FC" [ref=f12e103]
+              - cell "1–7 novembre" [ref=f12e104]
+              - cell "Prévue" [ref=f12e105]

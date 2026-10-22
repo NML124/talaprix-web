@@ -1,0 +1,111 @@
+<tp-admin-page-header
+  title="Notifications"
+  subtitle="Décisions et événements qui demandent votre attention."
+>
+  <span class="badge info">Démonstration</span>
+</tp-admin-page-header>
+@if (feedback()) {
+<p class="toast" role="status">{{feedback()}}</p>
+}
+<section class="card admin-inbox" aria-label="Boîte de notifications">
+  <div class="card-head">
+    <h2>À consulter</h2>
+    <span class="muted small">{{inbox.unreadCount()}} non lue(s)</span>
+  </div>
+  @for (notice of inbox.notices(); track notice.id) {
+  <button
+    type="button"
+    class="admin-notice-row grid w-full grid-cols-[8px_minmax(0,1fr)_auto] items-center gap-4 border-0 border-t border-[var(--line)] bg-transparent py-4 text-left text-[var(--text)] hover:bg-[var(--surface-muted)] max-[560px]:grid-cols-[7px_minmax(0,1fr)]"
+    [class.unread]="!notice.read"
+    (click)="open(notice.id)"
+  >
+    <span
+      class="admin-notice-indicator h-[7px] w-[7px] rounded-full"
+      [style.background]="!notice.read ? 'var(--brand)' : 'transparent'"
+      aria-hidden="true"
+    ></span>
+    <span class="admin-notice-copy grid gap-1"
+      ><strong>{{notice.title}}</strong
+      ><small class="text-[var(--text-2)]">{{notice.summary}}</small></span
+    >
+    <span
+      class="admin-notice-meta grid gap-1 max-[560px]:col-start-2 max-[560px]:flex max-[560px]:flex-wrap max-[560px]:items-center"
+      ><small class="text-[var(--text-2)]">{{notice.time}}</small> @if
+      (notice.status === 'pending') {
+      <span class="badge warning">À décider</span> } @if (notice.status ===
+      'approved') { <span class="badge success">Acceptée</span> } @if
+      (notice.status === 'rejected') {
+      <span class="badge danger">Refusée</span> }
+    </span>
+  </button>
+  } @empty {
+  <p class="muted">Aucune notification pour le moment.</p>
+  }
+</section>
+@if (selected(); as request) {
+<tp-admin-dialog title="Demande pour devenir boutique" (closed)="close()">
+  <p class="muted small">Demande reçue · {{request.time}}</p>
+  <dl class="admin-request-facts my-4 grid border-t border-[var(--line)]">
+    <div
+      class="flex justify-between gap-4 border-b border-[var(--line-soft)] py-3"
+    >
+      <dt class="text-[var(--text-2)]">Boutique proposée</dt>
+      <dd class="m-0 text-right font-semibold">{{request.shop}}</dd>
+    </div>
+    <div
+      class="flex justify-between gap-4 border-b border-[var(--line-soft)] py-3"
+    >
+      <dt class="text-[var(--text-2)]">Demandeur</dt>
+      <dd class="m-0 text-right font-semibold">{{request.applicant}}</dd>
+    </div>
+    <div
+      class="flex justify-between gap-4 border-b border-[var(--line-soft)] py-3"
+    >
+      <dt class="text-[var(--text-2)]">Zone</dt>
+      <dd class="m-0 text-right font-semibold">{{request.zone}}</dd>
+    </div>
+  </dl>
+  <p class="notice">
+    Avant l’activation, vérifiez l’identité et les justificatifs de la boutique.
+  </p>
+  @if (request.status === 'pending') { @if (rejecting()) {
+  <label class="field"
+    >Motif du refus<textarea
+      [ngModel]="reason()"
+      (ngModelChange)="reason.set($event); error.set('')"
+      placeholder="Indiquez une raison compréhensible pour le demandeur"
+    ></textarea>
+  </label>
+  } @if (error()) {
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Fermer
+    </button>
+    @if (rejecting()) {
+    <button type="button" class="btn btn-danger" (click)="decide('rejected')">
+      Confirmer le refus
+    </button>
+    } @else {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="rejecting.set(true)"
+    >
+      Refuser</button
+    ><button type="button" class="btn btn-primary" (click)="decide('approved')">
+      Accepter
+    </button>
+    }
+  </div>
+  } @else {
+  <p class="muted">
+    Décision locale : {{request.status === 'approved' ? 'acceptée' :
+    'refusée'}}.
+  </p>
+  @if (request.reason) {
+  <p>Motif : {{request.reason}}</p>
+  } }
+</tp-admin-dialog>
+}

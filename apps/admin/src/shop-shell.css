@@ -1,0 +1,222 @@
+.shop-app .shop-sidebar {
+  background: var(--surface);
+}
+.shop-app .sidebar-nav {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 16px;
+}
+.shop-app .shop-identity {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 64px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-muted);
+}
+.shop-identity-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.shop-identity span:last-child {
+  min-width: 0;
+}
+.shop-identity strong,
+.shop-identity small {
+  display: block;
+}
+.shop-identity strong {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+.shop-identity small {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.shop-nav-links {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-height: 0;
+  overflow-y: auto;
+}
+.shop-nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 41px;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.shop-nav-links a:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+.shop-nav-links a.active {
+  background: var(--brand-tint);
+  color: var(--brand-hover);
+  font-weight: 700;
+}
+.shop-sidebar-foot {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  min-height: 65px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+}
+.shop-sidebar-foot small {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.shop-topbar > div {
+  display: grid;
+  line-height: 1.2;
+}
+.shop-topbar strong {
+  font-size: 14px;
+}
+.shop-topbar small {
+  margin-top: 3px;
+  color: var(--text-2);
+  font-size: 11px;
+}
+.shop-main-inner {
+  gap: 18px;
+  padding-top: 26px !important;
+}
+.shop-page-header {
+  padding: 0 0 2px;
+}
+.shop-eyebrow {
+  margin: 0 0 7px;
+  color: var(--brand-hover);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+.shop-page-header p:last-child {
+  margin: 7px 0 0;
+  color: var(--text-2);
+}
+.shop-status-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-height: 68px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--brand);
+  border-radius: 13px;
+  background: var(--surface);
+}
+.shop-status-strip > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.shop-status-strip > div strong {
+  font-size: 14px;
+}
+.shop-status-strip p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 12px;
+}
+.shop-explainer {
+  align-items: baseline;
+  min-height: 0;
+}
+.shop-metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.shop-metric-row > div {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  min-height: 122px;
+  padding: 18px 22px;
+}
+.shop-metric-row > div + div {
+  border-left: 1px solid var(--line);
+}
+.shop-metric-row small,
+.shop-metric-row span {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.shop-metric-row strong {
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+.shop-overview-columns,
+.shop-analytics-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.shop-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--brand-hover) !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+.shop-line-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.shop-line-item > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.shop-line-item strong {
+  font-size: 12.5px;
+}
+.shop-line-item small {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.shop-line-value {
+  text-align: right;
+  white-space: nowrap;
+}
+.shop-attention-item {
+  padding: 12px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.shop-attention-item strong {
+  font-size: 12.5px;
+}
+.shop-attention-item p {
+  margin: 3px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+}

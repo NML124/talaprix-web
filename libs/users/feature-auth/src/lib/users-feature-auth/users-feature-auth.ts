@@ -2,14 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  effect,
   inject,
   signal,
   viewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRight, LucideMail } from '@lucide/angular';
 import { SupabaseClientService } from '@talaprix/shared/data-access';
+import { AuthSessionStore } from '@talaprix/users/data-access';
 
 @Component({
   selector: 'lib-users-feature-auth',
@@ -25,6 +27,18 @@ import { SupabaseClientService } from '@talaprix/shared/data-access';
 })
 export class UsersFeatureAuth {
   readonly #supabase = inject(SupabaseClientService);
+  readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
+  readonly #session = inject(AuthSessionStore);
+  readonly #privatePortal = this.#route.snapshot.data['privatePortal'] === true;
+  protected readonly privatePortal = this.#privatePortal;
+  protected readonly logoPath = this.#privatePortal
+    ? '/admin-assets/logo-talaprix.png'
+    : '/assets/images/logo_app.png';
+  protected readonly illustrationPath = this.#privatePortal
+    ? '/admin-assets/auth-price-illustration.svg'
+    : '/assets/images/auth-price-illustration.svg';
+  protected readonly googleSignInVisible = !this.#privatePortal;
   protected readonly otpInputs =
     viewChildren<ElementRef<HTMLInputElement>>('otpInput');
   protected email = '';
@@ -33,6 +47,35 @@ export class UsersFeatureAuth {
   protected readonly isSubmitting = signal(false);
   protected readonly error = signal('');
   protected readonly info = signal('');
+
+  protected resetEmail(): void {
+    this.otpRequested.set(false);
+    this.otpDigits.set(Array(6).fill(''));
+    this.error.set('');
+    this.info.set('');
+  }
+
+  constructor() {
+    effect(() => {
+      if (!this.#privatePortal) return;
+      const roles = this.#session.user()?.roles ?? [];
+      const isAdmin = roles.some((role) =>
+        ['admin', 'catalog-manager', 'scraper-operator'].includes(role),
+      );
+      const isShop = roles.includes('shop');
+      if (!isAdmin && !isShop) return;
+      const requested = this.#route.snapshot.queryParamMap.get('returnUrl');
+      const safeRequested =
+        requested &&
+        !requested.startsWith('//') &&
+        (isAdmin
+          ? /^\/admin(?:\/|\?|$)/.test(requested)
+          : /^\/shop(?:\/|\?|$)/.test(requested));
+      void this.#router.navigateByUrl(
+        safeRequested ? requested : isAdmin ? '/admin' : '/shop',
+      );
+    });
+  }
 
   protected async submit(): Promise<void> {
     this.error.set('');
@@ -61,7 +104,7 @@ export class UsersFeatureAuth {
     const { error } = await client.auth.signInWithOtp({
       email,
       options: {
-        shouldCreateUser: true,
+        shouldCreateUser: !this.#privatePortal,
         emailRedirectTo: this.authRedirectUrl(),
       },
     });
@@ -84,6 +127,7 @@ export class UsersFeatureAuth {
       this.error.set('Saisissez le code à 6 chiffres reçu par email.');
       return;
     }
+    const email = this.email.trim().toLowerCase();
     const client = this.#supabase.client;
     if (!client) return;
     this.isSubmitting.set(true);
@@ -152,7 +196,12 @@ export class UsersFeatureAuth {
   }
 
   private authRedirectUrl(): string {
-    return new URL('/auth', window.location.origin).toString();
+    const url = new URL('/auth', window.location.origin);
+    if (this.#privatePortal) {
+      const returnUrl = this.#route.snapshot.queryParamMap.get('returnUrl');
+      if (returnUrl) url.searchParams.set('returnUrl', returnUrl);
+    }
+    return url.toString();
   }
 
   private focusOtpInput(index: number): void {

@@ -7,8 +7,8 @@
   <p class="dialog-error" role="alert">{{ error() }}</p>
   } @if (mode() === 'delete') {
   <p>
-    Supprimer <strong>{{ row.name }}</strong> du catalogue de démonstration ?
-    Cette action retire la fiche de la liste.
+    Supprimer <strong>{{ row.name }}</strong> du catalogue ? Cette action retire
+    la fiche de la liste.
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
@@ -30,10 +30,7 @@
     </button>
   </div>
   } @else if (mode() === 'restore') {
-  <p>
-    Republier <strong>{{ row.name }}</strong> dans le catalogue de démonstration
-    ?
-  </p>
+  <p>Republier <strong>{{ row.name }}</strong> dans le catalogue ?</p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
       Annuler</button
@@ -56,21 +53,21 @@
     </label>
     <div class="grid-2">
       <label class="field"
-        >Catégorie<select [(ngModel)]="row.category">
-          @for (item of categories().slice(1); track item) {
-          <option>{{ item }}</option>
-          }
-        </select></label
-      >
+        >Catégorie<tp-admin-select
+          [options]="categories().slice(1)"
+          [selected]="row.category"
+          ariaLabel="Catégorie du produit"
+          (changed)="row.category=$event"
+      /></label>
       <label class="field">Unité / poids<input [(ngModel)]="row.unit" /></label>
     </div>
     <label class="field"
-      >Boutique<select [(ngModel)]="row.shop">
-        @for (item of shops().slice(1); track item) {
-        <option>{{ item }}</option>
-        }
-      </select></label
-    >
+      >Boutique<tp-admin-select
+        [options]="shops().slice(1)"
+        [selected]="row.shop"
+        ariaLabel="Boutique du produit"
+        (changed)="row.shop=$event"
+    /></label>
     <label class="field"
       >Prix public (FC)<input type="number" min="1" [(ngModel)]="row.price"
     /></label>

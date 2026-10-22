@@ -1,0 +1,216 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">CATALOGUE BOUTIQUE</p>
+    <h1>Mes offres</h1>
+    <p>Prix, disponibilité et fraîcheur de vos annonces.</p>
+  </div>
+  <span class="muted small">Démonstration locale</span>
+</header>
+<section class="card">
+  <div class="shop-table-toolbar">
+    <div class="shop-filter-row" role="group" aria-label="Filtrer les offres">
+      @for (item of filters; track item) {
+      <button
+        type="button"
+        class="btn"
+        [class.btn-filter-active]="filter() === item"
+        [class.btn-secondary]="filter() !== item"
+        [attr.aria-pressed]="filter() === item"
+        (click)="filter.set(item); page.set(1)"
+      >
+        {{ item }}
+      </button>
+      }
+    </div>
+    <label class="search"
+      ><span class="sr-only">Rechercher une offre</span
+      ><input
+        type="search"
+        placeholder="Rechercher une offre"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event); page.set(1)"
+    /></label>
+  </div>
+  @if (offers().length) {
+  <div class="table-wrap">
+    <table class="shop-table">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Prix</th>
+          <th>Visibilité</th>
+          <th>Stock</th>
+          <th>Mis à jour</th>
+          <th>Consultations</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (offer of visibleOffers(); track offer.id) {
+        <tr>
+          <td>
+            <strong>{{ offer.product }}</strong
+            ><small>{{ offer.category }}</small>
+          </td>
+          <td class="number">{{ price(offer.price) }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.success]="offer.publication === 'published' && offer.visibility === 'visible'"
+              [class.warning]="offer.visibility === 'hidden'"
+            >
+              {{ visibilityLabel(offer) }}
+            </span>
+          </td>
+          <td>{{ availabilityLabel(offer) }}</td>
+          <td>{{ offer.updatedAt }}</td>
+          <td class="number">{{ offer.engagement['30d'].views }}</td>
+          <td>
+            <button
+              type="button"
+              class="table-action"
+              [attr.aria-label]="'Gérer '+offer.product"
+              (click)="selectedId.set(offer.id); confirmHide.set(false)"
+            >
+              <svg lucideEye size="17" aria-hidden="true"></svg>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="shop-offer-mobile-list">
+    @for (offer of visibleOffers(); track offer.id) {
+    <article class="shop-offer-mobile-row">
+      <div class="shop-offer-mobile-head">
+        <div>
+          <strong>{{ offer.product }}</strong
+          ><small>{{ offer.category }}</small>
+        </div>
+        <span class="number">{{ price(offer.price) }}</span>
+      </div>
+      <div class="shop-offer-mobile-meta">
+        <span
+          [class.positive]="offer.visibility === 'visible' && offer.publication === 'published'"
+          >{{ visibilityLabel(offer) }}</span
+        >
+        <span>{{ availabilityLabel(offer) }}</span>
+        <span>{{ offer.engagement['30d'].views }} vues</span>
+      </div>
+      <button
+        type="button"
+        class="btn btn-secondary shop-offer-mobile-action"
+        (click)="selectedId.set(offer.id); confirmHide.set(false)"
+      >
+        Gérer l’offre <span class="sr-only">{{ offer.product }}</span>
+      </button>
+    </article>
+    }
+  </div>
+  <tp-admin-pagination
+    [total]="offers().length"
+    [page]="currentPage()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  } @else {
+  <div class="shop-empty">
+    <strong>Aucune offre trouvée</strong>
+    <p>Essayez un autre filtre ou une recherche plus courte.</p>
+  </div>
+  }
+</section>
+@if (selected(); as offer) {
+<tp-admin-dialog
+  [title]="offer.product"
+  (closed)="selectedId.set(null); confirmHide.set(false)"
+>
+  <div class="shop-detail-list">
+    <div><span>Prix actuel</span><strong>{{ price(offer.price) }}</strong></div>
+    <div>
+      <span>Visibilité</span><strong>{{ visibilityLabel(offer) }}</strong>
+    </div>
+    <div>
+      <span>Disponibilité</span><strong>{{ availabilityLabel(offer) }}</strong>
+    </div>
+    <div>
+      <span>Dernière mise à jour</span><strong>{{ offer.updatedAt }}</strong>
+    </div>
+    <div>
+      <span>Consultations</span
+      ><strong>{{ offer.engagement['30d'].views }}</strong>
+    </div>
+    <div>
+      <span>Contacts vendeur</span
+      ><strong>{{ offer.engagement['30d'].contactPeople }} personnes</strong>
+    </div>
+    <div>
+      <span>Itinéraires ouverts</span
+      ><strong>{{ offer.engagement['30d'].locatePeople }} personnes</strong>
+    </div>
+    <div>
+      <span>Favoris</span
+      ><strong>{{ offer.engagement['30d'].favoritePeople }} personnes</strong>
+    </div>
+  </div>
+  <p class="muted small">
+    30 derniers jours · chiffres fictifs. Une même personne peut apparaître dans
+    plusieurs offres.
+  </p>
+  @if (offer.publication === 'published') {
+  <div class="shop-offer-controls" aria-label="Gestion de l'offre">
+    @if (offer.visibility === 'visible') { @if (confirmHide()) {
+    <div
+      class="shop-offer-confirm"
+      role="group"
+      aria-label="Confirmer le masquage"
+    >
+      <p>Masquer cette offre dans l’application cliente ?</p>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="confirmHide.set(false)"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="setVisibility(offer, 'hidden')"
+      >
+        Masquer l’offre
+      </button>
+    </div>
+    } @else {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="confirmHide.set(true)"
+    >
+      Masquer l’offre
+    </button>
+    } } @else {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="setVisibility(offer, 'visible')"
+    >
+      Rendre visible
+    </button>
+    }
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="setAvailability(offer, offer.availability === 'in_stock' ? 'out_of_stock' : 'in_stock')"
+    >
+      {{ offer.availability === 'in_stock' ? 'Marquer stock épuisé' : 'Marquer
+      en stock' }}
+    </button>
+  </div>
+  }
+  <p class="muted small">
+    Aperçu local : ces changements ne modifient pas l’application mobile.
+  </p>
+</tp-admin-dialog>
+}

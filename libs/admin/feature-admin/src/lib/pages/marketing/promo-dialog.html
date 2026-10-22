@@ -18,12 +18,12 @@
   }
   <div class="form-stack">
     <label class="field"
-      >Visuel de démonstration
-      <select [ngModel]="value().image" (ngModelChange)="changeImage($event)">
-        <option value="chipsbig.png">Chips Lay's</option>
-        <option value="painbig.png">Pain de mie</option>
-      </select>
-    </label>
+      >Visuel de campagne<tp-admin-select
+        [options]="['chipsbig.png','painbig.png']"
+        [selected]="value().image"
+        ariaLabel="Visuel de campagne"
+        (changed)="changeImage($event)"
+    /></label>
     <label class="field"
       >Titre<input
         [ngModel]="value().title"
@@ -50,7 +50,7 @@
       Annuler
     </button>
     <button type="button" class="btn btn-primary" (click)="save()">
-      Enregistrer dans la maquette
+      Enregistrer
     </button>
   </div>
   }

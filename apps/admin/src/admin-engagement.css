@@ -1,0 +1,217 @@
+.admin-app .admin-engagement {
+  display: grid;
+  gap: var(--space-5);
+}
+.admin-app .admin-engagement .card-head {
+  margin: 0;
+}
+.admin-app .admin-engagement .card-head p {
+  margin: var(--space-2) 0 0;
+}
+.admin-engagement-metrics,
+.shop-engagement-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.admin-engagement-metrics > div,
+.shop-engagement-list > div {
+  display: grid;
+  align-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  min-width: 0;
+}
+.admin-engagement-metrics > div:first-child,
+.shop-engagement-list > div:first-child {
+  padding-left: 0;
+}
+.admin-engagement-metrics > div + div,
+.shop-engagement-list > div + div {
+  border-left: 1px solid var(--line);
+}
+.admin-engagement-metrics small,
+.admin-engagement-metrics span,
+.shop-engagement-list span {
+  color: var(--text-2);
+  font-size: var(--type-small);
+}
+.admin-engagement-metrics strong,
+.shop-engagement-list strong {
+  color: var(--text);
+  font-size: var(--type-page);
+  font-weight: 600;
+  line-height: 1.15;
+}
+.admin-app .shop-engagement-section {
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+}
+.shop-engagement-section .card-head {
+  align-items: flex-start;
+}
+.shop-engagement-section .card-head p {
+  margin: var(--space-2) 0 0;
+}
+.shop-offer-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+}
+.shop-offer-confirm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-muted);
+}
+.shop-offer-confirm p {
+  flex: 1 1 100%;
+  margin: 0;
+  font-weight: 600;
+}
+.admin-app .shop-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.admin-app .shop-analytics-total {
+  min-width: 0;
+}
+.admin-app .shop-analytics-total strong {
+  font-size: var(--type-metric);
+  font-weight: 600;
+}
+.shop-offer-mobile-list,
+.shop-analytics-mobile-list {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .admin-app .shop-analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 820px) {
+  .shop-offer-mobile-list,
+  .shop-analytics-mobile-list {
+    display: grid;
+  }
+  .shop-offer-mobile-list {
+    gap: var(--space-3);
+  }
+  .shop-analytics-mobile-list {
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-md);
+  }
+  .shop-offer-mobile-row,
+  .shop-analytics-mobile-row {
+    min-width: 0;
+    padding: var(--space-4);
+    border: 1px solid var(--line-soft);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+  .shop-offer-mobile-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: var(--space-3);
+  }
+  .shop-offer-mobile-head > div {
+    min-width: 0;
+  }
+  .shop-offer-mobile-head strong,
+  .shop-offer-mobile-head small {
+    display: block;
+  }
+  .shop-offer-mobile-head small {
+    margin-top: var(--space-1);
+    color: var(--text-2);
+  }
+  .shop-offer-mobile-head .number {
+    flex: none;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .shop-offer-mobile-meta {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin: var(--space-4) 0;
+    color: var(--text-2);
+    font-size: var(--type-small);
+  }
+  .shop-offer-mobile-meta span + span::before {
+    content: '·';
+    margin-right: var(--space-2);
+    color: var(--text-2);
+  }
+  .shop-offer-mobile-action {
+    width: 100%;
+  }
+  .shop-analytics-mobile-row {
+    border: 0;
+    border-radius: 0;
+  }
+  .shop-analytics-mobile-row + .shop-analytics-mobile-row {
+    border-top: 1px solid var(--line-soft);
+  }
+  .shop-analytics-mobile-row h3 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--type-small);
+  }
+  .shop-analytics-mobile-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+  .shop-analytics-mobile-metrics > div {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .shop-analytics-mobile-metrics small {
+    color: var(--text-2);
+  }
+  .shop-analytics-mobile-metrics strong {
+    font-size: var(--type-emphasis);
+    font-weight: 600;
+  }
+  .admin-app tp-shop-offers-page .table-wrap,
+  .admin-app tp-shop-analytics-page .table-wrap {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .admin-engagement-metrics,
+  .shop-engagement-list {
+    grid-template-columns: 1fr;
+  }
+  .admin-engagement-metrics > div,
+  .shop-engagement-list > div {
+    padding: var(--space-4) 0;
+  }
+  .admin-engagement-metrics > div + div,
+  .shop-engagement-list > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .admin-app .shop-analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 400px) {
+  .admin-app .shop-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}

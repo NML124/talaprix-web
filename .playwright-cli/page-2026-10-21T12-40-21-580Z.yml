@@ -1,0 +1,17 @@
+- generic [ref=f1e5]:
+  - complementary [ref=f1e6]:
+    - button "Afficher la navigation boutique" [ref=f1e7] [cursor=pointer]
+    - navigation "Navigation boutique" [ref=f1e9]:
+      - generic [ref=f1e10]: TalaPrix
+  - main [ref=f1e12]:
+    - generic [ref=f1e13]:
+      - generic [ref=f1e14]:
+        - strong [ref=f1e15]: Espace boutique
+        - generic [ref=f1e16]: Données de démonstration
+      - generic [ref=f1e17]:
+        - generic [ref=f1e20]: Thème du panneau
+        - combobox "Thème du panneau" [ref=f1e21] [cursor=pointer]:
+          - option "Système" [selected]
+          - option "Clair"
+          - option "Sombre"
+    - status "Chargement des données" [ref=f1e23]

@@ -28,7 +28,8 @@ export class FilterPrice {
   readonly floor = input(0);
   readonly ceiling = input(2_000_000);
   readonly rangeChange = output<PriceRange>();
-  private readonly sliderTrack = viewChild<ElementRef<HTMLElement>>('sliderTrack');
+  private readonly sliderTrack =
+    viewChild<ElementRef<HTMLElement>>('sliderTrack');
   protected readonly activeHandle = signal<'min' | 'max' | null>(null);
   protected readonly min = computed(() => this.minPrice() ?? this.floor());
   protected readonly max = computed(() => this.maxPrice() ?? this.ceiling());

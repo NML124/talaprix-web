@@ -1,7 +1,2 @@
-import { isDevMode } from '@angular/core';
-import type { CanMatchFn } from '@angular/router';
-import { adminGuard } from '@talaprix/users/data-access';
-
-/** Prévisualisation des données fictives en développement uniquement. */
-export const adminPreviewGuard: CanMatchFn = (route, segments, snapshot) =>
-  isDevMode() ? true : adminGuard(route, segments, snapshot);
+/** Kept as a compatibility alias; admin routes always require a verified session. */
+export { adminGuard as adminPreviewGuard } from '@talaprix/users/data-access';

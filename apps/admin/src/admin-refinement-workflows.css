@@ -1,0 +1,166 @@
+/* Scraping: keep the spider as the one animated focus. */
+.admin-app .scrape-run-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--line-soft);
+  border-top: 2px solid var(--brand);
+}
+.admin-app .scrape-run-head,
+.admin-app .scrape-demo-note {
+  grid-column: 1 / -1;
+}
+.admin-app .scrape-run-card tp-scraping-network-animation {
+  grid-column: 1;
+  grid-row: 2;
+}
+.admin-app .scrape-network {
+  margin-top: var(--space-4);
+}
+.admin-app .scrape-network-canvas {
+  height: 160px;
+}
+.admin-app .scrape-network figcaption,
+.admin-app .scrape-demo-note,
+.admin-app .scrape-run-head p,
+.admin-app .scrape-stage-list small {
+  font-size: var(--type-small);
+  line-height: 1.45;
+}
+.admin-app .scrape-network figcaption {
+  flex-wrap: wrap;
+}
+.admin-app .scrape-stage-list strong {
+  font-size: var(--type-small);
+}
+.admin-app .scrape-run-head h2 {
+  font-size: var(--type-section);
+}
+.admin-app .scrape-review-policy::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: var(--space-2);
+  border-radius: 50%;
+  background: var(--success);
+  vertical-align: 1px;
+}
+.admin-app .scrape-stage-list {
+  gap: 0;
+  grid-column: 2;
+  grid-row: 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: var(--space-4) 0 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.admin-app .scrape-stage-list li,
+.admin-app .scrape-stage-list li.current {
+  padding: var(--space-4) var(--space-3);
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+.admin-app .scrape-stage-list li:first-child {
+  border-left: 0;
+}
+.admin-app .scrape-stage-list li:nth-child(3) {
+  border-left: 0;
+}
+.admin-app .scrape-stage-list li:nth-child(n + 3) {
+  border-top: 1px solid var(--line);
+}
+.admin-app .scrape-stage-list li.current {
+  box-shadow: inset 0 2px 0 var(--brand);
+}
+.admin-app .scrape-web-node,
+.admin-app .scrape-signal-dot,
+.admin-app .scrape-live-mark.is-running {
+  animation: none;
+}
+.admin-app .scrape-kpis {
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.admin-app .scrape-kpis article {
+  padding: var(--space-5) var(--space-6);
+  border-left: 1px solid var(--line);
+}
+.admin-app .scrape-kpis article:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.admin-app .scrape-kpis strong {
+  font-size: var(--type-metric);
+  font-weight: 600;
+}
+.admin-app .scrape-kpis small,
+.admin-app .scrape-kpis span {
+  font-size: var(--type-small);
+  line-height: 1.4;
+}
+.admin-app .scrape-queue-head {
+  margin-bottom: var(--space-5);
+}
+
+/* Shop overview: status, figures, and work lists each have a clear surface. */
+.admin-app .shop-main-inner {
+  gap: var(--space-8);
+}
+.admin-app tp-shop-overview-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  min-width: 0;
+}
+.admin-app .shop-status-strip {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+}
+.admin-app .shop-metric-row {
+  gap: var(--space-4);
+  overflow: visible;
+  background: none;
+  border: 0;
+}
+.admin-app .shop-metric-row > div {
+  min-width: 0;
+  min-height: 116px;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+}
+.admin-app .shop-metric-row > div + div {
+  border-left: 1px solid var(--line-soft);
+}
+.admin-app .shop-metric-row strong {
+  font-size: var(--type-metric);
+  font-weight: 600;
+}
+.admin-app .shop-overview-columns {
+  gap: var(--space-6);
+  margin-top: var(--space-2);
+}
+.admin-app .shop-overview-columns > section {
+  border: 1px solid var(--line-soft);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.admin-app .shop-attention-count {
+  color: var(--warning);
+}
+.admin-app .shop-topbar small,
+.admin-app .shop-page-header p:last-child {
+  font-size: var(--type-small);
+  line-height: 1.45;
+}

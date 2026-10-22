@@ -1,0 +1,126 @@
+<div class="admin-app shop-app" [attr.data-theme]="resolvedTheme()">
+  <div class="shell">
+    <aside
+      class="sidebar shop-sidebar"
+      [class.mobile-open]="mobileMenuOpen()"
+      (document:keydown.escape)="mobileMenuOpen.set(false)"
+    >
+      <button
+        type="button"
+        class="mobile-menu-toggle btn btn-secondary btn-icon"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Afficher la navigation boutique"
+        (click)="mobileMenuOpen.set(!mobileMenuOpen())"
+      >
+        @if (mobileMenuOpen()) {
+        <svg lucideX size="19" aria-hidden="true"></svg>
+        } @else {
+        <svg lucideMenu size="19" aria-hidden="true"></svg>
+        }
+      </button>
+      <nav class="sidebar-nav" aria-label="Navigation boutique">
+        <div class="brandline">
+          <img src="/admin-assets/logo-talaprix.png" alt="" />
+          <span>TalaPrix</span>
+        </div>
+        <div class="shop-identity">
+          <span class="shop-identity-mark" aria-hidden="true">AK</span>
+          <span
+            ><strong>{{ store.data()?.shop?.name ?? 'Ma boutique' }}</strong
+            ><small>Espace boutique</small></span
+          >
+        </div>
+        <div class="shop-nav-links">
+          @for (link of links; track link.path) {
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: link.path === '/shop' }"
+            (click)="mobileMenuOpen.set(false)"
+          >
+            @switch (link.icon) { @case ('home') {
+            <svg lucideLayoutDashboard size="18" aria-hidden="true"></svg> }
+            @case ('offer') {
+            <svg lucidePackage size="18" aria-hidden="true"></svg> } @case
+            ('discount') {
+            <svg lucideBadgePercent size="18" aria-hidden="true"></svg> } @case
+            ('visibility') {
+            <svg lucideMegaphone size="18" aria-hidden="true"></svg> } @case
+            ('analytics') {
+            <svg lucideBarChart3 size="18" aria-hidden="true"></svg> } @case
+            ('reviews') {
+            <svg lucideMessageCircle size="18" aria-hidden="true"></svg> } @case
+            ('settings') {
+            <svg lucideSettings2 size="18" aria-hidden="true"></svg> } }
+            <span>{{ link.label }}</span>
+          </a>
+          }
+        </div>
+        <div class="shop-sidebar-foot">
+          <span class="status success">Boutique active</span>
+          <small
+            >Dernière mise à jour · {{ store.data()?.shop?.updatedAt ?? '—'
+            }}</small
+          >
+        </div>
+      </nav>
+    </aside>
+    <main class="main">
+      <header class="topbar shop-topbar">
+        <div>
+          <strong>Espace boutique</strong
+          ><small>Gestion de votre boutique</small>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg lucideMoon size="16" aria-hidden="true"></svg>
+          <tp-admin-select
+            [options]="['Système','Clair','Sombre']"
+            [selected]="themeLabel()"
+            ariaLabel="Thème du panneau"
+            (changed)="setTheme($event)"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary btn-icon"
+            aria-label="Se déconnecter"
+            title="Se déconnecter"
+            (click)="logout()"
+          >
+            <svg lucideLogOut size="17" aria-hidden="true"></svg>
+          </button>
+        </div>
+      </header>
+      <div class="main-inner shop-main-inner">
+        @switch (store.state().status) { @case ('loading') {
+        <div
+          class="shop-loading"
+          role="status"
+          aria-label="Chargement des données"
+        >
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+        } @case ('error') {
+        <section class="card shop-feedback" role="alert">
+          <h1>Chargement impossible</h1>
+          <p>{{ store.errorMessage() }}</p>
+          @if (store.previewEnabled) {
+          <button type="button" class="btn btn-primary" (click)="store.load()">
+            Réessayer
+          </button>
+          }
+        </section>
+        } @case ('empty') {
+        <section class="card shop-feedback">
+          <h1>Aucune boutique liée</h1>
+          <p>
+            Une boutique active doit être associée à ce compte pour afficher cet
+            espace.
+          </p>
+        </section>
+        } @case ('ready') { <router-outlet /> } }
+      </div>
+    </main>
+  </div>
+</div>

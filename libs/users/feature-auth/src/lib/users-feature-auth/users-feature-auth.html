@@ -1,214 +1,266 @@
-<section class="flex min-h-screen bg-white text-[#1d2422]">
-  <div
-    class="flex w-full flex-col justify-center px-8 py-12 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24"
+<main class="h-[100svh] overflow-hidden bg-white text-[#182a26]">
+  <section
+    class="grid h-full min-h-0 w-full content-start lg:grid-cols-2 lg:content-center"
+    aria-label="Connexion TalaPrix"
   >
-    <div class="mx-auto w-full max-w-sm">
-      <a
-        routerLink="/"
-        class="group mb-8 inline-flex items-center gap-2 rounded-lg text-sm font-bold text-[#6f7976] transition-colors hover:text-[#1d2422] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+    <aside
+      class="relative flex min-h-[146px] items-center overflow-hidden bg-gradient-to-br from-[#008f7a] via-[#007568] to-[#064b44] px-5 py-3 text-white sm:min-h-[170px] sm:px-8 lg:h-full lg:min-h-0 lg:flex-col lg:items-start lg:justify-center lg:px-14 lg:py-10"
+    >
+      <div
+        class="relative grid w-full grid-cols-[minmax(0,1fr)_112px] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_170px] lg:flex lg:max-w-[620px] lg:flex-col lg:items-start lg:gap-7"
       >
-        <svg
-          lucideArrowLeft
-          size="17"
-          class="transition-transform group-hover:-translate-x-1"
-          aria-hidden="true"
-        ></svg>
-        Retour à TalaPrix
-      </a>
-
-      <div class="mb-6">
-        <div class="mb-5 flex items-center gap-3">
-          <img
-            src="/assets/images/logo_app.png"
-            alt="TalaPrix"
-            class="h-10 w-10 object-contain"
-          />
-          <span
-            class="text-[13px] font-black uppercase tracking-[0.2em] text-[#087d6d]"
-            >TalaPrix</span
+        <div class="max-w-xs">
+          <div class="mb-3 flex items-center gap-2.5">
+            <img
+              [src]="logoPath"
+              alt=""
+              class="h-9 w-9 object-contain"
+              aria-hidden="true"
+            />
+            <span
+              class="text-xs font-extrabold uppercase tracking-[0.19em] text-white"
+              >TalaPrix</span
+            >
+          </div>
+          <p
+            class="text-[11px] font-bold uppercase tracking-[0.16em] text-white/70 sm:text-xs"
           >
+            Comparez les prix à Kinshasa
+          </p>
+          <h2
+            class="mt-1.5 text-lg font-semibold leading-snug tracking-[-0.025em] text-white sm:mt-2 sm:text-2xl lg:text-[34px]"
+          >
+            Les bons prix, au bon endroit.
+          </h2>
+          <p
+            class="mt-2 hidden text-sm leading-6 text-white/75 sm:block lg:mt-3 lg:max-w-sm"
+          >
+            Comparez les offres des boutiques de Kinshasa et choisissez en
+            confiance.
+          </p>
         </div>
-        <h1
-          class="text-[28px] font-black leading-tight tracking-[-0.035em] text-[#1d2422]"
-        >
-          Content de vous revoir
-        </h1>
-        <p class="mt-1.5 text-sm leading-6 text-[#6b7471]">
-          Entrez votre adresse email pour recevoir votre code de vérification
-          (OTP).
-        </p>
-      </div>
 
-      @if (error()) {
-      <div
-        class="mb-4 rounded-xl border border-red-500/25 bg-red-50 px-4 py-2.5 text-sm leading-5 text-red-700"
-        role="alert"
-      >
-        {{ error() }}
+        <img
+          [src]="illustrationPath"
+          alt="Illustration TalaPrix : une boutique, un téléphone et des prix comparés"
+          class="relative z-10 h-[112px] w-[112px] object-contain sm:h-[170px] sm:w-[170px] lg:mt-0 lg:h-auto lg:w-full lg:max-w-[390px]"
+        />
+
+        <div
+          class="hidden w-full max-w-[340px] items-center gap-3 border-l-2 border-white/25 pl-4 lg:flex"
+        >
+          <span
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white"
+            aria-hidden="true"
+          >
+            <svg lucideArrowRight size="18"></svg>
+          </span>
+          <p class="text-xs leading-5 text-white/75">
+            Un accès simple à votre espace TalaPrix.
+          </p>
+        </div>
       </div>
-      } @if (info()) {
-      <div
-        class="mb-4 rounded-xl border border-[#9cd8ce] bg-[#edf9f7] px-4 py-2.5 text-sm leading-5 text-[#176a5e]"
-        role="status"
-      >
-        {{ info() }}
-      </div>
-      } @if (!otpRequested()) {
-      <form class="space-y-4" (ngSubmit)="submit()" novalidate>
-        <div class="relative">
+    </aside>
+
+    <div
+      class="flex items-center justify-center px-5 py-4 sm:px-8 lg:h-full lg:px-14 lg:py-8"
+    >
+      <div class="w-full max-w-[390px]">
+        @if (!privatePortal) {
+        <a
+          routerLink="/"
+          class="group mb-10 inline-flex items-center gap-2 text-sm font-medium text-[#687873] transition-colors hover:text-[#087d6d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+        >
           <svg
-            lucideMail
+            lucideArrowLeft
             size="17"
-            class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8a9491] peer-focus:text-[#009f88]"
+            class="transition-transform group-hover:-translate-x-1"
             aria-hidden="true"
           ></svg>
-          <input
-            id="auth-email"
-            type="email"
-            name="email"
-            placeholder=" "
-            autocomplete="email"
-            [(ngModel)]="email"
-            class="peer h-[48px] w-full rounded-xl border border-[#cfd6d3] bg-white pl-11 pr-4 pt-3.5 text-sm text-[#1d2422] outline-none transition-colors placeholder:text-transparent hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/10"
-            [class.border-red-400]="error()"
-          />
-          <label
-            for="auth-email"
-            class="pointer-events-none absolute left-10 top-1/2 origin-left -translate-y-1/2 bg-white px-1 text-sm text-[#77817e] transition-all duration-200 peer-focus:left-3.5 peer-focus:top-0 peer-focus:text-[11px] peer-focus:font-bold peer-focus:text-[#087d6d] peer-[:not(:placeholder-shown)]:left-3.5 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-bold peer-[:not(:placeholder-shown)]:text-[#087d6d]"
-            >Adresse email</label
+          Retour à TalaPrix
+        </a>
+        }
+
+        <div class="mb-8">
+          <p
+            class="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#078775]"
           >
+            Espace sécurisé
+          </p>
+          <h1
+            class="text-[27px] font-semibold leading-tight tracking-[-0.035em] text-[#1d2b27] sm:text-[30px]"
+          >
+            {{ otpRequested() ? 'Vérifiez votre email' : 'Content de vous
+            revoir' }}
+          </h1>
+          <p class="mt-2 text-sm leading-6 text-[#687873]">
+            @if (otpRequested()) { Entrez le code à 6 chiffres envoyé à
+            <span class="font-semibold text-[#344943]">{{ email }}</span>. }
+            @else { Saisissez votre adresse email pour recevoir un code de
+            connexion à usage unique. }
+          </p>
         </div>
 
-        <button
-          type="submit"
-          class="flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#009f88] text-sm font-black text-white transition-colors hover:bg-[#008a76] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
-          [disabled]="isSubmitting()"
+        @if (error()) {
+        <div
+          class="mb-4 rounded-xl border border-[#e8b9b5] bg-[#fff4f2] px-4 py-3 text-sm leading-5 text-[#a13b32]"
+          role="alert"
         >
-          @if (isSubmitting()) {
-          <span
-            class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
-          ></span>
-          Envoi du code… } @else { Recevoir le code OTP
-          <svg lucideArrowRight size="17" aria-hidden="true"></svg>
-          }
-        </button>
+          {{ error() }}
+        </div>
+        } @if (info()) {
+        <div
+          class="mb-4 rounded-xl border border-[#b9e2d8] bg-[#eff9f6] px-4 py-3 text-sm leading-5 text-[#176a5e]"
+          role="status"
+        >
+          {{ info() }}
+        </div>
+        } @if (!otpRequested()) {
+        <form class="space-y-4" (ngSubmit)="submit()" novalidate>
+          <div>
+            <label
+              for="auth-email"
+              class="mb-2 block text-sm font-semibold text-[#344943]"
+              >Adresse email</label
+            >
+            <div class="relative">
+              <svg
+                lucideMail
+                size="17"
+                class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#82918c]"
+                aria-hidden="true"
+              ></svg>
+              <input
+                id="auth-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="vous@exemple.com"
+                [(ngModel)]="email"
+                class="h-12 w-full rounded-[14px] border border-[#d4dfdb] bg-white pl-11 pr-4 text-sm text-[#1d2b27] outline-none transition placeholder:text-[#9aa7a2] hover:border-[#9dbbb2] focus:border-[#009f88] focus:ring-4 focus:ring-[#009f88]/10"
+                [class.border-red-400]="!!error()"
+              />
+            </div>
+          </div>
 
-        <p class="text-center text-[11px] leading-5 text-[#7b8582]">
-          En vous connectant, vous acceptez nos
+          <button
+            type="submit"
+            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white shadow-[0_6px_16px_-8px_rgba(0,125,106,0.75)] transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
+            [disabled]="isSubmitting()"
+          >
+            @if (isSubmitting()) {
+            <span
+              class="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white"
+            ></span>
+            Envoi du code… } @else { Recevoir mon code
+            <svg lucideArrowRight size="17" aria-hidden="true"></svg>
+            }
+          </button>
+        </form>
+        } @else {
+        <form class="space-y-4" (ngSubmit)="verifyOtp()" novalidate>
+          <label
+            for="auth-otp-0"
+            class="block text-sm font-semibold text-[#344943]"
+            >Code de vérification</label
+          >
+          <div class="flex justify-between gap-2" (paste)="pasteOtp($event)">
+            @for (digit of otpDigits(); track $index) {
+            <input
+              #otpInput
+              [id]="'auth-otp-' + $index"
+              type="text"
+              inputmode="numeric"
+              [autocomplete]="$index === 0 ? 'one-time-code' : 'off'"
+              maxlength="1"
+              [value]="digit"
+              [attr.aria-label]="'Chiffre ' + ($index + 1) + ' sur 6'"
+              class="h-12 min-w-0 flex-1 rounded-[14px] border border-[#d4dfdb] bg-white text-center text-lg font-semibold text-[#1d2b27] outline-none transition hover:border-[#9dbbb2] focus:border-[#009f88] focus:ring-4 focus:ring-[#009f88]/10 disabled:cursor-wait disabled:bg-[#f4f8f7]"
+              [disabled]="isSubmitting()"
+              (input)="updateOtpDigit($index, $event)"
+              (keydown)="handleOtpKeydown($index, $event)"
+            />
+            }
+          </div>
+          <button
+            type="submit"
+            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white shadow-[0_6px_16px_-8px_rgba(0,125,106,0.75)] transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
+            [disabled]="isSubmitting()"
+          >
+            Vérifier et continuer
+            <svg lucideArrowRight size="17" aria-hidden="true"></svg>
+          </button>
+          <div class="flex items-center justify-between text-sm">
+            <button
+              type="button"
+              class="font-medium text-[#087d6d] hover:underline disabled:opacity-60"
+              (click)="submit()"
+              [disabled]="isSubmitting()"
+            >
+              Renvoyer le code
+            </button>
+            <button
+              type="button"
+              class="font-medium text-[#687873] hover:text-[#087d6d]"
+              (click)="resetEmail()"
+            >
+              Changer d’adresse
+            </button>
+          </div>
+        </form>
+        } @if (googleSignInVisible && !otpRequested()) {
+        <div class="my-5 flex items-center gap-3" aria-hidden="true">
+          <span class="h-px flex-1 bg-[#e4ece9]"></span
+          ><span class="text-xs text-[#899792]">ou</span
+          ><span class="h-px flex-1 bg-[#e4ece9]"></span>
+        </div>
+        <button
+          type="button"
+          class="flex h-11 w-full items-center justify-center gap-3 rounded-[14px] border border-[#d4dfdb] bg-white text-sm font-medium text-[#344943] transition hover:bg-[#f7fbfa] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/15"
+          (click)="startGoogleSignIn()"
+        >
+          <svg
+            viewBox="0 0 48 48"
+            class="h-4 w-4"
+            role="img"
+            aria-label="Google"
+          >
+            <path
+              fill="#4285F4"
+              d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11a9.4 9.4 0 0 1-4.1 6.2v5.1h6.6c3.9-3.6 6.1-8.8 6.1-15Z"
+            />
+            <path
+              fill="#34A853"
+              d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.1c-1.8 1.2-4 2-6.9 2-5.3 0-9.8-3.6-11.4-8.4H5.8v5.3A20 20 0 0 0 24 44Z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M12.6 27.6a12 12 0 0 1 0-7.2v-5.3H5.8a20 20 0 0 0 0 17.8l6.8-5.3Z"
+            />
+            <path
+              fill="#EA4335"
+              d="M24 12c3 0 5.7 1 7.8 3.1l5.9-5.9A19.7 19.7 0 0 0 24 4 20 20 0 0 0 5.8 15.1l6.8 5.3C14.2 15.6 18.7 12 24 12Z"
+            />
+          </svg>
+          Continuer avec Google
+        </button>
+        }
+
+        <p class="mt-6 text-center text-[11px] leading-5 text-[#87948f]">
+          En continuant, vous acceptez nos
           <a
             href="#conditions-utilisation"
-            class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+            class="font-medium text-[#087d6d] underline decoration-[#087d6d]/40 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
             >Conditions d'utilisation</a
           >
           et notre
           <a
             href="#politique-confidentialite"
-            class="font-bold text-[#087d6d] underline decoration-[#087d6d]/50 underline-offset-2 transition-colors hover:text-[#065f53] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
+            class="font-medium text-[#087d6d] underline decoration-[#087d6d]/40 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
             >Politique de confidentialité</a
           >.
         </p>
-      </form>
-      } @else {
-      <form class="space-y-4" (ngSubmit)="verifyOtp()" novalidate>
-        <label for="auth-otp-0" class="block text-sm font-bold text-[#38423f]"
-          >Code de vérification</label
-        >
-        <div class="flex justify-between gap-2" (paste)="pasteOtp($event)">
-          @for (digit of otpDigits(); track $index) {
-          <input
-            #otpInput
-            [id]="'auth-otp-' + $index"
-            type="text"
-            inputmode="numeric"
-            [autocomplete]="$index === 0 ? 'one-time-code' : 'off'"
-            maxlength="1"
-            [value]="digit"
-            [attr.aria-label]="'Chiffre ' + ($index + 1) + ' sur 6'"
-            class="h-12 min-w-0 flex-1 rounded-xl border border-[#cfd6d3] bg-white text-center text-lg font-black text-[#1d2422] outline-none transition-colors hover:border-[#aebbb6] focus:border-[#009f88] focus:ring-2 focus:ring-[#009f88]/20 disabled:cursor-wait disabled:bg-[#f4f8f7]"
-            [disabled]="isSubmitting()"
-            (input)="updateOtpDigit($index, $event)"
-            (keydown)="handleOtpKeydown($index, $event)"
-          />
-          }
-        </div>
-        <button
-          type="submit"
-          class="flex h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-[#009f88] text-sm font-black text-white transition-colors hover:bg-[#008a76] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006f60] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
-          [disabled]="isSubmitting()"
-        >
-          Vérifier le code
-          <svg lucideArrowRight size="17" aria-hidden="true"></svg>
-        </button>
-        <button
-          type="button"
-          class="w-full text-center text-sm font-bold text-[#087d6d] underline underline-offset-4"
-          (click)="submit()"
-          [disabled]="isSubmitting()"
-        >
-          Renvoyer un code
-        </button>
-      </form>
-      }
-
-      <div class="my-5 flex items-center gap-3" aria-hidden="true">
-        <span class="h-px flex-1 bg-[#e2e7e5]"></span>
-        <span class="text-xs text-[#8a9491]">ou</span>
-        <span class="h-px flex-1 bg-[#e2e7e5]"></span>
-      </div>
-
-      <button
-        type="button"
-        class="flex h-[44px] w-full items-center justify-center gap-3 rounded-xl border border-[#cfd6d3] bg-white text-sm font-bold text-[#26302d] transition-colors hover:bg-[#f4f8f7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009f88]"
-        (click)="startGoogleSignIn()"
-      >
-        <img
-          src="/assets/images/google_logo.png"
-          alt=""
-          class="h-4 w-4 object-contain"
-          aria-hidden="true"
-        />
-        Continuer avec Google
-      </button>
-    </div>
-  </div>
-
-  <aside class="relative hidden overflow-hidden bg-[#0b2420] lg:block lg:w-1/2">
-    <img
-      src="/assets/images/bg-banner.jpg"
-      alt=""
-      class="absolute inset-0 h-full w-full scale-110 object-cover object-[center_24%] opacity-85"
-    />
-    <div
-      class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,159,136,0.52),transparent_31%),linear-gradient(140deg,rgba(3,20,18,0.8),rgba(3,20,18,0.17)_54%,rgba(3,20,18,0.58))]"
-    ></div>
-    <div
-      class="absolute bottom-10 left-10 right-10 rounded-[28px] border border-white/20 bg-white/12 p-7 text-white backdrop-blur-md xl:p-8"
-    >
-      <p class="text-xs font-bold uppercase tracking-[0.22em] text-white/65">
-        Comparez en confiance
-      </p>
-      <h2
-        class="mt-3 max-w-md text-[32px] font-black leading-tight tracking-[-0.035em]"
-      >
-        Les bons prix, au bon endroit.
-      </h2>
-      <p class="mt-3 max-w-lg text-sm leading-6 text-white/75">
-        Retrouvez vos alertes et vos produits suivis, partout à Kinshasa.
-      </p>
-      <div class="mt-7 grid grid-cols-3 gap-4 text-sm">
-        <div>
-          <p class="text-2xl font-black">+500</p>
-          <p class="mt-1 text-white/65">offres suivies</p>
-        </div>
-        <div>
-          <p class="text-2xl font-black">24h</p>
-          <p class="mt-1 text-white/65">prix actualisés</p>
-        </div>
-        <div>
-          <p class="text-2xl font-black">100%</p>
-          <p class="mt-1 text-white/65">comparables</p>
-        </div>
       </div>
     </div>
-  </aside>
-</section>
+  </section>
+</main>

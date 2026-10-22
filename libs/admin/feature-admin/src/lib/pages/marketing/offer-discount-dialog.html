@@ -1,0 +1,74 @@
+<tp-admin-dialog
+  [title]="mode() === 'create' ? 'Créer une réduction d’offre' : 'Modifier la réduction'"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
+  <div class="form-stack">
+    <label class="field"
+      >Offre<input
+        [ngModel]="value().offer"
+        (ngModelChange)="change('offer', $event)"
+        placeholder="Produit · format"
+    /></label>
+    <label class="field"
+      >Boutique<input
+        [ngModel]="value().shop"
+        (ngModelChange)="change('shop', $event)"
+        placeholder="Nom de la boutique"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Ancien prix<input
+          type="number"
+          min="1"
+          [ngModel]="value().oldPrice"
+          (ngModelChange)="change('oldPrice', +$event)"
+      /></label>
+      <label class="field"
+        >Nouveau prix<input
+          type="number"
+          min="1"
+          [ngModel]="value().newPrice"
+          (ngModelChange)="change('newPrice', +$event)"
+      /></label>
+    </div>
+    <label class="field"
+      >Devise<tp-admin-select
+        [options]="['CDF','USD']"
+        [selected]="value().currency"
+        ariaLabel="Devise"
+        (changed)="change('currency', $event)"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Début<input
+          type="date"
+          [ngModel]="value().validFrom"
+          (ngModelChange)="change('validFrom', $event)"
+      /></label>
+      <label class="field"
+        >Fin<input
+          type="date"
+          [ngModel]="value().validUntil"
+          (ngModelChange)="change('validUntil', $event)"
+      /></label>
+    </div>
+  </div>
+  <p class="notice notice-compact">
+    <strong>Réduction rattachée à une offre précise</strong>
+    <span
+      >Les prix et la période seront validés par le service au
+      raccordement.</span
+    >
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save()">
+      Enregistrer
+    </button>
+  </div>
+</tp-admin-dialog>

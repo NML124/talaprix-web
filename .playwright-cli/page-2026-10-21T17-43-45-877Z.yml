@@ -1,0 +1,38 @@
+- main [ref=f5e4]:
+  - region "Connexion TalaPrix" [ref=f5e5]:
+    - complementary [ref=f5e6]:
+      - generic [ref=f5e7]:
+        - generic [ref=f5e8]:
+          - paragraph [ref=f5e9]: Les prix près de chez vous
+          - heading "Achetez mieux, en toute confiance." [level=2] [ref=f5e10]
+        - 'img "Illustration TalaPrix : une boutique, un téléphone et des prix comparés" [ref=f5e11]'
+    - generic [ref=f5e13]:
+      - link "Retour à TalaPrix" [ref=f5e14] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f5e17]:
+        - generic [ref=f5e18]: TalaPrix
+        - paragraph [ref=f5e21]: Espace sécurisé
+        - heading "Vérifiez votre email" [level=1] [ref=f5e44]
+        - paragraph [ref=f5e23]: Entrez le code à 6 chiffres envoyé à admin.demo@talaprix.cd.
+      - status [ref=f5e43]: "Code de test local : 123456. Aucun email ne sera envoyé."
+      - generic [ref=f5e45]:
+        - generic [ref=f5e46]: Code de vérification
+        - generic [ref=f5e47]:
+          - textbox "Chiffre 1 sur 6" [ref=f5e48]
+          - textbox "Chiffre 2 sur 6" [ref=f5e49]
+          - textbox "Chiffre 3 sur 6" [ref=f5e50]
+          - textbox "Chiffre 4 sur 6" [ref=f5e51]
+          - textbox "Chiffre 5 sur 6" [ref=f5e52]
+          - textbox "Chiffre 6 sur 6" [ref=f5e53]
+        - button "Vérifier et continuer" [ref=f5e54]
+        - generic [ref=f5e57]:
+          - button "Renvoyer le code" [ref=f5e58]
+          - button "Changer d’adresse" [ref=f5e59]
+      - paragraph [ref=f5e40]:
+        - text: En continuant, vous acceptez nos
+        - link "Conditions d'utilisation" [ref=f5e41] [cursor=pointer]:
+          - /url: "#conditions-utilisation"
+        - text: et notre
+        - link "Politique de confidentialité" [ref=f5e42] [cursor=pointer]:
+          - /url: "#politique-confidentialite"
+        - text: .

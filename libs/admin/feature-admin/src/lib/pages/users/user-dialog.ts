@@ -5,7 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { User } from '../../mocks/models';
+import type { CommunityUserView } from '../../mocks/models';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { StatusDot } from '../../ui/status-dot';
 
@@ -16,7 +16,7 @@ import { StatusDot } from '../../ui/status-dot';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserDialog {
-  readonly user = input.required<User>();
+  readonly user = input.required<CommunityUserView>();
   readonly mode = input.required<'edit' | 'suspend' | 'delete'>();
   readonly error = input('');
   readonly reason = input('');

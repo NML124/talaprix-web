@@ -1,0 +1,71 @@
+- generic [ref=f17e5]:
+  - complementary [ref=f17e6]:
+    - button "Ouvrir ou fermer la navigation" [ref=f17e7] [cursor=pointer]
+    - navigation "Navigation principale" [ref=f17e9]:
+      - generic [ref=f17e10]: TalaPrix
+  - main [ref=f17e12]:
+    - generic [ref=f17e13]:
+      - generic [ref=f17e16]:
+        - generic [ref=f17e20]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f17e21]
+      - generic [ref=f17e22]:
+        - generic [ref=f17e23]:
+          - generic [ref=f17e26]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f17e27] [cursor=pointer]:
+            - option "Système"
+            - option "Clair" [selected]
+            - option "Sombre"
+        - link "Notifications, 2 non lues" [ref=f17e68] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f17e32]: "2"
+    - generic [ref=f17e34]:
+      - generic "Notifications" [ref=f17e35]:
+        - generic [ref=f17e36]:
+          - generic [ref=f17e37]:
+            - heading "Notifications" [level=1] [ref=f17e38]
+            - paragraph [ref=f17e39]: Décisions et événements qui demandent votre attention.
+          - generic [ref=f17e40]: Démonstration
+      - region "Boîte de notifications" [ref=f17e42]:
+        - generic [ref=f17e43]:
+          - heading "À consulter" [level=2] [ref=f17e44]
+          - generic [ref=f17e45]: 2 non lue(s)
+        - button "Demande pour devenir boutique Ujisha · Gombe Aujourd’hui · 10:14 À décider" [ref=f17e46] [cursor=pointer]:
+          - generic [ref=f17e48]:
+            - strong [ref=f17e49]: Demande pour devenir boutique
+            - generic [ref=f17e50]: Ujisha · Gombe
+          - generic [ref=f17e51]:
+            - generic [ref=f17e52]: Aujourd’hui · 10:14
+            - generic [ref=f17e53]: À décider
+        - button "Prix à vérifier 3 propositions attendent une décision Aujourd’hui · 09:42" [ref=f17e54] [cursor=pointer]:
+          - generic [ref=f17e56]:
+            - strong [ref=f17e57]: Prix à vérifier
+            - generic [ref=f17e58]: 3 propositions attendent une décision
+          - generic [ref=f17e59]: Aujourd’hui · 09:42
+        - button "Collecte terminée Nouvelles annonces en attente de revue Hier · 18:30" [ref=f17e61] [cursor=pointer]:
+          - generic [ref=f17e63]:
+            - strong [ref=f17e64]: Collecte terminée
+            - generic [ref=f17e65]: Nouvelles annonces en attente de revue
+          - generic [ref=f17e66]: Hier · 18:30
+      - generic "Demande pour devenir boutique":
+        - dialog "Demande pour devenir boutique" [ref=f17e69]:
+          - generic [ref=f17e70]:
+            - generic [ref=f17e71]:
+              - heading "Demande pour devenir boutique" [level=2] [ref=f17e72]
+              - button "Fermer" [active] [ref=f17e73] [cursor=pointer]
+            - generic [ref=f17e77]:
+              - paragraph [ref=f17e78]: Dossier de démonstration · Aujourd’hui · 10:14
+              - generic [ref=f17e79]:
+                - generic [ref=f17e80]:
+                  - term [ref=f17e81]: Boutique proposée
+                  - definition [ref=f17e82]: Ujisha
+                - generic [ref=f17e83]:
+                  - term [ref=f17e84]: Demandeur
+                  - definition [ref=f17e85]: Compte de démonstration 01
+                - generic [ref=f17e86]:
+                  - term [ref=f17e87]: Zone
+                  - definition [ref=f17e88]: Gombe, Kinshasa
+              - paragraph [ref=f17e89]: La décision est simulée ici. Lors du branchement API, il faudra contrôler l’identité et les justificatifs avant l’activation.
+              - generic [ref=f17e90]:
+                - button "Fermer" [ref=f17e91] [cursor=pointer]
+                - button "Refuser" [ref=f17e92] [cursor=pointer]
+                - button "Accepter" [ref=f17e93] [cursor=pointer]
