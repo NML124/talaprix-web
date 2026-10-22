@@ -12,6 +12,13 @@ import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { AdminMockApi } from '../../services/admin-mock-api';
 import { fc, imagePath } from '../../mocks/catalogue';
 import { Pagination } from '../../ui/pagination';
+import { adminEngagementPreview } from '../../mocks/admin-engagement-preview';
+import {
+  comparableProductCount,
+  lowestPriceShops,
+  usageZones,
+} from '../../mocks/overview-insights';
+import type { AuditEntry } from '../../mocks/models';
 
 @Component({
   selector: 'tp-overview-page',
@@ -42,8 +49,14 @@ export class OverviewPage {
   );
   protected readonly fc = fc;
   protected readonly imagePath = imagePath;
+  protected readonly engagement = adminEngagementPreview;
+  protected readonly usageZones = usageZones;
+  protected readonly lowestPriceShops = lowestPriceShops();
+  protected readonly comparableProductCount = comparableProductCount;
+  protected readonly audit = signal<AuditEntry[]>([]);
   constructor() {
     void this.api.getOverview().then((value) => this.overview.set(value));
+    void this.api.listAudit().then((value) => this.audit.set(value));
   }
   protected barHeight(value: number): string {
     return `${Math.round((value / 15) * 135)}px`;

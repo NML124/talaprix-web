@@ -1,0 +1,123 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">TABLEAU DE BORD</p>
+    <h1>Bonjour, {{ store.data()?.shop?.name }}</h1>
+  </div>
+  <a routerLink="/shop/offres" class="btn btn-primary"
+    ><svg lucidePackagePlus size="16" aria-hidden="true"></svg>Gérer mes
+    offres</a
+  >
+</header>
+<section class="shop-status-strip" aria-label="État de la boutique">
+  <div>
+    <span class="status success">{{ store.data()?.shop?.status }}</span
+    ><strong>Votre boutique est visible</strong>
+  </div>
+  <p>
+    Mis à jour {{ store.data()?.shop?.updatedAt }} · {{
+    store.data()?.shop?.commune }}
+  </p>
+</section>
+<section
+  class="shop-metric-row [&>div]:min-h-[104px]"
+  aria-label="Indicateurs de la boutique"
+>
+  <div>
+    <small>Offres publiées</small
+    ><strong class="number">{{ published() }}</strong
+    ><span>sur {{ store.data()?.offers?.length }} offres</span>
+  </div>
+  <div>
+    <small>Consultations</small
+    ><strong class="number">{{ engagement()?.views ?? 0 }}</strong
+    ><span>30 derniers jours</span>
+  </div>
+  <div>
+    <small>Promotions actives</small
+    ><strong class="number">{{ store.data()?.discounts?.length }}</strong>
+  </div>
+  <div>
+    <small>Avis clients</small
+    ><strong class="number">{{ store.data()?.reviews?.length }}</strong>
+  </div>
+</section>
+<section class="shop-engagement-section" aria-label="Engagement des visiteurs">
+  <div class="card-head">
+    <div>
+      <h2>Intérêt pour vos offres</h2>
+      <p class="muted small">
+        Personnes distinctes par action · 30 derniers jours
+      </p>
+    </div>
+    <a routerLink="/shop/analyses" class="shop-text-link"
+      >Voir les analyses
+      <svg lucideArrowRight size="15" aria-hidden="true"></svg
+    ></a>
+  </div>
+  <div class="shop-engagement-list">
+    <div>
+      <span>Contacter le vendeur</span
+      ><strong class="number">{{ engagement()?.contactPeople ?? 0 }}</strong>
+    </div>
+    <div>
+      <span>Localiser la boutique</span
+      ><strong class="number">{{ engagement()?.locatePeople ?? 0 }}</strong>
+    </div>
+    <div>
+      <span>Ajout en favoris</span
+      ><strong class="number">{{ engagement()?.favoritePeople ?? 0 }}</strong>
+    </div>
+  </div>
+</section>
+<div class="shop-overview-columns">
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <p class="shop-eyebrow">VOTRE CATALOGUE</p>
+        <h2>Offres récentes</h2>
+      </div>
+      <a routerLink="/shop/offres" class="shop-text-link"
+        >Toutes les offres
+        <svg lucideArrowRight size="15" aria-hidden="true"></svg
+      ></a>
+    </div>
+    @for (offer of store.data()?.offers?.slice(0, 4); track offer.id) {
+    <div class="shop-line-item">
+      <span
+        ><strong>{{ offer.product }}</strong
+        ><small>{{ offer.category }} · {{ offer.updatedAt }}</small></span
+      >
+      <span class="shop-line-value"
+        ><strong class="number">{{ price(offer.price) }}</strong
+        ><small>{{ offerStatus(offer) }}</small></span
+      >
+    </div>
+    }
+  </section>
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <p class="shop-eyebrow">À SUIVRE</p>
+        <h2>Points d’attention</h2>
+      </div>
+      <span class="shop-attention-count">{{ attention().length }} offres</span>
+    </div>
+    @if (attention().length) { @for (offer of attentionPreview(); track
+    offer.id) {
+    <div class="shop-attention-item">
+      <strong>{{ offer.product }}</strong>
+      <p>
+        {{ offer.publication === 'draft' ? 'Cette offre attend sa publication.'
+        : offer.visibility === 'hidden' ? 'Cette offre est masquée aux clients.'
+        : 'Indiquez un retour en stock lorsque le produit est disponible.' }}
+      </p>
+    </div>
+    } } @else {
+    <p class="muted">Toutes les offres sont publiées et disponibles.</p>
+    }
+    <a routerLink="/shop/offres" class="btn btn-secondary shop-card-action"
+      >{{attention().length > attentionPreview().length ? 'Voir les
+      '+attention().length+' offres' : 'Examiner les offres'}}</a
+    >
+  </section>
+</div>

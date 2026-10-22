@@ -1,0 +1,234 @@
+<tp-admin-page-header
+  title="Catégories"
+  subtitle="Organisez le catalogue indépendamment des fiches produits."
+>
+  <button type="button" class="btn btn-primary" (click)="open()">
+    <svg lucidePlus size="16" aria-hidden="true"></svg>Ajouter une catégorie
+  </button>
+</tp-admin-page-header>
+<div class="toolbar">
+  <label class="search category-search w-full max-w-[410px] [&::before]:hidden"
+    ><svg lucideSearch size="16" aria-hidden="true"></svg
+    ><span class="sr-only">Rechercher une catégorie</span>
+    <input
+      type="search"
+      placeholder="Rechercher une catégorie"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event); page.set(1)"
+    />
+  </label>
+  <span class="muted small"
+    >{{filtered().length}} catégorie(s) affichée(s)</span
+  >
+</div>
+<div
+  class="flex flex-wrap gap-2"
+  role="group"
+  aria-label="Filtrer les catégories"
+>
+  @for (item of ['Toutes', 'Visibles', 'Masquées']; track item) {
+  <button
+    type="button"
+    class="btn"
+    [class.btn-filter-active]="visibilityFilter() === item"
+    [class.btn-secondary]="visibilityFilter() !== item"
+    [attr.aria-pressed]="visibilityFilter() === item"
+    (click)="visibilityFilter.set($any(item)); page.set(1)"
+  >
+    {{item}}
+  </button>
+  }
+</div>
+@if (feedback()) {
+<p class="toast" role="status">{{feedback()}}</p>
+} @if (error() && !editing()) {
+<p class="toast error" role="alert">
+  {{error()}}
+  <button type="button" class="link" (click)="load()">Réessayer</button>
+</p>
+}
+<section class="card category-list" aria-label="Liste des catégories">
+  <div class="card-head items-baseline">
+    <h2>Catégories du catalogue</h2>
+    <span class="muted small"
+      >Une catégorie peut être retirée si aucun produit actif ne
+      l’utilise.</span
+    >
+  </div>
+  @if (loading()) { @for (item of [1,2,3]; track item) {
+  <div class="skeleton mt-3 h-[50px]"></div>
+  } } @else if (!filtered().length) {
+  <p class="muted">Aucune catégorie trouvée. Essayez un autre terme.</p>
+  } @else {
+  <div class="table-wrap max-[560px]:overflow-visible">
+    <table class="max-[560px]:block max-[560px]:w-full max-[560px]:min-w-0!">
+      <thead class="max-[560px]:hidden">
+        <tr>
+          <th>Catégorie</th>
+          <th>Description</th>
+          <th>Produits actifs</th>
+          <th>Visibilité</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="max-[560px]:block max-[560px]:w-full">
+        @for (row of visible(); track row.id) {
+        <tr
+          class="max-[560px]:grid max-[560px]:grid-cols-[minmax(0,1fr)_auto] max-[560px]:gap-x-3 max-[560px]:gap-y-1 max-[560px]:border-b max-[560px]:border-[var(--line-soft)] max-[560px]:py-3"
+        >
+          <td
+            class="max-[560px]:col-start-1 max-[560px]:row-start-1 max-[560px]:block max-[560px]:min-w-0 max-[560px]:border-0! max-[560px]:p-0!"
+          >
+            <strong>{{row.parentId !== null ? '↳ ' : ''}}{{row.name}}</strong>
+          </td>
+          <td
+            class="muted max-[560px]:col-start-1 max-[560px]:row-start-2 max-[560px]:block max-[560px]:min-w-0 max-[560px]:border-0! max-[560px]:p-0! max-[560px]:break-words"
+          >
+            {{row.description || 'Aucune description'}}
+          </td>
+          <td
+            class="number max-[560px]:col-start-1 max-[560px]:row-start-3 max-[560px]:block max-[560px]:border-0! max-[560px]:p-0! max-[560px]:text-xs max-[560px]:text-[var(--text-2)]"
+          >
+            {{productCount(row.name)}}
+            <span class="hidden max-[560px]:inline">produits actifs</span>
+          </td>
+          <td
+            class="max-[560px]:col-start-1 max-[560px]:row-start-4 max-[560px]:block max-[560px]:border-0! max-[560px]:p-0!"
+          >
+            <span
+              class="badge"
+              [class.success]="store.isEffectivelyVisible(row)"
+              [class.warning]="!store.isEffectivelyVisible(row)"
+              >{{visibilityLabel(row)}}</span
+            >
+          </td>
+          <td
+            class="max-[560px]:col-start-2 max-[560px]:row-span-4 max-[560px]:row-start-1 max-[560px]:self-center max-[560px]:border-0! max-[560px]:p-0!"
+          >
+            <div class="table-actions">
+              <button
+                type="button"
+                class="table-action"
+                [disabled]="row.isClientVisible && row.parentId !== null && !store.isEffectivelyVisible(row)"
+                [attr.aria-label]="(store.isEffectivelyVisible(row) ? 'Masquer ' : 'Rendre visible ') + row.name"
+                [attr.title]="row.parentId !== null && !store.isEffectivelyVisible(row) && row.isClientVisible ? 'Masquée par le parent' : (store.isEffectivelyVisible(row) ? 'Masquer' : 'Rendre visible')"
+                (click)="askVisibility(row)"
+              >
+                @if (store.isEffectivelyVisible(row)) {<svg
+                  lucideEyeOff
+                  size="16"
+                  aria-hidden="true"
+                ></svg
+                >} @else {<svg lucideEye size="16" aria-hidden="true"></svg>}
+              </button>
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="'Modifier '+row.name"
+                (click)="open(row)"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                type="button"
+                class="table-action danger disabled:cursor-not-allowed disabled:opacity-40"
+                [disabled]="productCount(row.name) > 0 || store.descendantIds(row.id).length > 0"
+                [attr.aria-label]="'Supprimer '+row.name"
+                [attr.title]="productCount(row.name) > 0 ? 'Catégorie utilisée par des produits' : (store.descendantIds(row.id).length > 0 ? 'Supprimez d’abord les sous-catégories' : 'Supprimer')"
+                (click)="remove(row)"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <tp-admin-pagination
+    [total]="filtered().length"
+    [page]="currentPage()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  }
+</section>
+@if (editing(); as row) {
+<tp-admin-dialog
+  [title]="previousName() ? 'Modifier la catégorie' : 'Nouvelle catégorie'"
+  (closed)="editing.set(null)"
+>
+  <div class="form-stack">
+    <label class="field"
+      >Nom<input
+        [ngModel]="row.name"
+        (ngModelChange)="row.name = $event; error.set('')"
+        maxlength="60"
+    /></label>
+    <label class="field"
+      >Description<input
+        [ngModel]="row.description"
+        (ngModelChange)="row.description = $event"
+        maxlength="140"
+    /></label>
+  </div>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <p class="muted small">
+    Le renommage actualise aussi le classement des produits associés.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="editing.set(null)">
+      Annuler
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="busy()"
+      (click)="save()"
+    >
+      {{busy() ? 'Enregistrement…' : 'Enregistrer'}}
+    </button>
+  </div>
+</tp-admin-dialog>
+} @if (visibilityTarget(); as row) {
+<tp-admin-dialog
+  [title]="row.isClientVisible ? 'Masquer la catégorie ?' : 'Rendre la catégorie visible ?'"
+  (closed)="visibilityTarget.set(null)"
+>
+  <p>
+    {{row.isClientVisible ? 'Cette action retire la catégorie du catalogue
+    mobile et des recherches publiques.' : 'Cette action réaffiche la catégorie
+    dans le catalogue mobile et les recherches publiques.'}}
+  </p>
+  @if (store.descendantIds(row.id).length) {
+  <p class="muted">
+    L’action concerne aussi {{store.descendantIds(row.id).length}}
+    sous-catégorie(s).
+  </p>
+  }
+  <p class="muted small">
+    Démonstration locale. Aucun changement réel n’est envoyé à l’application.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="visibilityTarget.set(null)"
+    >
+      Annuler
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="busy()"
+      (click)="confirmVisibility()"
+    >
+      {{busy() ? 'Mise à jour…' : (row.isClientVisible ? 'Masquer' : 'Rendre
+      visible')}}
+    </button>
+  </div>
+</tp-admin-dialog>
+}

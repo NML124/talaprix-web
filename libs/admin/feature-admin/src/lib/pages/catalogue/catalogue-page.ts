@@ -6,6 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucidePause,
   LucidePencil,
@@ -22,11 +24,14 @@ import { Pagination } from '../../ui/pagination';
 import { fc, imagePath } from '../../mocks/catalogue';
 import type { Product } from '../../mocks/models';
 import { ProductDialog } from './product-dialog';
+import { CategoryPreviewStore } from '../../services/category-preview-store';
+import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-catalogue-page',
   imports: [
     FormsModule,
+    RouterLink,
     PageHeader,
     SegmentedTabs,
     StatusDot,
@@ -38,12 +43,15 @@ import { ProductDialog } from './product-dialog';
     LucidePlay,
     LucideTrash2,
     ProductDialog,
+    AdminSelect,
   ],
   templateUrl: './catalogue-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CataloguePage {
   private readonly api = inject(AdminMockApi);
+  private readonly route = inject(ActivatedRoute);
+  protected readonly categoryStore = inject(CategoryPreviewStore);
   protected readonly products = signal<Product[]>([]);
   protected readonly selected = signal<Product | null>(null);
   protected readonly dialogMode = signal<
@@ -61,13 +69,10 @@ export class CataloguePage {
   protected readonly fc = fc;
   protected readonly imagePath = imagePath;
   protected readonly tabs = ['Publiés 2 486', 'Brouillons 38', 'Archivés 124'];
-  protected readonly categories = [
+  protected readonly categories = computed(() => [
     'Toutes les catégories',
-    'Boulangerie',
-    'Épicerie',
-    'Mode',
-    'Accessoires',
-  ];
+    ...this.categoryStore.names(),
+  ]);
   protected readonly shops = [
     'Toutes les boutiques',
     'Kin Marché',
@@ -107,6 +112,9 @@ export class CataloguePage {
   );
 
   constructor() {
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed())
+      .subscribe((params) => this.query.set(params.get('q') ?? ''));
     void this.load();
   }
   protected async load(): Promise<void> {
@@ -135,7 +143,7 @@ export class CataloguePage {
     this.selected.set({
       id: Date.now(),
       name: '',
-      category: 'Boulangerie',
+      category: this.categoryStore.names()[0] ?? '',
       unit: '',
       shop: 'Kin Marché',
       price: 0,
@@ -185,7 +193,7 @@ export class CataloguePage {
     await this.api.saveProduct(row);
     this.products.set(await this.api.listProducts());
     this.selected.set(null);
-    this.toast.set('Produit republié dans la maquette.');
+    this.toast.set('Produit republié.');
   }
   protected async remove(): Promise<void> {
     const row = this.selected();
@@ -194,7 +202,7 @@ export class CataloguePage {
       await this.api.deleteProduct(row.id);
       this.products.set(await this.api.listProducts());
       this.selected.set(null);
-      this.toast.set('Produit supprimé de la maquette et action auditée.');
+      this.toast.set('Produit supprimé et action auditée.');
     } catch {
       this.error.set('Suppression impossible.');
     }

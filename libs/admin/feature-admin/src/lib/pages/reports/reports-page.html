@@ -1,10 +1,8 @@
 <tp-admin-page-header
   title="Rapports"
   subtitle="Comprendre les économies potentielles et la qualité des données."
-  ><span class="badge info"
-    >Aperçu de conception · aucun envoi</span
-  ></tp-admin-page-header
 >
+</tp-admin-page-header>
 <div class="toolbar">
   <tp-segmented-tabs
     [items]="['Mensuel','Annuel']"
@@ -13,30 +11,30 @@
   /><span class="report-context muted small"
     >{{view().period}} · Toutes les boutiques</span
   >
+  <span class="report-preview-label">Données illustratives · aucun envoi</span>
 </div>
 <div class="report-summary">
-  <section class="card" style="background: var(--brand); color: #fff">
+  <section class="report-lead-stat">
     <small>{{view().primaryLabel}}</small
-    ><strong class="hero-number number" style="display: block; margin: 8px 0"
+    ><strong class="hero-number number report-stat-value"
       >{{view().primaryValue}}</strong
     ><small>{{view().primaryHint}}</small>
   </section>
-  <section class="card">
+  <section class="report-stat">
     <small class="muted">{{view().secondaryLabel}}</small
-    ><strong class="hero-number number" style="display: block; margin: 8px 0"
+    ><strong class="hero-number number report-stat-value"
       >{{view().secondaryValue}}</strong
     ><small class="muted">{{view().secondaryHint}}</small>
   </section>
-  <section class="card">
+  <section class="report-stat">
     <small class="muted">Prix actualisés ≤ 30 jours</small
-    ><strong class="hero-number number" style="display: block; margin: 8px 0"
-      >92,5 %</strong
+    ><strong class="hero-number number report-stat-value">92,5 %</strong
     ><small class="muted">2 300 prix sur 2 486 publiés</small>
   </section>
-  <section class="card">
+  <section class="report-stat">
     <small class="muted">Boutiques couvertes</small
-    ><strong class="hero-number number" style="display: block; margin: 8px 0"
-      >24 <span class="muted" style="font-size: 18px">/ 28</span></strong
+    ><strong class="hero-number number report-stat-value"
+      >24 <span class="muted report-stat-denominator">/ 28</span></strong
     ><small class="muted">Avec au moins un prix publié</small>
   </section>
 </div>
@@ -49,48 +47,48 @@
     <svg
       viewBox="0 0 560 145"
       preserveAspectRatio="none"
-      style="display: block; width: 100%; height: 200px"
+      class="report-chart"
       role="img"
       aria-label="Économies estimées progressant de 3,1 millions FC en avril à 12,8 millions FC en septembre 2026"
     >
       <path
         d="M0 108 L110 96 L220 83 L330 66 L440 47 L550 31 L550 140 L0 140 Z"
-        fill="rgba(0,151,136,.08)"
+        class="report-chart-fill"
       />
       <polyline
         [attr.points]="previousPath"
         fill="none"
-        stroke="#c8c8c8"
+        class="report-chart-previous"
         stroke-width="2"
         stroke-dasharray="6 5"
       />
       <polyline
         [attr.points]="currentPath"
         fill="none"
-        stroke="#009788"
+        class="report-chart-current"
         stroke-width="3"
       />
-      <circle cx="550" cy="31" r="5" fill="#009788" />
-      <text x="480" y="21" fill="#00796d" font-size="11">12,8 M</text>
+      <circle class="report-chart-point" cx="550" cy="31" r="5" />
+      <text class="report-chart-label" x="480" y="21">12,8 M</text>
     </svg>
     <div class="metric-strip muted small">
       @for(month of savings;track month.month){<span>{{month.month}}</span>}
     </div>
-    <div class="grid-2" style="margin-top: 16px">
+    <div class="grid-2 report-insights">
       <div class="report-insight">
         <strong class="positive">{{view().growth}}</strong
-        ><small class="muted" style="display: block"
+        ><small class="muted report-insight-detail"
           >{{view().growthDetail}}</small
         >
       </div>
       <div class="report-insight">
         <strong>1 420 FC en moyenne</strong
-        ><small class="muted" style="display: block"
+        ><small class="muted report-insight-detail"
           >Écart potentiel par consultation utile</small
         >
       </div>
     </div>
-    <p class="muted small" style="margin: 16px 0 0">
+    <p class="muted small report-method">
       Différence entre le prix consulté et le meilleur prix disponible, à unité
       identique. Ce n'est ni un chiffre d'affaires ni une économie réalisée.
     </p>
@@ -119,7 +117,7 @@
       <span class="grow">Pain complet<small>28 avis · À surveiller</small></span
       ><strong>★ 3,1</strong>
     </div>
-    <p class="muted small" style="margin: 12px 0 0">
+    <p class="muted small report-footnote">
       Note boutique = moyenne des notes de ses produits publiés.
     </p>
   </section>
@@ -130,12 +128,8 @@
     </div>
     @for(row of trending;track row.name){
     <div class="item-row">
-      <img
-        class="thumb"
-        style="width: 36px; height: 36px"
-        [src]="imagePath(row.image)"
-        alt=""
-      /><span class="grow"
+      <img class="thumb" [src]="imagePath(row.image)" alt="" /><span
+        class="grow"
         ><strong>{{row.name}}</strong
         ><small>{{row.favorites}} favoris</small></span
       ><span class="positive small"
@@ -144,18 +138,16 @@
       >
     </div>
     }
-    <p class="muted small" style="margin: 12px 0 0">
+    <p class="muted small report-footnote">
       Favoris ajoutés sur la période. Aucune vente n'est comptabilisée.
     </p>
   </section>
   <section class="card">
     <div class="card-head">
       <h2>Envoi programmé</h2>
-      <span class="badge info">Aperçu</span>
+      <span class="report-preview-label">Aperçu</span>
     </div>
-    <p class="muted small">
-      Exemple de programmation mensuelle, sans envoi réel.
-    </p>
+    <p class="muted small">Programmation mensuelle des rapports.</p>
     <div class="item-row">
       <span class="grow"
         ><strong>Destinataires</strong
@@ -173,7 +165,7 @@
         ><strong>Format</strong><small>PDF · email</small></span
       >
     </div>
-    <p class="muted small" style="margin: 14px 0">
+    <p class="muted small report-schedule-note">
       Prochain envoi : 01 novembre 2026. Rapport annuel : 01 janvier 2027.
     </p>
   </section>

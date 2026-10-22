@@ -1,0 +1,248 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">PERFORMANCE</p>
+    <h1>Analyses</h1>
+    <p>Une lecture simple des interactions avec vos offres.</p>
+  </div>
+  <div class="shop-filter-row" role="group" aria-label="Période">
+    <button
+      type="button"
+      class="btn"
+      [class.btn-filter-active]="period() === '7 jours'"
+      [class.btn-secondary]="period() !== '7 jours'"
+      [attr.aria-pressed]="period() === '7 jours'"
+      (click)="period.set('7 jours')"
+    >
+      7 jours
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [class.btn-filter-active]="period() === '30 jours'"
+      [class.btn-secondary]="period() !== '30 jours'"
+      [attr.aria-pressed]="period() === '30 jours'"
+      (click)="period.set('30 jours')"
+    >
+      30 jours
+    </button>
+  </div>
+</header>
+<section class="shop-analytics-grid max-[400px]:grid-cols-2!">
+  <div
+    class="card shop-analytics-total max-[400px]:p-3 max-[400px]:[&_strong]:text-2xl"
+  >
+    <small>Consultations · {{ period() }}</small
+    ><strong class="number">{{ engagement()?.views ?? 0 }}</strong
+    ><span>Pages d’offre consultées</span>
+  </div>
+  <div
+    class="card shop-analytics-total max-[400px]:p-3 max-[400px]:[&_strong]:text-2xl"
+  >
+    <small>Contacts vendeur</small
+    ><strong class="number">{{ engagement()?.contactPeople ?? 0 }}</strong
+    ><span>Personnes distinctes</span>
+  </div>
+  <div
+    class="card shop-analytics-total max-[400px]:p-3 max-[400px]:[&_strong]:text-2xl"
+  >
+    <small>Itinéraires ouverts</small
+    ><strong class="number">{{ engagement()?.locatePeople ?? 0 }}</strong
+    ><span>Personnes distinctes</span>
+  </div>
+  <div
+    class="card shop-analytics-total max-[400px]:p-3 max-[400px]:[&_strong]:text-2xl"
+  >
+    <small>Ajouts en favoris</small
+    ><strong class="number">{{ engagement()?.favoritePeople ?? 0 }}</strong
+    ><span>Personnes distinctes</span>
+  </div>
+</section>
+<section class="card">
+  <div class="card-head">
+    <h2>Engagement par offre</h2>
+    <div class="flex flex-wrap items-center gap-3">
+      <span class="muted small"
+        >Top {{preview().length}} sur {{featured().length}} · {{ period()
+        }}</span
+      >
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="detailOpen.set(true)"
+      >
+        Toutes les offres
+      </button>
+    </div>
+  </div>
+  @if (featured().length) {
+  <div class="table-wrap">
+    <table class="shop-table">
+      <thead>
+        <tr>
+          <th>Offre</th>
+          <th>Consultations</th>
+          <th>Contacts</th>
+          <th>Itinéraires</th>
+          <th>Favoris</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (offer of preview(); track offer.id) {
+        <tr>
+          <td><strong>{{ offer.product }}</strong></td>
+          <td class="number">{{ offer.engagement[periodKey()].views }}</td>
+          <td class="number">
+            {{ offer.engagement[periodKey()].contactPeople }}
+          </td>
+          <td class="number">
+            {{ offer.engagement[periodKey()].locatePeople }}
+          </td>
+          <td class="number">
+            {{ offer.engagement[periodKey()].favoritePeople }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="shop-analytics-mobile-list">
+    @for (offer of preview(); track offer.id) {
+    <article class="shop-analytics-mobile-row">
+      <h3>{{ offer.product }}</h3>
+      <div class="shop-analytics-mobile-metrics">
+        <div>
+          <small>Consultations</small
+          ><strong class="number"
+            >{{ offer.engagement[periodKey()].views }}</strong
+          >
+        </div>
+        <div>
+          <small>Contacts</small
+          ><strong class="number"
+            >{{ offer.engagement[periodKey()].contactPeople }}</strong
+          >
+        </div>
+        <div>
+          <small>Itinéraires</small
+          ><strong class="number"
+            >{{ offer.engagement[periodKey()].locatePeople }}</strong
+          >
+        </div>
+        <div>
+          <small>Favoris</small
+          ><strong class="number"
+            >{{ offer.engagement[periodKey()].favoritePeople }}</strong
+          >
+        </div>
+      </div>
+    </article>
+    }
+  </div>
+  } @else {
+  <div class="shop-empty">
+    <strong>Pas encore de consultations</strong>
+    <p>Les produits consultés apparaîtront ici.</p>
+  </div>
+  }
+  <p class="muted small">
+    Les consultations comptent les vues. Contacts, itinéraires et favoris
+    comptent les personnes uniques par offre et par période ; une même personne
+    peut apparaître sur plusieurs offres, donc ces lignes ne donnent pas un
+    total unique pour la boutique.
+  </p>
+</section>
+@if (detailOpen()) {
+<tp-admin-dialog
+  title="Engagement de toutes les offres"
+  (closed)="detailOpen.set(false)"
+>
+  <div class="grid min-w-0 content-start gap-4">
+    <p class="muted small">
+      {{period()}} · Les contacts, itinéraires et favoris sont comptés par
+      offre. Une personne peut apparaître sur plusieurs lignes.
+    </p>
+    <label class="search w-full">
+      <span class="sr-only">Rechercher une offre dans les analyses</span>
+      <input
+        type="search"
+        placeholder="Rechercher une offre"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event); page.set(1)"
+      />
+    </label>
+    @if (visibleOffers().length) {
+    <div class="table-wrap hidden min-[700px]:block">
+      <table class="shop-table">
+        <thead>
+          <tr>
+            <th>Offre</th>
+            <th>Consultations</th>
+            <th>Contacts</th>
+            <th>Itinéraires</th>
+            <th>Favoris</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (offer of visibleOffers(); track offer.id) {
+          <tr>
+            <td><strong>{{offer.product}}</strong></td>
+            <td class="number">{{offer.engagement[periodKey()].views}}</td>
+            <td class="number">
+              {{offer.engagement[periodKey()].contactPeople}}
+            </td>
+            <td class="number">
+              {{offer.engagement[periodKey()].locatePeople}}
+            </td>
+            <td class="number">
+              {{offer.engagement[periodKey()].favoritePeople}}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="grid gap-3 min-[700px]:hidden">
+      @for (offer of visibleOffers(); track offer.id) {
+      <article class="rounded-xl border border-[var(--line)] p-4">
+        <h3 class="mb-3 font-semibold">{{offer.product}}</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <small class="muted">Consultations</small
+            ><strong class="block number"
+              >{{offer.engagement[periodKey()].views}}</strong
+            >
+          </div>
+          <div>
+            <small class="muted">Contacts</small
+            ><strong class="block number"
+              >{{offer.engagement[periodKey()].contactPeople}}</strong
+            >
+          </div>
+          <div>
+            <small class="muted">Itinéraires</small
+            ><strong class="block number"
+              >{{offer.engagement[periodKey()].locatePeople}}</strong
+            >
+          </div>
+          <div>
+            <small class="muted">Favoris</small
+            ><strong class="block number"
+              >{{offer.engagement[periodKey()].favoritePeople}}</strong
+            >
+          </div>
+        </div>
+      </article>
+      }
+    </div>
+    <tp-admin-pagination
+      [total]="filteredOffers().length"
+      [page]="currentPage()"
+      [pageSize]="pageSize"
+      (pageChanged)="page.set($event)"
+    />
+    } @else {
+    <p class="muted">Aucune offre trouvée.</p>
+    }
+  </div>
+</tp-admin-dialog>
+}

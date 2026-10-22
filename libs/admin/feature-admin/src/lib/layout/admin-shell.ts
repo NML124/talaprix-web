@@ -22,14 +22,18 @@ import {
   LucideMegaphone,
   LucideScanSearch,
   LucidePackage,
-  LucideSearch,
   LucideMoon,
   LucideMenu,
   LucideShieldCheck,
   LucideUsers,
   LucideX,
+  LucideLogOut,
 } from '@lucide/angular';
 import { filter } from 'rxjs';
+import { AuthSessionStore } from '@talaprix/users/data-access';
+import { AdminSelect } from '../ui/admin-select';
+import { AdminGlobalSearch } from '../ui/admin-global-search';
+import { AdminNotificationPreview } from '../services/admin-notification-preview';
 
 interface NavPage {
   label: string;
@@ -58,22 +62,29 @@ interface NavSection {
     LucideMegaphone,
     LucideScanSearch,
     LucidePackage,
-    LucideSearch,
+    AdminGlobalSearch,
     LucideMoon,
     LucideMenu,
     LucideShieldCheck,
     LucideUsers,
     LucideX,
+    LucideLogOut,
+    AdminSelect,
   ],
   templateUrl: './admin-shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminShell {
   private readonly router = inject(Router);
+  protected readonly session = inject(AuthSessionStore);
+  protected readonly notifications = inject(AdminNotificationPreview);
   protected readonly currentPath = signal(this.router.url.split('?')[0]);
   protected readonly scrolled = signal(false);
   protected readonly mobileMenuOpen = signal(false);
   protected readonly theme = signal<'system' | 'light' | 'dark'>('system');
+  protected readonly themeLabel = computed(
+    () => ({ system: 'Système', light: 'Clair', dark: 'Sombre' })[this.theme()],
+  );
   private readonly systemDark = signal(false);
   protected readonly resolvedTheme = computed(() =>
     this.theme() === 'system'
@@ -106,6 +117,7 @@ export class AdminShell {
       count: 24,
       pages: [
         { label: 'Produits', path: '/admin/catalogue' },
+        { label: 'Catégories', path: '/admin/categories' },
         { label: 'Prix & modération', path: '/admin/moderation', count: 24 },
         { label: 'Boutiques', path: '/admin/boutiques', count: 4 },
       ],
@@ -115,16 +127,7 @@ export class AdminShell {
       icon: 'megaphone',
       pages: [
         { label: 'Promotions', path: '/admin/marketing', query: 'promotions' },
-        {
-          label: 'Notifications',
-          path: '/admin/marketing',
-          query: 'notifications',
-        },
-        {
-          label: 'Email & messages',
-          path: '/admin/marketing',
-          query: 'messages',
-        },
+        { label: 'Notifications', path: '/admin/notifications' },
       ],
     },
     {
@@ -202,6 +205,13 @@ export class AdminShell {
     this.scrolled.set(window.scrollY > 8);
   }
   protected setTheme(value: string): void {
+    value =
+      (
+        { Système: 'system', Clair: 'light', Sombre: 'dark' } as Record<
+          string,
+          string
+        >
+      )[value] ?? value;
     if (value !== 'system' && value !== 'light' && value !== 'dark') return;
     this.theme.set(value);
     this.syncBrowserTheme();
@@ -211,8 +221,9 @@ export class AdminShell {
       /* stockage indisponible */
     }
   }
-  protected onThemeChange(event: Event): void {
-    this.setTheme((event.target as HTMLSelectElement).value);
+  protected async logout(): Promise<void> {
+    await this.session.signOut();
+    await this.router.navigate(['/auth']);
   }
   private syncBrowserTheme(): void {
     const color = this.resolvedTheme() === 'dark' ? '#111718' : '#f6f6f6';

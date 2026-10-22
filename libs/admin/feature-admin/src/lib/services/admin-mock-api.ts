@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 import { products, proposals, shops } from '../mocks/catalogue';
-import { campaigns } from '../mocks/marketing';
+import { campaigns, offerDiscounts } from '../mocks/marketing';
 import {
   audit,
   invitations,
@@ -25,15 +25,23 @@ import type {
   Proposal,
   Shop,
   User,
+  CommunityUserView,
 } from '../mocks/models';
+import type { OfferDiscount } from '../mocks/marketing';
 
 const pause = () => new Promise<void>((resolve) => setTimeout(resolve, 160));
+const maskCommunityPhone = (phone: string): string => {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.length < 3) return '+243 •••';
+  return `+243 ${'•'.repeat(Math.max(3, digits.length - 6))}${digits.slice(-3)}`;
+};
 
 /** Frontière de données temporaire : remplacer ces méthodes lors du branchement API. */
 @Service()
 export class AdminMockApi {
   private readonly productRows = structuredClone(products);
   private readonly campaignRows = structuredClone(campaigns);
+  private readonly discountRows = structuredClone(offerDiscounts);
   private readonly proposalRows = structuredClone(proposals);
   private readonly shopRows = structuredClone(shops);
   private readonly memberRows = structuredClone(members);
@@ -60,6 +68,20 @@ export class AdminMockApi {
   async listCampaigns(): Promise<Campaign[]> {
     await pause();
     return structuredClone(this.campaignRows);
+  }
+  async listOfferDiscounts(): Promise<OfferDiscount[]> {
+    await pause();
+    return structuredClone(this.discountRows);
+  }
+  async saveOfferDiscount(value: OfferDiscount): Promise<void> {
+    await pause();
+    const index = this.discountRows.findIndex((row) => row.id === value.id);
+    if (index < 0) this.discountRows.unshift(structuredClone(value));
+    else this.discountRows[index] = structuredClone(value);
+    this.record(
+      'Modification d’une réduction d’offre',
+      `${value.shop} · ${value.offer}`,
+    );
   }
   async saveCampaign(campaign: Campaign): Promise<void> {
     await pause();
@@ -89,6 +111,13 @@ export class AdminMockApi {
     if (index < 0) throw new Error('Produit introuvable.');
     const [product] = this.productRows.splice(index, 1);
     this.record('Suppression du produit', product.name);
+  }
+  async renameProductCategory(previous: string, next: string): Promise<void> {
+    await pause();
+    for (const product of this.productRows) {
+      if (product.category === previous) product.category = next;
+    }
+    this.record('Catégorie renommée', `${previous} → ${next}`);
   }
   async listProposals(): Promise<Proposal[]> {
     await pause();
@@ -138,28 +167,40 @@ export class AdminMockApi {
     }
     this.record('Suppression de la boutique', shop.name);
   }
-  async listUsers(): Promise<User[]> {
+  async listUsers(): Promise<CommunityUserView[]> {
     await pause();
-    return structuredClone(this.userRows);
+    return this.userRows.map(({ phone, ...user }) => ({
+      ...structuredClone(user),
+      phoneMasked: maskCommunityPhone(phone),
+    }));
   }
-  async saveUser(user: User, reason = ''): Promise<void> {
+  async saveUser(
+    userId: number,
+    status: User['status'],
+    reason = '',
+  ): Promise<void> {
     await pause();
-    if (user.status === 'Suspendu' && !reason.trim())
+    if (status === 'Suspendu' && !reason.trim())
       throw new Error('Indiquez un motif de suspension.');
-    const index = this.userRows.findIndex((row) => row.id === user.id);
-    if (index >= 0) this.userRows[index] = structuredClone(user);
+    const user = this.userRows.find((row) => row.id === userId);
+    if (!user) throw new Error('Compte introuvable.');
+    user.status = status;
     this.record(
-      user.status === 'Suspendu'
-        ? 'Suspension du compte'
-        : 'Réactivation du compte',
+      status === 'Suspendu' ? 'Suspension du compte' : 'Réactivation du compte',
       `${user.name}${reason ? ` · ${reason}` : ''}`,
     );
   }
-  async updateUserProfile(user: User): Promise<void> {
+  async updateUserProfile(
+    user: Pick<User, 'id' | 'name' | 'commune'>,
+  ): Promise<void> {
     await pause();
     const index = this.userRows.findIndex((row) => row.id === user.id);
     if (index < 0) throw new Error('Compte introuvable.');
-    this.userRows[index] = structuredClone(user);
+    this.userRows[index] = {
+      ...this.userRows[index],
+      name: user.name,
+      commune: user.commune,
+    };
     this.record('Modification du profil utilisateur', user.name);
   }
   async deleteUser(id: number): Promise<void> {

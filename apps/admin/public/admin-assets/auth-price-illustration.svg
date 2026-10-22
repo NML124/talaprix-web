@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Comparer les prix avec TalaPrix</title>
+  <desc id="desc">Une boutique de quartier et des prix comparés sur un téléphone.</desc>
+  <defs>
+    <linearGradient id="wash" x1="80" y1="70" x2="430" y2="360" gradientUnits="userSpaceOnUse"><stop stop-color="#D9F0E9"/><stop offset="1" stop-color="#EEF8F4"/></linearGradient>
+    <filter id="shadow" x="130" y="64" width="300" height="320" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="12"/><feOffset dy="12"/><feComponentTransfer><feFuncA type="linear" slope=".16"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <ellipse cx="264" cy="351" rx="176" ry="23" fill="#C7E5DC"/><circle cx="258" cy="218" r="171" fill="url(#wash)"/>
+  <path d="M92 263c49-48 89-65 123-51 24 10 46 9 68-4 27-17 57-17 91 0" stroke="#fff" stroke-linecap="round" stroke-width="7" stroke-dasharray="1 17"/><circle cx="114" cy="235" r="12" fill="#fff"/><circle cx="114" cy="235" r="5" fill="#009F88"/>
+  <g filter="url(#shadow)"><rect x="174" y="92" width="174" height="243" rx="22" fill="#193B34"/><rect x="182" y="101" width="158" height="224" rx="16" fill="#fff"/><rect x="240" y="107" width="42" height="5" rx="2.5" fill="#B7C9C3"/>
+    <text x="198" y="139" fill="#35564D" font-family="Arial,sans-serif" font-size="11" font-weight="700">OFFRES PRÈS DE VOUS</text>
+    <rect x="197" y="151" width="128" height="47" rx="11" fill="#EAF6F2"/><rect x="207" y="161" width="28" height="28" rx="8" fill="#C8E9DF"/><path d="m214 173 5-6 6 6v8h-11v-8Zm3 8v-5h5v5" stroke="#087D6D" stroke-linejoin="round" stroke-width="2"/><text x="244" y="170" fill="#2C4841" font-family="Arial,sans-serif" font-size="10" font-weight="700">Duka Market</text><text x="244" y="185" fill="#078775" font-family="Arial,sans-serif" font-size="12" font-weight="700">12 500 FC</text>
+    <rect x="197" y="207" width="128" height="47" rx="11" fill="#fff" stroke="#E2ECE8"/><rect x="207" y="217" width="28" height="28" rx="8" fill="#F9E9CD"/><path d="M213 226h16v12h-16zm-2 0 2-5h16l2 5" stroke="#C27A2C" stroke-linejoin="round" stroke-width="2"/><text x="244" y="226" fill="#2C4841" font-family="Arial,sans-serif" font-size="10" font-weight="700">Chez Mado</text><text x="244" y="241" fill="#078775" font-family="Arial,sans-serif" font-size="12" font-weight="700">11 900 FC</text>
+    <rect x="197" y="263" width="128" height="40" rx="11" fill="#009F88"/><text x="222" y="288" fill="#fff" font-family="Arial,sans-serif" font-size="11" font-weight="700">Voir les offres</text></g>
+  <g><rect x="74" y="142" width="101" height="104" rx="16" fill="#fff"/><path d="M89 181h70v49H89z" fill="#F5C77C"/><path d="M83 181 95 159h58l12 22H83Z" fill="#009F88"/><path d="M94 181v-13h15v13m8 0v-13h15v13m8 0v-13h15v13M115 199h16v31h-16" stroke="#DDF4ED" stroke-width="3"/><path d="M84 231h70" stroke="#087D6D" stroke-linecap="round" stroke-width="4"/></g>
+  <g><circle cx="389" cy="126" r="36" fill="#fff"/><path d="M389 105c-11 0-20 9-20 20 0 15 20 32 20 32s20-17 20-32c0-11-9-20-20-20Z" fill="#009F88"/><circle cx="389" cy="125" r="7" fill="#fff"/></g>
+  <g><rect x="353" y="245" width="94" height="61" rx="14" fill="#fff"/><path d="M369 264h62M369 276h43M369 288h52" stroke="#C7D8D2" stroke-linecap="round" stroke-width="4"/><circle cx="426" cy="276" r="10" fill="#E4F4EF"/><path d="m422 276 3 3 5-6" stroke="#078775" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g>
+</svg>

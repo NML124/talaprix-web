@@ -6,6 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   LucidePause,
   LucidePencil,
@@ -42,6 +44,7 @@ import { ShopDialog } from './shop-dialog';
 })
 export class ShopsPage {
   private readonly api = inject(AdminMockApi);
+  private readonly route = inject(ActivatedRoute);
   protected readonly shops = signal<Shop[]>([]);
   protected readonly products = signal<Product[]>([]);
   protected readonly selected = signal<Shop | null>(null);
@@ -96,6 +99,9 @@ export class ShopsPage {
     ),
   );
   constructor() {
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed())
+      .subscribe((params) => this.query.set(params.get('q') ?? ''));
     void this.load();
   }
   protected async load(): Promise<void> {
@@ -181,7 +187,7 @@ export class ShopsPage {
       await this.api.deleteShop(row.id);
       this.shops.set(await this.api.listShops());
       this.selected.set(null);
-      this.toast.set('Boutique supprimée de la maquette et action auditée.');
+      this.toast.set('Boutique supprimée et action auditée.');
     } catch {
       this.error.set('Suppression impossible.');
     }

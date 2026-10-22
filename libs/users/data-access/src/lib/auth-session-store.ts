@@ -58,7 +58,12 @@ export class AuthSessionStore {
         subscription?: { title?: string };
       }>('user-profile');
       if (error || !data || user.id !== this.user()?.id) return;
-      const role = data.subscription?.title === 'admin' ? 'admin' : 'customer';
+      const role =
+        data.subscription?.title === 'admin'
+          ? 'admin'
+          : data.subscription?.title === 'shop'
+            ? 'shop'
+            : 'customer';
       this.authenticate({ ...identity, roles: [role] });
     } catch {
       // A profile lookup failure keeps the session authenticated but denies admin UI access.
@@ -67,6 +72,12 @@ export class AuthSessionStore {
 
   clear(): void {
     this.#state.set({ status: 'anonymous', user: null });
+  }
+
+  async signOut(): Promise<void> {
+    const client = this.#supabase.client;
+    if (client) await client.auth.signOut();
+    this.clear();
   }
 
   private toIdentity(user: User): UserIdentity {

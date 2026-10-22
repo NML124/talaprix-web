@@ -8,10 +8,11 @@ import { FormsModule } from '@angular/forms';
 import type { Product } from '../../mocks/models';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { ProductImages } from '../../ui/product-images';
+import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-product-dialog',
-  imports: [FormsModule, AdminDialog, ProductImages],
+  imports: [FormsModule, AdminDialog, ProductImages, AdminSelect],
   templateUrl: './product-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

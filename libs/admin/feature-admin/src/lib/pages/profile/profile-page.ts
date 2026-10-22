@@ -44,7 +44,7 @@ export class ProfilePage {
       return;
     }
     await this.api.recordAction('Modification du profil', this.name());
-    this.toast.set('Profil enregistré dans la maquette.');
+    this.toast.set('Profil enregistré.');
     this.error.set('');
   }
 }

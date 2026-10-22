@@ -1,6 +1,7 @@
 export type UserId = string;
 export type UserRole =
   | 'customer'
+  | 'shop'
   | 'admin'
   | 'catalog-manager'
   | 'scraper-operator';

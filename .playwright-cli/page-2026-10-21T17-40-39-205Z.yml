@@ -1,0 +1,38 @@
+- main [ref=f5e4]:
+  - region "Connexion TalaPrix" [ref=f5e5]:
+    - complementary [ref=f5e6]:
+      - generic [ref=f5e7]:
+        - generic [ref=f5e8]:
+          - paragraph [ref=f5e9]: Les prix près de chez vous
+          - heading "Achetez mieux, en toute confiance." [level=2] [ref=f5e10]
+        - 'img "Illustration TalaPrix : une boutique, un téléphone et des prix comparés" [ref=f5e11]'
+    - generic [ref=f5e13]:
+      - link "Retour à TalaPrix" [ref=f5e14] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f5e17]:
+        - generic [ref=f5e18]: TalaPrix
+        - paragraph [ref=f5e21]: Espace sécurisé
+        - heading "Content de vous revoir" [level=1] [ref=f5e22]
+        - paragraph [ref=f5e23]: Saisissez votre adresse email pour recevoir un code de connexion à usage unique.
+      - generic [ref=f5e24]:
+        - generic [ref=f5e25]:
+          - generic [ref=f5e26]: Adresse email
+          - textbox "Adresse email" [ref=f5e28]:
+            - /placeholder: vous@exemple.com
+        - button "Recevoir mon code" [ref=f5e29]
+      - generic "Accès de test local" [ref=f5e32]:
+        - paragraph [ref=f5e33]: Test local · OTP 123456
+        - button "Administrateur admin.demo@talaprix.cd" [ref=f5e34]:
+          - generic [ref=f5e35]: Administrateur
+          - generic [ref=f5e36]: admin.demo@talaprix.cd
+        - button "Boutique shop.demo@talaprix.cd" [ref=f5e37]:
+          - generic [ref=f5e38]: Boutique
+          - generic [ref=f5e39]: shop.demo@talaprix.cd
+      - paragraph [ref=f5e40]:
+        - text: En continuant, vous acceptez nos
+        - link "Conditions d'utilisation" [ref=f5e41] [cursor=pointer]:
+          - /url: "#conditions-utilisation"
+        - text: et notre
+        - link "Politique de confidentialité" [ref=f5e42] [cursor=pointer]:
+          - /url: "#politique-confidentialite"
+        - text: .

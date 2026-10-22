@@ -5,28 +5,45 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { PageHeader } from '../../ui/page-header';
 import { AdminMockApi } from '../../services/admin-mock-api';
-import { actions, domains, initialPermissions, roles } from '../../mocks/roles';
+import {
+  actions,
+  domains,
+  initialPermissions,
+  roles as defaultRoles,
+} from '../../mocks/roles';
 import type { PermissionDomain, PermissionAction } from '../../mocks/models';
 
 @Component({
   selector: 'tp-roles-page',
-  imports: [FormsModule, PageHeader],
+  imports: [PageHeader],
   templateUrl: './roles-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RolesPage {
   private readonly api = inject(AdminMockApi);
-  protected readonly roles = roles;
+  protected readonly roleRows = defaultRoles;
   protected readonly domains = domains;
   protected readonly actions = actions;
   protected readonly selected = signal('Modérateur');
-  protected readonly roleName = signal('Modérateur');
-  protected readonly scope = signal('Global');
+  protected readonly selectedRole = computed(
+    () =>
+      this.roleRows.find((role) => role.name === this.selected()) ??
+      this.roleRows[0],
+  );
+  protected readonly roleIsLocked = computed(
+    () =>
+      this.selected() === 'Super administrateur' ||
+      this.selected() === 'Administrateur',
+  );
   protected readonly permissions = signal(initialPermissions('Modérateur'));
   protected readonly saved = signal(initialPermissions('Modérateur'));
+  protected readonly permissionsByRole = signal(
+    new Map(
+      defaultRoles.map((role) => [role.name, initialPermissions(role.name)]),
+    ),
+  );
   protected readonly toast = signal('');
   protected readonly changes = computed(
     () =>
@@ -36,15 +53,16 @@ export class RolesPage {
   );
   protected select(name: string): void {
     this.selected.set(name);
-    this.roleName.set(name);
-    this.scope.set(roles.find((role) => role.name === name)?.scope ?? 'Global');
-    this.permissions.set(initialPermissions(name));
-    this.saved.set(initialPermissions(name));
+    const permissions = new Set(
+      this.permissionsByRole().get(name) ?? initialPermissions(name),
+    );
+    this.permissions.set(permissions);
+    this.saved.set(new Set(permissions));
     this.toast.set('');
   }
   protected isReserved(domain: PermissionDomain): boolean {
     return (
-      this.selected() !== 'Super administrateur' &&
+      !this.roleIsLocked() &&
       (domain === 'Administrateurs' || domain === 'Rôles & permissions')
     );
   }
@@ -55,26 +73,30 @@ export class RolesPage {
     return this.permissions().has(`${domain}:${action}`);
   }
   protected toggle(domain: PermissionDomain, action: PermissionAction): void {
-    if (this.selected() === 'Super administrateur' || this.isReserved(domain))
-      return;
+    if (this.roleIsLocked() || this.isReserved(domain)) return;
     const next = new Set(this.permissions());
     const key = `${domain}:${action}`;
     if (next.has(key)) next.delete(key);
     else next.add(key);
     this.permissions.set(next);
+    this.toast.set('');
   }
   protected cancel(): void {
     this.permissions.set(new Set(this.saved()));
-    this.roleName.set(this.selected());
+    this.toast.set('');
   }
   protected async save(): Promise<void> {
+    if (this.roleIsLocked() || !this.changes()) return;
     await this.api.recordAction(
-      'Modification de permissions',
-      `${this.selected()} · ${this.changes()} droits`,
+      'Modification des permissions',
+      `${this.selected()} · ${this.changes()} changements`,
     );
+    this.permissionsByRole.update((current) => {
+      const next = new Map(current);
+      next.set(this.selected(), new Set(this.permissions()));
+      return next;
+    });
     this.saved.set(new Set(this.permissions()));
-    this.toast.set(
-      'Permissions enregistrées dans la maquette et action auditée.',
-    );
+    this.toast.set('Permissions enregistrées.');
   }
 }

@@ -42,6 +42,10 @@
   --text-3: #9baba8;
   --line: #354344;
   --line-soft: #303d3e;
+  --chart-previous: #6e807d;
+  --chart-fill: rgba(32, 181, 166, 0.12);
+  --chart-label: #79decf;
+  --surface-quiet: #192223;
   --tree: #667575;
   --selected-row: #263637;
   --success: #77ddba;

@@ -1,0 +1,56 @@
+<div class="relative min-w-0">
+  <button
+    #trigger
+    type="button"
+    class="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 text-left text-sm text-[var(--text-1)] shadow-sm transition hover:border-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] disabled:cursor-not-allowed disabled:opacity-50"
+    [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel()"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="optionId(0) + '-listbox'"
+    (keydown.arrowdown)="openAndFocus($event, 0)"
+    (keydown.arrowup)="openAndFocus($event, options().length - 1)"
+    (click)="toggle()"
+  >
+    <span class="truncate">{{ selected() || placeholder() }}</span>
+    <svg
+      lucideChevronDown
+      size="16"
+      class="shrink-0 text-[var(--text-2)]"
+      aria-hidden="true"
+    ></svg>
+  </button>
+  @if (open()) {
+  <div
+    class="absolute left-0 top-[calc(100%+6px)] z-50 max-h-64 w-full min-w-44 overflow-y-auto rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-1.5 shadow-xl"
+    role="listbox"
+    [id]="optionId(0) + '-listbox'"
+    [attr.aria-label]="ariaLabel()"
+  >
+    @for (option of options(); track option; let index = $index) {
+    <button
+      type="button"
+      class="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl px-3 text-left text-sm text-[var(--text-1)] transition hover:bg-[var(--surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
+      [id]="optionId(index)"
+      role="option"
+      [attr.aria-selected]="selected() === option"
+      (keydown.arrowdown)="moveFocus($event, index)"
+      (keydown.arrowup)="moveFocus($event, index)"
+      (keydown.home)="focusOption(0)"
+      (keydown.end)="focusOption(options().length - 1)"
+      (click)="choose(option)"
+    >
+      <span class="truncate">{{ option }}</span>
+      @if (selected() === option) {
+      <svg
+        lucideCheck
+        size="16"
+        class="shrink-0 text-[var(--brand)]"
+        aria-hidden="true"
+      ></svg>
+      }
+    </button>
+    }
+  </div>
+  }
+</div>

@@ -18,16 +18,25 @@
   <button type="button" class="link" (click)="load()">Réessayer</button>
 </div>
 }
-<div class="split">
+<div [class.split]="tab() !== tabs[2]">
   <div class="wide admin-stack">
     <section class="card">
       <div class="card-head">
-        <h2>Équipe d'administration</h2>
-        <span class="muted small">5 actifs · 1 désactivé</span>
+        <h2>
+          {{tab()==='Membres'?'Équipe
+          d’administration':tab()==='Invitations'?'Invitations en
+          attente':'Journal d’audit'}}
+        </h2>
+        <span class="muted small"
+          >{{tab()==='Membres'?members().length:tab()==='Invitations'?invitations().length:audit().length}}
+          entrées</span
+        >
       </div>
       @if(loading()){@for(item of [1,2,3,4];track item){
       <div class="skeleton" style="height: 53px; margin: 10px 0"></div>
-      }} @else if(tab()==="Journal d'audit"){@for(entry of audit();track
+      }} @else if(tab()==="Journal d'audit" && !audit().length){
+      <p class="muted">Aucune activité enregistrée.</p>
+      } @else if(tab()==="Journal d'audit"){@for(entry of audit();track
       entry.id){
       <div class="item-row">
         <span class="number muted small">{{entry.time}}</span
@@ -36,15 +45,17 @@
           ><small>{{entry.detail}}</small></span
         >
       </div>
-      }} @else if(tab()==='Invitations 2'){@for(invite of invitations();track
+      }} @else if(tab()==='Invitations' && !invitations().length){
+      <p class="muted">Aucune invitation en attente.</p>
+      } @else if(tab()==='Invitations'){@for(invite of invitations();track
       invite.name){
       <div class="item-row">
         <span class="avatar">{{invite.name.slice(0,2).toUpperCase()}}</span
         ><span class="grow"
           ><strong>{{invite.name}}</strong
           ><small
-            >{{invite.role}} · envoyée le {{invite.sent}} · expire le
-            {{invite.expires}}</small
+            >{{invite.role}} · {{invite.scope || 'Périmètre à définir'}} ·
+            envoyée le {{invite.sent}} · expire le {{invite.expires}}</small
           ></span
         ><button
           class="link"
@@ -55,30 +66,36 @@
           Annuler
         </button>
       </div>
-      }} @else{@for(row of members();track row.id){<button
+      }} @else if(!members().length){
+      <p class="muted">Aucun membre à afficher.</p>
+      } @else{@for(row of members();track row.id){<button
         type="button"
-        class="item-row"
+        class="item-row team-member-row"
         [class.selected]="selectedId()===row.id"
-        [style.opacity]="row.active?1:.6"
         (click)="select(row)"
       >
-        <span class="avatar"
+        <span class="avatar team-member-avatar"
           >{{row.name.split(' ')[0][0]}}{{row.name.split(' ')[1][0]}}</span
-        ><span class="grow"
+        ><span class="grow team-member-identity"
           ><strong>{{row.name}} {{row.id===1?'· vous':''}}</strong
           ><small>{{row.email}}</small></span
-        ><span class="badge">{{row.role}}</span
-        ><span class="muted small">{{row.scope}}</span
+        ><span class="badge team-member-role">{{row.role}}</span
+        ><span class="muted small team-member-scope">{{row.scope}}</span
         ><tp-status-dot
+          class="team-member-status"
           [label]="row.active?'Actif':'Désactivé'"
           [tone]="row.active?'success':'neutral'"
-        /><span class="muted small number">{{row.activity}}</span></button
-      >}}
+        /><span class="muted small number team-member-activity"
+          >{{row.activity}}</span
+        ></button
+      >}} @if(tab()==='Membres'){
       <p class="muted small" style="margin: 14px 0 0">
         Un accès désactivé ne supprime pas l'historique. Les utilisateurs de
         l'application ne figurent pas dans cette liste.
       </p>
+      }
     </section>
+    @if(tab()==='Membres'){
     <section class="card">
       <div class="card-head">
         <h2>Activité auditée</h2>
@@ -101,9 +118,11 @@
         Consulter le journal complet →
       </button>
     </section>
+    }
   </div>
+  @if(tab()!==tabs[2]){
   <aside class="narrow admin-stack">
-    @if(selected();as row){
+    @if(tab()==='Membres' && selected();as row){
     <section class="card">
       <h2>Accès de {{row.name}}</h2>
       <div class="toolbar" style="margin: 15px 0">
@@ -112,49 +131,60 @@
         ><span
           ><strong>{{row.role}}</strong
           ><small class="muted" style="display: block"
-            >{{row.scope}}</small
+            >{{row.role==='Administrateur'?'TalaPrix ·
+            global':row.scope}}</small
           ></span
         >
       </div>
       @if(row.id===1){
       <p class="notice">
-        C'est votre compte. Votre rôle et votre périmètre ne sont pas
-        modifiables ici.
+        Votre compte super administrateur est protégé. Son rôle et son périmètre
+        ne sont pas modifiables depuis la gestion de l’équipe.
       </p>
       }
-      <label class="field"
-        >Rôle<select
-          [ngModel]="editRole()"
-          (ngModelChange)="editRole.set($event)"
-          [disabled]="row.id===1"
+      <p class="notice notice-compact">
+        <strong>Authentification renforcée</strong>
+        <span
+          >Double authentification · état à vérifier auprès du service
+          d’authentification.</span
         >
-          <option>Administrateur</option>
-          <option>Modérateur</option>
-          <option>Analyste</option>
-        </select></label
-      ><label class="field" style="margin-top: 14px"
-        >Boutiques assignées<input
+      </p>
+      <p class="muted small">Dernière activité : {{row.activity}}</p>
+      @if(row.id!==1){
+      <label class="field"
+        >Rôle<tp-admin-select
+          [options]="roleOptions"
+          [selected]="editRole()"
+          ariaLabel="Rôle du membre"
+          (changed)="editRole.set($event)"
+      /></label>
+      @if(editRole()==='Administrateur') {
+      <div
+        class="mt-3 rounded-xl border border-[var(--line)] bg-[var(--surface-muted)] p-3"
+      >
+        <span class="text-xs text-[var(--text-2)]">Périmètre</span>
+        <p class="mt-1 text-sm font-medium text-[var(--text-1)]">
+          TalaPrix · global
+        </p>
+        <p class="mt-1 text-xs text-[var(--text-2)]">
+          Les administrateurs gèrent la plateforme, sans boutique propriétaire.
+        </p>
+      </div>
+      } @else {
+      <label class="field mt-3"
+        >Périmètre<input
           [ngModel]="editScope()"
           (ngModelChange)="editScope.set($event)"
-          [disabled]="row.id===1"
       /></label>
-      <p class="muted small" style="margin: 12px 0">
-        Le périmètre limite les boutiques gérées par ce membre.
-      </p>
+      }
       <div class="toolbar">
         <button
           class="btn btn-danger"
           type="button"
-          [disabled]="row.id===1"
           (click)="confirm.set(true)"
         >
           {{row.active?'Désactiver':'Réactiver'}}</button
-        ><button
-          class="btn btn-primary"
-          type="button"
-          [disabled]="row.id===1"
-          (click)="save()"
-        >
+        ><button class="btn btn-primary" type="button" (click)="save()">
           Enregistrer
         </button>
       </div>
@@ -173,9 +203,9 @@
           </button>
         </div>
       </div>
-      }
+      } }
     </section>
-    }
+    } @if(tab()==='Invitations'){
     <section class="card">
       <h2 style="margin-bottom: 14px">Inviter un membre</h2>
       <div class="form-stack">
@@ -184,44 +214,53 @@
             type="email"
             placeholder="prenom@talaprix.cd"
             [ngModel]="invitationEmail()"
-            (ngModelChange)="invitationEmail.set($event)" /></label
+            (ngModelChange)="invitationEmail.set($event); invitationSent.set(false); invitationError.set('')" /></label
         ><label class="field"
-          >Rôle<select
-            [ngModel]="invitationRole()"
-            (ngModelChange)="invitationRole.set($event)"
-          >
-            <option>Administrateur</option>
-            <option>Modérateur</option>
-            <option>Analyste</option>
-          </select></label
-        ><label class="field"
+          >Rôle<tp-admin-select
+            [options]="roleOptions"
+            [selected]="invitationRole()"
+            ariaLabel="Rôle à inviter"
+            (changed)="invitationRole.set($event); invitationSent.set(false)"
+        /></label>
+        @if(invitationRole()==='Administrateur') {
+        <div
+          class="rounded-xl border border-[var(--line)] bg-[var(--surface-muted)] p-3 text-sm text-[var(--text-2)]"
+        >
+          Périmètre :
+          <strong class="text-[var(--text-1)]">TalaPrix · global</strong>
+        </div>
+        } @else {
+        <label class="field"
           >Périmètre<input
             [ngModel]="invitationScope()"
-            (ngModelChange)="invitationScope.set($event)"
+            (ngModelChange)="invitationScope.set($event); invitationError.set(''); invitationSent.set(false)"
         /></label>
+        }
       </div>
       <p class="muted small" style="margin: 12px 0">
-        L'invitation expire après 7 jours. La double authentification sera
-        exigée à l'activation.
+        Le lien d’invitation reste valable 7 jours. L’accès s’active après
+        acceptation.
       </p>
-      <button type="button" class="btn btn-primary" (click)="invite()">
-        Envoyer l'invitation
-      </button>
-      @for(invite of invitations();track invite.name){
-      <div class="item-row">
-        <span class="grow"
-          ><strong>{{invite.name}}</strong
-          ><small>{{invite.role}} · expire le {{invite.expires}}</small></span
-        ><button
-          type="button"
-          class="link"
-          style="border: 0; background: transparent"
-          (click)="cancelInvite(invite.name)"
-        >
-          Annuler
-        </button>
-      </div>
+      @if(invitationError()){
+      <p class="dialog-error" role="alert">{{invitationError()}}</p>
       }
+      <div class="mt-3 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="invitationSent()"
+          (click)="invite()"
+        >
+          {{invitationSent() ? 'Envoyé' : 'Envoyer l’invitation'}}
+        </button>
+        @if(invitationSent()){
+        <span class="text-sm font-medium text-[var(--brand)]" role="status"
+          >Invitation ajoutée à la liste en attente.</span
+        >
+        }
+      </div>
     </section>
+    }
   </aside>
+  }
 </div>

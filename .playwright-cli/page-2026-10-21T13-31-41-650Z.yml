@@ -1,0 +1,91 @@
+- generic [ref=f14e5]:
+  - complementary [ref=f14e6]:
+    - button "Ouvrir ou fermer la navigation" [ref=f14e7] [cursor=pointer]
+    - navigation "Navigation principale" [ref=f14e9]:
+      - generic [ref=f14e10]: TalaPrix
+  - main [ref=f14e12]:
+    - generic [ref=f14e13]:
+      - generic [ref=f14e16]:
+        - generic [ref=f14e20]: Rechercher dans TalaPrix
+        - searchbox "Rechercher dans TalaPrix" [ref=f14e21]
+      - generic [ref=f14e22]:
+        - generic [ref=f14e23]:
+          - generic [ref=f14e26]: Thème du panneau
+          - combobox "Thème du panneau" [ref=f14e27] [cursor=pointer]:
+            - option "Système"
+            - option "Clair"
+            - option "Sombre" [selected]
+        - link "Notifications, 3 non lues" [ref=f14e28] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f14e32]: "3"
+    - generic [ref=f14e34]:
+      - generic "Catégories" [ref=f14e35]:
+        - generic [ref=f14e36]:
+          - generic [ref=f14e37]:
+            - heading "Catégories" [level=1] [ref=f14e38]
+            - paragraph [ref=f14e39]: Organisez le catalogue indépendamment des fiches produits.
+          - button "Ajouter une catégorie" [ref=f14e41] [cursor=pointer]
+      - generic [ref=f14e43]:
+        - generic [ref=f14e44]:
+          - generic [ref=f14e48]: Rechercher une catégorie
+          - searchbox "Rechercher une catégorie" [ref=f14e49]
+        - generic [ref=f14e50]: 4 catégorie(s) affichée(s) · démonstration
+      - region "Liste des catégories" [ref=f14e51]:
+        - generic [ref=f14e52]:
+          - heading "Catégories du catalogue" [level=2] [ref=f14e53]
+          - generic [ref=f14e54]: Une catégorie peut être retirée si aucun produit actif ne l’utilise.
+        - table [ref=f14e56]:
+          - rowgroup [ref=f14e57]:
+            - row [ref=f14e58]:
+              - cell [ref=f14e59]:
+                - strong [ref=f14e60]: Boulangerie
+              - cell "Pains et produits de boulangerie" [ref=f14e61]
+              - cell "4 produits actifs" [ref=f14e62]
+              - cell [ref=f14e63]:
+                - generic [ref=f14e64]:
+                  - button "Modifier Boulangerie" [ref=f14e65] [cursor=pointer]
+                  - button "Supprimer Boulangerie" [disabled] [ref=f14e69]
+            - row [ref=f14e73]:
+              - cell [ref=f14e74]:
+                - strong [ref=f14e75]: Épicerie
+              - cell "Alimentation et produits du quotidien" [ref=f14e76]
+              - cell "3 produits actifs" [ref=f14e77]
+              - cell [ref=f14e78]:
+                - generic [ref=f14e79]:
+                  - button "Modifier Épicerie" [ref=f14e80] [cursor=pointer]
+                  - button "Supprimer Épicerie" [disabled] [ref=f14e84]
+            - row [ref=f14e88]:
+              - cell [ref=f14e89]:
+                - strong [ref=f14e90]: Mode
+              - cell "Vêtements et chaussures" [ref=f14e91]
+              - cell "3 produits actifs" [ref=f14e92]
+              - cell [ref=f14e93]:
+                - generic [ref=f14e94]:
+                  - button "Modifier Mode" [ref=f14e95] [cursor=pointer]
+                  - button "Supprimer Mode" [disabled] [ref=f14e99]
+            - row [ref=f14e103]:
+              - cell [ref=f14e104]:
+                - strong [ref=f14e105]: Accessoires
+              - cell "Sacs et accessoires personnels" [ref=f14e106]
+              - cell "2 produits actifs" [ref=f14e107]
+              - cell [ref=f14e108]:
+                - generic [ref=f14e109]:
+                  - button "Modifier Accessoires" [ref=f14e110] [cursor=pointer]
+                  - button "Supprimer Accessoires" [disabled] [ref=f14e114]
+      - dialog "Nouvelle catégorie" [ref=f14e118]:
+        - generic [ref=f14e119]:
+          - generic [ref=f14e120]:
+            - heading "Nouvelle catégorie" [level=2] [ref=f14e121]
+            - button "Fermer" [active] [ref=f14e122] [cursor=pointer]
+          - generic [ref=f14e126]:
+            - generic [ref=f14e127]:
+              - generic [ref=f14e128]:
+                - text: Nom
+                - textbox "Nom" [ref=f14e129]
+              - generic [ref=f14e130]:
+                - text: Description
+                - textbox "Description" [ref=f14e131]
+            - paragraph [ref=f14e132]: Le renommage actualise les produits liés dans cette démonstration.
+            - generic [ref=f14e133]:
+              - button "Annuler" [ref=f14e134] [cursor=pointer]
+              - button "Enregistrer" [ref=f14e135] [cursor=pointer]

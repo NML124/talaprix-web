@@ -1,0 +1,28 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">VOTRE BOUTIQUE</p>
+    <h1>Profil de la boutique</h1>
+    <p>Identité publique et localisation de votre point de vente.</p>
+  </div>
+</header>
+<section class="card shop-settings-card">
+  <div class="card-head">
+    <h2>Informations de la boutique</h2>
+    <span class="status success">{{ store.data()?.shop?.status }}</span>
+  </div>
+  <div class="shop-detail-list">
+    <div>
+      <span>Nom public</span><strong>{{ store.data()?.shop?.name }}</strong>
+    </div>
+    <div>
+      <span>Adresse</span><strong>{{ store.data()?.shop?.address }}</strong>
+    </div>
+    <div>
+      <span>Commune</span><strong>{{ store.data()?.shop?.commune }}</strong>
+    </div>
+    <div>
+      <span>Dernière mise à jour</span
+      ><strong>{{ store.data()?.shop?.updatedAt }}</strong>
+    </div>
+  </div>
+</section>

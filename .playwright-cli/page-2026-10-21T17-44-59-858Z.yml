@@ -1,0 +1,289 @@
+- generic [ref=f5e62]:
+  - complementary [ref=f5e63]:
+    - button "Ouvrir ou fermer la navigation" [ref=f5e64] [cursor=pointer]
+    - navigation "Navigation principale" [ref=f5e66]:
+      - generic [ref=f5e67]: TalaPrix
+  - main [ref=f5e69]:
+    - generic [ref=f5e70]:
+      - generic [ref=f5e73]:
+        - generic [ref=f5e77]: Rechercher dans TalaPrix
+        - searchbox "Rechercher un produit, une boutique ou un module" [ref=f5e78]
+      - generic [ref=f5e79]:
+        - button "Thème du panneau" [ref=f5e85] [cursor=pointer]:
+          - generic [ref=f5e86]: Système
+        - button "Se déconnecter" [ref=f5e89] [cursor=pointer]
+        - link "Notifications, 3 non lues" [ref=f5e93] [cursor=pointer]:
+          - /url: /admin/notifications
+          - generic [aria-hidden] [ref=f5e97]: "3"
+    - generic [ref=f5e99]:
+      - generic "Bonjour Aline" [ref=f5e100]:
+        - generic [ref=f5e101]:
+          - generic [ref=f5e102]:
+            - heading "Bonjour Aline" [level=1] [ref=f5e103]
+            - paragraph [ref=f5e104]: 34 actions vous attendent. Voici l'état de TalaPrix en septembre.
+          - generic [ref=f5e105]:
+            - button "Septembre 2026 ▾" [ref=f5e106] [cursor=pointer]
+            - link "Ajouter un produit" [ref=f5e107] [cursor=pointer]:
+              - /url: /admin/catalogue
+      - region "Indicateurs de septembre" [ref=f5e109]:
+        - generic [ref=f5e110]:
+          - generic [ref=f5e111]: Produits publiés
+          - strong [ref=f5e112]: 2 486
+          - generic [ref=f5e113]: +64 ce mois-ci
+        - generic [ref=f5e114]:
+          - generic [ref=f5e115]: Boutiques partenaires
+          - strong [ref=f5e116]: "28"
+          - generic [ref=f5e117]: 24 actives · 4 à compléter
+        - generic [ref=f5e118]:
+          - generic [ref=f5e119]: Utilisateurs actifs
+          - strong [ref=f5e120]: 8 412
+          - generic [ref=f5e121]: +12,4 % sur 30 jours
+        - generic [ref=f5e122]:
+          - generic [ref=f5e123]: Prix à jour
+          - strong [ref=f5e124]: 92,5 %
+          - generic [ref=f5e125]: 2 300 sur 2 486 publiés
+      - region [ref=f5e126]:
+        - generic [ref=f5e128]:
+          - heading "Intérêt pour les vendeurs" [level=2] [ref=f5e129]
+          - paragraph [ref=f5e130]: 30 derniers jours
+        - generic [ref=f5e131]:
+          - generic [ref=f5e132]:
+            - generic [ref=f5e133]: Contacter le vendeur
+            - strong [ref=f5e134]: "1264"
+            - generic [ref=f5e135]: personnes distinctes
+          - generic [ref=f5e136]:
+            - generic [ref=f5e137]: Localiser le vendeur
+            - strong [ref=f5e138]: "948"
+            - generic [ref=f5e139]: personnes distinctes
+          - generic [ref=f5e140]:
+            - generic [ref=f5e141]: Ajouter une offre en favoris
+            - strong [ref=f5e142]: "2371"
+            - generic [ref=f5e143]: personnes distinctes
+        - table [ref=f5e145]:
+          - rowgroup [ref=f5e146]:
+            - row [ref=f5e147]:
+              - columnheader "Boutique" [ref=f5e148]
+              - columnheader "Contacts" [ref=f5e149]
+              - columnheader "Itinéraires" [ref=f5e150]
+              - columnheader "Favoris" [ref=f5e151]
+          - rowgroup [ref=f5e152]:
+            - row [ref=f5e153]:
+              - cell [ref=f5e154]:
+                - strong [ref=f5e155]: DRC Mart
+              - cell "214" [ref=f5e156]
+              - cell "168" [ref=f5e157]
+              - cell "392" [ref=f5e158]
+            - row [ref=f5e159]:
+              - cell [ref=f5e160]:
+                - strong [ref=f5e161]: UAC Kintambo
+              - cell "187" [ref=f5e162]
+              - cell "144" [ref=f5e163]
+              - cell "311" [ref=f5e164]
+            - row [ref=f5e165]:
+              - cell [ref=f5e166]:
+                - strong [ref=f5e167]: Dickcom Shop
+              - cell "96" [ref=f5e168]
+              - cell "72" [ref=f5e169]
+              - cell "153" [ref=f5e170]
+            - row [ref=f5e171]:
+              - cell [ref=f5e172]:
+                - strong [ref=f5e173]: Atelier Kin
+              - cell "84" [ref=f5e174]
+              - cell "61" [ref=f5e175]
+              - cell "143" [ref=f5e176]
+        - paragraph [ref=f5e177]: Chaque total global déduplique les personnes entre boutiques. Les lignes par boutique ne s’additionnent pas.
+      - generic [ref=f5e178]:
+        - generic [ref=f5e179]:
+          - generic [ref=f5e180]:
+            - heading "Économies estimées" [level=2] [ref=f5e181]
+            - generic [ref=f5e182]:
+              - strong [ref=f5e183]: 32 640
+              - text: consultations ce mois-ci
+          - generic [ref=f5e184]:
+            - strong [ref=f5e185]: 12,8 M FC
+            - generic [ref=f5e186]: ↑ 18,5 % vs août
+          - img "Économies estimées de 3,1 millions de FC en avril à 12,8 millions en septembre 2026, supérieures à la période précédente." [ref=f5e187]:
+            - generic [ref=f5e188]:
+              - generic "3.1 millions de FC" [ref=f5e189]
+              - generic [ref=f5e191]: Avr.
+            - generic [ref=f5e192]:
+              - generic "4.6 millions de FC" [ref=f5e193]
+              - generic [ref=f5e195]: Mai
+            - generic [ref=f5e196]:
+              - generic "6.2 millions de FC" [ref=f5e197]
+              - generic [ref=f5e199]: Juin
+            - generic [ref=f5e200]:
+              - generic "8.4 millions de FC" [ref=f5e201]
+              - generic [ref=f5e203]: Juil.
+            - generic [ref=f5e204]:
+              - generic "10.8 millions de FC" [ref=f5e205]
+              - generic [ref=f5e207]: Août
+            - generic [ref=f5e208]:
+              - generic "12.8 millions de FC" [ref=f5e209]
+              - generic [ref=f5e211]: Sept.
+          - generic [ref=f5e212]:
+            - generic [ref=f5e213]: 2026 Période précédente
+            - generic [ref=f5e216]: Estimation sur les produits consultés, sans achat confirmé.
+        - generic [ref=f5e217]:
+          - generic [ref=f5e218]:
+            - heading "À traiter" [level=2] [ref=f5e219]
+            - generic [ref=f5e220]: 34 actions
+          - link "24 Propositions de prix 7 variations supérieures à 20 %" [ref=f5e221] [cursor=pointer]:
+            - /url: /admin/moderation
+            - strong [ref=f5e222]: "24"
+            - generic [ref=f5e223]:
+              - strong [ref=f5e224]: Propositions de prix
+              - generic [ref=f5e225]: 7 variations supérieures à 20 %
+          - link "6 Avis signalés À vérifier avant publication" [ref=f5e228] [cursor=pointer]:
+            - /url: /admin/moderation
+            - strong [ref=f5e229]: "6"
+            - generic [ref=f5e230]:
+              - strong [ref=f5e231]: Avis signalés
+              - generic [ref=f5e232]: À vérifier avant publication
+          - link "4 Boutiques à compléter Adresse ou coordonnées manquantes" [ref=f5e235] [cursor=pointer]:
+            - /url: /admin/boutiques
+            - strong [ref=f5e236]: "4"
+            - generic [ref=f5e237]:
+              - strong [ref=f5e238]: Boutiques à compléter
+              - generic [ref=f5e239]: Adresse ou coordonnées manquantes
+          - generic [ref=f5e242]:
+            - generic [ref=f5e243]: 186 prix non revus depuis 30 jours
+            - paragraph [ref=f5e244]: "Priorité : alimentation et boissons"
+            - link "Ouvrir les prix périmés →" [ref=f5e245] [cursor=pointer]:
+              - /url: /admin/moderation
+      - generic [ref=f5e246]:
+        - generic [ref=f5e247]:
+          - generic [ref=f5e249]:
+            - heading "Zones les plus actives" [level=2] [ref=f5e250]
+            - paragraph [ref=f5e251]: Communes uniquement · septembre 2026
+          - generic [ref=f5e252]:
+            - generic [ref=f5e253]:
+              - generic [ref=f5e254]: "1"
+              - generic [ref=f5e255]:
+                - strong [ref=f5e256]: Gombe
+                - generic [ref=f5e257]: Kinshasa
+              - strong [ref=f5e258]: 2 810
+            - generic [ref=f5e259]:
+              - generic [ref=f5e260]: "2"
+              - generic [ref=f5e261]:
+                - strong [ref=f5e262]: Limete
+                - generic [ref=f5e263]: Kinshasa
+              - strong [ref=f5e264]: 1 934
+            - generic [ref=f5e265]:
+              - generic [ref=f5e266]: "3"
+              - generic [ref=f5e267]:
+                - strong [ref=f5e268]: Ngaliema
+                - generic [ref=f5e269]: Kinshasa
+              - strong [ref=f5e270]: 1 420
+            - generic [ref=f5e271]:
+              - generic [ref=f5e272]: "4"
+              - generic [ref=f5e273]:
+                - strong [ref=f5e274]: Kasa-Vubu
+                - generic [ref=f5e275]: Kinshasa
+              - strong [ref=f5e276]: "916"
+          - paragraph [ref=f5e277]: Utilisateurs actifs agrégés par commune. Aucune adresse ou position individuelle.
+        - generic [ref=f5e278]:
+          - generic [ref=f5e280]:
+            - heading "Prix les plus bas" [level=2] [ref=f5e281]
+            - paragraph [ref=f5e282]: Boutiques · échantillon comparable
+          - generic [ref=f5e283]:
+            - generic [ref=f5e284]:
+              - generic [ref=f5e285]: "1"
+              - generic [ref=f5e286]:
+                - strong [ref=f5e287]: Kin Marché
+                - generic [ref=f5e288]: Ex. Pain de mie
+              - strong [ref=f5e289]: "2"
+            - generic [ref=f5e290]:
+              - generic [ref=f5e291]: "2"
+              - generic [ref=f5e292]:
+                - strong [ref=f5e293]: Dickcom Shop
+                - generic [ref=f5e294]: Ex. Canon G2410
+              - strong [ref=f5e295]: "1"
+            - generic [ref=f5e296]:
+              - generic [ref=f5e297]: "3"
+              - generic [ref=f5e298]:
+                - strong [ref=f5e299]: Maison Galaxy
+                - generic [ref=f5e300]: Ex. Baskets Adidas
+              - strong [ref=f5e301]: "1"
+            - generic [ref=f5e302]:
+              - generic [ref=f5e303]: "4"
+              - generic [ref=f5e304]:
+                - strong [ref=f5e305]: S&K
+                - generic [ref=f5e306]: Ex. Chips Lay's
+              - strong [ref=f5e307]: "1"
+          - paragraph [ref=f5e308]: Nombre de prix minimum sur 5 produits identiques, à unité et devise égales. Ex æquo inclus.
+      - generic [ref=f5e309]:
+        - generic [ref=f5e310]:
+          - generic [ref=f5e311]:
+            - heading "Produits tendances" [level=2] [ref=f5e312]
+            - group "Filtrer la liste" [ref=f5e314]:
+              - button "Favoris" [pressed] [ref=f5e315] [cursor=pointer]
+              - button "Consultations" [ref=f5e316] [cursor=pointer]
+          - paragraph [ref=f5e317]: Favoris et prix → faites glisser le tableau
+          - region "Produits tendances, tableau défilant horizontalement" [ref=f5e318]:
+            - table [ref=f5e319]:
+              - rowgroup [ref=f5e320]:
+                - row [ref=f5e321]:
+                  - columnheader "Produit" [ref=f5e322]
+                  - columnheader "Favoris" [ref=f5e323]
+                  - columnheader "Prix min." [ref=f5e324]
+              - rowgroup [ref=f5e325]:
+                - row [ref=f5e326]:
+                  - cell "Pain de mie Boulangerie · 500 g" [ref=f5e327]:
+                    - generic [ref=f5e329]:
+                      - strong [ref=f5e330]: Pain de mie
+                      - generic [ref=f5e331]: Boulangerie · 500 g
+                  - cell [ref=f5e332]:
+                    - strong [ref=f5e333]: "428"
+                  - cell "2 500 FC" [ref=f5e336]
+                - row [ref=f5e337]:
+                  - cell "Chips Lay's Épicerie · 90 g" [ref=f5e338]:
+                    - generic [ref=f5e340]:
+                      - strong [ref=f5e341]: Chips Lay's
+                      - generic [ref=f5e342]: Épicerie · 90 g
+                  - cell [ref=f5e343]:
+                    - strong [ref=f5e344]: "316"
+                  - cell "3 800 FC" [ref=f5e347]
+                - row [ref=f5e348]:
+                  - cell "Baskets Adidas Mode · paire" [ref=f5e349]:
+                    - generic [ref=f5e351]:
+                      - strong [ref=f5e352]: Baskets Adidas
+                      - generic [ref=f5e353]: Mode · paire
+                  - cell [ref=f5e354]:
+                    - strong [ref=f5e355]: "287"
+                  - cell "185 000 FC" [ref=f5e358]
+                - row [ref=f5e359]:
+                  - cell "Nike Air Force 1 Mode · paire" [ref=f5e360]:
+                    - generic [ref=f5e362]:
+                      - strong [ref=f5e363]: Nike Air Force 1
+                      - generic [ref=f5e364]: Mode · paire
+                  - cell [ref=f5e365]:
+                    - strong [ref=f5e366]: "241"
+                  - cell "220 000 FC" [ref=f5e369]
+        - generic [ref=f5e370]:
+          - generic [ref=f5e371]:
+            - heading "Activité de l'équipe" [level=2] [ref=f5e372]
+            - generic [ref=f5e373]: Aujourd'hui
+          - generic [ref=f5e374]:
+            - generic [ref=f5e375]:
+              - time [ref=f5e376]: 09:42
+              - generic [ref=f5e377]:
+                - strong [ref=f5e378]: Joël Kabeya
+                - generic [ref=f5e379]: Validation du prix · 2 500 FC · Pain de mie · Kin Marché
+            - generic [ref=f5e380]:
+              - time [ref=f5e381]: 09:18
+              - generic [ref=f5e382]:
+                - strong [ref=f5e383]: Brigitte Ndala
+                - generic [ref=f5e384]: Publication de promotion · S&K · Chips Lay's
+            - generic [ref=f5e385]:
+              - time [ref=f5e386]: 08:56
+              - generic [ref=f5e387]:
+                - strong [ref=f5e388]: Aline Mukendi
+                - generic [ref=f5e389]: Invitation · rôle Analyste · Grâce Mbuyi
+            - generic [ref=f5e390]:
+              - time [ref=f5e391]: 08:34
+              - generic [ref=f5e392]:
+                - strong [ref=f5e393]: Joël Kabeya
+                - generic [ref=f5e394]: Masquage d’avis · motif archivé · Pain de mie
+          - link "Journal d'audit →" [ref=f5e395] [cursor=pointer]:
+            - /url: /admin/equipe?tab=audit

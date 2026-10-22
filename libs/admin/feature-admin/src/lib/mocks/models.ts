@@ -64,6 +64,7 @@ export interface User {
   status: 'Actif' | 'Suspendu';
   initials: string;
 }
+export type CommunityUserView = Omit<User, 'phone'> & { phoneMasked: string };
 export interface AuditEntry {
   id: number;
   actor: string;
@@ -79,6 +80,7 @@ export interface AdminSession {
 export interface Invitation {
   name: string;
   role: string;
+  scope?: string;
   sent: string;
   expires: string;
 }
@@ -90,6 +92,7 @@ export interface Campaign {
   date: string;
   status: string;
   action: string;
+  message?: string;
 }
 export type PermissionDomain =
   | 'Catalogue'

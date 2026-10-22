@@ -4,76 +4,35 @@
 >
 </tp-admin-page-header>
 
-<section class="card scrape-run-card" aria-labelledby="run-title">
-  <div class="scrape-run-head">
-    <div>
-      <p class="eyebrow">Flux de traitement</p>
-      <h2 id="run-title">De la collecte à la revue humaine</h2>
-      <p class="muted small">
-        Apify collecte → données préparées → Gemini suggère → l’admin décide
-      </p>
-    </div>
-    <span class="badge success">Aucune publication automatique</span>
-  </div>
-  <tp-scraping-network-animation />
-  <ol class="scrape-stage-list">
-    <li class="complete">
-      <span class="scrape-stage-index">1</span>
-      <div>
-        <strong>Collecte Apify</strong
-        ><small>Observations enregistrées dans le schéma privé</small>
-      </div>
-    </li>
-    <li class="complete">
-      <span class="scrape-stage-index">2</span>
-      <div>
-        <strong>Préparation</strong
-        ><small>Déduplication et candidats vendeur/offre</small>
-      </div>
-    </li>
-    <li class="complete">
-      <span class="scrape-stage-index">3</span>
-      <div>
-        <strong>Analyse Gemini</strong
-        ><small>Suggestions reliées à la preuve collectée</small>
-      </div>
-    </li>
-    <li class="current">
-      <span class="scrape-stage-index">4</span>
-      <div>
-        <strong>Revue humaine</strong
-        ><small>Décision auditée, sans publication au catalogue</small>
-      </div>
-    </li>
-  </ol>
-  <p class="muted small scrape-demo-note">
-    L’animation illustre le parcours ; les candidats et décisions ci-dessous
-    proviennent de l’API privée.
-  </p>
-</section>
-
-@if(notice()){
+@if(!error() && notice()){
 <div class="toast" role="status">{{notice()}}</div>
 } @if(error()){
 <div class="notice notice-compact" role="alert">
   <strong>Chargement ou action impossible</strong><span>{{error()}}</span>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    (click)="load()"
+    [disabled]="loading()"
+  >
+    Actualiser
+  </button>
 </div>
-}
-
+} @if(!error()){
 <section class="scrape-kpis" aria-label="Résumé des candidats affichés">
-  <article class="card">
+  <article>
     <small>Sur cette page</small><strong>{{rows().length}}</strong
     ><span>candidats reçus de l’API</span>
   </article>
-  <article class="card">
+  <article>
     <small>Offres</small><strong>{{offerCount()}}</strong
     ><span>à rapprocher ou vérifier</span>
   </article>
-  <article class="card">
+  <article>
     <small>Vendeurs</small><strong>{{sellerCount()}}</strong
     ><span>à identifier ou contacter</span>
   </article>
-  <article class="card">
+  <article>
     <small>Prix à confirmer</small><strong>{{unknownPriceCount()}}</strong
     ><span>prix/devise absents conservés comme tels</span>
   </article>
@@ -206,6 +165,54 @@
   </div>
 </section>
 
+<section class="card scrape-run-card" aria-labelledby="run-title">
+  <div class="scrape-run-head">
+    <div>
+      <p class="eyebrow">Flux de traitement</p>
+      <h2 id="run-title">De la collecte à la revue humaine</h2>
+      <p class="muted small">
+        Apify collecte → données préparées → Gemini suggère → l’admin décide
+      </p>
+    </div>
+    <span class="scrape-review-policy">Aucune publication automatique</span>
+  </div>
+  <tp-scraping-network-animation />
+  <ol class="scrape-stage-list">
+    <li class="complete">
+      <span class="scrape-stage-index">1</span>
+      <div>
+        <strong>Collecte Apify</strong
+        ><small>Observations enregistrées dans le schéma privé</small>
+      </div>
+    </li>
+    <li class="complete">
+      <span class="scrape-stage-index">2</span>
+      <div>
+        <strong>Préparation</strong
+        ><small>Déduplication et candidats vendeur/offre</small>
+      </div>
+    </li>
+    <li class="complete">
+      <span class="scrape-stage-index">3</span>
+      <div>
+        <strong>Analyse Gemini</strong
+        ><small>Suggestions reliées à la preuve collectée</small>
+      </div>
+    </li>
+    <li class="current">
+      <span class="scrape-stage-index">4</span>
+      <div>
+        <strong>Revue humaine</strong
+        ><small>Décision auditée, sans publication au catalogue</small>
+      </div>
+    </li>
+  </ol>
+  <p class="muted small scrape-demo-note">
+    L’animation illustre le parcours ; les candidats et décisions ci-dessous
+    proviennent de l’API privée.
+  </p>
+</section>
+
 @if(detailLoading()){
 <div class="notice notice-compact" role="status">
   Chargement du candidat et des médias privés…
@@ -217,4 +224,4 @@
   (closed)="selected.set(null)"
   (decided)="decide($event)"
 />
-}
+} }

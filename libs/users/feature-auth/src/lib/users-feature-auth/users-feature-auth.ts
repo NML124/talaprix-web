@@ -2,14 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  effect,
   inject,
+  isDevMode,
   signal,
   viewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRight, LucideMail } from '@lucide/angular';
 import { SupabaseClientService } from '@talaprix/shared/data-access';
+import { AuthSessionStore } from '@talaprix/users/data-access';
+import type { UserIdentity, UserRole } from '@talaprix/users/domain';
+import { AuthBrandPanel } from './auth-brand-panel';
 
 @Component({
   selector: 'lib-users-feature-auth',
@@ -19,12 +24,21 @@ import { SupabaseClientService } from '@talaprix/shared/data-access';
     LucideArrowLeft,
     LucideArrowRight,
     LucideMail,
+    AuthBrandPanel,
   ],
   templateUrl: './users-feature-auth.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersFeatureAuth {
   readonly #supabase = inject(SupabaseClientService);
+  readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
+  readonly #session = inject(AuthSessionStore);
+  readonly #privatePortal = this.#route.snapshot.data['privatePortal'] === true;
+  protected readonly privatePortal = this.#privatePortal;
+  protected readonly googleSignInVisible = !this.#privatePortal;
+  protected readonly demoCredentialsVisible =
+    isDevMode() && this.#privatePortal;
   protected readonly otpInputs =
     viewChildren<ElementRef<HTMLInputElement>>('otpInput');
   protected email = '';
@@ -33,6 +47,35 @@ export class UsersFeatureAuth {
   protected readonly isSubmitting = signal(false);
   protected readonly error = signal('');
   protected readonly info = signal('');
+
+  protected resetEmail(): void {
+    this.otpRequested.set(false);
+    this.otpDigits.set(Array(6).fill(''));
+    this.error.set('');
+    this.info.set('');
+  }
+
+  constructor() {
+    effect(() => {
+      if (!this.#privatePortal) return;
+      const roles = this.#session.user()?.roles ?? [];
+      const isAdmin = roles.some((role) =>
+        ['admin', 'catalog-manager', 'scraper-operator'].includes(role),
+      );
+      const isShop = roles.includes('shop');
+      if (!isAdmin && !isShop) return;
+      const requested = this.#route.snapshot.queryParamMap.get('returnUrl');
+      const safeRequested =
+        requested &&
+        !requested.startsWith('//') &&
+        (isAdmin
+          ? /^\/admin(?:\/|\?|$)/.test(requested)
+          : /^\/shop(?:\/|\?|$)/.test(requested));
+      void this.#router.navigateByUrl(
+        safeRequested ? requested : isAdmin ? '/admin' : '/shop',
+      );
+    });
+  }
 
   protected async submit(): Promise<void> {
     this.error.set('');
@@ -49,6 +92,21 @@ export class UsersFeatureAuth {
       return;
     }
 
+    if (this.demoCredentialsVisible) {
+      if (!this.demoRoleForEmail(email)) {
+        this.error.set(
+          'Utilisez un identifiant de démonstration affiché ci-dessous.',
+        );
+        return;
+      }
+      this.email = email;
+      this.otpDigits.set(Array(6).fill(''));
+      this.otpRequested.set(true);
+      this.info.set(`Mode démo local : code de test prêt pour ${email}.`);
+      queueMicrotask(() => this.focusOtpInput(0));
+      return;
+    }
+
     const client = this.#supabase.client;
     if (!client) {
       this.error.set(
@@ -61,7 +119,7 @@ export class UsersFeatureAuth {
     const { error } = await client.auth.signInWithOtp({
       email,
       options: {
-        shouldCreateUser: true,
+        shouldCreateUser: !this.#privatePortal,
         emailRedirectTo: this.authRedirectUrl(),
       },
     });
@@ -82,6 +140,28 @@ export class UsersFeatureAuth {
     const otp = this.otpDigits().join('');
     if (!/^\d{6}$/.test(otp)) {
       this.error.set('Saisissez le code à 6 chiffres reçu par email.');
+      return;
+    }
+    const email = this.email.trim().toLowerCase();
+    if (this.demoCredentialsVisible) {
+      const role = this.demoRoleForEmail(email);
+      if (!role || otp !== '123456') {
+        this.otpDigits.set(Array(6).fill(''));
+        this.error.set('Identifiant ou code de démonstration invalide.');
+        queueMicrotask(() => this.focusOtpInput(0));
+        return;
+      }
+      const identity: UserIdentity = {
+        id: `local-demo-${role}`,
+        email,
+        displayName:
+          role === 'admin'
+            ? 'Admin de démonstration'
+            : 'Boutique de démonstration',
+        roles: [role],
+      };
+      this.#session.authenticate(identity);
+      this.info.set('Accès de démonstration local activé.');
       return;
     }
     const client = this.#supabase.client;
@@ -151,8 +231,20 @@ export class UsersFeatureAuth {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
   }
 
+  private demoRoleForEmail(email: string): UserRole | null {
+    if (!this.demoCredentialsVisible) return null;
+    if (email === 'admin.demo@talaprix.cd') return 'admin';
+    if (email === 'shop.demo@talaprix.cd') return 'shop';
+    return null;
+  }
+
   private authRedirectUrl(): string {
-    return new URL('/auth', window.location.origin).toString();
+    const url = new URL('/auth', window.location.origin);
+    if (this.#privatePortal) {
+      const returnUrl = this.#route.snapshot.queryParamMap.get('returnUrl');
+      if (returnUrl) url.searchParams.set('returnUrl', returnUrl);
+    }
+    return url.toString();
   }
 
   private focusOtpInput(index: number): void {

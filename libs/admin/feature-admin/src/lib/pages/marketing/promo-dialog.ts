@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import type { Promotion } from '../../mocks/marketing';
 import { imagePath } from '../../mocks/catalogue';
 import { AdminDialog } from '../../ui/admin-dialog';
+import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-promo-dialog',
-  imports: [AdminDialog, FormsModule],
+  imports: [AdminDialog, FormsModule, AdminSelect],
   templateUrl: './promo-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

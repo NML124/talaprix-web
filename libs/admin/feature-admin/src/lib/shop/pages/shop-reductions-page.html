@@ -1,0 +1,86 @@
+<header class="page-header shop-page-header">
+  <div>
+    <p class="shop-eyebrow">PRIX DES OFFRES</p>
+    <h1>Promotions</h1>
+    <p>Les offres à prix promotionnel, indépendamment des mises en avant.</p>
+  </div>
+</header>
+<section class="shop-status-strip shop-explainer">
+  <div>
+    <strong>Une promotion modifie temporairement le prix d’une offre.</strong>
+  </div>
+  <p>
+    Une mise en avant concerne la visibilité publicitaire et se suit dans
+    l’onglet Visibilité.
+  </p>
+</section>
+<section class="card">
+  <div class="card-head">
+    <h2>Promotions de la boutique</h2>
+    <span class="muted small">{{ promotions().length }} enregistrées</span>
+  </div>
+  @if (promotions().length) {
+  <div class="table-wrap max-[560px]:hidden">
+    <table class="shop-table">
+      <thead>
+        <tr>
+          <th>Offre</th>
+          <th>Prix habituel</th>
+          <th>Prix réduit</th>
+          <th>Période</th>
+          <th>État</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of visiblePromotions(); track row.id) {
+        <tr>
+          <td><strong>{{ row.product }}</strong></td>
+          <td class="number shop-old-price">{{ price(row.oldPrice) }}</td>
+          <td class="number shop-new-price">{{ price(row.newPrice) }}</td>
+          <td>{{ row.period }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.success]="row.status === 'Active'"
+              [class.info]="row.status === 'Prévue'"
+              >{{ row.status }}</span
+            >
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="hidden max-[560px]:grid">
+    @for (row of visiblePromotions(); track row.id) {
+    <article
+      class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 border-b border-[var(--line-soft)] py-3"
+    >
+      <strong class="min-w-0">{{row.product}}</strong>
+      <span
+        class="badge self-start"
+        [class.success]="row.status === 'Active'"
+        [class.info]="row.status === 'Prévue'"
+        >{{row.status}}</span
+      >
+      <span class="shop-old-price number">{{price(row.oldPrice)}}</span>
+      <strong class="shop-new-price number text-right"
+        >{{price(row.newPrice)}}</strong
+      >
+      <small class="col-span-2 text-[var(--text-2)]">{{row.period}}</small>
+    </article>
+    }
+  </div>
+  <tp-admin-pagination
+    [total]="promotions().length"
+    [page]="currentPage()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  } @else {
+  <div class="shop-empty">
+    <strong>Aucune promotion</strong>
+    <p>Les promotions créées sur vos offres apparaîtront ici.</p>
+  </div>
+  }
+</section>

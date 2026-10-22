@@ -1,0 +1,94 @@
+- generic [ref=f2e5]:
+  - complementary [ref=f2e6]:
+    - button "Afficher la navigation boutique" [ref=f2e7] [cursor=pointer]
+    - navigation "Navigation boutique" [ref=f2e9]:
+      - generic [ref=f2e10]: TalaPrix
+  - main [ref=f2e12]:
+    - generic [ref=f2e13]:
+      - generic [ref=f2e14]:
+        - strong [ref=f2e15]: Espace boutique
+        - generic [ref=f2e16]: Données de démonstration
+      - generic [ref=f2e17]:
+        - generic [ref=f2e20]: Thème du panneau
+        - combobox "Thème du panneau" [ref=f2e21] [cursor=pointer]:
+          - option "Système"
+          - option "Clair"
+          - option "Sombre" [selected]
+    - generic [ref=f2e23]:
+      - generic [ref=f2e24]:
+        - generic [ref=f2e25]:
+          - paragraph [ref=f2e26]: PERFORMANCE
+          - heading "Analyses" [level=1] [ref=f2e27]
+          - paragraph [ref=f2e28]: Une lecture simple des interactions avec vos offres.
+        - group "Période" [ref=f2e29]:
+          - button "7 jours" [ref=f2e30] [cursor=pointer]
+          - button "30 jours" [pressed] [ref=f2e31] [cursor=pointer]
+      - generic [ref=f2e32]:
+        - strong [ref=f2e34]: Chiffres de démonstration
+        - paragraph [ref=f2e35]: Les données de cette interface sont fictives ; les métriques réelles seront raccordées à l’API.
+      - generic [ref=f2e36]:
+        - generic [ref=f2e37]:
+          - generic [ref=f2e38]: Consultations · 30 jours
+          - strong [ref=f2e39]: "961"
+          - generic [ref=f2e40]: Pages d’offre consultées
+        - generic [ref=f2e41]:
+          - generic [ref=f2e42]: Contacts vendeur
+          - strong [ref=f2e43]: "84"
+          - generic [ref=f2e44]: Personnes distinctes
+        - generic [ref=f2e45]:
+          - generic [ref=f2e46]: Itinéraires ouverts
+          - strong [ref=f2e47]: "61"
+          - generic [ref=f2e48]: Personnes distinctes
+        - generic [ref=f2e49]:
+          - generic [ref=f2e50]: Ajouts en favoris
+          - strong [ref=f2e51]: "143"
+          - generic [ref=f2e52]: Personnes distinctes
+      - generic [ref=f2e53]:
+        - generic [ref=f2e54]:
+          - heading "Engagement par offre" [level=2] [ref=f2e55]
+          - generic [ref=f2e56]: Démonstration · 30 jours
+        - table [ref=f2e58]:
+          - rowgroup [ref=f2e59]:
+            - row [ref=f2e60]:
+              - columnheader "Offre" [ref=f2e61]
+              - columnheader "Consultations" [ref=f2e62]
+              - columnheader "Contacts" [ref=f2e63]
+              - columnheader "Itinéraires" [ref=f2e64]
+              - columnheader "Favoris" [ref=f2e65]
+          - rowgroup [ref=f2e66]:
+            - row [ref=f2e67]:
+              - cell [ref=f2e68]:
+                - strong [ref=f2e69]: Galaxy A55 · 128 Go
+              - cell "417" [ref=f2e70]
+              - cell "42" [ref=f2e71]
+              - cell "30" [ref=f2e72]
+              - cell "71" [ref=f2e73]
+            - row [ref=f2e74]:
+              - cell [ref=f2e75]:
+                - strong [ref=f2e76]: AirPods Pro 3
+              - cell "284" [ref=f2e77]
+              - cell "27" [ref=f2e78]
+              - cell "19" [ref=f2e79]
+              - cell "43" [ref=f2e80]
+            - row [ref=f2e81]:
+              - cell [ref=f2e82]:
+                - strong [ref=f2e83]: Imprimante Canon G2410
+              - cell "168" [ref=f2e84]
+              - cell "16" [ref=f2e85]
+              - cell "14" [ref=f2e86]
+              - cell "29" [ref=f2e87]
+            - row [ref=f2e88]:
+              - cell [ref=f2e89]:
+                - strong [ref=f2e90]: Chargeur USB-C 30 W
+              - cell "92" [ref=f2e91]
+              - cell "7" [ref=f2e92]
+              - cell "4" [ref=f2e93]
+              - cell "18" [ref=f2e94]
+            - row [ref=f2e95]:
+              - cell [ref=f2e96]:
+                - strong [ref=f2e97]: Casque JBL Tune 520BT
+              - cell "0" [ref=f2e98]
+              - cell "0" [ref=f2e99]
+              - cell "0" [ref=f2e100]
+              - cell "0" [ref=f2e101]
+        - paragraph [ref=f2e102]: Chaque colonne « personnes » déduplique au niveau de l’offre et de la période. Les lignes ne s’additionnent pas pour obtenir des personnes uniques dans toute la boutique.
