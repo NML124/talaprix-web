@@ -4,6 +4,7 @@ import {
   ElementRef,
   effect,
   inject,
+  isDevMode,
   signal,
   viewChildren,
 } from '@angular/core';
@@ -12,6 +13,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRight, LucideMail } from '@lucide/angular';
 import { SupabaseClientService } from '@talaprix/shared/data-access';
 import { AuthSessionStore } from '@talaprix/users/data-access';
+import type { UserIdentity, UserRole } from '@talaprix/users/domain';
+import { AuthBrandPanel } from './auth-brand-panel';
 
 @Component({
   selector: 'lib-users-feature-auth',
@@ -21,6 +24,7 @@ import { AuthSessionStore } from '@talaprix/users/data-access';
     LucideArrowLeft,
     LucideArrowRight,
     LucideMail,
+    AuthBrandPanel,
   ],
   templateUrl: './users-feature-auth.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,13 +36,9 @@ export class UsersFeatureAuth {
   readonly #session = inject(AuthSessionStore);
   readonly #privatePortal = this.#route.snapshot.data['privatePortal'] === true;
   protected readonly privatePortal = this.#privatePortal;
-  protected readonly logoPath = this.#privatePortal
-    ? '/admin-assets/logo-talaprix.png'
-    : '/assets/images/logo_app.png';
-  protected readonly illustrationPath = this.#privatePortal
-    ? '/admin-assets/auth-price-illustration.svg'
-    : '/assets/images/auth-price-illustration.svg';
   protected readonly googleSignInVisible = !this.#privatePortal;
+  protected readonly demoCredentialsVisible =
+    isDevMode() && this.#privatePortal;
   protected readonly otpInputs =
     viewChildren<ElementRef<HTMLInputElement>>('otpInput');
   protected email = '';
@@ -92,6 +92,21 @@ export class UsersFeatureAuth {
       return;
     }
 
+    if (this.demoCredentialsVisible) {
+      if (!this.demoRoleForEmail(email)) {
+        this.error.set(
+          'Utilisez un identifiant de démonstration affiché ci-dessous.',
+        );
+        return;
+      }
+      this.email = email;
+      this.otpDigits.set(Array(6).fill(''));
+      this.otpRequested.set(true);
+      this.info.set(`Mode démo local : code de test prêt pour ${email}.`);
+      queueMicrotask(() => this.focusOtpInput(0));
+      return;
+    }
+
     const client = this.#supabase.client;
     if (!client) {
       this.error.set(
@@ -128,6 +143,27 @@ export class UsersFeatureAuth {
       return;
     }
     const email = this.email.trim().toLowerCase();
+    if (this.demoCredentialsVisible) {
+      const role = this.demoRoleForEmail(email);
+      if (!role || otp !== '123456') {
+        this.otpDigits.set(Array(6).fill(''));
+        this.error.set('Identifiant ou code de démonstration invalide.');
+        queueMicrotask(() => this.focusOtpInput(0));
+        return;
+      }
+      const identity: UserIdentity = {
+        id: `local-demo-${role}`,
+        email,
+        displayName:
+          role === 'admin'
+            ? 'Admin de démonstration'
+            : 'Boutique de démonstration',
+        roles: [role],
+      };
+      this.#session.authenticate(identity);
+      this.info.set('Accès de démonstration local activé.');
+      return;
+    }
     const client = this.#supabase.client;
     if (!client) return;
     this.isSubmitting.set(true);
@@ -193,6 +229,13 @@ export class UsersFeatureAuth {
 
   private isEmailValid(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  }
+
+  private demoRoleForEmail(email: string): UserRole | null {
+    if (!this.demoCredentialsVisible) return null;
+    if (email === 'admin.demo@talaprix.cd') return 'admin';
+    if (email === 'shop.demo@talaprix.cd') return 'shop';
+    return null;
   }
 
   private authRedirectUrl(): string {

@@ -1,66 +1,9 @@
 <main class="h-[100svh] overflow-hidden bg-white text-[#182a26]">
   <section
-    class="grid h-full min-h-0 w-full content-start lg:grid-cols-2 lg:content-center"
+    class="grid h-full min-h-0 w-full grid-rows-[auto_minmax(0,1fr)] lg:grid-cols-2 lg:grid-rows-1"
     aria-label="Connexion TalaPrix"
   >
-    <aside
-      class="relative flex min-h-[146px] items-center overflow-hidden bg-gradient-to-br from-[#008f7a] via-[#007568] to-[#064b44] px-5 py-3 text-white sm:min-h-[170px] sm:px-8 lg:h-full lg:min-h-0 lg:flex-col lg:items-start lg:justify-center lg:px-14 lg:py-10"
-    >
-      <div
-        class="relative grid w-full grid-cols-[minmax(0,1fr)_112px] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_170px] lg:flex lg:max-w-[620px] lg:flex-col lg:items-start lg:gap-7"
-      >
-        <div class="max-w-xs">
-          <div class="mb-3 flex items-center gap-2.5">
-            <img
-              [src]="logoPath"
-              alt=""
-              class="h-9 w-9 object-contain"
-              aria-hidden="true"
-            />
-            <span
-              class="text-xs font-extrabold uppercase tracking-[0.19em] text-white"
-              >TalaPrix</span
-            >
-          </div>
-          <p
-            class="text-[11px] font-bold uppercase tracking-[0.16em] text-white/70 sm:text-xs"
-          >
-            Comparez les prix à Kinshasa
-          </p>
-          <h2
-            class="mt-1.5 text-lg font-semibold leading-snug tracking-[-0.025em] text-white sm:mt-2 sm:text-2xl lg:text-[34px]"
-          >
-            Les bons prix, au bon endroit.
-          </h2>
-          <p
-            class="mt-2 hidden text-sm leading-6 text-white/75 sm:block lg:mt-3 lg:max-w-sm"
-          >
-            Comparez les offres des boutiques de Kinshasa et choisissez en
-            confiance.
-          </p>
-        </div>
-
-        <img
-          [src]="illustrationPath"
-          alt="Illustration TalaPrix : une boutique, un téléphone et des prix comparés"
-          class="relative z-10 h-[112px] w-[112px] object-contain sm:h-[170px] sm:w-[170px] lg:mt-0 lg:h-auto lg:w-full lg:max-w-[390px]"
-        />
-
-        <div
-          class="hidden w-full max-w-[340px] items-center gap-3 border-l-2 border-white/25 pl-4 lg:flex"
-        >
-          <span
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white"
-            aria-hidden="true"
-          >
-            <svg lucideArrowRight size="18"></svg>
-          </span>
-          <p class="text-xs leading-5 text-white/75">
-            Un accès simple à votre espace TalaPrix.
-          </p>
-        </div>
-      </div>
-    </aside>
+    <lib-auth-brand-panel [privatePortal]="privatePortal" />
 
     <div
       class="flex items-center justify-center px-5 py-4 sm:px-8 lg:h-full lg:px-14 lg:py-8"
@@ -97,7 +40,7 @@
             @if (otpRequested()) { Entrez le code à 6 chiffres envoyé à
             <span class="font-semibold text-[#344943]">{{ email }}</span>. }
             @else { Saisissez votre adresse email pour recevoir un code de
-            connexion à usage unique. }
+            connexion<span class="max-lg:hidden"> à usage unique</span>. }
           </p>
         </div>
 
@@ -137,7 +80,7 @@
                 autocomplete="email"
                 placeholder="vous@exemple.com"
                 [(ngModel)]="email"
-                class="h-12 w-full rounded-[14px] border border-[#d4dfdb] bg-white pl-11 pr-4 text-sm text-[#1d2b27] outline-none transition placeholder:text-[#9aa7a2] hover:border-[#9dbbb2] focus:border-[#009f88] focus:ring-4 focus:ring-[#009f88]/10"
+                class="h-12 w-full rounded-[14px] border border-[#d4dfdb] bg-white pl-11 pr-4 text-base text-[#1d2b27] outline-none transition placeholder:text-[#9aa7a2] hover:border-[#9dbbb2] focus:border-[#009f88] focus:ring-4 focus:ring-[#009f88]/10 lg:text-sm"
                 [class.border-red-400]="!!error()"
               />
             </div>
@@ -145,7 +88,7 @@
 
           <button
             type="submit"
-            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white shadow-[0_6px_16px_-8px_rgba(0,125,106,0.75)] transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
+            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
             [disabled]="isSubmitting()"
           >
             @if (isSubmitting()) {
@@ -184,7 +127,7 @@
           </div>
           <button
             type="submit"
-            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white shadow-[0_6px_16px_-8px_rgba(0,125,106,0.75)] transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
+            class="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#009f88] px-5 text-sm font-semibold text-white transition hover:bg-[#078775] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#009f88]/25 disabled:cursor-wait disabled:opacity-60"
             [disabled]="isSubmitting()"
           >
             Vérifier et continuer
@@ -244,6 +187,12 @@
           </svg>
           Continuer avec Google
         </button>
+        } @if (demoCredentialsVisible && !otpRequested()) {
+        <p class="mt-4 text-center text-xs leading-5 text-[#687873]">
+          Démo locale · Admin : admin.demo@talaprix.cd · Boutique :
+          shop.demo@talaprix.cd · Code :
+          <span class="font-semibold">123456</span>
+        </p>
         }
 
         <p class="mt-6 text-center text-[11px] leading-5 text-[#87948f]">
