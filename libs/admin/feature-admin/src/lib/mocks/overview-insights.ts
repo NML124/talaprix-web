@@ -6,7 +6,7 @@ export const usageZones = [
   { zone: 'Kasa-Vubu', city: 'Kinshasa', users: 916 },
 ];
 
-interface ComparableOffer {
+export interface ComparableOffer {
   product: string;
   unit: string;
   currency: 'CDF';
@@ -98,7 +98,7 @@ const comparableOffers: ComparableOffer[] = [
 export function lowestPriceShops(): {
   shop: string;
   wins: number;
-  example: string;
+  products: { product: string; unit: string; currency: 'CDF'; price: number }[];
 }[] {
   const groups = new Map<string, ComparableOffer[]>();
   for (const offer of comparableOffers) {
@@ -107,7 +107,16 @@ export function lowestPriceShops(): {
   }
   const wins = new Map<
     string,
-    { shop: string; wins: number; example: string }
+    {
+      shop: string;
+      wins: number;
+      products: {
+        product: string;
+        unit: string;
+        currency: 'CDF';
+        price: number;
+      }[];
+    }
   >();
   for (const group of groups.values()) {
     if (group.length < 2) continue;
@@ -117,7 +126,15 @@ export function lowestPriceShops(): {
       wins.set(offer.shop, {
         shop: offer.shop,
         wins: (current?.wins ?? 0) + 1,
-        example: current?.example ?? offer.product,
+        products: [
+          ...(current?.products ?? []),
+          {
+            product: offer.product,
+            unit: offer.unit,
+            currency: offer.currency,
+            price: offer.price,
+          },
+        ],
       });
     }
   }

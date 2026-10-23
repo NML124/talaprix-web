@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import type { OfferDiscount } from '../../mocks/marketing';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { AdminSelect } from '../../ui/admin-select';
+import { AdminDatePicker } from '../../ui/admin-date-picker';
 
 @Component({
   selector: 'tp-offer-discount-dialog',
-  imports: [AdminDialog, FormsModule, AdminSelect],
+  imports: [AdminDialog, FormsModule, AdminSelect, AdminDatePicker],
   templateUrl: './offer-discount-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

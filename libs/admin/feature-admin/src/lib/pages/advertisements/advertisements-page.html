@@ -118,7 +118,7 @@
 </section>
 @if(draft();as row) {
 <tp-admin-dialog
-  [title]="mode()==='delete'?'Supprimer la publicité':'Gérer la publicité'"
+  [title]="mode()==='delete'?'Supprimer la publicité':row.name?'Modifier la publicité':'Créer une publicité'"
   (closed)="draft.set(null)"
 >
   @if(mode()==='delete') {
@@ -153,18 +153,22 @@
     </div>
     <div class="grid-2">
       <label class="field"
-        >Priorité<input
-          type="number"
-          min="1"
-          [ngModel]="row.priority"
-          (ngModelChange)="change('priority',+$event)" /></label
+        >Priorité<tp-admin-select
+          [options]="['1','2','3']"
+          [selected]="''+row.priority"
+          ariaLabel="Priorité de la publicité"
+          (changed)="change('priority',+$event)" /></label
       ><label class="field"
-        >Date de fin<input
-          type="date"
-          [ngModel]="row.endDate"
-          (ngModelChange)="change('endDate',$event)"
+        >Date de fin<tp-admin-date-picker
+          label="Date de fin de la publicité"
+          [value]="row.endDate"
+          (valueChange)="change('endDate',$event)"
       /></label>
     </div>
+    <p class="text-xs leading-[1.4] text-[var(--text-2)]">
+      1 · Accueil, catégories et produits<br />2 · Accueil et catégories<br />3
+      · Accueil uniquement
+    </p>
     <label class="field"
       >État<tp-admin-select
         [options]="['Active','En pause']"

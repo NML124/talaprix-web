@@ -3,13 +3,22 @@ export interface Product {
   name: string;
   category: string;
   unit: string;
-  shop: string;
-  price: number;
   status: 'Publié' | 'À revoir' | 'Brouillon' | 'Archivé';
   updated: string;
   image: string;
   images?: string[];
   description: string;
+}
+/** Offre d'une boutique : prix et disponibilité séparés de la fiche produit. */
+export interface Offer {
+  id: number;
+  productId: number;
+  shop: string;
+  price: number;
+  currency: 'CDF' | 'USD';
+  status: 'Active' | 'En pause';
+  updated: string;
+  images: string[];
 }
 export interface Shop {
   id: number;

@@ -142,13 +142,6 @@
         ne sont pas modifiables depuis la gestion de l’équipe.
       </p>
       }
-      <p class="notice notice-compact">
-        <strong>Authentification renforcée</strong>
-        <span
-          >Double authentification · état à vérifier auprès du service
-          d’authentification.</span
-        >
-      </p>
       <p class="muted small">Dernière activité : {{row.activity}}</p>
       @if(row.id!==1){
       <label class="field"
@@ -177,7 +170,7 @@
           (ngModelChange)="editScope.set($event)"
       /></label>
       }
-      <div class="toolbar">
+      <div class="toolbar mt-6 gap-3">
         <button
           class="btn btn-danger"
           type="button"

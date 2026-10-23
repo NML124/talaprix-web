@@ -21,6 +21,7 @@ import { EmptyState } from '../../ui/empty-state';
 import { PageHeader } from '../../ui/page-header';
 import { Pagination } from '../../ui/pagination';
 import { SingleImagePicker } from '../../ui/single-image-picker';
+import { AdminDatePicker } from '../../ui/admin-date-picker';
 
 @Component({
   selector: 'tp-advertisements-page',
@@ -38,6 +39,7 @@ import { SingleImagePicker } from '../../ui/single-image-picker';
     PageHeader,
     Pagination,
     SingleImagePicker,
+    AdminDatePicker,
   ],
   templateUrl: './advertisements-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,11 +117,13 @@ export class AdvertisementsPage {
       !value.name.trim() ||
       !value.shop ||
       !value.endDate ||
+      !Number.isInteger(value.priority) ||
       value.priority < 1 ||
+      value.priority > 3 ||
       new Date(value.endDate) < new Date(new Date().toDateString())
     ) {
       this.error.set(
-        'Renseignez le nom, la boutique, une priorité positive et une date de fin à venir.',
+        'Renseignez le nom, la boutique, une priorité de 1 à 3 et une date de fin à venir.',
       );
       return;
     }

@@ -4,6 +4,7 @@
 @source '../../../../../apps/**/*.{html,ts}';
 @source '../../../../**/*.{html,ts}';
 @source '../../../../../node_modules/flowbite';
+@source '../../../../../node_modules/flowbite-datepicker';
 
 @plugin 'flowbite/plugin';
 @plugin 'daisyui' {

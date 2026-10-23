@@ -1,0 +1,141 @@
+@if(offer(); as row){
+<tp-admin-dialog
+  [title]="mode()==='delete'?'Supprimer l’offre':mode()==='pause'?'Masquer l’offre':mode()==='resume'?'Réactiver l’offre':creating()?'Créer une offre':'Modifier l’offre'"
+  (closed)="closed.emit()"
+>
+  @if(error()){
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  } @if(mode()==='delete' || mode()==='pause' || mode()==='resume'){
+  <p>
+    {{mode()==='delete'?'Supprimer définitivement':mode()==='pause'?'Masquer
+    pour les utilisateurs':'Rendre de nouveau visible'}} l’offre de
+    <strong>{{selectedName()}}</strong> chez <strong>{{row.shop}}</strong> ?
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button
+      type="button"
+      class="btn"
+      [class.btn-danger]="mode()!=='resume'"
+      [class.btn-primary]="mode()==='resume'"
+      (click)="mode()==='delete'?removed.emit():mode()==='pause'?paused.emit():resumed.emit()"
+    >
+      Confirmer
+    </button>
+  </div>
+  } @else {
+  <div class="form-stack">
+    <div class="field relative">
+      <label for="offer-product">Produit</label>
+      <input
+        id="offer-product"
+        type="search"
+        autocomplete="off"
+        [ngModel]="productQuery() || selectedName()"
+        (ngModelChange)="onSearch($event)"
+        (focus)="searching.set(true)"
+        (keydown.escape)="searching.set(false)"
+        [attr.aria-expanded]="searching()"
+        aria-controls="offer-product-results"
+        placeholder="Rechercher un produit existant"
+      />
+      @if(searching()){
+      <div
+        id="offer-product-results"
+        class="relative z-10 mt-2 max-h-52 w-full overflow-y-auto rounded-xl border border-[var(--line)] bg-[var(--surface)] p-1 shadow-sm"
+        role="listbox"
+        aria-label="Produits correspondants"
+      >
+        @for(product of matches(); track product.id){<button
+          type="button"
+          role="option"
+          class="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-[var(--surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
+          (click)="choose(product)"
+        >
+          {{product.name}}
+          <small class="text-[var(--text-2)]"
+            >· {{product.category}}</small
+          ></button
+        >} @if(!matches().length && productQuery().trim()){<button
+          type="button"
+          class="block w-full rounded-lg px-3 py-2 text-left text-sm text-[var(--brand)] hover:bg-[var(--surface-muted)]"
+          (click)="proposalOpen.set(true); searching.set(false)"
+        >
+          Proposer « {{productQuery()}} » comme nouveau produit</button
+        >}
+      </div>
+      }
+    </div>
+    @if(proposalOpen()){
+    <section
+      class="grid gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-muted)] p-4"
+      aria-label="Proposer un produit"
+    >
+      <strong>Nouvelle fiche produit · {{productQuery()}}</strong>
+      <label class="field"
+        >Catégorie<tp-admin-select
+          [options]="categories()"
+          [selected]="proposalCategory()"
+          ariaLabel="Catégorie du nouveau produit"
+          (changed)="proposalCategory.set($event)"
+      /></label>
+      <tp-admin-product-images
+        [images]="proposalImages()"
+        (imagesChanged)="proposalImages.set($event)"
+      />
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="busy() || !proposalCategory() || !proposalImages().length"
+        (click)="propose()"
+      >
+        Créer la fiche et poursuivre
+      </button>
+    </section>
+    }
+    <label class="field"
+      >Boutique<tp-admin-select
+        [options]="shops()"
+        [selected]="row.shop"
+        ariaLabel="Boutique de l’offre"
+        (changed)="row.shop=$event"
+    /></label>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="field"
+        >Prix<input type="number" min="1" [(ngModel)]="row.price" /></label
+      ><label class="field"
+        >Devise<tp-admin-select
+          [options]="['CDF','USD']"
+          [selected]="row.currency"
+          ariaLabel="Devise de l’offre"
+          (changed)="row.currency=$event==='USD'?'USD':'CDF'"
+      /></label>
+    </div>
+    <label class="field"
+      >État<tp-admin-select
+        [options]="['Active','En pause']"
+        [selected]="row.status"
+        ariaLabel="État de l’offre"
+        (changed)="row.status=$event==='En pause'?'En pause':'Active'"
+    /></label>
+    <tp-admin-product-images
+      [images]="row.images"
+      (imagesChanged)="setImages($event)"
+    />
+  </div>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler</button
+    ><button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="busy()"
+      (click)="saved.emit()"
+    >
+      {{busy() ? 'Création du produit…' : 'Enregistrer l’offre'}}
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

@@ -19,7 +19,6 @@ import { AdminSelect } from '../../ui/admin-select';
 export class ProductDialog {
   readonly product = input.required<Product>();
   readonly categories = input.required<string[]>();
-  readonly shops = input.required<string[]>();
   readonly mode = input.required<'edit' | 'archive' | 'restore' | 'delete'>();
   readonly error = input('');
   readonly closed = output<void>();

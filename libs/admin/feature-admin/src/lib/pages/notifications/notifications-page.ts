@@ -44,9 +44,7 @@ export class NotificationsPage {
     this.reason.set('');
     this.rejecting.set(false);
     if (notice.kind !== 'shop_request') {
-      void this.router.navigateByUrl(
-        notice.kind === 'moderation' ? '/admin/moderation' : '/admin/scraping',
-      );
+      void this.router.navigateByUrl('/admin/scraping');
       return;
     }
     this.selectedId.set(id);

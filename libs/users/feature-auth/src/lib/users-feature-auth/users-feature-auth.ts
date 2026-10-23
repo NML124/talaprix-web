@@ -13,7 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRight, LucideMail } from '@lucide/angular';
 import { SupabaseClientService } from '@talaprix/shared/data-access';
 import { AuthSessionStore } from '@talaprix/users/data-access';
-import type { UserIdentity, UserRole } from '@talaprix/users/domain';
+import type { UserRole } from '@talaprix/users/domain';
 import { AuthBrandPanel } from './auth-brand-panel';
 
 @Component({
@@ -151,16 +151,12 @@ export class UsersFeatureAuth {
         queueMicrotask(() => this.focusOtpInput(0));
         return;
       }
-      const identity: UserIdentity = {
-        id: `local-demo-${role}`,
-        email,
-        displayName:
-          role === 'admin'
-            ? 'Admin de démonstration'
-            : 'Responsable de démonstration',
-        roles: [role],
-      };
-      this.#session.authenticate(identity);
+      if (!this.#session.authenticateDemo(email)) {
+        this.error.set(
+          'La session de démonstration ne peut pas être conservée.',
+        );
+        return;
+      }
       this.info.set('Accès de démonstration local activé.');
       return;
     }

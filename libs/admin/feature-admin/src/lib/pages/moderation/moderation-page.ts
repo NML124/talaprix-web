@@ -11,7 +11,8 @@ import { PageHeader } from '../../ui/page-header';
 import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { EmptyState } from '../../ui/empty-state';
 import { Pagination } from '../../ui/pagination';
-import { fc, imagePath } from '../../mocks/catalogue';
+import { imagePath } from '../../mocks/catalogue';
+import { AdminCurrencyStore } from '../../services/admin-currency-store';
 import type { Proposal } from '../../mocks/models';
 import { FlaggedReviews } from './flagged-reviews';
 import { AdminDialog } from '../../ui/admin-dialog';
@@ -32,6 +33,7 @@ import { AdminDialog } from '../../ui/admin-dialog';
 })
 export class ModerationPage {
   private readonly api = inject(AdminMockApi);
+  protected readonly currency = inject(AdminCurrencyStore);
   protected readonly proposals = signal<Proposal[]>([]);
   protected readonly selectedId = signal(1);
   protected readonly detailOpen = signal(false);
@@ -53,7 +55,6 @@ export class ModerationPage {
     'Prix périmés 186',
     'Alertes',
   ];
-  protected readonly fc = fc;
   protected readonly imagePath = imagePath;
   protected readonly filtered = computed(() =>
     this.proposals().filter((row) =>

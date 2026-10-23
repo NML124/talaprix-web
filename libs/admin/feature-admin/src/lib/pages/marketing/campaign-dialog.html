@@ -37,10 +37,10 @@
     /></label>
     <div class="grid-2">
       <label class="field"
-        >Date<input
-          type="date"
-          [ngModel]="value().date"
-          (ngModelChange)="change('date', $event)"
+        >Date<tp-admin-date-picker
+          label="Date de la campagne"
+          [value]="value().date"
+          (valueChange)="change('date', $event)"
       /></label>
       <label class="field"
         >Heure · Kinshasa<input

@@ -25,9 +25,9 @@ export const kpis = [
   },
 ];
 export const overviewStats = {
-  subtitle: "34 actions vous attendent. Voici l'état de TalaPrix en septembre.",
+  subtitle: "Voici l'état de TalaPrix en septembre.",
   period: 'Septembre 2026',
-  actions: '34 actions',
+  actions: '4 boutiques à compléter',
   visits: '32 640',
   heroSavings: '12,8 M FC',
   savingsChange: '↑ 18,5 % vs août',
@@ -77,18 +77,6 @@ export const trending = [
   },
 ];
 export const actionItems = [
-  {
-    count: 24,
-    title: 'Propositions de prix',
-    detail: '7 variations supérieures à 20 %',
-    link: '/admin/moderation',
-  },
-  {
-    count: 6,
-    title: 'Avis signalés',
-    detail: 'À vérifier avant publication',
-    link: '/admin/moderation',
-  },
   {
     count: 4,
     title: 'Boutiques à compléter',

@@ -10,6 +10,7 @@ import type { Campaign } from '../../mocks/models';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { AdminSelect } from '../../ui/admin-select';
+import { AdminDatePicker } from '../../ui/admin-date-picker';
 
 export interface CampaignDraft {
   title: string;
@@ -22,7 +23,13 @@ export interface CampaignDraft {
 
 @Component({
   selector: 'tp-campaign-dialog',
-  imports: [AdminDialog, FormsModule, SegmentedTabs, AdminSelect],
+  imports: [
+    AdminDialog,
+    FormsModule,
+    SegmentedTabs,
+    AdminSelect,
+    AdminDatePicker,
+  ],
   templateUrl: './campaign-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,0 +1,62 @@
+@if(lowestShop(); as selected){
+<tp-admin-dialog
+  [title]="'Meilleurs prix · ' + selected.shop"
+  (closed)="closeLowest.emit()"
+>
+  <p class="mb-4 text-sm text-[var(--text-2)]">
+    {{selected.wins}} produits comparés à unité et devise identiques. Les ex
+    æquo sont inclus.
+  </p>
+  <div class="divide-y divide-[var(--line)]">
+    @for(item of selected.products; track item.product){
+    <div class="flex flex-wrap items-center justify-between gap-3 py-3">
+      <div>
+        <strong>{{item.product}}</strong
+        ><small class="block text-[var(--text-2)]">{{item.unit}}</small>
+      </div>
+      <strong class="tabular-nums">{{currency.format(item.price)}}</strong>
+    </div>
+    }
+  </div>
+  <button
+    type="button"
+    class="btn btn-secondary mt-5"
+    (click)="closeLowest.emit()"
+  >
+    Fermer
+  </button>
+</tp-admin-dialog>
+} @if(trendingOpen()){
+<tp-admin-dialog title="Produits tendances" (closed)="closeTrending.emit()">
+  <p class="mb-4 text-sm text-[var(--text-2)]">
+    Classement par {{activeTab().toLowerCase()}}.
+  </p>
+  <div class="divide-y divide-[var(--line)]">
+    @for(row of visibleTrending(); track row.name){
+    <div class="flex items-center gap-3 py-3">
+      <img class="thumb" [src]="imagePath(row.image)" alt="" />
+      <div class="min-w-0 grow">
+        <strong class="block truncate">{{row.name}}</strong
+        ><small class="text-[var(--text-2)]">{{row.detail}}</small>
+      </div>
+      <strong class="shrink-0 tabular-nums"
+        >{{activeTab()==='Favoris'?row.favorites:row.views}}</strong
+      >
+    </div>
+    }
+  </div>
+  <tp-admin-pagination
+    [total]="trendingRows().length"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    (pageChanged)="pageChanged.emit($event)"
+  />
+  <button
+    type="button"
+    class="btn btn-secondary mt-4"
+    (click)="closeTrending.emit()"
+  >
+    Fermer
+  </button>
+</tp-admin-dialog>
+}

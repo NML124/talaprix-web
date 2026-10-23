@@ -32,7 +32,8 @@
   </div>
   @if(mode() === 'bars'){
   <div
-    class="grid h-48 grid-cols-6 items-end gap-2 border-b border-[var(--line)] sm:gap-4"
+    class="grid h-48 items-end gap-2 border-b border-[var(--line)] sm:gap-4"
+    [style.grid-template-columns]="'repeat(' + series().length + ', minmax(0, 1fr))'"
     role="img"
     aria-label="Économies estimées comparées à la période précédente"
   >
@@ -42,12 +43,12 @@
         <span
           class="w-3 rounded-t bg-[var(--brand)] transition-[height] duration-300 sm:w-5"
           [style.height]="barHeight(row.current)"
-          [title]="row.current + ' millions FC · ' + row.month"
+          [title]="formatValue(row.current) + ' · ' + row.month"
         ></span>
         <span
           class="w-3 rounded-t bg-slate-400 transition-[height] duration-300 sm:w-5"
           [style.height]="barHeight(row.previous)"
-          [title]="row.previous + ' millions FC · période précédente · ' + row.month"
+          [title]="formatValue(row.previous) + ' · période précédente · ' + row.month"
         ></span>
       </div>
       <small class="text-center text-xs text-[var(--text-2)]"
@@ -89,11 +90,14 @@
       r="4"
       fill="var(--brand)"
     >
-      <title>{{row.month}} · {{row.current}} M FC</title>
+      <title>{{row.month}} · {{formatValue(row.current)}}</title>
     </circle>
     }
   </svg>
-  <div class="grid grid-cols-6 gap-2">
+  <div
+    class="grid gap-2"
+    [style.grid-template-columns]="'repeat(' + series().length + ', minmax(0, 1fr))'"
+  >
     @for(row of series(); track row.month){<small
       class="text-center text-xs text-[var(--text-2)]"
       >{{row.month}}</small

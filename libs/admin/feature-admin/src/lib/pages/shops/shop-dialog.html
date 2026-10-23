@@ -7,8 +7,8 @@
   <p class="dialog-error" role="alert">{{ error() }}</p>
   } @if (mode() === 'delete') {
   <p>
-    Supprimer <strong>{{ row.name }}</strong> ? Ses offres liées seront
-    archivées pour éviter des offres sans boutique.
+    Supprimer <strong>{{ row.name }}</strong> ? Retirez d’abord ses offres si
+    elle en possède.
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">
@@ -90,26 +90,39 @@
   </div>
   <section class="dialog-section">
     <h3>Offres de la boutique</h3>
-    @if (products().length) { @for (product of products(); track product.id) {
+    <label class="search mt-3 flex items-center gap-2">
+      <svg lucideSearch size="16" aria-hidden="true"></svg>
+      <span class="sr-only">Rechercher une offre de cette boutique</span>
+      <input
+        type="search"
+        placeholder="Rechercher une offre"
+        [ngModel]="offerQuery()"
+        (ngModelChange)="offerQuery.set($event); offerPage.set(1)"
+      />
+    </label>
+    @if (filteredOffers().length) { @for (offer of visibleOffers(); track
+    offer.id) {
     <div class="item-row">
-      <img class="thumb" [src]="imagePath(product.image)" alt="" />
       <span class="grow"
-        ><strong>{{ product.name }}</strong
-        ><small
-          >{{ product.unit }} · actualisé {{ product.updated }}</small
-        ></span
+        ><strong>{{ offerName(offer) }}</strong
+        ><small>Actualisé {{ offer.updated }}</small></span
       >
       <span class="toolbar">
         <tp-status-dot
-          [label]="product.status"
-          [tone]="productTone(product.status)"
+          [label]="offer.status"
+          [tone]="offerTone(offer.status)"
         />
-        <strong class="number">{{ fc(product.price) }}</strong>
+        <strong class="number">{{ offerPrice(offer) }}</strong>
       </span>
     </div>
     } } @else {
-    <p class="muted small">Aucun produit lié dans cet aperçu.</p>
-    }
+    <p class="muted small">Aucune offre ne correspond à cette recherche.</p>
+    } @if(filteredOffers().length > offerPageSize){<tp-admin-pagination
+      [total]="filteredOffers().length"
+      [page]="currentOfferPage()"
+      [pageSize]="offerPageSize"
+      (pageChanged)="offerPage.set($event)"
+    />}
   </section>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">

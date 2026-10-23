@@ -1,0 +1,20 @@
+<div class="relative">
+  <input
+    #dateInput
+    type="text"
+    inputmode="none"
+    autocomplete="off"
+    [value]="value()"
+    [attr.aria-label]="label()"
+    placeholder="AAAA-MM-JJ"
+    class="w-full rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-2.5 pr-10 text-sm text-[var(--text-1)] shadow-none outline-none transition focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand)]/20"
+  />
+  <button
+    type="button"
+    class="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[var(--text-2)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
+    [attr.aria-label]="label()"
+    (click)="open()"
+  >
+    <svg lucideCalendarDays size="16" aria-hidden="true"></svg>
+  </button>
+</div>

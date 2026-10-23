@@ -61,16 +61,6 @@
       /></label>
       <label class="field">Unité / poids<input [(ngModel)]="row.unit" /></label>
     </div>
-    <label class="field"
-      >Boutique<tp-admin-select
-        [options]="shops().slice(1)"
-        [selected]="row.shop"
-        ariaLabel="Boutique du produit"
-        (changed)="row.shop=$event"
-    /></label>
-    <label class="field"
-      >Prix public (FC)<input type="number" min="1" [(ngModel)]="row.price"
-    /></label>
   </div>
   <p class="muted small dialog-section">
     Dernière modification : Joël Kabeya · {{ row.updated }}

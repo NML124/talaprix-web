@@ -5,9 +5,9 @@
 </tp-admin-page-header>
 <div class="toolbar">
   <tp-segmented-tabs
-    [items]="['Mensuel','Annuel']"
+    [items]="periods"
     [selected]="tab()"
-    (selectTab)="tab.set($event)"
+    (selectTab)="selectPeriod($event)"
   /><span class="report-context muted small"
     >{{view().period}} · Toutes les boutiques</span
   >
@@ -43,7 +43,7 @@
       <h2>Évolution des économies estimées</h2>
       <span class="muted small">{{view().chartLabel}}</span>
     </div>
-    <tp-savings-chart [series]="savings" />
+    <tp-savings-chart [series]="savings()" />
     <div class="grid-2 report-insights">
       <div class="report-insight">
         <strong class="positive">{{view().growth}}</strong
@@ -52,7 +52,7 @@
         >
       </div>
       <div class="report-insight">
-        <strong>1 420 FC en moyenne</strong
+        <strong>{{currency.format(1420)}}</strong
         ><small class="muted report-insight-detail"
           >Écart potentiel par consultation utile</small
         >
@@ -67,15 +67,15 @@
 <div class="report-lower grid !grid-cols-1 gap-6 lg:!grid-cols-2">
   <section class="card">
     <div class="card-head">
-      <h2>Notes produits</h2>
+      <h2>Notes des vendeurs</h2>
       <small class="muted">20 avis minimum</small>
     </div>
     <tp-metric-bars
       [items]="reviewBars"
-      label="Note moyenne des produits selon les avis"
+      label="Note moyenne des boutiques selon les avis"
     />
     <p class="mt-6 text-[11px] leading-relaxed text-[var(--text-2)]">
-      Moyenne des avis publiés · produits avec au moins 20 avis.
+      Moyenne des avis publiés · boutiques avec au moins 20 avis.
     </p>
   </section>
   <section class="card">
