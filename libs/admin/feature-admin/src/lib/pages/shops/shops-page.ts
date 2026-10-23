@@ -20,8 +20,8 @@ import { PageHeader } from '../../ui/page-header';
 import { EmptyState } from '../../ui/empty-state';
 import { StatusDot } from '../../ui/status-dot';
 import { Pagination } from '../../ui/pagination';
-import { fc, imagePath } from '../../mocks/catalogue';
-import type { Product, Shop } from '../../mocks/models';
+import type { Offer, Product, Shop } from '../../mocks/models';
+import { imagePath } from '../../mocks/catalogue';
 import { ShopDialog } from './shop-dialog';
 
 @Component({
@@ -46,6 +46,7 @@ export class ShopsPage {
   private readonly api = inject(AdminMockApi);
   private readonly route = inject(ActivatedRoute);
   protected readonly shops = signal<Shop[]>([]);
+  protected readonly offers = signal<Offer[]>([]);
   protected readonly products = signal<Product[]>([]);
   protected readonly selected = signal<Shop | null>(null);
   protected readonly dialogMode = signal<'edit' | 'suspend' | 'delete'>('edit');
@@ -57,7 +58,6 @@ export class ShopsPage {
   protected readonly page = signal(1);
   protected readonly pageSize = 10;
   protected readonly imagePath = imagePath;
-  protected readonly fc = fc;
   protected readonly filters = [
     { label: 'Toutes', count: 28 },
     { label: 'Actives', count: 24 },
@@ -91,8 +91,8 @@ export class ShopsPage {
       this.currentPage() * this.pageSize,
     ),
   );
-  protected readonly relatedProducts = computed(() =>
-    this.products().filter(
+  protected readonly relatedOffers = computed(() =>
+    this.offers().filter(
       (row) =>
         row.shop ===
         this.shops().find((shop) => shop.id === this.selected()?.id)?.name,
@@ -108,11 +108,13 @@ export class ShopsPage {
     this.loading.set(true);
     this.error.set('');
     try {
-      const [rows, products] = await Promise.all([
+      const [rows, offers, products] = await Promise.all([
         this.api.listShops(),
+        this.api.listOffers(),
         this.api.listProducts(),
       ]);
       this.shops.set(rows);
+      this.offers.set(offers);
       this.products.set(products);
     } catch {
       this.error.set('Les boutiques ne peuvent pas être chargées.');
@@ -188,8 +190,10 @@ export class ShopsPage {
       this.shops.set(await this.api.listShops());
       this.selected.set(null);
       this.toast.set('Boutique supprimée et action auditée.');
-    } catch {
-      this.error.set('Suppression impossible.');
+    } catch (error) {
+      this.error.set(
+        error instanceof Error ? error.message : 'Suppression impossible.',
+      );
     }
   }
   protected tone(value: string): 'success' | 'warning' | 'danger' {

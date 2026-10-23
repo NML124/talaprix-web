@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   signal,
 } from '@angular/core';
+import { AdminCurrencyStore } from '../services/admin-currency-store';
 
 export interface SavingsMonth {
   readonly month: string;
@@ -18,6 +20,7 @@ export interface SavingsMonth {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SavingsChart {
+  protected readonly currency = inject(AdminCurrencyStore);
   readonly series = input.required<readonly SavingsMonth[]>();
   protected readonly mode = signal<'bars' | 'lines' | 'area'>('bars');
   protected readonly modes = [
@@ -36,6 +39,9 @@ export class SavingsChart {
 
   protected barHeight(value: number): string {
     return `${Math.max(2, (value / this.max()) * 100)}%`;
+  }
+  protected formatValue(value: number): string {
+    return this.currency.formatMillionsFromCdf(value);
   }
   private points(key: 'current' | 'previous'): string {
     const rows = this.series();

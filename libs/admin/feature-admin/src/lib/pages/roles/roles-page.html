@@ -41,9 +41,8 @@
       <div>
         <h2 style="font-size: 22px">{{selected()}}</h2>
         <span class="muted small"
-          >{{roleIsLocked()?(selected()==='Super administrateur'?'Rôle système ·
-          non modifiable':'Permissions administrateur gérées par le super
-          administrateur'):changes()+' modifications non enregistrées'}}</span
+          >{{roleIsLocked()?'Rôle système · non modifiable':changes()+'
+          modifications non enregistrées'}}</span
         >
       </div>
       <span class="status success">Rôle sélectionné</span>
@@ -94,7 +93,7 @@
                 role="checkbox"
                 [attr.aria-label]="domain+', '+action"
                 [attr.aria-checked]="checked(domain,action)"
-                [disabled]="roleIsLocked()||isReserved(domain)"
+                [disabled]="!canEditRoles()||roleIsLocked()||isReserved(domain)"
                 (click)="toggle(domain,action)"
               >
                 {{checked(domain,action)?'✓':isReserved(domain)?'×':''}}
@@ -133,9 +132,9 @@
       >
     </div>
     <div class="notice">
-      Validation = approuver ou rejeter une proposition de prix, publier ou
-      masquer un avis avec justification. La lecture des utilisateurs n'autorise
-      pas la suspension d'un compte.
+      Les droits de lecture permettent de consulter les données du domaine. Les
+      actions de création, modification et validation sont accordées séparément.
+      La gestion des rôles reste réservée au super administrateur.
     </div>
     <div class="toolbar mt-4 flex-wrap">
       <button type="button" class="btn btn-secondary" (click)="cancel()">
@@ -148,7 +147,7 @@
         disabled:border-[var(--line)]
         disabled:opacity-100
         disabled:cursor-not-allowed
-        [disabled]="roleIsLocked()||!changes()"
+        [disabled]="!canEditRoles()||roleIsLocked()||!changes()"
         (click)="save()"
       >
         Enregistrer les permissions

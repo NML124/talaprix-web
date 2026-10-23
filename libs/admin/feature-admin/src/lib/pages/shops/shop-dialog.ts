@@ -2,24 +2,37 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  inject,
   output,
+  computed,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideMapPin, LucidePencil } from '@lucide/angular';
-import type { Product, Shop } from '../../mocks/models';
-import { fc, imagePath } from '../../mocks/catalogue';
+import { LucideMapPin, LucidePencil, LucideSearch } from '@lucide/angular';
+import type { Offer, Product, Shop } from '../../mocks/models';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { StatusDot } from '../../ui/status-dot';
+import { Pagination } from '../../ui/pagination';
+import { AdminCurrencyStore } from '../../services/admin-currency-store';
 
 @Component({
   selector: 'tp-shop-dialog',
-  imports: [FormsModule, LucideMapPin, LucidePencil, AdminDialog, StatusDot],
+  imports: [
+    FormsModule,
+    LucideMapPin,
+    LucidePencil,
+    LucideSearch,
+    AdminDialog,
+    StatusDot,
+    Pagination,
+  ],
   templateUrl: './shop-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShopDialog {
+  protected readonly currency = inject(AdminCurrencyStore);
   readonly shop = input.required<Shop>();
+  readonly offers = input.required<Offer[]>();
   readonly products = input.required<Product[]>();
   readonly mode = input.required<'edit' | 'suspend' | 'delete'>();
   readonly error = input('');
@@ -27,8 +40,39 @@ export class ShopDialog {
   readonly saved = output<void>();
   readonly suspended = output<void>();
   readonly removed = output<void>();
-  protected readonly fc = fc;
-  protected readonly imagePath = imagePath;
+  protected readonly offerPage = signal(1);
+  protected readonly offerQuery = signal('');
+  protected readonly offerPageSize = 5;
+  protected readonly filteredOffers = computed(() => {
+    const query = this.offerQuery().trim().toLocaleLowerCase('fr');
+    if (!query) return this.offers();
+    return this.offers().filter((offer) =>
+      `${this.offerName(offer)} ${offer.status}`
+        .toLocaleLowerCase('fr')
+        .includes(query),
+    );
+  });
+  protected readonly currentOfferPage = computed(() =>
+    Math.min(
+      this.offerPage(),
+      Math.max(1, Math.ceil(this.filteredOffers().length / this.offerPageSize)),
+    ),
+  );
+  protected readonly visibleOffers = computed(() =>
+    this.filteredOffers().slice(
+      (this.currentOfferPage() - 1) * this.offerPageSize,
+      this.currentOfferPage() * this.offerPageSize,
+    ),
+  );
+  protected offerName(offer: Offer): string {
+    return (
+      this.products().find((product) => product.id === offer.productId)?.name ??
+      'Produit'
+    );
+  }
+  protected offerPrice(offer: Offer): string {
+    return this.currency.format(offer.price, offer.currency);
+  }
   protected readonly shopFields = [
     { key: 'name', label: 'Nom', type: 'text' },
     { key: 'address', label: 'Adresse', type: 'text' },
@@ -62,16 +106,8 @@ export class ShopDialog {
       shop[field] = String(value);
     }
   }
-  protected productTone(
-    value: Product['status'],
-  ): 'success' | 'warning' | 'neutral' | 'danger' {
-    return value === 'Publié'
-      ? 'success'
-      : value === 'À revoir'
-        ? 'warning'
-        : value === 'Archivé'
-          ? 'neutral'
-          : 'danger';
+  protected offerTone(value: Offer['status']): 'success' | 'neutral' {
+    return value === 'Active' ? 'success' : 'neutral';
   }
   protected tone(value: string): 'success' | 'warning' | 'danger' {
     return value === 'Active'

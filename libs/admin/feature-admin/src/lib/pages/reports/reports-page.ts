@@ -2,15 +2,23 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   signal,
 } from '@angular/core';
 import { PageHeader } from '../../ui/page-header';
 import { SegmentedTabs } from '../../ui/segmented-tabs';
-import { savings, trending } from '../../mocks/overview';
+import { trending } from '../../mocks/overview';
+import {
+  savingsByPeriod,
+  savingsPeriodNote,
+  savingsPeriods,
+  type SavingsPeriod,
+} from '../../mocks/savings-periods';
 import { imagePath } from '../../mocks/catalogue';
 import { MetricBars } from '../../ui/metric-bars';
 import type { MetricBarItem } from '../../ui/metric-bars';
 import { SavingsChart } from '../../ui/savings-chart';
+import { AdminCurrencyStore } from '../../services/admin-currency-store';
 
 @Component({
   selector: 'tp-reports-page',
@@ -19,41 +27,46 @@ import { SavingsChart } from '../../ui/savings-chart';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsPage {
-  protected readonly tab = signal('Mensuel');
-  protected readonly view = computed(() =>
-    this.tab() === 'Annuel'
-      ? {
-          period: 'Janvier–septembre 2026',
-          primaryLabel: 'Économies estimées · cumul 2026',
-          primaryValue: '76,4 M FC',
-          primaryHint:
-            'Janvier à septembre · estimation, sans ventes confirmées',
-          secondaryLabel: 'Même période · 2025',
-          secondaryValue: '58,2 M FC',
-          secondaryHint: 'Base fictive de comparaison annuelle',
-          chartLabel: 'Évolution mensuelle · 2026 vs 2025 · millions FC',
-          growth: '+31,3 % sur un an',
-          growthDetail: '76,4 M FC contre 58,2 M FC sur la même période',
-        }
-      : {
-          period: 'Septembre 2026',
-          primaryLabel: 'Économies estimées · septembre',
-          primaryValue: '12,8 M FC',
-          primaryHint: 'Écart de prix × produits consultés',
-          secondaryLabel: 'Cumul estimé · 2026',
-          secondaryValue: '76,4 M FC',
-          secondaryHint: 'Janvier à septembre · pas de ventes confirmées',
-          chartLabel: 'Évolution mensuelle · 2026 vs 2025 · millions FC',
-          growth: '+18,5 % sur un mois',
-          growthDetail: '12,8 M FC contre 10,8 M FC en août',
-        },
-  );
-  protected readonly savings = savings;
+  protected readonly currency = inject(AdminCurrencyStore);
+  protected readonly tab = signal<SavingsPeriod>('Mois');
+  protected readonly periods = savingsPeriods;
+  protected selectPeriod(value: string): void {
+    if (savingsPeriods.includes(value as SavingsPeriod))
+      this.tab.set(value as SavingsPeriod);
+  }
+  protected readonly view = computed(() => {
+    const period = this.tab();
+    const latest = savingsByPeriod[period][savingsByPeriod[period].length - 1];
+    const current = latest?.current ?? 0;
+    const previous = latest?.previous ?? 0;
+    const percent = previous
+      ? Math.round(((current - previous) / previous) * 100)
+      : 0;
+    const format = (value: number) =>
+      this.currency.formatMillionsFromCdf(value);
+    return {
+      period: savingsPeriodNote[period],
+      primaryLabel:
+        period === 'Année'
+          ? 'Économies estimées · janvier à septembre 2026'
+          : `Économies estimées · ${period.toLowerCase()}`,
+      primaryValue: format(current),
+      primaryHint: 'Estimation, sans vente confirmée',
+      secondaryLabel:
+        period === 'Année' ? 'Janvier à septembre 2025' : 'Période précédente',
+      secondaryValue: format(previous),
+      secondaryHint: 'À périmètre comparable',
+      chartLabel: savingsPeriodNote[period],
+      growth: `${percent >= 0 ? '+' : ''}${percent} %`,
+      growthDetail: `${format(current)} contre ${format(previous)} pour la période précédente`,
+    };
+  });
+  protected readonly savings = computed(() => savingsByPeriod[this.tab()]);
   protected readonly trending = trending;
   protected readonly imagePath = imagePath;
   protected readonly reviewBars: MetricBarItem[] = [
     {
-      label: 'Pain de mie',
+      label: 'Kin Marché',
       detail: '86 avis · Excellent',
       value: 4.8,
       width: 96,
@@ -61,7 +74,7 @@ export class ReportsPage {
       tone: 'positive',
     },
     {
-      label: "Chips Lay's",
+      label: 'S&K',
       detail: '124 avis · Très bon',
       value: 4.6,
       width: 92,
@@ -69,7 +82,7 @@ export class ReportsPage {
       tone: 'positive',
     },
     {
-      label: 'Sac à main rouge',
+      label: 'Maison Galaxy',
       detail: '32 avis · À surveiller',
       value: 2.9,
       width: 58,
@@ -77,7 +90,7 @@ export class ReportsPage {
       tone: 'attention',
     },
     {
-      label: 'Pain complet',
+      label: 'Swiss Mart',
       detail: '28 avis · À surveiller',
       value: 3.1,
       width: 62,

@@ -3,6 +3,7 @@ export type UserRole =
   | 'customer'
   | 'shop'
   | 'admin'
+  | 'super-admin'
   | 'catalog-manager'
   | 'scraper-operator';
 

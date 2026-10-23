@@ -1,6 +1,6 @@
-import { Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { products, proposals, shops } from '../mocks/catalogue';
-import { campaigns, offerDiscounts } from '../mocks/marketing';
+import { OfferPreviewStore } from './offer-preview-store';
 import {
   audit,
   invitations,
@@ -19,15 +19,14 @@ import {
 } from '../mocks/overview';
 import type {
   AuditEntry,
-  Campaign,
   Member,
   Product,
+  Offer,
   Proposal,
   Shop,
   User,
   CommunityUserView,
 } from '../mocks/models';
-import type { OfferDiscount } from '../mocks/marketing';
 import { advertisements } from '../mocks/advertisements';
 import type { Advertisement } from '../mocks/advertisements';
 
@@ -41,10 +40,9 @@ const maskCommunityPhone = (phone: string): string => {
 /** Frontière de données temporaire : remplacer ces méthodes lors du branchement API. */
 @Service()
 export class AdminMockApi {
+  private readonly offerStore = inject(OfferPreviewStore);
   private readonly productRows = structuredClone(products);
   private readonly advertisementRows = structuredClone(advertisements);
-  private readonly campaignRows = structuredClone(campaigns);
-  private readonly discountRows = structuredClone(offerDiscounts);
   private readonly proposalRows = structuredClone(proposals);
   private readonly shopRows = structuredClone(shops);
   private readonly memberRows = structuredClone(members);
@@ -88,37 +86,31 @@ export class AdminMockApi {
     await pause();
     return structuredClone(this.productRows);
   }
-  async listCampaigns(): Promise<Campaign[]> {
+  async listOffers(): Promise<Offer[]> {
     await pause();
-    return structuredClone(this.campaignRows);
+    return this.offerStore.list();
   }
-  async listOfferDiscounts(): Promise<OfferDiscount[]> {
+  async saveOffer(value: Offer): Promise<void> {
     await pause();
-    return structuredClone(this.discountRows);
-  }
-  async saveOfferDiscount(value: OfferDiscount): Promise<void> {
-    await pause();
-    const index = this.discountRows.findIndex((row) => row.id === value.id);
-    if (index < 0) this.discountRows.unshift(structuredClone(value));
-    else this.discountRows[index] = structuredClone(value);
+    const product = this.productRows.find((row) => row.id === value.productId);
+    if (!product) throw new Error('Produit introuvable.');
+    if (product.status !== 'Publié' && value.status === 'Active')
+      throw new Error('Publiez la fiche produit avant d’activer cette offre.');
+    if (!this.shopRows.some((row) => row.name === value.shop))
+      throw new Error('Boutique introuvable.');
+    this.offerStore.save(value);
     this.record(
-      'Modification d’une réduction d’offre',
-      `${value.shop} · ${value.offer}`,
+      'Modification d’une offre',
+      `${value.shop} · ${value.productId}`,
     );
   }
-  async saveCampaign(campaign: Campaign): Promise<void> {
+  async deleteOffer(id: number): Promise<void> {
     await pause();
-    const index = this.campaignRows.findIndex((row) => row.id === campaign.id);
-    if (index < 0) this.campaignRows.push(structuredClone(campaign));
-    else this.campaignRows[index] = structuredClone(campaign);
-    this.record('Modification de campagne', campaign.name);
-  }
-  async deleteCampaign(id: number): Promise<void> {
-    await pause();
-    const index = this.campaignRows.findIndex((row) => row.id === id);
-    if (index < 0) throw new Error('Campagne introuvable.');
-    const [campaign] = this.campaignRows.splice(index, 1);
-    this.record('Suppression de campagne', campaign.name);
+    const offer = this.offerStore.delete(id);
+    this.record(
+      'Suppression d’une offre',
+      `${offer.shop} · ${offer.productId}`,
+    );
   }
   async saveProduct(product: Product): Promise<Product> {
     await pause();
@@ -130,6 +122,10 @@ export class AdminMockApi {
   }
   async deleteProduct(id: number): Promise<void> {
     await pause();
+    if (this.offerStore.hasProduct(id))
+      throw new Error(
+        'Ce produit possède des offres. Retirez-les avant de supprimer la fiche.',
+      );
     const index = this.productRows.findIndex((row) => row.id === id);
     if (index < 0) throw new Error('Produit introuvable.');
     const [product] = this.productRows.splice(index, 1);
@@ -173,9 +169,7 @@ export class AdminMockApi {
     if (index < 0) this.shopRows.push(structuredClone(shop));
     else this.shopRows[index] = structuredClone(shop);
     if (previousName && previousName !== shop.name) {
-      for (const product of this.productRows) {
-        if (product.shop === previousName) product.shop = shop.name;
-      }
+      this.offerStore.renameShop(previousName, shop.name);
     }
     this.record('Modification de la boutique', shop.name);
     return structuredClone(shop);
@@ -184,10 +178,11 @@ export class AdminMockApi {
     await pause();
     const index = this.shopRows.findIndex((row) => row.id === id);
     if (index < 0) throw new Error('Boutique introuvable.');
+    if (this.offerStore.hasShop(this.shopRows[index].name))
+      throw new Error(
+        'Cette boutique possède des offres. Suspendez-la ou retirez ses offres avant suppression.',
+      );
     const [shop] = this.shopRows.splice(index, 1);
-    for (const product of this.productRows) {
-      if (product.shop === shop.name) product.status = 'Archivé';
-    }
     this.record('Suppression de la boutique', shop.name);
   }
   async listUsers(): Promise<CommunityUserView[]> {

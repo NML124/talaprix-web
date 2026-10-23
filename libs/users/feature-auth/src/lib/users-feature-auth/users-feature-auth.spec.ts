@@ -10,12 +10,12 @@ import { UsersFeatureAuth } from './users-feature-auth';
 
 describe('UsersFeatureAuth', () => {
   let fixture: ComponentFixture<UsersFeatureAuth>;
-  const authenticate = vi.fn();
+  const authenticateDemo = vi.fn(() => true);
   const signInWithOtp = vi.fn();
   const verifyOtp = vi.fn();
 
   beforeEach(async () => {
-    authenticate.mockClear();
+    authenticateDemo.mockClear();
     signInWithOtp.mockClear();
     verifyOtp.mockClear();
     await TestBed.configureTestingModule({
@@ -44,7 +44,7 @@ describe('UsersFeatureAuth', () => {
         },
         {
           provide: AuthSessionStore,
-          useValue: { user: () => null, authenticate },
+          useValue: { user: () => null, authenticateDemo },
         },
       ],
     }).compileComponents();
@@ -100,12 +100,7 @@ describe('UsersFeatureAuth', () => {
       ?.click();
     await fixture.whenStable();
 
-    expect(authenticate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        email: 'admin.demo@talaprix.cd',
-        roles: ['admin'],
-      }),
-    );
+    expect(authenticateDemo).toHaveBeenCalledWith('admin.demo@talaprix.cd');
     expect(signInWithOtp).not.toHaveBeenCalled();
     expect(verifyOtp).not.toHaveBeenCalled();
   });

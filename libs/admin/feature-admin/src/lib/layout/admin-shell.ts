@@ -35,6 +35,7 @@ import { AdminSelect } from '../ui/admin-select';
 import { AdminGlobalSearch } from '../ui/admin-global-search';
 import { AdminDialog } from '../ui/admin-dialog';
 import { AdminNotificationPreview } from '../services/admin-notification-preview';
+import { AdminCurrencyStore } from '../services/admin-currency-store';
 
 interface NavPage {
   label: string;
@@ -80,6 +81,7 @@ export class AdminShell {
   private readonly router = inject(Router);
   protected readonly session = inject(AuthSessionStore);
   protected readonly notifications = inject(AdminNotificationPreview);
+  protected readonly currency = inject(AdminCurrencyStore);
   protected readonly currentPath = signal(this.router.url.split('?')[0]);
   protected readonly scrolled = signal(false);
   protected readonly logoutConfirmation = signal(false);
@@ -117,12 +119,10 @@ export class AdminShell {
     {
       label: 'Catalogue & prix',
       icon: 'package',
-      count: 24,
       pages: [
         { label: 'Produits', path: '/admin/catalogue' },
         { label: 'Offres', path: '/admin/offres' },
         { label: 'Catégories', path: '/admin/categories' },
-        { label: 'Prix & modération', path: '/admin/moderation', count: 24 },
         { label: 'Boutiques', path: '/admin/boutiques', count: 4 },
       ],
     },
@@ -130,9 +130,7 @@ export class AdminShell {
       label: 'Marketing',
       icon: 'megaphone',
       pages: [
-        { label: 'Promotions', path: '/admin/marketing', query: 'promotions' },
         { label: 'Publicités', path: '/admin/publicites' },
-        { label: 'Récompenses', path: '/admin/recompenses' },
         { label: 'Notifications', path: '/admin/notifications' },
       ],
     },
@@ -147,7 +145,7 @@ export class AdminShell {
       pages: [
         { label: 'Administrateurs', path: '/admin/equipe' },
         { label: 'Rôles & permissions', path: '/admin/roles' },
-        { label: 'Mon profil & sécurité', path: '/admin/profil' },
+        { label: 'Mon compte', path: '/admin/profil' },
       ],
     },
   ];
@@ -155,6 +153,10 @@ export class AdminShell {
   constructor() {
     afterNextRender(() => {
       const saved = localStorage.getItem('talaprix-admin-theme');
+      const savedCurrency = localStorage.getItem('talaprix-admin-currency');
+      if (savedCurrency === 'CDF' || savedCurrency === 'USD') {
+        this.currency.setCurrency(savedCurrency);
+      }
       if (saved === 'light' || saved === 'dark' || saved === 'system')
         this.theme.set(saved);
       const media = window.matchMedia('(prefers-color-scheme: dark)');

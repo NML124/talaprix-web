@@ -1,144 +1,23 @@
 <tp-admin-page-header
-  title="Promotions"
-  subtitle="Promotions : baisse temporaire du prix d’une offre. Publicités : mise en avant sponsorisée. Les sélections éditoriales sont gérées séparément."
-  >@if(selected()==='Réductions sur les offres'){<button
-    class="btn btn-primary"
-    type="button"
-    (click)="newDiscount()"
-  >
-    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une réduction</button
-  >} @else if(selected()==='Sélections TalaPrix'){<button
-    class="btn btn-primary"
-    type="button"
-    (click)="newPromotion()"
-  >
-    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une sélection</button
-  >}</tp-admin-page-header
+  title="Sélections TalaPrix"
+  subtitle="Mises en avant éditoriales du catalogue."
+  ><button class="btn btn-primary" type="button" (click)="newPromotion()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une sélection
+  </button></tp-admin-page-header
 >
-<tp-segmented-tabs
-  [items]="tabs"
-  [selected]="selected()"
-  (selectTab)="changeTab($event)"
-/>
 @if(toast()){
 <div class="toast" role="status">{{toast()}}</div>
-} @if(selected()==='Sélections TalaPrix'){
+}
 <tp-promo-cards
   [promotions]="promotions()"
   (preview)="openPromotion($event,'preview')"
   (edit)="openPromotion($event,'edit')"
 />
-} @if(promotionDialog();as current){
+@if(promotionDialog();as current){
 <tp-promo-dialog
   [promotion]="current.promotion"
   [mode]="current.mode"
   (closed)="promotionDialog.set(null)"
   (saved)="savePromotion($event)"
-/>
-} @if(selected()==='Réductions sur les offres'){
-<section class="card">
-  <div class="card-head">
-    <h2>Promotions de prix</h2>
-  </div>
-  @if(discountError()) {
-  <p class="toast error" role="alert">
-    {{discountError()}}
-    <button type="button" class="link" (click)="loadDiscounts()">
-      Réessayer
-    </button>
-  </p>
-  } @else if(discountsLoading()) { @for(item of [1,2,3]; track item) {
-  <div class="skeleton" style="height: 48px"></div>
-  } } @else if(!discounts().length) {
-  <p class="muted">
-    Aucune réduction. Créez une réduction rattachée à une offre de boutique.
-  </p>
-  } @else {
-  <div class="discount-mobile-list">
-    @for(row of discounts(); track row.id) {
-    <article class="discount-mobile-card">
-      <div class="discount-mobile-head">
-        <strong>{{row.offer}}</strong>
-        <tp-status-dot
-          [label]="row.status"
-          [tone]="row.status==='Active'?'success':'info'"
-        />
-      </div>
-      <p class="muted small">{{row.shop}}</p>
-      <p class="discount-mobile-price">
-        <s class="muted">{{price(row.oldPrice,row.currency)}}</s>
-        <span aria-hidden="true">→</span>
-        <strong>{{price(row.newPrice,row.currency)}}</strong>
-      </p>
-      <div class="discount-mobile-foot">
-        <span class="muted small"
-          >{{dateRange(row.validFrom,row.validUntil)}}</span
-        >
-        <button
-          type="button"
-          class="btn btn-secondary"
-          [attr.aria-label]="'Modifier la réduction de '+row.offer"
-          (click)="editDiscount(row)"
-        >
-          <svg lucidePencil size="15" aria-hidden="true"></svg>
-          Modifier
-        </button>
-      </div>
-    </article>
-    }
-  </div>
-  <div class="table-wrap discount-desktop-table">
-    <table>
-      <thead>
-        <tr>
-          <th>Offre</th>
-          <th>Boutique</th>
-          <th>Prix avant → promo</th>
-          <th>Validité</th>
-          <th>État</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(row of discounts(); track row.id) {
-        <tr>
-          <td><strong>{{row.offer}}</strong></td>
-          <td>{{row.shop}}</td>
-          <td>
-            <span class="muted"
-              ><s>{{price(row.oldPrice,row.currency)}}</s></span
-            >
-            → <strong>{{price(row.newPrice,row.currency)}}</strong>
-          </td>
-          <td>{{dateRange(row.validFrom,row.validUntil)}}</td>
-          <td>
-            <tp-status-dot
-              [label]="row.status"
-              [tone]="row.status==='Active'?'success':'info'"
-            />
-          </td>
-          <td>
-            <button
-              class="table-action"
-              type="button"
-              [attr.aria-label]="'Modifier la réduction de '+row.offer"
-              (click)="editDiscount(row)"
-            >
-              <svg lucidePencil size="16" aria-hidden="true"></svg>
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  }
-</section>
-} @if(discountDialog(); as current) {
-<tp-offer-discount-dialog
-  [discount]="current.value"
-  [mode]="current.mode"
-  (closed)="discountDialog.set(null)"
-  (saved)="saveDiscount($event)"
 />
 }

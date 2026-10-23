@@ -1,135 +1,63 @@
 <tp-admin-page-header
-  title="Mon profil"
-  subtitle="Informations personnelles et préférences de votre compte."
-  ><button type="button" class="btn btn-primary" (click)="save()">
-    Enregistrer les modifications
-  </button></tp-admin-page-header
+  title="Mon compte"
+  subtitle="Informations personnelles et accès à l’espace administration."
 >
+  <button type="button" class="btn btn-primary" (click)="save()">
+    Enregistrer les modifications
+  </button>
+</tp-admin-page-header>
 @if(toast()){
 <div class="toast" role="status">{{toast()}}</div>
 }@if(error()){
 <div class="toast error" role="alert">{{error()}}</div>
 }
-<div class="split">
-  <div class="wide admin-stack">
-    <section class="card">
-      <div style="text-align: center; padding: 12px 0 22px">
-        <span
-          class="avatar brand"
-          style="width: 96px; height: 96px; font-size: 25px"
-          >AM</span
-        >
-        <h2 style="font-size: 22px; margin: 8px 0">{{name()}}</h2>
-        <span class="badge success">Super administrateur · Global</span>
+<div
+  class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.8fr)]"
+>
+  <section class="card grid content-start gap-6">
+    <div class="flex items-center gap-4 border-b border-[var(--line)] pb-5">
+      <span class="avatar brand size-16 text-xl">{{name().slice(0,1)}}</span>
+      <div class="min-w-0">
+        <h2 class="truncate text-xl font-semibold text-[var(--text-1)]">
+          {{name()}}
+        </h2>
+        <span class="badge success mt-2">Super administrateur · Global</span>
       </div>
-      <div class="form-stack">
-        <label class="field"
-          >Nom complet<input
-            [ngModel]="name()"
-            (ngModelChange)="name.set($event)" /></label
-        ><label class="field"
-          >Email professionnel<input
-            type="email"
-            [ngModel]="email()"
-            (ngModelChange)="email.set($event)" /></label
-        ><label class="field"
-          >Téléphone<input
-            type="tel"
-            [ngModel]="phone()"
-            (ngModelChange)="phone.set($event)"
-        /></label>
-      </div>
-    </section>
-    <section class="card">
-      <h2 style="margin-bottom: 14px">Préférences du compte</h2>
-      <div class="settings-list">
-        <div class="settings-row">
-          <span
-            >Langue de l'interface<small class="muted" style="display: block"
-              >Français</small
-            ></span
-          ><span class="muted small">Langue actuelle</span>
-        </div>
-        <div class="settings-row">
-          <span
-            >Actions à traiter<small class="muted" style="display: block"
-              >Prix, avis et boutiques en attente</small
-            ></span
-          ><tp-admin-switch
-            label="Recevoir les actions à traiter"
-            [checked]="actionAlerts()"
-            (changed)="actionAlerts.set($event)"
-          />
-        </div>
-        <div class="settings-row">
-          <span
-            >Rapports par email<small class="muted" style="display: block"
-              >Synthèse mensuelle de la plateforme</small
-            ></span
-          ><tp-admin-switch
-            label="Recevoir les rapports par email"
-            [checked]="reports()"
-            (changed)="reports.set($event)"
-          />
-        </div>
-        <div class="settings-row">
-          <span
-            >Résumé quotidien<small class="muted" style="display: block"
-              >Un email chaque matin à 08:00</small
-            ></span
-          ><tp-admin-switch
-            label="Recevoir le résumé quotidien"
-            [checked]="daily()"
-            (changed)="daily.set($event)"
-          />
-        </div>
-      </div>
-    </section>
-  </div>
-  <div class="narrow admin-stack">
-    <section class="card">
-      <div class="card-head">
-        <h2>Sécurité de connexion</h2>
-      </div>
-      <p class="notice notice-compact">
-        Les méthodes de connexion et la gestion des sessions sont contrôlées par
-        le service d’authentification TalaPrix.
-      </p>
-    </section>
-    <section class="card">
-      <div class="card-head">
-        <h2>Sessions</h2>
-      </div>
-      @for(row of sessions();track row.name){
-      <div class="item-row">
-        <span class="grow"
-          ><strong>{{row.name}}</strong><small>{{row.detail}}</small></span
-        >@if(row.current){<span class="badge info">Appareil actuel</span>}
-      </div>
-      }
-    </section>
-    <section class="card">
-      <h2>Historique de sécurité</h2>
-      <div class="item-row">
-        <span class="grow"
-          ><strong>Connexion réussie · MacBook Pro</strong
-          ><small
-            >Aujourd'hui, 08:10 · double authentification vérifiée</small
-          ></span
-        >
-      </div>
-      <div class="item-row">
-        <span class="grow"
-          ><strong>Mot de passe modifié</strong
-          ><small>12 septembre, 14:32</small></span
-        >
-      </div>
-      <div class="item-row">
-        <span class="grow"
-          ><strong>Double authentification activée</strong
-          ><small>12 septembre, 14:28</small></span
-        >
-      </div>
-    </section>
-  </div>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="field"
+        >Nom complet<input
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+      /></label>
+      <label class="field"
+        >Email professionnel<input
+          type="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+      /></label>
+      <label class="field"
+        >Téléphone<input
+          type="tel"
+          [ngModel]="phone()"
+          (ngModelChange)="phone.set($event)"
+      /></label>
+    </div>
+  </section>
+  <aside class="card grid content-start gap-4">
+    <h2 class="text-base font-semibold text-[var(--text-1)]">
+      Accès au panneau
+    </h2>
+    <p class="text-sm leading-relaxed text-[var(--text-2)]">
+      Votre compte dispose d’un accès global à l’administration TalaPrix.
+    </p>
+    <div
+      class="grid gap-1 rounded-xl border border-[var(--line)] bg-[var(--surface-muted)] p-4"
+    >
+      <span class="text-xs text-[var(--text-2)]">Adresse de connexion</span>
+      <strong class="break-all text-sm text-[var(--text-1)]"
+        >{{email()}}</strong
+      >
+    </div>
+  </aside>
 </div>

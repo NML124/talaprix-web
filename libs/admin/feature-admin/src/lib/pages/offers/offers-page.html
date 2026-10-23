@@ -1,7 +1,15 @@
 <tp-admin-page-header
   title="Offres"
-  subtitle="Prix publiés par les boutiques et état des annonces."
-/>
+  subtitle="Prix et disponibilité proposés par chaque boutique."
+  ><button
+    type="button"
+    class="btn btn-primary"
+    [disabled]="loading() || !products().length || !shops().length"
+    (click)="create()"
+  >
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une offre
+  </button></tp-admin-page-header
+>
 <div class="toolbar">
   <label class="search"
     ><span class="sr-only">Rechercher une offre</span
@@ -12,22 +20,30 @@
       (ngModelChange)="query.set($event); page.set(1)"
   /></label>
 </div>
+@if(toast()){
+<p class="toast" role="status">{{toast()}}</p>
+} @if(error()){
+<p class="toast error" role="alert">{{error()}}</p>
+}
 <section class="card">
   <div class="card-head">
     <h2>Toutes les offres</h2>
     <span class="muted small">{{filtered().length}} offres</span>
   </div>
-  @if(visible().length){
+  @if(loading()){
+  <div class="skeleton" style="height: 60px"></div>
+  } @else if(visible().length){
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>Produit</th>
           <th>Boutique</th>
-          <th>Catégorie</th>
+          <th>Devise</th>
           <th>Prix</th>
           <th>État</th>
           <th>Mise à jour</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -37,23 +53,58 @@
             <span class="flex items-center gap-3"
               ><img
                 class="thumb"
-                [src]="imagePath(row.image)"
+                [src]="imagePath(row.images[0] || productFor(row)?.image || '')"
                 [alt]="''"
-              /><strong>{{row.name}}</strong></span
+              /><strong
+                >{{productFor(row)?.name || 'Produit à compléter'}}</strong
+              ></span
             >
           </td>
           <td>{{row.shop}}</td>
-          <td>{{row.category}}</td>
-          <td class="number">{{row.price | number:'1.0-0':'fr-FR'}} FC</td>
+          <td>{{row.currency}}</td>
+          <td class="number">{{priceFor(row)}}</td>
           <td>
             <span
               class="badge"
-              [class.success]="row.status==='Publié'"
-              [class.warning]="row.status==='À revoir'"
+              [class.success]="row.status==='Active'"
+              [class.warning]="row.status==='En pause'"
               >{{row.status}}</span
             >
           </td>
           <td>{{row.updated}}</td>
+          <td>
+            <div class="table-actions">
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="'Modifier ' + (productFor(row)?.name || 'l’offre')"
+                (click)="open(row,'edit')"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="(row.status==='Active'?'Masquer ':'Réactiver ') + (productFor(row)?.name || 'l’offre')"
+                (click)="open(row,row.status==='Active'?'pause':'resume')"
+              >
+                @if(row.status==='Active'){<svg
+                  lucidePause
+                  size="16"
+                  aria-hidden="true"
+                ></svg
+                >}@else{<svg lucidePlay size="16" aria-hidden="true"></svg>}
+              </button>
+              <button
+                type="button"
+                class="table-action danger"
+                [attr.aria-label]="'Supprimer ' + (productFor(row)?.name || 'l’offre')"
+                (click)="open(row,'delete')"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
+          </td>
         </tr>
         }
       </tbody>
@@ -61,7 +112,7 @@
   </div>
   <tp-admin-pagination
     [total]="filtered().length"
-    [page]="page()"
+    [page]="currentPage()"
     [pageSize]="pageSize"
     (pageChanged)="page.set($event)"
   />}@else{<tp-empty-state
@@ -69,3 +120,22 @@
     message="Essayez une autre recherche."
   />}
 </section>
+@if(selected(); as row){
+<tp-admin-offer-dialog
+  [offer]="row"
+  [products]="products()"
+  [shops]="shops()"
+  [categories]="categoryStore.names()"
+  [mode]="mode()"
+  [creating]="creating()"
+  [error]="error()"
+  [busy]="proposing()"
+  (closed)="selected.set(null)"
+  (saved)="save()"
+  (paused)="toggle()"
+  (resumed)="toggle()"
+  (removed)="remove()"
+  (proposed)="proposeProduct($event)"
+  (imagesChanged)="selected.update(value => value ? {...value, images: $event} : value)"
+/>
+}

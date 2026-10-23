@@ -66,20 +66,19 @@
       {{ row.points }} points · membre depuis le {{ row.joined }} · dernière
       activité {{ row.activity }}
     </p>
-    @if (row.id === 1) {
+    @for (activity of visibleActivities(); track activity.action) {
     <div class="item-row">
-      <span class="grow"
-        ><strong>Prix proposé · Pain de mie</strong
-        ><small>2 500 FC · Maison Galaxy</small></span
-      ><span class="badge warning">En attente</span>
-    </div>
-    <div class="item-row">
-      <span class="grow"
-        ><strong>Note publiée · Chips Lay's</strong
-        ><small>4/5 · 02 oct.</small></span
-      >
+      <span class="grow">
+        <strong>{{activity.action}}</strong><small>{{activity.detail}}</small>
+      </span>
     </div>
     }
+    <tp-admin-pagination
+      [total]="activities().length"
+      [page]="activityPage()"
+      [pageSize]="activityPageSize"
+      (pageChanged)="activityPage.set($event)"
+    />
   </section>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="closed.emit()">

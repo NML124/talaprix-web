@@ -144,7 +144,8 @@
   @if(selected();as row){
   <tp-shop-dialog
     [shop]="row"
-    [products]="relatedProducts()"
+    [offers]="relatedOffers()"
+    [products]="products()"
     [mode]="dialogMode()"
     [error]="error()"
     (closed)="selected.set(null)"

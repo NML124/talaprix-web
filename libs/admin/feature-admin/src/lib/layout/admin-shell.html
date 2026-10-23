@@ -113,6 +113,31 @@
       <div class="topbar" [class.scrolled]="scrolled()">
         <tp-admin-global-search />
         <div class="toolbar">
+          <div
+            class="join rounded-xl border border-[var(--line)] bg-[var(--surface-muted)] p-1"
+            role="group"
+            aria-label="Devise d’affichage"
+            [title]="currency.rateHint()"
+          >
+            <button
+              type="button"
+              class="btn btn-sm join-item"
+              [class.btn-primary]="currency.currency()==='CDF'"
+              [attr.aria-pressed]="currency.currency()==='CDF'"
+              (click)="currency.setCurrency('CDF')"
+            >
+              FC
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm join-item"
+              [class.btn-primary]="currency.currency()==='USD'"
+              [attr.aria-pressed]="currency.currency()==='USD'"
+              (click)="currency.setCurrency('USD')"
+            >
+              USD
+            </button>
+          </div>
           <div class="flex items-center gap-2">
             <svg lucideMoon size="16" aria-hidden="true"></svg>
             <tp-admin-select

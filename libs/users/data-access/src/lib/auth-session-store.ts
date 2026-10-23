@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   computed,
   inject,
+  isDevMode,
   makeEnvironmentProviders,
   PLATFORM_ID,
   Service,
@@ -20,6 +21,8 @@ export type AuthSessionState =
 export class AuthSessionStore {
   readonly #supabase = inject(SupabaseClientService);
   readonly #isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  readonly #demoPersistenceEnabled = isDevMode() && this.#isBrowser;
+  readonly #demoStorageKey = 'talaprix.private-demo-session.v1';
   readonly #state = signal<AuthSessionState>({
     status: 'anonymous',
     user: null,
@@ -33,19 +36,33 @@ export class AuthSessionStore {
 
   async initialize(): Promise<void> {
     if (!this.#isBrowser) return;
+    this.restoreDemoSession();
     const client = this.#supabase.client;
     if (!client) return;
+    client.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') this.clear();
+      else if (session?.user) void this.authenticateWithRole(session.user);
+    });
     const { data } = await client.auth.getSession();
     if (data.session?.user) await this.authenticateWithRole(data.session.user);
-    client.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session?.user) this.clear();
-      else if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')
-        void this.authenticateWithRole(session.user);
-    });
   }
 
   authenticate(user: UserIdentity): void {
+    if (!user.id.startsWith('local-demo-')) this.removeDemoSession();
     this.#state.set({ status: 'authenticated', user });
+  }
+
+  authenticateDemo(email: string): boolean {
+    if (!this.#demoPersistenceEnabled) return false;
+    const identity = this.demoIdentity(email);
+    if (!identity) return false;
+    try {
+      localStorage.setItem(this.#demoStorageKey, identity.email);
+    } catch {
+      // Keep the current demo login usable when browser storage is unavailable.
+    }
+    this.#state.set({ status: 'authenticated', user: identity });
+    return true;
   }
 
   private async authenticateWithRole(user: User): Promise<void> {
@@ -71,7 +88,52 @@ export class AuthSessionStore {
   }
 
   clear(): void {
+    this.removeDemoSession();
     this.#state.set({ status: 'anonymous', user: null });
+  }
+
+  private restoreDemoSession(): void {
+    if (!this.#demoPersistenceEnabled) return;
+    try {
+      const identity = this.demoIdentity(
+        localStorage.getItem(this.#demoStorageKey) ?? '',
+      );
+      if (identity)
+        this.#state.set({ status: 'authenticated', user: identity });
+      else localStorage.removeItem(this.#demoStorageKey);
+    } catch {
+      // Storage may be disabled by the browser; normal authentication still works.
+    }
+  }
+
+  private removeDemoSession(): void {
+    if (!this.#demoPersistenceEnabled) return;
+    try {
+      localStorage.removeItem(this.#demoStorageKey);
+    } catch {
+      // Ignore storage restrictions during sign-out.
+    }
+  }
+
+  private demoIdentity(email: string): UserIdentity | null {
+    const normalized = email.trim().toLowerCase();
+    if (normalized === 'admin.demo@talaprix.cd') {
+      return {
+        id: 'local-demo-admin',
+        email: normalized,
+        displayName: 'Admin de démonstration',
+        roles: ['admin', 'super-admin'],
+      };
+    }
+    if (normalized === 'shop.demo@talaprix.cd') {
+      return {
+        id: 'local-demo-shop',
+        email: normalized,
+        displayName: 'Responsable de démonstration',
+        roles: ['shop'],
+      };
+    }
+    return null;
   }
 
   async signOut(): Promise<void> {

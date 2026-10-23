@@ -7,7 +7,7 @@ export type AdminNoticeStatus =
   | 'information';
 export interface AdminNotice {
   id: number;
-  kind: 'shop_request' | 'moderation' | 'scraping';
+  kind: 'shop_request' | 'scraping';
   title: string;
   summary: string;
   time: string;
@@ -34,15 +34,6 @@ export class AdminNotificationPreview {
       shop: 'Ujisha',
       applicant: 'Compte de démonstration 01',
       zone: 'Gombe, Kinshasa',
-    },
-    {
-      id: 2,
-      kind: 'moderation',
-      title: 'Prix à vérifier',
-      summary: '3 propositions attendent une décision',
-      time: 'Aujourd’hui · 09:42',
-      read: false,
-      status: 'information',
     },
     {
       id: 3,

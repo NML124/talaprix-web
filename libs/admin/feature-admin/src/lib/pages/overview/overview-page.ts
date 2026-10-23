@@ -6,12 +6,16 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LucideChevronRight, LucidePlus } from '@lucide/angular';
+import {
+  LucideArrowUpRight,
+  LucideChevronRight,
+  LucidePlus,
+} from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
 import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { AdminMockApi } from '../../services/admin-mock-api';
-import { fc, imagePath } from '../../mocks/catalogue';
-import { Pagination } from '../../ui/pagination';
+import { imagePath } from '../../mocks/catalogue';
+import { OverviewDialogs } from './overview-dialogs';
 import { adminEngagementPreview } from '../../mocks/admin-engagement-preview';
 import { MetricBars } from '../../ui/metric-bars';
 import type { MetricBarItem } from '../../ui/metric-bars';
@@ -22,6 +26,13 @@ import {
   usageZones,
 } from '../../mocks/overview-insights';
 import type { AuditEntry } from '../../mocks/models';
+import { AdminCurrencyStore } from '../../services/admin-currency-store';
+import {
+  savingsByPeriod,
+  savingsPeriodNote,
+  savingsPeriods,
+  type SavingsPeriod,
+} from '../../mocks/savings-periods';
 
 @Component({
   selector: 'tp-overview-page',
@@ -31,7 +42,8 @@ import type { AuditEntry } from '../../mocks/models';
     SegmentedTabs,
     MetricBars,
     SavingsChart,
-    Pagination,
+    OverviewDialogs,
+    LucideArrowUpRight,
     LucideChevronRight,
     LucidePlus,
   ],
@@ -40,19 +52,42 @@ import type { AuditEntry } from '../../mocks/models';
 })
 export class OverviewPage {
   private readonly api = inject(AdminMockApi);
+  protected readonly currency = inject(AdminCurrencyStore);
   protected readonly overview = signal<Awaited<
     ReturnType<AdminMockApi['getOverview']>
   > | null>(null);
   protected readonly activeTab = signal('Favoris');
-  protected readonly page = signal(1);
-  protected readonly pageSize = 10;
   protected readonly visibleTrending = computed(() =>
-    (this.overview()?.trending ?? []).slice(
-      (this.page() - 1) * this.pageSize,
-      this.page() * this.pageSize,
-    ),
+    (this.overview()?.trending ?? []).slice(0, 3),
   );
-  protected readonly fc = fc;
+  protected readonly trendingOpen = signal(false);
+  protected readonly trendingPage = signal(1);
+  protected readonly trendingPageSize = 10;
+  protected readonly selectedLowest = signal<
+    (typeof this.lowestPriceShops)[number] | null
+  >(null);
+  protected readonly savingsPeriod = signal<SavingsPeriod>('Mois');
+  protected readonly savingsPeriods = savingsPeriods;
+  protected readonly savingsSeries = computed(
+    () => savingsByPeriod[this.savingsPeriod()],
+  );
+  protected readonly savingsNote = computed(
+    () => savingsPeriodNote[this.savingsPeriod()],
+  );
+  protected readonly savingsCurrent = computed(
+    () => this.savingsSeries()[this.savingsSeries().length - 1],
+  );
+  protected readonly savingsTotal = computed(() =>
+    this.currency.formatMillionsFromCdf(this.savingsCurrent()?.current ?? 0),
+  );
+  protected readonly savingsChange = computed(() => {
+    const row = this.savingsCurrent();
+    if (!row?.previous) return '';
+    const change = Math.round(
+      ((row.current - row.previous) / row.previous) * 100,
+    );
+    return `${change >= 0 ? '+' : ''}${change} % vs période précédente`;
+  });
   protected readonly imagePath = imagePath;
   protected readonly engagement = adminEngagementPreview;
   protected readonly usageZones = usageZones;
@@ -65,15 +100,6 @@ export class OverviewPage {
       tone: 'neutral' as const,
     })),
   );
-  protected readonly cheapestShopBars = this.scaleBars(
-    this.lowestPriceShops.map((row) => ({
-      label: row.shop,
-      detail: `Ex. ${row.example}`,
-      value: row.wins,
-      displayValue: String(row.wins),
-      tone: 'positive' as const,
-    })),
-  );
   protected readonly engagementBars = [
     {
       label: 'Contacts',
@@ -84,11 +110,6 @@ export class OverviewPage {
       label: 'Itinéraires',
       field: 'locatePeople' as const,
       tone: 'neutral' as const,
-    },
-    {
-      label: 'Favoris',
-      field: 'favoritePeople' as const,
-      tone: 'attention' as const,
     },
   ].map((chart) => ({
     ...chart,

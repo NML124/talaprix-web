@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { PageHeader } from '../../ui/page-header';
 import { AdminMockApi } from '../../services/admin-mock-api';
+import { AuthSessionStore } from '@talaprix/users/data-access';
 import {
   actions,
   domains,
@@ -23,6 +24,10 @@ import type { PermissionDomain, PermissionAction } from '../../mocks/models';
 })
 export class RolesPage {
   private readonly api = inject(AdminMockApi);
+  private readonly session = inject(AuthSessionStore);
+  protected readonly canEditRoles = computed(
+    () => this.session.user()?.roles.includes('super-admin') ?? false,
+  );
   protected readonly roleRows = defaultRoles;
   protected readonly domains = domains;
   protected readonly actions = actions;
@@ -33,9 +38,7 @@ export class RolesPage {
       this.roleRows[0],
   );
   protected readonly roleIsLocked = computed(
-    () =>
-      this.selected() === 'Super administrateur' ||
-      this.selected() === 'Administrateur',
+    () => this.selected() === 'Super administrateur',
   );
   protected readonly permissions = signal(initialPermissions('Modérateur'));
   protected readonly saved = signal(initialPermissions('Modérateur'));
@@ -62,6 +65,7 @@ export class RolesPage {
   }
   protected isReserved(domain: PermissionDomain): boolean {
     return (
+      (this.selected() !== 'Administrateur' || !this.canEditRoles()) &&
       !this.roleIsLocked() &&
       (domain === 'Administrateurs' || domain === 'Rôles & permissions')
     );
@@ -73,7 +77,8 @@ export class RolesPage {
     return this.permissions().has(`${domain}:${action}`);
   }
   protected toggle(domain: PermissionDomain, action: PermissionAction): void {
-    if (this.roleIsLocked() || this.isReserved(domain)) return;
+    if (!this.canEditRoles() || this.roleIsLocked() || this.isReserved(domain))
+      return;
     const next = new Set(this.permissions());
     const key = `${domain}:${action}`;
     if (next.has(key)) next.delete(key);
@@ -86,7 +91,7 @@ export class RolesPage {
     this.toast.set('');
   }
   protected async save(): Promise<void> {
-    if (this.roleIsLocked() || !this.changes()) return;
+    if (!this.canEditRoles() || this.roleIsLocked() || !this.changes()) return;
     await this.api.recordAction(
       'Modification des permissions',
       `${this.selected()} · ${this.changes()} changements`,

@@ -56,7 +56,8 @@
             ><span>{{row.shop}} · {{row.contributor}}</span>
             <span aria-hidden="true">|</span>
             <span class="number"
-              >{{fc(row.current)}} → {{fc(row.proposed)}}</span
+              >{{currency.format(row.current)}} →
+              {{currency.format(row.proposed)}}</span
             ></small
           ></span
         ><span
@@ -131,13 +132,13 @@
         ><strong
           class="number"
           style="display: block; text-decoration: line-through"
-          >{{fc(row.current)}}</strong
+          >{{currency.format(row.current)}}</strong
         >
       </div>
       <div style="background: #e3f4ec; border-radius: 10px; padding: 14px">
         <span class="small">Prix proposé · {{row.change}}</span
         ><strong class="number" style="display: block; font-size: 21px"
-          >{{fc(row.proposed)}}</strong
+          >{{currency.format(row.proposed)}}</strong
         >
       </div>
     </div>
@@ -176,15 +177,15 @@
     @if(row.id===1){
     <div class="item-row">
       <span class="grow">28 sept. · Joël Kabeya</span
-      ><strong>{{fc(2800)}}</strong>
+      ><strong>{{currency.format(2800)}}</strong>
     </div>
     <div class="item-row">
       <span class="grow">14 sept. · Aline Mukendi</span
-      ><strong>{{fc(2700)}}</strong>
+      ><strong>{{currency.format(2700)}}</strong>
     </div>
     <div class="item-row">
       <span class="grow">01 sept. · Joël Kabeya</span
-      ><strong>{{fc(2500)}}</strong>
+      ><strong>{{currency.format(2500)}}</strong>
     </div>
     }@else{
     <p class="muted small">Aucun historique antérieur dans cet aperçu.</p>

@@ -43,16 +43,16 @@
     /></label>
     <div class="grid-2">
       <label class="field"
-        >Début<input
-          type="date"
-          [ngModel]="value().validFrom"
-          (ngModelChange)="change('validFrom', $event)"
+        >Début<tp-admin-date-picker
+          label="Début de validité"
+          [value]="value().validFrom"
+          (valueChange)="change('validFrom', $event)"
       /></label>
       <label class="field"
-        >Fin<input
-          type="date"
-          [ngModel]="value().validUntil"
-          (ngModelChange)="change('validUntil', $event)"
+        >Fin<tp-admin-date-picker
+          label="Fin de validité"
+          [value]="value().validUntil"
+          (valueChange)="change('validUntil', $event)"
       /></label>
     </div>
   </div>

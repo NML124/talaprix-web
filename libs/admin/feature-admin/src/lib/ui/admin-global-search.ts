@@ -88,7 +88,7 @@ export class AdminGlobalSearch {
       ...products.map((row) => ({
         group: 'Produits',
         label: row.name,
-        detail: `${row.category} · ${row.shop}`,
+        detail: `${row.category} · ${row.unit}`,
         path: '/admin/catalogue',
         query: { q: row.name },
       })),

@@ -21,7 +21,7 @@ import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { StatusDot } from '../../ui/status-dot';
 import { EmptyState } from '../../ui/empty-state';
 import { Pagination } from '../../ui/pagination';
-import { fc, imagePath } from '../../mocks/catalogue';
+import { imagePath } from '../../mocks/catalogue';
 import type { Product } from '../../mocks/models';
 import { ProductDialog } from './product-dialog';
 import { CategoryPreviewStore } from '../../services/category-preview-store';
@@ -60,26 +60,17 @@ export class CataloguePage {
   protected readonly tab = signal('Publiés 2 486');
   protected readonly query = signal('');
   protected readonly category = signal('Toutes les catégories');
-  protected readonly shop = signal('Toutes les boutiques');
   protected readonly loading = signal(true);
   protected readonly error = signal('');
   protected readonly toast = signal('');
   protected readonly page = signal(1);
   protected readonly pageSize = 10;
-  protected readonly fc = fc;
   protected readonly imagePath = imagePath;
   protected readonly tabs = ['Publiés 2 486', 'Brouillons 38', 'Archivés 124'];
   protected readonly categories = computed(() => [
     'Toutes les catégories',
     ...this.categoryStore.names(),
   ]);
-  protected readonly shops = [
-    'Toutes les boutiques',
-    'Kin Marché',
-    'S&K',
-    'Maison Galaxy',
-    'Swiss Mart',
-  ];
   protected readonly filtered = computed(() =>
     this.products().filter((row) => {
       const group = this.tab().startsWith('Publiés')
@@ -89,12 +80,11 @@ export class CataloguePage {
           : row.status === 'Archivé';
       return (
         group &&
-        `${row.name} ${row.shop}`
+        `${row.name} ${row.category}`
           .toLowerCase()
           .includes(this.query().toLowerCase()) &&
         (this.category() === 'Toutes les catégories' ||
-          row.category === this.category()) &&
-        (this.shop() === 'Toutes les boutiques' || row.shop === this.shop())
+          row.category === this.category())
       );
     }),
   );
@@ -145,8 +135,6 @@ export class CataloguePage {
       name: '',
       category: this.categoryStore.names()[0] ?? '',
       unit: '',
-      shop: 'Kin Marché',
-      price: 0,
       status: 'Brouillon',
       updated: 'Aujourd’hui',
       image: '',
@@ -161,10 +149,8 @@ export class CataloguePage {
   }
   protected async save(): Promise<void> {
     const row = this.selected();
-    if (!row?.name.trim() || row.price <= 0 || !row.image) {
-      this.error.set(
-        'Renseignez un nom, un prix valide et au moins une photo.',
-      );
+    if (!row?.name.trim() || !row.category.trim() || !row.image) {
+      this.error.set('Renseignez un nom, une catégorie et au moins une photo.');
       return;
     }
     this.error.set('');
@@ -203,8 +189,10 @@ export class CataloguePage {
       this.products.set(await this.api.listProducts());
       this.selected.set(null);
       this.toast.set('Produit supprimé et action auditée.');
-    } catch {
-      this.error.set('Suppression impossible.');
+    } catch (error) {
+      this.error.set(
+        error instanceof Error ? error.message : 'Suppression impossible.',
+      );
     }
   }
   protected statusTone(value: string): 'success' | 'warning' | 'neutral' {
