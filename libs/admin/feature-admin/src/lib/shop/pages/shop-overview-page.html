@@ -10,12 +10,14 @@
 </header>
 <section class="shop-status-strip" aria-label="État de la boutique">
   <div>
-    <span class="status success">{{ store.data()?.shop?.status }}</span
-    ><strong>Votre boutique est visible</strong>
+    <span class="status success"
+      >{{ store.data()?.shop?.status === 'Active' ? 'Visible' : 'À compléter'
+      }}</span
+    >
   </div>
   <p>
-    Mis à jour {{ store.data()?.shop?.updatedAt }} · {{
-    store.data()?.shop?.commune }}
+    {{store.data()?.shop?.commune}} · Mis à jour
+    {{store.data()?.shop?.updatedAt}}
   </p>
 </section>
 <section
@@ -41,34 +43,71 @@
     ><strong class="number">{{ store.data()?.reviews?.length }}</strong>
   </div>
 </section>
-<section class="shop-engagement-section" aria-label="Engagement des visiteurs">
-  <div class="card-head">
-    <div>
-      <h2>Intérêt pour vos offres</h2>
-      <p class="muted small">
-        Personnes distinctes par action · 30 derniers jours
-      </p>
+<div class="shop-overview-columns">
+  <section class="card" aria-label="Engagement des visiteurs">
+    <div class="card-head">
+      <div>
+        <h2>Intérêt pour vos offres</h2>
+        <p class="muted small">
+          Personnes distinctes par action · 30 derniers jours
+        </p>
+      </div>
+      <a routerLink="/shop/analyses" class="shop-text-link"
+        >Voir les analyses
+        <svg lucideArrowRight size="15" aria-hidden="true"></svg
+      ></a>
     </div>
-    <a routerLink="/shop/analyses" class="shop-text-link"
-      >Voir les analyses
-      <svg lucideArrowRight size="15" aria-hidden="true"></svg
-    ></a>
-  </div>
-  <div class="shop-engagement-list">
-    <div>
-      <span>Contacter le vendeur</span
-      ><strong class="number">{{ engagement()?.contactPeople ?? 0 }}</strong>
+    <div class="grid min-w-0 gap-3">
+      @for (metric of engagementBars(); track metric.label) {
+      <div
+        class="grid grid-cols-[minmax(86px,0.8fr)_minmax(0,2fr)_auto] items-center gap-3 text-xs"
+      >
+        <span class="muted">{{metric.label}}</span>
+        <span class="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]"
+          ><span
+            class="block h-full rounded-full bg-[var(--brand)]"
+            [style.width.%]="metric.width"
+          ></span
+        ></span>
+        <strong class="number">{{metric.value}}</strong>
+      </div>
+      }
     </div>
-    <div>
-      <span>Localiser la boutique</span
-      ><strong class="number">{{ engagement()?.locatePeople ?? 0 }}</strong>
+  </section>
+  <section class="card" aria-label="Position des prix de la boutique">
+    <div class="card-head">
+      <div>
+        <p class="shop-eyebrow">PRIX DU MARCHÉ</p>
+        <h2>Vos prix comparés</h2>
+      </div>
+      <a routerLink="/shop/analyses" class="shop-text-link"
+        >Détails <svg lucideArrowRight size="15" aria-hidden="true"></svg
+      ></a>
     </div>
-    <div>
-      <span>Ajout en favoris</span
-      ><strong class="number">{{ engagement()?.favoritePeople ?? 0 }}</strong>
+    <div class="grid gap-3">
+      @for (metric of priceBars(); track metric.label) {
+      <div class="grid gap-1.5">
+        <div class="flex items-center justify-between gap-2 text-xs">
+          <span class="muted">{{metric.label}}</span
+          ><strong class="number">{{metric.value}}</strong>
+        </div>
+        <span class="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]"
+          ><span
+            class="block h-full rounded-full"
+            [class.bg-emerald-500]="metric.tone === 'good'"
+            [class.bg-slate-400]="metric.tone === 'neutral'"
+            [class.bg-amber-500]="metric.tone === 'attention'"
+            [style.width.%]="metric.width"
+          ></span
+        ></span>
+      </div>
+      }
     </div>
-  </div>
-</section>
+    <p class="muted small mt-4">
+      Comparaison indicative des offres similaires.
+    </p>
+  </section>
+</div>
 <div class="shop-overview-columns">
   <section class="card">
     <div class="card-head">

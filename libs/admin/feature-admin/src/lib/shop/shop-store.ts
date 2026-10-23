@@ -1,5 +1,11 @@
+import type {
+  ShopRepository,
+  ShopWorkspace,
+  ShopOffer,
+  ShopDiscount,
+  ShopProfile,
+} from './shop-models';
 import { computed, isDevMode, Service, signal } from '@angular/core';
-import type { ShopRepository, ShopWorkspace } from './shop-models';
 import { SHOP_PREVIEW_ID, shopPreview } from './shop-fixture';
 
 class ShopPreviewRepository implements ShopRepository {
@@ -69,25 +75,128 @@ export class ShopStore {
 
   updateOffer(
     offerId: string,
-    change: {
-      visibility?: 'visible' | 'hidden';
-      availability?: 'in_stock' | 'out_of_stock';
-    },
+    change: Partial<
+      Pick<
+        ShopOffer,
+        | 'visibility'
+        | 'availability'
+        | 'price'
+        | 'product'
+        | 'category'
+        | 'images'
+      >
+    >,
   ): boolean {
-    const current = this.state();
-    if (!this.previewEnabled || current.status !== 'ready') return false;
-    const offer = current.data.offers.find((row) => row.id === offerId);
-    if (!offer || offer.publication !== 'published') return false;
-    this.state.set({
-      status: 'ready',
-      data: {
-        ...current.data,
-        offers: current.data.offers.map((row) =>
-          row.id === offerId ? { ...row, ...change } : row,
-        ),
-      },
+    const current = this.ready();
+    const offer = current?.offers.find((row) => row.id === offerId);
+    if (!current || !offer || offer.publication !== 'published') return false;
+    this.commit({
+      ...current,
+      offers: current.offers.map((row) =>
+        row.id === offerId
+          ? { ...row, ...change, updatedAt: 'À l’instant' }
+          : row,
+      ),
     });
     return true;
+  }
+
+  saveOffer(offer: ShopOffer): boolean {
+    const current = this.ready();
+    if (
+      !current ||
+      !offer.product.trim() ||
+      !Number.isFinite(offer.price) ||
+      offer.price <= 0
+    )
+      return false;
+    const exists = current.offers.some((row) => row.id === offer.id);
+    this.commit({
+      ...current,
+      offers: exists
+        ? current.offers.map((row) =>
+            row.id === offer.id ? { ...offer, updatedAt: 'À l’instant' } : row,
+          )
+        : [
+            {
+              ...offer,
+              shopId: current.shop.id,
+              publication: 'published',
+              visibility: 'visible',
+              availability: 'in_stock',
+              updatedAt: 'À l’instant',
+            },
+            ...current.offers,
+          ],
+    });
+    return true;
+  }
+
+  deleteOffer(offerId: string): boolean {
+    const current = this.ready();
+    if (!current || !current.offers.some((row) => row.id === offerId))
+      return false;
+    this.commit({
+      ...current,
+      offers: current.offers.filter((row) => row.id !== offerId),
+      discounts: current.discounts.filter((row) => row.offerId !== offerId),
+    });
+    return true;
+  }
+
+  saveDiscount(discount: ShopDiscount): boolean {
+    const current = this.ready();
+    if (
+      !current ||
+      !current.offers.some((row) => row.id === discount.offerId) ||
+      discount.newPrice <= 0 ||
+      discount.newPrice >= discount.oldPrice
+    )
+      return false;
+    const exists = current.discounts.some((row) => row.id === discount.id);
+    this.commit({
+      ...current,
+      discounts: exists
+        ? current.discounts.map((row) =>
+            row.id === discount.id ? discount : row,
+          )
+        : [discount, ...current.discounts],
+    });
+    return true;
+  }
+
+  deleteDiscount(id: string): boolean {
+    const current = this.ready();
+    if (!current || !current.discounts.some((row) => row.id === id))
+      return false;
+    this.commit({
+      ...current,
+      discounts: current.discounts.filter((row) => row.id !== id),
+    });
+    return true;
+  }
+
+  saveProfile(shop: ShopProfile): boolean {
+    const current = this.ready();
+    if (
+      !current ||
+      !shop.name.trim() ||
+      !shop.address.trim() ||
+      !shop.commune.trim()
+    )
+      return false;
+    this.commit({ ...current, shop: { ...shop, updatedAt: 'À l’instant' } });
+    return true;
+  }
+
+  private ready(): ShopWorkspace | null {
+    const current = this.state();
+    return this.previewEnabled && current.status === 'ready'
+      ? current.data
+      : null;
+  }
+  private commit(data: ShopWorkspace): void {
+    this.state.set({ status: 'ready', data });
   }
 }
 

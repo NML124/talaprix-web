@@ -1,0 +1,48 @@
+<section class="card">
+  <div class="card-head">
+    <div>
+      <p class="shop-eyebrow">INTERACTIONS</p>
+      <h2>Actions sur vos offres</h2>
+    </div>
+    <span class="muted small"
+      >{{periodKey() === '7d' ? '7 jours' : '30 jours'}} · volume mesuré</span
+    >
+  </div>
+  <tp-metric-bars
+    [items]="engagementBars()"
+    label="Interactions de la boutique par type d’action"
+  />
+  <p class="muted small mt-4">
+    Les vues comptent les consultations ; les autres indicateurs comptent les
+    personnes distinctes.
+  </p>
+</section>
+<section class="shop-overview-columns">
+  <article class="card">
+    <div class="card-head">
+      <div>
+        <p class="shop-eyebrow">POSITIONNEMENT</p>
+        <h2>Classement des prix</h2>
+      </div>
+    </div>
+    <tp-metric-bars
+      [items]="priceBars()"
+      label="Position des prix de la boutique"
+    />
+    <p class="muted small">
+      Comparaison indicative fondée sur les offres similaires observées.
+    </p>
+  </article>
+  <article class="card">
+    <div class="card-head">
+      <div>
+        <p class="shop-eyebrow">CONCURRENCE</p>
+        <h2>Boutiques avec plus d’offres moins chères</h2>
+      </div>
+    </div>
+    <tp-metric-bars
+      [items]="competitorBars()"
+      label="Offres moins chères par boutique concurrente"
+    />
+  </article>
+</section>

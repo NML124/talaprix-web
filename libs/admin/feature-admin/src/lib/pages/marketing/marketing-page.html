@@ -1,18 +1,18 @@
 <tp-admin-page-header
   title="Promotions"
-  subtitle="Réductions d’offres et visibilité TalaPrix."
+  subtitle="Promotions : baisse temporaire du prix d’une offre. Publicités : mise en avant sponsorisée. Les sélections éditoriales sont gérées séparément."
   >@if(selected()==='Réductions sur les offres'){<button
     class="btn btn-primary"
     type="button"
     (click)="newDiscount()"
   >
     <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une réduction</button
-  >} @else if(selected()==='Mise en avant'){<button
+  >} @else if(selected()==='Sélections TalaPrix'){<button
     class="btn btn-primary"
     type="button"
     (click)="newPromotion()"
   >
-    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une mise en avant</button
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une sélection</button
   >}</tp-admin-page-header
 >
 <tp-segmented-tabs
@@ -22,7 +22,7 @@
 />
 @if(toast()){
 <div class="toast" role="status">{{toast()}}</div>
-} @if(selected()==='Mise en avant'){
+} @if(selected()==='Sélections TalaPrix'){
 <tp-promo-cards
   [promotions]="promotions()"
   (preview)="openPromotion($event,'preview')"
@@ -38,7 +38,7 @@
 } @if(selected()==='Réductions sur les offres'){
 <section class="card">
   <div class="card-head">
-    <h2>Réductions appliquées aux offres</h2>
+    <h2>Promotions de prix</h2>
   </div>
   @if(discountError()) {
   <p class="toast error" role="alert">

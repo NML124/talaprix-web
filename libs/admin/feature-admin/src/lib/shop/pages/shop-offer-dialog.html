@@ -1,0 +1,57 @@
+<tp-admin-dialog
+  [title]="mode()==='create'?'Créer une offre':mode()==='edit'?'Modifier l’offre':'Supprimer l’offre'"
+  (closed)="closed.emit()"
+>
+  @if(mode()==='delete') {
+  <p>
+    Supprimer <strong>{{offer().product}}</strong> ? Ses promotions associées
+    seront également retirées.
+  </p>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-danger" (click)="removed.emit()">
+      Confirmer la suppression
+    </button>
+  </div>
+  } @else { @if(error()){
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <tp-admin-product-images
+    [images]="value().images ?? []"
+    (imagesChanged)="changeImages($event)"
+  />
+  <div class="form-stack">
+    <label class="field"
+      >Produit<input
+        [ngModel]="value().product"
+        (ngModelChange)="change('product',$event)"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Catégorie<tp-admin-select
+          [options]="categories()"
+          [selected]="value().category"
+          ariaLabel="Catégorie de l’offre"
+          (changed)="change('category',$event)"
+      /></label>
+      <label class="field"
+        >Prix (FC)<input
+          type="number"
+          min="1"
+          [ngModel]="value().price"
+          (ngModelChange)="change('price',+$event)"
+      /></label>
+    </div>
+  </div>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>

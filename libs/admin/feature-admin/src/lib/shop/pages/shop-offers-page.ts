@@ -6,16 +6,31 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideEye } from '@lucide/angular';
+import {
+  LucideEye,
+  LucidePencil,
+  LucidePlus,
+  LucideTrash2,
+} from '@lucide/angular';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { Pagination } from '../../ui/pagination';
 import type { ShopOffer } from '../shop-models';
 import { ShopStore, formatShopPrice } from '../shop-store';
+import { ShopOfferDialog } from './shop-offer-dialog';
 
 @Component({
   selector: 'tp-shop-offers-page',
   host: { class: 'grid min-w-0 content-start items-start gap-6' },
-  imports: [FormsModule, LucideEye, AdminDialog, Pagination],
+  imports: [
+    FormsModule,
+    LucideEye,
+    LucidePencil,
+    LucidePlus,
+    LucideTrash2,
+    AdminDialog,
+    Pagination,
+    ShopOfferDialog,
+  ],
   templateUrl: './shop-offers-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,6 +45,10 @@ export class ShopOffersPage {
   >('Toutes');
   protected readonly selectedId = signal<string | null>(null);
   protected readonly confirmHide = signal(false);
+  protected readonly editing = signal<{
+    offer: ShopOffer;
+    mode: 'create' | 'edit' | 'delete';
+  } | null>(null);
   protected readonly selected = computed(
     () =>
       this.store.data()?.offers.find((row) => row.id === this.selectedId()) ??
@@ -83,6 +102,58 @@ export class ShopOffersPage {
 
   protected availabilityLabel(offer: ShopOffer): string {
     return offer.availability === 'out_of_stock' ? 'Stock épuisé' : 'En stock';
+  }
+
+  protected blankOffer(): ShopOffer {
+    return {
+      id: `offer-${Date.now()}`,
+      shopId: this.store.data()?.shop.id ?? '',
+      product: '',
+      category: 'Téléphones',
+      price: 1,
+      currency: 'CDF',
+      publication: 'published',
+      visibility: 'visible',
+      availability: 'in_stock',
+      updatedAt: 'À l’instant',
+      images: [],
+      engagement: {
+        '7d': {
+          contactPeople: 0,
+          locatePeople: 0,
+          favoritePeople: 0,
+          views: 0,
+        },
+        '30d': {
+          contactPeople: 0,
+          locatePeople: 0,
+          favoritePeople: 0,
+          views: 0,
+        },
+      },
+    };
+  }
+  protected openCreate(): void {
+    this.editing.set({ offer: this.blankOffer(), mode: 'create' });
+  }
+  protected edit(offer: ShopOffer): void {
+    this.editing.set({ offer: structuredClone(offer), mode: 'edit' });
+  }
+  protected remove(offer: ShopOffer): void {
+    this.editing.set({ offer, mode: 'delete' });
+  }
+  protected saveOffer(offer: ShopOffer): void {
+    if (this.store.saveOffer(offer)) this.editing.set(null);
+  }
+  protected deleteOffer(): void {
+    const current = this.editing();
+    if (current && this.store.deleteOffer(current.offer.id))
+      this.editing.set(null);
+  }
+  protected categories(): string[] {
+    return [
+      ...new Set((this.store.data()?.offers ?? []).map((row) => row.category)),
+    ];
   }
 
   protected setVisibility(

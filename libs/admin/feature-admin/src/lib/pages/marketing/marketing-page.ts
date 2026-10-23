@@ -52,7 +52,10 @@ export class MarketingPage {
     mode: 'preview' | 'edit' | 'create';
   } | null>(null);
   protected readonly imagePath = imagePath;
-  protected readonly tabs = ['Réductions sur les offres', 'Mise en avant'];
+  protected readonly tabs = [
+    'Réductions sur les offres',
+    'Sélections TalaPrix',
+  ];
   protected readonly selected = signal('Réductions sur les offres');
   protected readonly toast = signal('');
   protected openPromotion(
@@ -96,7 +99,7 @@ export class MarketingPage {
       const tab = params.get('tab');
       this.selected.set(
         tab === 'placements' || tab === 'promotions'
-          ? 'Mise en avant'
+          ? 'Sélections TalaPrix'
           : 'Réductions sur les offres',
       );
     });
@@ -149,7 +152,7 @@ export class MarketingPage {
     return `${format(start)} – ${format(end)}`;
   }
   protected changeTab(value: string): void {
-    const tab = value === 'Mise en avant' ? 'placements' : 'discounts';
+    const tab = value === 'Sélections TalaPrix' ? 'placements' : 'discounts';
     this.selected.set(value);
     void this.router.navigate([], {
       relativeTo: this.route,

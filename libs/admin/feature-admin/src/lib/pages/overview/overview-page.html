@@ -42,31 +42,23 @@
       ><span>personnes distinctes</span>
     </div>
   </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Boutique</th>
-          <th>Contacts</th>
-          <th>Itinéraires</th>
-          <th>Favoris</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (shop of engagement.shops; track shop.name) {
-        <tr>
-          <td><strong>{{ shop.name }}</strong></td>
-          <td class="number">{{ shop.contactPeople }}</td>
-          <td class="number">{{ shop.locatePeople }}</td>
-          <td class="number">{{ shop.favoritePeople }}</td>
-        </tr>
-        }
-      </tbody>
-    </table>
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+    @for(chart of engagementBars; track chart.field){
+    <section
+      class="grid min-w-0 content-start gap-3"
+      [attr.aria-label]="chart.label + ' par boutique'"
+    >
+      <h3 class="text-sm font-semibold">{{chart.label}}</h3>
+      <tp-metric-bars
+        [items]="chart.items"
+        [label]="chart.label + ' par boutique'"
+      />
+    </section>
+    }
   </div>
-  <p class="muted small">
-    Chaque total global déduplique les personnes entre boutiques. Les lignes par
-    boutique ne s’additionnent pas.
+  <p class="text-xs leading-relaxed text-[var(--text-2)]">
+    Totaux globaux dédupliqués entre boutiques ; les chiffres par boutique ne
+    s’additionnent pas.
   </p>
 </section>
 <div class="split">
@@ -82,23 +74,7 @@
       <strong class="hero-number number">{{data.stats.heroSavings}}</strong
       ><span class="positive small">{{data.stats.savingsChange}}</span>
     </div>
-    <div
-      class="bar-chart"
-      role="img"
-      aria-label="Économies estimées de 3,1 millions de FC en avril à 12,8 millions en septembre 2026, supérieures à la période précédente."
-    >
-      @for(month of data.savings; track month.month){
-      <div class="bar-group">
-        <span
-          class="bar"
-          [style.height]="barHeight(month.current)"
-          [attr.aria-label]="month.current+' millions de FC'"
-        ></span
-        ><span class="bar" [style.height]="barHeight(month.previous)"></span
-        ><small class="bar-label">{{month.month}}</small>
-      </div>
-      }
-    </div>
+    <tp-savings-chart [series]="data.savings" />
     <div class="metric-strip small">
       <span
         ><span class="legend-swatch current" aria-hidden="true"></span> 2026
@@ -142,23 +118,12 @@
         <p class="muted small mt-1">Communes uniquement · septembre 2026</p>
       </div>
     </div>
-    <div class="border-t border-[var(--line)]">
-      @for(zone of usageZones; track zone.zone; let rank = $index){
-      <div
-        class="grid grid-cols-[22px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[var(--line-soft)] py-3"
-      >
-        <span class="muted number">{{rank + 1}}</span>
-        <span class="grid min-w-0"
-          ><strong class="font-semibold">{{zone.zone}}</strong
-          ><small class="text-[var(--text-2)]">{{zone.city}}</small></span
-        >
-        <strong class="number">{{zone.users.toLocaleString('fr-FR')}}</strong>
-      </div>
-      }
-    </div>
-    <p class="muted small mt-3 leading-[1.4]">
-      Utilisateurs actifs agrégés par commune. Aucune adresse ou position
-      individuelle.
+    <tp-metric-bars
+      [items]="zoneBars"
+      label="Utilisateurs actifs par commune"
+    />
+    <p class="mt-6 text-[11px] leading-relaxed text-[var(--text-2)]">
+      Activité agrégée par commune.
     </p>
   </section>
   <section class="card narrow">
@@ -168,25 +133,13 @@
         <p class="muted small mt-1">Boutiques · échantillon comparable</p>
       </div>
     </div>
-    <div class="border-t border-[var(--line)]">
-      @for(shop of lowestPriceShops; track shop.shop; let rank = $index){
-      <div
-        class="grid grid-cols-[22px_minmax(0,1fr)_auto] items-center gap-3 border-b border-[var(--line-soft)] py-3"
-      >
-        <span class="muted number">{{rank + 1}}</span>
-        <span class="grid min-w-0"
-          ><strong class="font-semibold">{{shop.shop}}</strong
-          ><small class="text-[var(--text-2)]"
-            >Ex. {{shop.example}}</small
-          ></span
-        >
-        <strong class="number">{{shop.wins}}</strong>
-      </div>
-      }
-    </div>
-    <p class="muted small mt-3 leading-[1.4]">
-      Nombre de prix minimum sur {{comparableProductCount}} produits identiques,
-      à unité et devise égales. Ex æquo inclus.
+    <tp-metric-bars
+      [items]="cheapestShopBars"
+      label="Nombre de prix minimum par boutique"
+    />
+    <p class="mt-6 text-[11px] leading-relaxed text-[var(--text-2)]">
+      Prix comparés à produit, unité et devise égaux ·
+      {{comparableProductCount}} produits · ex æquo inclus.
     </p>
   </section>
 </div>

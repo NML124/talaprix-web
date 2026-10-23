@@ -1,0 +1,19 @@
+<div class="grid min-w-0 gap-4" role="img" [attr.aria-label]="label()">
+  @for (item of items(); track item.label) {
+  <div class="grid min-w-0 gap-1.5">
+    <div class="flex min-w-0 items-center justify-between gap-3 text-sm">
+      <span class="truncate text-[var(--text-2)]">{{ item.label }}</span>
+      <strong class="shrink-0 tabular-nums">{{ item.value }}</strong>
+    </div>
+    <div class="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]">
+      <span
+        class="block h-full rounded-full transition-[width] duration-300"
+        [class.bg-emerald-500]="item.tone === 'positive'"
+        [class.bg-slate-400]="item.tone === 'neutral'"
+        [class.bg-amber-500]="item.tone === 'attention'"
+        [style.width.%]="item.width"
+      ></span>
+    </div>
+  </div>
+  }
+</div>

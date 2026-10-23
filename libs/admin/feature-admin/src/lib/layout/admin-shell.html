@@ -85,17 +85,24 @@
           </div>
           }
         </div>
-        <a class="profile-link" routerLink="/admin/profil"
-          ><span class="avatar brand"
-            >{{(session.user()?.displayName || 'A').slice(0,1)}}</span
-          ><span
-            ><strong>{{session.user()?.displayName || 'Administrateur'}}</strong
-            ><small
-              >{{session.user()?.roles?.[0] === 'admin' ? 'Administration' :
-              'Accès administrateur'}}</small
+        <a class="profile-link" routerLink="/admin/profil">
+          @if(session.user()?.avatarUrl){<img
+            class="avatar"
+            [src]="session.user()!.avatarUrl"
+            alt=""
+          />}@else{<span class="avatar brand"
+            >{{(session.user()?.displayName || session.user()?.email ||
+            'A').slice(0,1).toLocaleUpperCase('fr')}}</span
+          >}
+          <span class="grid min-w-0 flex-1 gap-0.5"
+            ><strong class="truncate"
+              >{{session.user()?.displayName || 'Administrateur'}}</strong
+            ><small class="truncate"
+              >{{session.user()?.email || 'Compte administrateur'}}</small
             ></span
-          ><svg lucideChevronRight size="15" aria-hidden="true"></svg
-        ></a>
+          >
+          <svg lucideChevronRight size="15" aria-hidden="true"></svg>
+        </a>
       </nav>
     </aside>
     <main
@@ -144,3 +151,41 @@
     </main>
   </div>
 </div>
+
+@if(logoutConfirmation()){
+<tp-admin-dialog
+  title="Confirmer la déconnexion"
+  size="compact"
+  (closed)="logoutConfirmation.set(false)"
+>
+  <div
+    class="flex items-start gap-4 rounded-2xl border border-[var(--line-soft)] bg-[var(--surface-muted)] p-4"
+  >
+    <span
+      class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--brand-tint)] text-[var(--brand)]"
+      ><svg lucideLogOut size="18" aria-hidden="true"></svg
+    ></span>
+    <div class="grid gap-1">
+      <p class="text-sm font-semibold text-[var(--text)]">
+        Quitter votre espace ?
+      </p>
+      <p class="text-xs leading-relaxed text-[var(--text-2)]">
+        Votre session d’administration sera fermée. Vous pourrez vous
+        reconnecter à tout moment.
+      </p>
+    </div>
+  </div>
+  <div class="toolbar dialog-actions flex-wrap">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="logoutConfirmation.set(false)"
+    >
+      Rester connecté
+    </button>
+    <button type="button" class="btn btn-primary" (click)="confirmLogout()">
+      Se déconnecter
+    </button>
+  </div>
+</tp-admin-dialog>
+}

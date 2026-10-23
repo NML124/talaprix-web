@@ -8,10 +8,13 @@ import { PageHeader } from '../../ui/page-header';
 import { SegmentedTabs } from '../../ui/segmented-tabs';
 import { savings, trending } from '../../mocks/overview';
 import { imagePath } from '../../mocks/catalogue';
+import { MetricBars } from '../../ui/metric-bars';
+import type { MetricBarItem } from '../../ui/metric-bars';
+import { SavingsChart } from '../../ui/savings-chart';
 
 @Component({
   selector: 'tp-reports-page',
-  imports: [PageHeader, SegmentedTabs],
+  imports: [PageHeader, SegmentedTabs, MetricBars, SavingsChart],
   templateUrl: './reports-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -48,6 +51,56 @@ export class ReportsPage {
   protected readonly savings = savings;
   protected readonly trending = trending;
   protected readonly imagePath = imagePath;
-  protected readonly currentPath = '0,108 110,96 220,83 330,66 440,47 550,31';
-  protected readonly previousPath = '0,111 110,102 220,89 330,76 440,57 550,44';
+  protected readonly reviewBars: MetricBarItem[] = [
+    {
+      label: 'Pain de mie',
+      detail: '86 avis · Excellent',
+      value: 4.8,
+      width: 96,
+      displayValue: '★ 4,8',
+      tone: 'positive',
+    },
+    {
+      label: "Chips Lay's",
+      detail: '124 avis · Très bon',
+      value: 4.6,
+      width: 92,
+      displayValue: '★ 4,6',
+      tone: 'positive',
+    },
+    {
+      label: 'Sac à main rouge',
+      detail: '32 avis · À surveiller',
+      value: 2.9,
+      width: 58,
+      displayValue: '★ 2,9',
+      tone: 'attention',
+    },
+    {
+      label: 'Pain complet',
+      detail: '28 avis · À surveiller',
+      value: 3.1,
+      width: 62,
+      displayValue: '★ 3,1',
+      tone: 'attention',
+    },
+  ];
+  protected readonly favoriteBars: MetricBarItem[] = trending.map((row) => {
+    const growth =
+      {
+        'Pain de mie': '22,1',
+        "Chips Lay's": '18,3',
+        'Baskets Adidas': '15,7',
+        'Nike Air Force 1': '11,6',
+      }[row.name] ?? '0';
+    return {
+      label: row.name,
+      detail: `+${growth} % sur la période`,
+      value: row.favorites,
+      width: Math.round((row.favorites / 428) * 100),
+      displayValue: `${row.favorites} favoris`,
+      tone: 'positive',
+      image: imagePath(row.image),
+    };
+  });
 }

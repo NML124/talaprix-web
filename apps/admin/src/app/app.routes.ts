@@ -102,6 +102,11 @@ export const appRoutes: Route[] = [
           import('@talaprix/admin').then(({ CataloguePage }) => CataloguePage),
       },
       {
+        path: 'offres',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ OffersPage }) => OffersPage),
+      },
+      {
         path: 'categories',
         loadComponent: () =>
           import('@talaprix/admin').then(
@@ -126,6 +131,18 @@ export const appRoutes: Route[] = [
         path: 'boutiques',
         loadComponent: () =>
           import('@talaprix/admin').then(({ ShopsPage }) => ShopsPage),
+      },
+      {
+        path: 'recompenses',
+        loadComponent: () =>
+          import('@talaprix/admin').then(({ RewardsPage }) => RewardsPage),
+      },
+      {
+        path: 'publicites',
+        loadComponent: () =>
+          import('@talaprix/admin').then(
+            ({ AdvertisementsPage }) => AdvertisementsPage,
+          ),
       },
       {
         path: 'marketing',

@@ -1,0 +1,33 @@
+<div class="grid min-w-0 gap-3" role="img" [attr.aria-label]="label()">
+  @for (item of items(); track item.label) {
+  <div class="grid min-w-0 gap-1">
+    <div class="flex min-w-0 items-center justify-between gap-3 text-sm">
+      <span class="flex min-w-0 items-center gap-2">
+        @if(item.image){<img
+          class="h-7 w-7 shrink-0 rounded-md object-cover"
+          [src]="item.image"
+          alt=""
+        />}
+        <span class="grid min-w-0"
+          ><span class="truncate text-[var(--text-2)]">{{item.label}}</span>
+          @if(item.detail){<small class="truncate text-xs text-[var(--text-2)]"
+            >{{item.detail}}</small
+          >}
+        </span>
+      </span>
+      <strong class="shrink-0 tabular-nums"
+        >{{item.displayValue ?? item.value}}</strong
+      >
+    </div>
+    <div class="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]">
+      <span
+        class="block h-full rounded-full transition-[width] duration-300"
+        [class.bg-emerald-500]="item.tone === 'positive'"
+        [class.bg-slate-400]="item.tone === 'neutral'"
+        [class.bg-amber-500]="item.tone === 'attention'"
+        [style.width.%]="item.width"
+      ></span>
+    </div>
+  </div>
+  }
+</div>

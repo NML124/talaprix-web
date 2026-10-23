@@ -1,0 +1,27 @@
+<div class="image-list" aria-label="Image sélectionnée">
+  @if(image()) {
+  <div class="image-tile">
+    <img [src]="imagePath(image())" alt="Aperçu de l’image" /><button
+      type="button"
+      class="image-remove"
+      aria-label="Retirer le visuel"
+      (click)="clear()"
+    >
+      ×
+    </button>
+  </div>
+  }
+  <label class="image-add"
+    ><span aria-hidden="true">＋</span
+    ><span>{{image() ? 'Remplacer l’image' : 'Ajouter une image'}}</span
+    ><input
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      aria-label="Choisir une image"
+      (change)="choose($event)"
+  /></label>
+</div>
+@if(error()) {
+<p class="image-error" role="alert">{{error()}}</p>
+}
+<small class="muted">Une image · JPG, PNG ou WebP · 5 Mo maximum.</small>

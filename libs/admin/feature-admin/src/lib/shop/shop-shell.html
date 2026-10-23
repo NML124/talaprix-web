@@ -56,13 +56,41 @@
           </a>
           }
         </div>
-        <div class="shop-sidebar-foot">
-          <span class="status success">Boutique active</span>
-          <small
-            >Dernière mise à jour · {{ store.data()?.shop?.updatedAt ?? '—'
-            }}</small
+        <a
+          class="shop-sidebar-foot flex w-full min-w-0 flex-nowrap items-center gap-3 rounded-xl border-t border-[var(--line-soft)] px-2 py-3 text-left"
+          routerLink="/shop/profil"
+          (click)="mobileMenuOpen.set(false)"
+          [attr.aria-label]="'Profil de la boutique ' + (store.data()?.shop?.name ?? '') + ', compte ' + (session.user()?.displayName ?? session.user()?.email ?? '')"
+        >
+          @if(session.user()?.avatarUrl){<img
+            class="h-9 w-9 shrink-0 rounded-full object-cover"
+            [src]="session.user()!.avatarUrl"
+            alt=""
+          />} @else {<span
+            class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--brand-tint)] text-sm font-semibold text-[var(--brand-hover)]"
+            aria-hidden="true"
+            >{{(session.user()?.displayName || session.user()?.email ||
+            store.data()?.shop?.name ||
+            'M').slice(0,1).toLocaleUpperCase('fr')}}</span
+          >}
+          <span class="grid min-w-0 flex-1 gap-0.5"
+            ><strong
+              class="block truncate whitespace-nowrap text-[13px] leading-5 font-semibold"
+              [title]="session.user()?.displayName || 'Responsable boutique'"
+              >{{session.user()?.displayName || 'Responsable boutique'}}</strong
+            ><small
+              class="block truncate whitespace-nowrap text-xs leading-4 text-[var(--text-2)]"
+              >{{session.user()?.email || 'Adresse email indisponible'}}</small
+            ></span
           >
-        </div>
+          >
+          <svg
+            class="shrink-0"
+            lucideChevronRight
+            size="16"
+            aria-hidden="true"
+          ></svg>
+        </a>
       </nav>
     </aside>
     <main class="main">
@@ -71,7 +99,7 @@
           <strong>Espace boutique</strong
           ><small>Gestion de votre boutique</small>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-row flex-wrap items-center gap-2">
           <svg lucideMoon size="16" aria-hidden="true"></svg>
           <tp-admin-select
             [options]="['Système','Clair','Sombre']"
@@ -124,3 +152,40 @@
     </main>
   </div>
 </div>
+
+@if(logoutConfirmation()){
+<tp-admin-dialog
+  title="Confirmer la déconnexion"
+  size="compact"
+  (closed)="logoutConfirmation.set(false)"
+>
+  <div
+    class="flex items-start gap-4 rounded-2xl border border-[var(--line-soft)] bg-[var(--surface-muted)] p-4"
+  >
+    <span
+      class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--brand-tint)] text-[var(--brand)]"
+      ><svg lucideLogOut size="18" aria-hidden="true"></svg
+    ></span>
+    <div class="grid gap-1">
+      <p class="text-sm font-semibold text-[var(--text)]">
+        Quitter votre espace boutique ?
+      </p>
+      <p class="text-xs leading-relaxed text-[var(--text-2)]">
+        Votre session sera fermée. Vous pourrez vous reconnecter à tout moment.
+      </p>
+    </div>
+  </div>
+  <div class="toolbar dialog-actions flex-wrap">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="logoutConfirmation.set(false)"
+    >
+      Rester connecté
+    </button>
+    <button type="button" class="btn btn-primary" (click)="confirmLogout()">
+      Se déconnecter
+    </button>
+  </div>
+</tp-admin-dialog>
+}

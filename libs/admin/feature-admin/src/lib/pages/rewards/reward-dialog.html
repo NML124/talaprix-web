@@ -1,0 +1,39 @@
+@if (value(); as reward) {
+<tp-admin-dialog
+  [title]="reward.name ? 'Modifier le cadeau' : 'Ajouter un cadeau'"
+  (closed)="closed.emit()"
+>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
+  <div class="form-stack">
+    <label class="field"
+      >Nom du cadeau<input
+        [ngModel]="reward.name"
+        (ngModelChange)="update({name: $event})"
+        maxlength="100"
+    /></label>
+    <label class="field"
+      >Points à atteindre<input
+        type="number"
+        min="1"
+        step="1"
+        [ngModel]="reward.points"
+        (ngModelChange)="update({points: +$event})"
+    /></label>
+    <label class="field">Image du cadeau</label>
+    <tp-admin-single-image-picker
+      [image]="reward.image"
+      (changed)="update({image: $event})"
+    />
+  </div>
+  <div class="toolbar dialog-actions">
+    <button class="btn btn-secondary" type="button" (click)="closed.emit()">
+      Annuler
+    </button>
+    <button class="btn btn-primary" type="button" (click)="submit()">
+      Enregistrer
+    </button>
+  </div>
+</tp-admin-dialog>
+}
