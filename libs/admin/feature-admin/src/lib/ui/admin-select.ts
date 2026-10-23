@@ -18,6 +18,7 @@ import { LucideCheck, LucideChevronDown } from '@lucide/angular';
 })
 export class AdminSelect {
   readonly options = input<readonly string[]>([]);
+  readonly displayLabels = input<Readonly<Record<string, string>>>({});
   readonly selected = input('');
   readonly placeholder = input('Choisir…');
   readonly ariaLabel = input('Choisir une option');

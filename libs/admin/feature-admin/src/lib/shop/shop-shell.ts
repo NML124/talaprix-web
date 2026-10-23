@@ -10,6 +10,7 @@ import {
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   LucideBarChart3,
+  LucideChevronRight,
   LucideBadgePercent,
   LucideLayoutDashboard,
   LucideMegaphone,
@@ -25,6 +26,7 @@ import { ShopStore } from './shop-store';
 import { AuthSessionStore } from '@talaprix/users/data-access';
 import { Router } from '@angular/router';
 import { AdminSelect } from '../ui/admin-select';
+import { AdminDialog } from '../ui/admin-dialog';
 
 @Component({
   selector: 'tp-shop-shell',
@@ -33,6 +35,7 @@ import { AdminSelect } from '../ui/admin-select';
     RouterLinkActive,
     RouterOutlet,
     LucideBarChart3,
+    LucideChevronRight,
     LucideBadgePercent,
     LucideLayoutDashboard,
     LucideMegaphone,
@@ -44,6 +47,7 @@ import { AdminSelect } from '../ui/admin-select';
     LucideX,
     LucideLogOut,
     AdminSelect,
+    AdminDialog,
   ],
   providers: [ShopStore],
   templateUrl: './shop-shell.html',
@@ -55,6 +59,7 @@ export class ShopShell {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly mobileMenuOpen = signal(false);
+  protected readonly logoutConfirmation = signal(false);
   protected readonly theme = signal<'system' | 'light' | 'dark'>('system');
   protected readonly themeLabel = computed(
     () => ({ system: 'Système', light: 'Clair', dark: 'Sombre' })[this.theme()],
@@ -71,7 +76,7 @@ export class ShopShell {
     { label: 'Vue d’ensemble', path: '/shop', icon: 'home' },
     { label: 'Offres', path: '/shop/offres', icon: 'offer' },
     { label: 'Promotions', path: '/shop/promotions', icon: 'discount' },
-    { label: 'Visibilité', path: '/shop/visibilite', icon: 'visibility' },
+    { label: 'Mises en avant', path: '/shop/visibilite', icon: 'visibility' },
     { label: 'Analyses', path: '/shop/analyses', icon: 'analytics' },
     { label: 'Avis', path: '/shop/avis', icon: 'reviews' },
     { label: 'Profil', path: '/shop/profil', icon: 'settings' },
@@ -111,7 +116,11 @@ export class ShopShell {
     }
   }
 
-  protected async logout(): Promise<void> {
+  protected logout(): void {
+    this.logoutConfirmation.set(true);
+  }
+  protected async confirmLogout(): Promise<void> {
+    this.logoutConfirmation.set(false);
     await this.session.signOut();
     await this.router.navigate(['/auth']);
   }

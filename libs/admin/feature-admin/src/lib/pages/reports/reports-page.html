@@ -11,7 +11,6 @@
   /><span class="report-context muted small"
     >{{view().period}} · Toutes les boutiques</span
   >
-  <span class="report-preview-label">Données illustratives · aucun envoi</span>
 </div>
 <div class="report-summary">
   <section class="report-lead-stat">
@@ -44,36 +43,7 @@
       <h2>Évolution des économies estimées</h2>
       <span class="muted small">{{view().chartLabel}}</span>
     </div>
-    <svg
-      viewBox="0 0 560 145"
-      preserveAspectRatio="none"
-      class="report-chart"
-      role="img"
-      aria-label="Économies estimées progressant de 3,1 millions FC en avril à 12,8 millions FC en septembre 2026"
-    >
-      <path
-        d="M0 108 L110 96 L220 83 L330 66 L440 47 L550 31 L550 140 L0 140 Z"
-        class="report-chart-fill"
-      />
-      <polyline
-        [attr.points]="previousPath"
-        fill="none"
-        class="report-chart-previous"
-        stroke-width="2"
-        stroke-dasharray="6 5"
-      />
-      <polyline
-        [attr.points]="currentPath"
-        fill="none"
-        class="report-chart-current"
-        stroke-width="3"
-      />
-      <circle class="report-chart-point" cx="550" cy="31" r="5" />
-      <text class="report-chart-label" x="480" y="21">12,8 M</text>
-    </svg>
-    <div class="metric-strip muted small">
-      @for(month of savings;track month.month){<span>{{month.month}}</span>}
-    </div>
+    <tp-savings-chart [series]="savings" />
     <div class="grid-2 report-insights">
       <div class="report-insight">
         <strong class="positive">{{view().growth}}</strong
@@ -94,31 +64,18 @@
     </p>
   </section>
 </div>
-<div class="report-lower">
+<div class="report-lower grid !grid-cols-1 gap-6 lg:!grid-cols-2">
   <section class="card">
     <div class="card-head">
       <h2>Notes produits</h2>
       <small class="muted">20 avis minimum</small>
     </div>
-    <div class="item-row">
-      <span class="grow">Pain de mie<small>86 avis · Excellent</small></span
-      ><strong>★ 4,8</strong>
-    </div>
-    <div class="item-row">
-      <span class="grow">Chips Lay's<small>124 avis · Très bon</small></span
-      ><strong>★ 4,6</strong>
-    </div>
-    <div class="item-row">
-      <span class="grow"
-        >Sac à main rouge<small>32 avis · À surveiller</small></span
-      ><strong>★ 2,9</strong>
-    </div>
-    <div class="item-row">
-      <span class="grow">Pain complet<small>28 avis · À surveiller</small></span
-      ><strong>★ 3,1</strong>
-    </div>
-    <p class="muted small report-footnote">
-      Note boutique = moyenne des notes de ses produits publiés.
+    <tp-metric-bars
+      [items]="reviewBars"
+      label="Note moyenne des produits selon les avis"
+    />
+    <p class="mt-6 text-[11px] leading-relaxed text-[var(--text-2)]">
+      Moyenne des avis publiés · produits avec au moins 20 avis.
     </p>
   </section>
   <section class="card">
@@ -126,47 +83,12 @@
       <h2>Tendances par favoris</h2>
       <small class="muted">Septembre</small>
     </div>
-    @for(row of trending;track row.name){
-    <div class="item-row">
-      <img class="thumb" [src]="imagePath(row.image)" alt="" /><span
-        class="grow"
-        ><strong>{{row.name}}</strong
-        ><small>{{row.favorites}} favoris</small></span
-      ><span class="positive small"
-        >↗ +{{row.name==='Pain de mie'?'22,1':row.name==="Chips
-        Lay's"?'18,3':row.name==='Baskets Adidas'?'15,7':'11,6'}} %</span
-      >
-    </div>
-    }
-    <p class="muted small report-footnote">
-      Favoris ajoutés sur la période. Aucune vente n'est comptabilisée.
-    </p>
-  </section>
-  <section class="card">
-    <div class="card-head">
-      <h2>Envoi programmé</h2>
-      <span class="report-preview-label">Aperçu</span>
-    </div>
-    <p class="muted small">Programmation mensuelle des rapports.</p>
-    <div class="item-row">
-      <span class="grow"
-        ><strong>Destinataires</strong
-        ><small>aline&#64;talaprix.cd, brigitte&#64;talaprix.cd</small></span
-      >
-    </div>
-    <div class="item-row">
-      <span class="grow"
-        ><strong>Fréquence</strong
-        ><small>Le 1er de chaque mois · 08:00</small></span
-      >
-    </div>
-    <div class="item-row">
-      <span class="grow"
-        ><strong>Format</strong><small>PDF · email</small></span
-      >
-    </div>
-    <p class="muted small report-schedule-note">
-      Prochain envoi : 01 novembre 2026. Rapport annuel : 01 janvier 2027.
+    <tp-metric-bars
+      [items]="favoriteBars"
+      label="Produits les plus ajoutés aux favoris"
+    />
+    <p class="mt-6 text-[11px] leading-relaxed text-[var(--text-2)]">
+      Ajouts aux favoris sur la période.
     </p>
   </section>
 </div>

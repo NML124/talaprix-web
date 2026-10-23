@@ -1,6 +1,7 @@
 <dialog
   #dialog
   class="admin-dialog"
+  [class.admin-dialog-compact]="size() === 'compact'"
   [attr.aria-label]="title()"
   (close)="closed.emit()"
   (click)="dismissBackdrop($event)"

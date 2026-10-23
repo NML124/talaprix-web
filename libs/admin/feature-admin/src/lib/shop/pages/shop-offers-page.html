@@ -4,7 +4,9 @@
     <h1>Mes offres</h1>
     <p>Prix, disponibilité et fraîcheur de vos annonces.</p>
   </div>
-  <span class="muted small">Démonstration locale</span>
+  <button type="button" class="btn btn-primary" (click)="openCreate()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une offre
+  </button>
 </header>
 <section class="card">
   <div class="shop-table-toolbar">
@@ -66,14 +68,32 @@
           <td>{{ offer.updatedAt }}</td>
           <td class="number">{{ offer.engagement['30d'].views }}</td>
           <td>
-            <button
-              type="button"
-              class="table-action"
-              [attr.aria-label]="'Gérer '+offer.product"
-              (click)="selectedId.set(offer.id); confirmHide.set(false)"
-            >
-              <svg lucideEye size="17" aria-hidden="true"></svg>
-            </button>
+            <div class="table-actions">
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="'Gérer '+offer.product"
+                (click)="selectedId.set(offer.id); confirmHide.set(false)"
+              >
+                <svg lucideEye size="17" aria-hidden="true"></svg>
+              </button>
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="'Modifier '+offer.product"
+                (click)="edit(offer)"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                type="button"
+                class="table-action danger"
+                [attr.aria-label]="'Supprimer '+offer.product"
+                (click)="remove(offer)"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
           </td>
         </tr>
         }
@@ -98,13 +118,21 @@
         <span>{{ availabilityLabel(offer) }}</span>
         <span>{{ offer.engagement['30d'].views }} vues</span>
       </div>
-      <button
-        type="button"
-        class="btn btn-secondary shop-offer-mobile-action"
-        (click)="selectedId.set(offer.id); confirmHide.set(false)"
-      >
-        Gérer l’offre <span class="sr-only">{{ offer.product }}</span>
-      </button>
+      <div class="shop-offer-mobile-action flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="selectedId.set(offer.id); confirmHide.set(false)"
+        >
+          Gérer
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="edit(offer)">
+          Modifier
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="remove(offer)">
+          Supprimer
+        </button>
+      </div>
     </article>
     }
   </div>
@@ -121,7 +149,16 @@
   </div>
   }
 </section>
-@if (selected(); as offer) {
+@if(editing(); as current) {
+<tp-shop-offer-dialog
+  [offer]="current.offer"
+  [mode]="current.mode"
+  [categories]="categories()"
+  (closed)="editing.set(null)"
+  (saved)="saveOffer($event)"
+  (removed)="deleteOffer()"
+/>
+} @if (selected(); as offer) {
 <tp-admin-dialog
   [title]="offer.product"
   (closed)="selectedId.set(null); confirmHide.set(false)"

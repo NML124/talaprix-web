@@ -157,7 +157,7 @@ export class UsersFeatureAuth {
         displayName:
           role === 'admin'
             ? 'Admin de démonstration'
-            : 'Boutique de démonstration',
+            : 'Responsable de démonstration',
         roles: [role],
       };
       this.#session.authenticate(identity);

@@ -4,12 +4,40 @@
     <h1>Profil de la boutique</h1>
     <p>Identité publique et localisation de votre point de vente.</p>
   </div>
+  @if(!editing()){<button
+    type="button"
+    class="btn btn-primary"
+    (click)="edit()"
+  >
+    Modifier le profil</button
+  >}
 </header>
+@if(feedback()){
+<p class="toast" role="status">{{feedback()}}</p>
+}
 <section class="card shop-settings-card">
   <div class="card-head">
     <h2>Informations de la boutique</h2>
     <span class="status success">{{ store.data()?.shop?.status }}</span>
   </div>
+  @if(editing() && draft(); as row){
+  <div class="form-stack">
+    <label class="field">Nom public<input [(ngModel)]="row.name" /></label>
+    <label class="field"
+      >Adresse complète<input
+        [(ngModel)]="row.address"
+        placeholder="Avenue, numéro, quartier"
+    /></label>
+    <label class="field">Commune<input [(ngModel)]="row.commune" /></label>
+  </div>
+  <div class="toolbar dialog-actions">
+    <button type="button" class="btn btn-secondary" (click)="cancel()">
+      Annuler</button
+    ><button type="button" class="btn btn-primary" (click)="save()">
+      Enregistrer
+    </button>
+  </div>
+  } @else {
   <div class="shop-detail-list">
     <div>
       <span>Nom public</span><strong>{{ store.data()?.shop?.name }}</strong>
@@ -25,4 +53,5 @@
       ><strong>{{ store.data()?.shop?.updatedAt }}</strong>
     </div>
   </div>
+  }
 </section>

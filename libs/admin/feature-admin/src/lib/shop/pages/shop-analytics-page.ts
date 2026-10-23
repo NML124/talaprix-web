@@ -8,11 +8,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { Pagination } from '../../ui/pagination';
+import { ShopAnalyticsCharts } from './shop-analytics-charts';
 import { ShopStore } from '../shop-store';
 
 @Component({
   selector: 'tp-shop-analytics-page',
-  imports: [FormsModule, AdminDialog, Pagination],
+  imports: [FormsModule, AdminDialog, Pagination, ShopAnalyticsCharts],
   host: { class: 'grid min-w-0 content-start items-start gap-6' },
   templateUrl: './shop-analytics-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

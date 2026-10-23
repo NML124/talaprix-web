@@ -12,6 +12,7 @@ export interface ShopOffer {
   readonly shopId: string;
   readonly product: string;
   readonly category: string;
+  readonly images?: string[];
   readonly price: number;
   readonly currency: 'CDF';
   readonly publication: 'published' | 'draft';
@@ -68,8 +69,28 @@ export interface ShopReview {
   readonly responded: boolean;
 }
 
+export interface ShopPricePosition {
+  readonly cheaper: number;
+  readonly average: number;
+  readonly higher: number;
+  readonly overpriced: number;
+  readonly competitive: number;
+  readonly competitors: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly cheaperProducts: number;
+  }[];
+}
+
+export interface ShopDelivery {
+  readonly supported: boolean;
+  readonly message: string;
+}
+
 export interface ShopWorkspace {
   readonly shop: ShopProfile;
+  readonly pricePosition: ShopPricePosition;
+  readonly delivery: ShopDelivery;
   readonly offers: readonly ShopOffer[];
   readonly engagement: Readonly<Record<'7d' | '30d', ShopEngagement>>;
   readonly discounts: readonly ShopDiscount[];

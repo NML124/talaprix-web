@@ -1,0 +1,103 @@
+<div class="grid min-w-0 gap-4">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div
+      class="flex flex-wrap gap-2"
+      role="group"
+      aria-label="Type de graphique"
+    >
+      @for(option of modes; track option.id){
+      <button
+        type="button"
+        class="btn btn-secondary px-3 py-1.5 text-xs"
+        [class.btn-filter-active]="mode() === option.id"
+        [attr.aria-pressed]="mode() === option.id"
+        (click)="mode.set(option.id)"
+      >
+        {{option.label}}
+      </button>
+      }
+    </div>
+    <div
+      class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--text-2)]"
+    >
+      <span
+        ><i class="mr-1 inline-block h-2 w-2 rounded-full bg-[var(--brand)]"></i
+        >Période actuelle</span
+      >
+      <span
+        ><i class="mr-1 inline-block h-2 w-2 rounded-full bg-slate-400"></i
+        >Période précédente</span
+      >
+    </div>
+  </div>
+  @if(mode() === 'bars'){
+  <div
+    class="grid h-48 grid-cols-6 items-end gap-2 border-b border-[var(--line)] sm:gap-4"
+    role="img"
+    aria-label="Économies estimées comparées à la période précédente"
+  >
+    @for(row of series(); track row.month){
+    <div class="grid h-full min-w-0 grid-rows-[1fr_auto] items-end gap-2">
+      <div class="flex h-full items-end justify-center gap-1.5">
+        <span
+          class="w-3 rounded-t bg-[var(--brand)] transition-[height] duration-300 sm:w-5"
+          [style.height]="barHeight(row.current)"
+          [title]="row.current + ' millions FC · ' + row.month"
+        ></span>
+        <span
+          class="w-3 rounded-t bg-slate-400 transition-[height] duration-300 sm:w-5"
+          [style.height]="barHeight(row.previous)"
+          [title]="row.previous + ' millions FC · période précédente · ' + row.month"
+        ></span>
+      </div>
+      <small class="text-center text-xs text-[var(--text-2)]"
+        >{{row.month}}</small
+      >
+    </div>
+    }
+  </div>
+  } @else {
+  <svg
+    viewBox="0 0 560 160"
+    preserveAspectRatio="none"
+    class="h-48 w-full overflow-visible"
+    role="img"
+    [attr.aria-label]="mode() === 'area' ? 'Graphique en aire des économies estimées' : 'Graphique en courbes des économies estimées'"
+  >
+    @if(mode() === 'area'){
+    <path [attr.d]="currentArea()" fill="var(--chart-fill)" />
+    }
+    <polyline
+      [attr.points]="previousPoints()"
+      fill="none"
+      stroke="rgb(148 163 184)"
+      stroke-width="3"
+      stroke-dasharray="7 6"
+      vector-effect="non-scaling-stroke"
+    />
+    <polyline
+      [attr.points]="currentPoints()"
+      fill="none"
+      stroke="var(--brand)"
+      stroke-width="3"
+      vector-effect="non-scaling-stroke"
+    />
+    @for(row of series(); track row.month; let i = $index){
+    <circle
+      [attr.cx]="series().length < 2 ? 280 : i * 560 / (series().length - 1)"
+      [attr.cy]="140 - row.current / max() * 120"
+      r="4"
+      fill="var(--brand)"
+    >
+      <title>{{row.month}} · {{row.current}} M FC</title>
+    </circle>
+    }
+  </svg>
+  <div class="grid grid-cols-6 gap-2">
+    @for(row of series(); track row.month){<small
+      class="text-center text-xs text-[var(--text-2)]"
+      >{{row.month}}</small
+    >}
+  </div>
+  }
+</div>

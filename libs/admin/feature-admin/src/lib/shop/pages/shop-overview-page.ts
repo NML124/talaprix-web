@@ -30,6 +30,46 @@ export class ShopOverviewPage {
   protected readonly engagement = computed(
     () => this.store.data()?.engagement['30d'],
   );
+  protected readonly engagementBars = computed(() => {
+    const values = this.engagement();
+    if (!values) return [];
+    const max = Math.max(
+      values.views,
+      values.contactPeople,
+      values.locatePeople,
+      values.favoritePeople,
+      1,
+    );
+    return [
+      { label: 'Consultations', value: values.views },
+      { label: 'Contacts', value: values.contactPeople },
+      { label: 'Itinéraires', value: values.locatePeople },
+      { label: 'Favoris', value: values.favoritePeople },
+    ].map((row) => ({
+      ...row,
+      width: Math.max(4, Math.round((row.value / max) * 100)),
+    }));
+  });
+  protected readonly priceBars = computed(() => {
+    const position = this.store.data()?.pricePosition;
+    if (!position) return [];
+    const total = Math.max(
+      position.cheaper + position.average + position.higher,
+      1,
+    );
+    return [
+      {
+        label: 'Moins cher que le marché',
+        value: position.cheaper,
+        tone: 'good',
+      },
+      { label: 'Dans la moyenne', value: position.average, tone: 'neutral' },
+      { label: 'Plus cher', value: position.higher, tone: 'attention' },
+    ].map((row) => ({
+      ...row,
+      width: Math.max(4, Math.round((row.value / total) * 100)),
+    }));
+  });
   protected readonly attention = computed(
     () =>
       this.store

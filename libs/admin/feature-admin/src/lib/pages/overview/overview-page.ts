@@ -13,6 +13,9 @@ import { AdminMockApi } from '../../services/admin-mock-api';
 import { fc, imagePath } from '../../mocks/catalogue';
 import { Pagination } from '../../ui/pagination';
 import { adminEngagementPreview } from '../../mocks/admin-engagement-preview';
+import { MetricBars } from '../../ui/metric-bars';
+import type { MetricBarItem } from '../../ui/metric-bars';
+import { SavingsChart } from '../../ui/savings-chart';
 import {
   comparableProductCount,
   lowestPriceShops,
@@ -26,6 +29,8 @@ import type { AuditEntry } from '../../mocks/models';
     RouterLink,
     PageHeader,
     SegmentedTabs,
+    MetricBars,
+    SavingsChart,
     Pagination,
     LucideChevronRight,
     LucidePlus,
@@ -52,14 +57,62 @@ export class OverviewPage {
   protected readonly engagement = adminEngagementPreview;
   protected readonly usageZones = usageZones;
   protected readonly lowestPriceShops = lowestPriceShops();
+  protected readonly zoneBars = this.scaleBars(
+    usageZones.map((row) => ({
+      label: row.zone,
+      value: row.users,
+      displayValue: row.users.toLocaleString('fr-FR'),
+      tone: 'neutral' as const,
+    })),
+  );
+  protected readonly cheapestShopBars = this.scaleBars(
+    this.lowestPriceShops.map((row) => ({
+      label: row.shop,
+      detail: `Ex. ${row.example}`,
+      value: row.wins,
+      displayValue: String(row.wins),
+      tone: 'positive' as const,
+    })),
+  );
+  protected readonly engagementBars = [
+    {
+      label: 'Contacts',
+      field: 'contactPeople' as const,
+      tone: 'positive' as const,
+    },
+    {
+      label: 'Itinéraires',
+      field: 'locatePeople' as const,
+      tone: 'neutral' as const,
+    },
+    {
+      label: 'Favoris',
+      field: 'favoritePeople' as const,
+      tone: 'attention' as const,
+    },
+  ].map((chart) => ({
+    ...chart,
+    items: this.scaleBars(
+      this.engagement.shops.map((shop) => ({
+        label: shop.name,
+        value: shop[chart.field],
+        displayValue: shop[chart.field].toLocaleString('fr-FR'),
+        tone: chart.tone,
+      })),
+    ),
+  }));
   protected readonly comparableProductCount = comparableProductCount;
   protected readonly audit = signal<AuditEntry[]>([]);
   constructor() {
     void this.api.getOverview().then((value) => this.overview.set(value));
     void this.api.listAudit().then((value) => this.audit.set(value));
   }
-  protected barHeight(value: number): string {
-    return `${Math.round((value / 15) * 135)}px`;
+  private scaleBars(items: Omit<MetricBarItem, 'width'>[]): MetricBarItem[] {
+    const max = Math.max(1, ...items.map((item) => item.value));
+    return items.map((item) => ({
+      ...item,
+      width: Math.round((item.value / max) * 100),
+    }));
   }
   protected barWidth(value: number): string {
     return `${Math.round((value / (this.activeTab() === 'Favoris' ? 428 : 2180)) * 100)}%`;

@@ -33,6 +33,7 @@ import { filter } from 'rxjs';
 import { AuthSessionStore } from '@talaprix/users/data-access';
 import { AdminSelect } from '../ui/admin-select';
 import { AdminGlobalSearch } from '../ui/admin-global-search';
+import { AdminDialog } from '../ui/admin-dialog';
 import { AdminNotificationPreview } from '../services/admin-notification-preview';
 
 interface NavPage {
@@ -70,6 +71,7 @@ interface NavSection {
     LucideX,
     LucideLogOut,
     AdminSelect,
+    AdminDialog,
   ],
   templateUrl: './admin-shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +82,7 @@ export class AdminShell {
   protected readonly notifications = inject(AdminNotificationPreview);
   protected readonly currentPath = signal(this.router.url.split('?')[0]);
   protected readonly scrolled = signal(false);
+  protected readonly logoutConfirmation = signal(false);
   protected readonly mobileMenuOpen = signal(false);
   protected readonly theme = signal<'system' | 'light' | 'dark'>('system');
   protected readonly themeLabel = computed(
@@ -117,6 +120,7 @@ export class AdminShell {
       count: 24,
       pages: [
         { label: 'Produits', path: '/admin/catalogue' },
+        { label: 'Offres', path: '/admin/offres' },
         { label: 'Catégories', path: '/admin/categories' },
         { label: 'Prix & modération', path: '/admin/moderation', count: 24 },
         { label: 'Boutiques', path: '/admin/boutiques', count: 4 },
@@ -127,6 +131,8 @@ export class AdminShell {
       icon: 'megaphone',
       pages: [
         { label: 'Promotions', path: '/admin/marketing', query: 'promotions' },
+        { label: 'Publicités', path: '/admin/publicites' },
+        { label: 'Récompenses', path: '/admin/recompenses' },
         { label: 'Notifications', path: '/admin/notifications' },
       ],
     },
@@ -221,7 +227,11 @@ export class AdminShell {
       /* stockage indisponible */
     }
   }
-  protected async logout(): Promise<void> {
+  protected logout(): void {
+    this.logoutConfirmation.set(true);
+  }
+  protected async confirmLogout(): Promise<void> {
+    this.logoutConfirmation.set(false);
     await this.session.signOut();
     await this.router.navigate(['/auth']);
   }

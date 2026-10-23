@@ -807,6 +807,9 @@
   background: rgba(16, 28, 27, 0.42);
   backdrop-filter: blur(3px);
 }
+.admin-app .admin-dialog.admin-dialog-compact {
+  width: min(440px, calc(100vw - 32px));
+}
 .admin-app .admin-dialog-panel {
   padding: 0 24px 24px;
 }

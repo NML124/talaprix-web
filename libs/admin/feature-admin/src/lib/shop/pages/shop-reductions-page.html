@@ -4,6 +4,9 @@
     <h1>Promotions</h1>
     <p>Les offres à prix promotionnel, indépendamment des mises en avant.</p>
   </div>
+  <button type="button" class="btn btn-primary" (click)="openCreate()">
+    Créer une promotion
+  </button>
 </header>
 <section class="shop-status-strip shop-explainer">
   <div>
@@ -29,6 +32,7 @@
           <th>Prix réduit</th>
           <th>Période</th>
           <th>État</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -45,6 +49,25 @@
               [class.info]="row.status === 'Prévue'"
               >{{ row.status }}</span
             >
+          </td>
+          <td>
+            <div class="table-actions">
+              <button
+                type="button"
+                class="table-action"
+                [attr.aria-label]="'Modifier la promotion de '+row.product"
+                (click)="edit(row)"
+              >
+                ✎</button
+              ><button
+                type="button"
+                class="table-action danger"
+                [attr.aria-label]="'Supprimer la promotion de '+row.product"
+                (click)="edit(row); deleting.set(true)"
+              >
+                ×
+              </button>
+            </div>
           </td>
         </tr>
         }
@@ -68,6 +91,17 @@
         >{{price(row.newPrice)}}</strong
       >
       <small class="col-span-2 text-[var(--text-2)]">{{row.period}}</small>
+      <div class="col-span-2 flex justify-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="edit(row)">
+          Modifier</button
+        ><button
+          type="button"
+          class="btn btn-secondary"
+          (click)="edit(row); deleting.set(true)"
+        >
+          Supprimer
+        </button>
+      </div>
     </article>
     }
   </div>
@@ -84,3 +118,71 @@
   </div>
   }
 </section>
+
+@if(draft(); as row) {
+<tp-admin-dialog
+  [title]="deleting() ? 'Supprimer la promotion' : 'Gérer la promotion'"
+  (closed)="draft.set(null); deleting.set(false)"
+>
+  @if(deleting()) {
+  <p>Supprimer la promotion de <strong>{{row.product}}</strong> ?</p>
+  <div class="toolbar dialog-actions">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="deleting.set(false)"
+    >
+      Annuler</button
+    ><button class="btn btn-danger" type="button" (click)="remove()">
+      Supprimer
+    </button>
+  </div>
+  } @else { @if(error()){
+  <p class="dialog-error" role="alert">{{error()}}</p>
+  }
+  <div class="form-stack">
+    <label class="field"
+      >Offre<tp-admin-select
+        [options]="offerOptions()"
+        [selected]="row.product"
+        ariaLabel="Offre à promouvoir"
+        (changed)="chooseOffer($event)"
+    /></label>
+    <div class="grid-2">
+      <label class="field"
+        >Prix habituel (FC)<input
+          type="number"
+          [ngModel]="row.oldPrice"
+          readonly /></label
+      ><label class="field"
+        >Prix promotionnel (FC)<input
+          type="number"
+          min="1"
+          [ngModel]="row.newPrice"
+          (ngModelChange)="change('newPrice',+$event)"
+      /></label>
+    </div>
+    <label class="field"
+      >Période<input
+        [ngModel]="row.period"
+        (ngModelChange)="change('period',$event)"
+        placeholder="Ex. 1–7 novembre"
+    /></label>
+    <label class="field"
+      >État<tp-admin-select
+        [options]="['Active','Prévue','Terminée']"
+        [selected]="row.status"
+        ariaLabel="État de la promotion"
+        (changed)="change('status',$event)"
+    /></label>
+  </div>
+  <div class="toolbar dialog-actions">
+    <button class="btn btn-secondary" type="button" (click)="draft.set(null)">
+      Annuler</button
+    ><button class="btn btn-primary" type="button" (click)="save()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

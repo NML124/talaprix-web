@@ -25,6 +25,9 @@ import { PageHeader } from '../../ui/page-header';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { Pagination } from '../../ui/pagination';
 import type { Product } from '../../mocks/models';
+import { SingleImagePicker } from '../../ui/single-image-picker';
+import { AdminSelect } from '../../ui/admin-select';
+import { imagePath } from '../../mocks/catalogue';
 
 @Component({
   selector: 'tp-categories-page',
@@ -34,6 +37,8 @@ import type { Product } from '../../mocks/models';
     PageHeader,
     AdminDialog,
     Pagination,
+    SingleImagePicker,
+    AdminSelect,
     LucideEye,
     LucideEyeOff,
     LucidePencil,
@@ -61,6 +66,28 @@ export class CategoriesPage {
   >('Toutes');
   protected readonly page = signal(1);
   protected readonly pageSize = 10;
+  protected readonly imagePath = imagePath;
+  protected readonly parentOptions = computed(() => {
+    const row = this.editing();
+    const excluded = row
+      ? new Set([row.id, ...this.store.descendantIds(row.id)])
+      : new Set<number>();
+    return [
+      'none|Aucune — catégorie principale',
+      ...this.store
+        .categories()
+        .filter((candidate) => !excluded.has(candidate.id))
+        .map((candidate) => `${candidate.id}|${candidate.name}`),
+    ];
+  });
+  protected readonly parentLabels = computed(() =>
+    Object.fromEntries(
+      this.parentOptions().map((option) => [
+        option,
+        option.slice(option.indexOf('|') + 1),
+      ]),
+    ),
+  );
   protected readonly visibilityTarget = signal<PreviewCategory | null>(null);
   protected readonly filtered = computed(() =>
     this.store
@@ -124,10 +151,22 @@ export class CategoriesPage {
             id: Date.now(),
             name: '',
             description: '',
+            image: '',
             parentId: null,
             isClientVisible: true,
           },
     );
+  }
+  protected parentSelection(row: PreviewCategory): string {
+    return row.parentId === null
+      ? 'none|Aucune — catégorie principale'
+      : `${row.parentId}|${this.store.categories().find((item) => item.id === row.parentId)?.name ?? ''}`;
+  }
+  protected changeParent(row: PreviewCategory, selection: string): void {
+    row.parentId = selection.startsWith('none|')
+      ? null
+      : Number(selection.split('|')[0]);
+    this.error.set('');
   }
   protected visibilityLabel(row: PreviewCategory): string {
     if (this.store.isEffectivelyVisible(row)) return 'Visible';
@@ -160,6 +199,10 @@ export class CategoriesPage {
   protected async save(): Promise<void> {
     const row = this.editing();
     if (!row || this.busy()) return;
+    if (!this.previousName() && !row.image) {
+      this.error.set('Ajoutez une image pour créer la catégorie.');
+      return;
+    }
     this.busy.set(true);
     this.error.set('');
     try {

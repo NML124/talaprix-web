@@ -4,6 +4,7 @@ export interface PreviewCategory {
   id: number;
   name: string;
   description: string;
+  image?: string;
   parentId: number | null;
   isClientVisible: boolean;
 }
@@ -16,6 +17,7 @@ export class CategoryPreviewStore {
       id: 1,
       name: 'Boulangerie',
       description: 'Pains et produits de boulangerie',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -23,6 +25,7 @@ export class CategoryPreviewStore {
       id: 2,
       name: 'Épicerie',
       description: 'Alimentation et produits du quotidien',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -30,6 +33,7 @@ export class CategoryPreviewStore {
       id: 3,
       name: 'Mode',
       description: 'Vêtements et chaussures',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -37,6 +41,7 @@ export class CategoryPreviewStore {
       id: 4,
       name: 'Accessoires',
       description: 'Sacs et accessoires personnels',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -44,6 +49,7 @@ export class CategoryPreviewStore {
       id: 5,
       name: 'Électronique',
       description: 'Appareils et accessoires électroniques',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -51,6 +57,7 @@ export class CategoryPreviewStore {
       id: 6,
       name: 'Téléphones',
       description: 'Téléphones et smartphones',
+      image: '',
       parentId: 5,
       isClientVisible: true,
     },
@@ -58,6 +65,7 @@ export class CategoryPreviewStore {
       id: 7,
       name: 'Audio',
       description: 'Casques et équipements audio',
+      image: '',
       parentId: 5,
       isClientVisible: true,
     },
@@ -65,6 +73,7 @@ export class CategoryPreviewStore {
       id: 8,
       name: 'Bureautique',
       description: 'Imprimantes et fournitures',
+      image: '',
       parentId: 5,
       isClientVisible: true,
     },
@@ -72,6 +81,7 @@ export class CategoryPreviewStore {
       id: 9,
       name: 'Maison',
       description: 'Équipement et décoration',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -79,6 +89,7 @@ export class CategoryPreviewStore {
       id: 10,
       name: 'Beauté',
       description: 'Soins et hygiène',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -86,6 +97,7 @@ export class CategoryPreviewStore {
       id: 11,
       name: 'Bébé',
       description: 'Produits pour enfants',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },
@@ -93,6 +105,7 @@ export class CategoryPreviewStore {
       id: 12,
       name: 'Automobile',
       description: 'Accessoires et entretien auto',
+      image: '',
       parentId: null,
       isClientVisible: true,
     },

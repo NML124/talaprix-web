@@ -79,7 +79,15 @@
           <td
             class="max-[560px]:col-start-1 max-[560px]:row-start-1 max-[560px]:block max-[560px]:min-w-0 max-[560px]:border-0! max-[560px]:p-0!"
           >
-            <strong>{{row.parentId !== null ? '↳ ' : ''}}{{row.name}}</strong>
+            <span class="flex min-w-0 items-center gap-2"
+              >@if(row.image){<img
+                class="h-8 w-8 shrink-0 rounded-full border border-[var(--line)] object-cover"
+                [src]="row.image.startsWith('data:') ? row.image : imagePath(row.image)"
+                alt=""
+              />}<strong class="truncate"
+                >{{row.parentId !== null ? '↳ ' : ''}}{{row.name}}</strong
+              ></span
+            >
           </td>
           <td
             class="muted max-[560px]:col-start-1 max-[560px]:row-start-2 max-[560px]:block max-[560px]:min-w-0 max-[560px]:border-0! max-[560px]:p-0! max-[560px]:break-words"
@@ -167,6 +175,19 @@
         maxlength="60"
     /></label>
     <label class="field"
+      >Catégorie parente<tp-admin-select
+        [options]="parentOptions()"
+        [displayLabels]="parentLabels()"
+        [selected]="parentSelection(row)"
+        ariaLabel="Catégorie parente"
+        (changed)="changeParent(row, $event)"
+    /></label>
+    <label class="field"
+      >Image de la catégorie<tp-admin-single-image-picker
+        [image]="row.image ?? ''"
+        (changed)="row.image = $event; error.set('')"
+    /></label>
+    <label class="field"
       >Description<input
         [ngModel]="row.description"
         (ngModelChange)="row.description = $event"
@@ -177,7 +198,9 @@
   <p class="dialog-error" role="alert">{{error()}}</p>
   }
   <p class="muted small">
-    Le renommage actualise aussi le classement des produits associés.
+    @if(previousName()){Le renommage actualise aussi le classement des produits
+    associés.} @else {Choisissez une catégorie parente pour créer une
+    sous-catégorie ; ajoutez une image pour publier cette catégorie.}
   </p>
   <div class="toolbar dialog-actions">
     <button type="button" class="btn btn-secondary" (click)="editing.set(null)">
@@ -189,7 +212,9 @@
       [disabled]="busy()"
       (click)="save()"
     >
-      {{busy() ? 'Enregistrement…' : 'Enregistrer'}}
+      {{busy() ? 'Enregistrement…' : (previousName() ? 'Enregistrer les
+      modifications' : (row.parentId === null ? 'Ajouter la catégorie' :
+      'Ajouter la sous-catégorie'))}}
     </button>
   </div>
 </tp-admin-dialog>

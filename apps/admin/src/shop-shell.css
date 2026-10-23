@@ -72,19 +72,7 @@
   color: var(--brand-hover);
   font-weight: 700;
 }
-.shop-sidebar-foot {
-  display: grid;
-  align-content: center;
-  gap: 4px;
-  min-height: 65px;
-  padding: 10px 12px;
-  border-top: 1px solid var(--line);
-}
-.shop-sidebar-foot small {
-  color: var(--text-2);
-  font-size: 11px;
-}
-.shop-topbar > div {
+.shop-topbar > div:first-child {
   display: grid;
   line-height: 1.2;
 }

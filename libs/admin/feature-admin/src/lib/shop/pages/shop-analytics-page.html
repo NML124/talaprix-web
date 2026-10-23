@@ -57,6 +57,7 @@
     ><span>Personnes distinctes</span>
   </div>
 </section>
+<tp-shop-analytics-charts [periodKey]="periodKey()" />
 <section class="card">
   <div class="card-head">
     <h2>Engagement par offre</h2>
@@ -144,11 +145,9 @@
     <p>Les produits consultés apparaîtront ici.</p>
   </div>
   }
-  <p class="muted small">
-    Les consultations comptent les vues. Contacts, itinéraires et favoris
-    comptent les personnes uniques par offre et par période ; une même personne
-    peut apparaître sur plusieurs offres, donc ces lignes ne donnent pas un
-    total unique pour la boutique.
+  <p class="text-xs leading-relaxed text-[var(--text-2)]">
+    Déduplication par offre et période ; une même personne peut compter sur
+    plusieurs offres.
   </p>
 </section>
 @if (detailOpen()) {
@@ -157,9 +156,8 @@
   (closed)="detailOpen.set(false)"
 >
   <div class="grid min-w-0 content-start gap-4">
-    <p class="muted small">
-      {{period()}} · Les contacts, itinéraires et favoris sont comptés par
-      offre. Une personne peut apparaître sur plusieurs lignes.
+    <p class="text-xs text-[var(--text-2)]">
+      {{period()}} · Déduplication par offre.
     </p>
     <label class="search w-full">
       <span class="sr-only">Rechercher une offre dans les analyses</span>

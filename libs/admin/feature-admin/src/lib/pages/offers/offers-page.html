@@ -1,0 +1,71 @@
+<tp-admin-page-header
+  title="Offres"
+  subtitle="Prix publiés par les boutiques et état des annonces."
+/>
+<div class="toolbar">
+  <label class="search"
+    ><span class="sr-only">Rechercher une offre</span
+    ><input
+      type="search"
+      placeholder="Rechercher une offre, boutique ou catégorie"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event); page.set(1)"
+  /></label>
+</div>
+<section class="card">
+  <div class="card-head">
+    <h2>Toutes les offres</h2>
+    <span class="muted small">{{filtered().length}} offres</span>
+  </div>
+  @if(visible().length){
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Boutique</th>
+          <th>Catégorie</th>
+          <th>Prix</th>
+          <th>État</th>
+          <th>Mise à jour</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(row of visible();track row.id){
+        <tr>
+          <td>
+            <span class="flex items-center gap-3"
+              ><img
+                class="thumb"
+                [src]="imagePath(row.image)"
+                [alt]="''"
+              /><strong>{{row.name}}</strong></span
+            >
+          </td>
+          <td>{{row.shop}}</td>
+          <td>{{row.category}}</td>
+          <td class="number">{{row.price | number:'1.0-0':'fr-FR'}} FC</td>
+          <td>
+            <span
+              class="badge"
+              [class.success]="row.status==='Publié'"
+              [class.warning]="row.status==='À revoir'"
+              >{{row.status}}</span
+            >
+          </td>
+          <td>{{row.updated}}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <tp-admin-pagination
+    [total]="filtered().length"
+    [page]="page()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />}@else{<tp-empty-state
+    title="Aucune offre trouvée"
+    message="Essayez une autre recherche."
+  />}
+</section>

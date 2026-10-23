@@ -12,6 +12,22 @@ export const shopPreview: ShopWorkspace = {
     status: 'Active',
     updatedAt: 'Aujourd’hui, 09:42',
   },
+  delivery: {
+    supported: true,
+    message: 'Aucun incident de livraison signalé.',
+  },
+  pricePosition: {
+    cheaper: 12,
+    average: 18,
+    higher: 7,
+    overpriced: 7,
+    competitive: 30,
+    competitors: [
+      { id: 'shop-drc', name: 'DRC Mart', cheaperProducts: 8 },
+      { id: 'shop-dickcom', name: 'Dickcom Shop', cheaperProducts: 5 },
+      { id: 'shop-uac', name: 'UAC Kintambo', cheaperProducts: 3 },
+    ],
+  },
   engagement: {
     '7d': {
       contactPeople: 24,

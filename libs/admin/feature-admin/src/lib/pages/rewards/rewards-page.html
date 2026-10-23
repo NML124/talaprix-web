@@ -1,0 +1,120 @@
+<tp-admin-page-header
+  title="Récompenses"
+  subtitle="Configurez les cadeaux et les points nécessaires pour les obtenir."
+>
+  <button class="btn btn-primary" type="button" (click)="create()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Ajouter un cadeau
+  </button>
+</tp-admin-page-header>
+@if (toast()) {
+<div class="toast" role="status">{{ toast() }}</div>
+}
+<section class="card">
+  <div class="card-head">
+    <div>
+      <h2>Cadeaux disponibles</h2>
+      <p class="muted small">
+        {{ rewards().length }} cadeau{{ rewards().length === 1 ? '' : 'x' }}
+        configuré{{ rewards().length === 1 ? '' : 's' }}
+      </p>
+    </div>
+  </div>
+  <label class="search w-full max-w-xl">
+    <svg lucideSearch size="17" aria-hidden="true"></svg>
+    <span class="sr-only">Rechercher un cadeau ou un nombre de points</span>
+    <input
+      type="search"
+      placeholder="Rechercher un cadeau ou un nombre de points"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event)"
+    />
+  </label>
+  @if (!rewards().length) {
+  <div class="empty-state">
+    <svg lucideGift size="28" aria-hidden="true"></svg>
+    <p>Aucun cadeau configuré</p>
+    <button class="btn btn-primary" type="button" (click)="create()">
+      Ajouter un cadeau
+    </button>
+  </div>
+  } @else if (!filteredRewards().length) {
+  <div class="empty-state">
+    <p>Aucun cadeau ne correspond à cette recherche.</p>
+  </div>
+  } @else {
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cadeau</th>
+          <th>Points à atteindre</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (reward of filteredRewards(); track reward.id) {
+        <tr>
+          <td>
+            <div class="item-row">
+              @if (reward.image) {
+              <img class="avatar" [src]="reward.image" alt="" /> } @else {
+              <span class="avatar" aria-hidden="true"
+                ><svg lucideGift size="17"></svg
+              ></span>
+              }
+              <strong>{{ reward.name }}</strong>
+            </div>
+          </td>
+          <td><span class="badge success">{{ reward.points }} pts</span></td>
+          <td>
+            <div class="toolbar">
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="'Modifier ' + reward.name"
+                (click)="edit(reward)"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                class="table-action danger"
+                type="button"
+                [attr.aria-label]="'Supprimer ' + reward.name"
+                (click)="removing.set(reward)"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</section>
+@if (editing(); as reward) {
+<tp-reward-dialog
+  [reward]="reward"
+  (closed)="editing.set(undefined)"
+  (saved)="save($event)"
+/>
+} @if (removing(); as reward) {
+<tp-admin-dialog title="Supprimer le cadeau" (closed)="removing.set(null)">
+  <p>
+    Supprimer <strong>{{ reward.name }}</strong> du catalogue de récompenses ?
+  </p>
+  <div class="toolbar dialog-actions">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="removing.set(null)"
+    >
+      Annuler
+    </button>
+    <button class="btn btn-danger" type="button" (click)="remove()">
+      Confirmer la suppression
+    </button>
+  </div>
+</tp-admin-dialog>
+}

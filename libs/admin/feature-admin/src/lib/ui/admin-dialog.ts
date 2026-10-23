@@ -17,6 +17,7 @@ import { LucideX } from '@lucide/angular';
 })
 export class AdminDialog {
   readonly title = input.required<string>();
+  readonly size = input<'default' | 'compact'>('default');
   readonly closed = output<void>();
   private readonly dialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('dialog');

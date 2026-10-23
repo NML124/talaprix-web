@@ -1,0 +1,185 @@
+<tp-admin-page-header
+  title="Publicités"
+  subtitle="Visuels boutique, priorité et période de diffusion."
+>
+  <button type="button" class="btn btn-primary" (click)="create()">
+    <svg lucidePlus size="15" aria-hidden="true"></svg>Créer une publicité
+  </button>
+</tp-admin-page-header>
+<div class="toolbar">
+  <label class="search"
+    ><span class="sr-only">Rechercher une publicité</span
+    ><input
+      type="search"
+      placeholder="Rechercher une publicité"
+      [ngModel]="query()"
+      (ngModelChange)="query.set($event); page.set(1)"
+  /></label>
+</div>
+@if(error()) {
+<p class="toast error" role="alert">
+  {{error()}}
+  <button type="button" class="link" (click)="load()">Réessayer</button>
+</p>
+}
+<section class="card">
+  <div class="card-head">
+    <h2>Publicités enregistrées</h2>
+    <span class="muted small">{{filtered().length}} résultats</span>
+  </div>
+  @if(loading()) {
+  <div class="skeleton" style="height: 60px"></div>
+  } @else if(!visible().length) {
+  <tp-empty-state
+    title="Aucune publicité"
+    message="Créez une publicité pour une boutique."
+  />
+  } @else {
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Publicité</th>
+          <th>Boutique</th>
+          <th>Priorité</th>
+          <th>Fin de diffusion</th>
+          <th>État</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(row of visible();track row.id) {
+        <tr>
+          <td>
+            <span class="flex items-center gap-3"
+              ><img
+                [src]="row.image.startsWith('data:') ? row.image : '/admin-assets/'+row.image"
+                alt=""
+                class="thumb"
+              /><strong>{{row.name}}</strong></span
+            >
+          </td>
+          <td>{{row.shop}}</td>
+          <td>{{row.priority}}</td>
+          <td>{{row.endDate}}</td>
+          <td>
+            <span
+              class="badge"
+              [class.success]="row.status==='Active'"
+              [class.warning]="row.status==='En pause'"
+              >{{row.status}}</span
+            >
+          </td>
+          <td>
+            <div class="table-actions">
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="'Modifier '+row.name"
+                (click)="edit(row)"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="(row.status==='Active'?'Mettre en pause ':'Reprendre ')+row.name"
+                (click)="toggle(row)"
+              >
+                @if(row.status==='Active'){<svg
+                  lucidePause
+                  size="16"
+                  aria-hidden="true"
+                ></svg
+                >}@else{<svg lucidePlay size="16" aria-hidden="true"></svg>}
+              </button>
+              <button
+                class="table-action danger"
+                type="button"
+                [attr.aria-label]="'Supprimer '+row.name"
+                (click)="remove(row)"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <tp-admin-pagination
+    [total]="filtered().length"
+    [page]="page()"
+    [pageSize]="pageSize"
+    (pageChanged)="page.set($event)"
+  />
+  }
+</section>
+@if(draft();as row) {
+<tp-admin-dialog
+  [title]="mode()==='delete'?'Supprimer la publicité':'Gérer la publicité'"
+  (closed)="draft.set(null)"
+>
+  @if(mode()==='delete') {
+  <p>Supprimer <strong>{{row.name}}</strong> ?</p>
+  <div class="toolbar dialog-actions">
+    <button class="btn btn-secondary" type="button" (click)="draft.set(null)">
+      Annuler</button
+    ><button class="btn btn-danger" type="button" (click)="confirmDelete()">
+      Supprimer
+    </button>
+  </div>
+  } @else {
+  <div class="form-stack">
+    <label class="field"
+      >Nom de la publicité<input
+        [ngModel]="row.name"
+        (ngModelChange)="change('name',$event)"
+    /></label>
+    <label class="field"
+      >Boutique<tp-admin-select
+        [options]="shops()"
+        [selected]="row.shop"
+        ariaLabel="Boutique de la publicité"
+        (changed)="change('shop',$event)"
+    /></label>
+    <div class="field">
+      <span>Visuel</span
+      ><tp-admin-single-image-picker
+        [image]="row.image"
+        (changed)="change('image',$event)"
+      />
+    </div>
+    <div class="grid-2">
+      <label class="field"
+        >Priorité<input
+          type="number"
+          min="1"
+          [ngModel]="row.priority"
+          (ngModelChange)="change('priority',+$event)" /></label
+      ><label class="field"
+        >Date de fin<input
+          type="date"
+          [ngModel]="row.endDate"
+          (ngModelChange)="change('endDate',$event)"
+      /></label>
+    </div>
+    <label class="field"
+      >État<tp-admin-select
+        [options]="['Active','En pause']"
+        [selected]="row.status"
+        ariaLabel="État de la publicité"
+        (changed)="change('status',$event)"
+    /></label>
+  </div>
+  <div class="toolbar dialog-actions">
+    <button class="btn btn-secondary" type="button" (click)="draft.set(null)">
+      Annuler</button
+    ><button class="btn btn-primary" type="button" (click)="save()">
+      Enregistrer
+    </button>
+  </div>
+  }
+</tp-admin-dialog>
+}

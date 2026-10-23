@@ -28,6 +28,8 @@ import type {
   CommunityUserView,
 } from '../mocks/models';
 import type { OfferDiscount } from '../mocks/marketing';
+import { advertisements } from '../mocks/advertisements';
+import type { Advertisement } from '../mocks/advertisements';
 
 const pause = () => new Promise<void>((resolve) => setTimeout(resolve, 160));
 const maskCommunityPhone = (phone: string): string => {
@@ -40,6 +42,7 @@ const maskCommunityPhone = (phone: string): string => {
 @Service()
 export class AdminMockApi {
   private readonly productRows = structuredClone(products);
+  private readonly advertisementRows = structuredClone(advertisements);
   private readonly campaignRows = structuredClone(campaigns);
   private readonly discountRows = structuredClone(offerDiscounts);
   private readonly proposalRows = structuredClone(proposals);
@@ -61,6 +64,26 @@ export class AdminMockApi {
     });
   }
 
+  async listAdvertisements(): Promise<Advertisement[]> {
+    await pause();
+    return structuredClone(this.advertisementRows);
+  }
+  async saveAdvertisement(value: Advertisement): Promise<void> {
+    await pause();
+    const index = this.advertisementRows.findIndex(
+      (row) => row.id === value.id,
+    );
+    if (index < 0) this.advertisementRows.unshift(structuredClone(value));
+    else this.advertisementRows[index] = structuredClone(value);
+    this.record('Modification de publicité', value.name);
+  }
+  async deleteAdvertisement(id: number): Promise<void> {
+    await pause();
+    const index = this.advertisementRows.findIndex((row) => row.id === id);
+    if (index < 0) throw new Error('Publicité introuvable.');
+    const [ad] = this.advertisementRows.splice(index, 1);
+    this.record('Suppression de publicité', ad.name);
+  }
   async listProducts(): Promise<Product[]> {
     await pause();
     return structuredClone(this.productRows);

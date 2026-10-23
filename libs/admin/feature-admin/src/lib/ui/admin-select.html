@@ -2,7 +2,7 @@
   <button
     #trigger
     type="button"
-    class="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 text-left text-sm text-[var(--text-1)] shadow-sm transition hover:border-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] disabled:cursor-not-allowed disabled:opacity-50"
+    class="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 text-left text-sm text-[var(--text-1)] transition hover:border-[var(--brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] disabled:cursor-not-allowed disabled:opacity-50"
     [disabled]="disabled()"
     [attr.aria-label]="ariaLabel()"
     aria-haspopup="listbox"
@@ -12,7 +12,9 @@
     (keydown.arrowup)="openAndFocus($event, options().length - 1)"
     (click)="toggle()"
   >
-    <span class="truncate">{{ selected() || placeholder() }}</span>
+    <span class="truncate"
+      >{{ displayLabels()[selected()] || selected() || placeholder() }}</span
+    >
     <svg
       lucideChevronDown
       size="16"
@@ -22,7 +24,7 @@
   </button>
   @if (open()) {
   <div
-    class="absolute left-0 top-[calc(100%+6px)] z-50 max-h-64 w-full min-w-44 overflow-y-auto rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-1.5 shadow-xl"
+    class="absolute left-0 top-[calc(100%+6px)] z-50 max-h-64 w-full min-w-44 overflow-y-auto rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-1.5 shadow-lg"
     role="listbox"
     [id]="optionId(0) + '-listbox'"
     [attr.aria-label]="ariaLabel()"
@@ -40,7 +42,7 @@
       (keydown.end)="focusOption(options().length - 1)"
       (click)="choose(option)"
     >
-      <span class="truncate">{{ option }}</span>
+      <span class="truncate">{{ displayLabels()[option] || option }}</span>
       @if (selected() === option) {
       <svg
         lucideCheck
