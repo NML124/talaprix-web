@@ -1,0 +1,279 @@
+<section
+  aria-label="Produits"
+  class="[flex:999_1_640px] [min-width:0] [background:var(--client-surface)] [border-radius:12px] [padding:12px]"
+>
+  <div
+    class="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(220px,_1fr))] [gap:4px]"
+  >
+    <tpx-client-results-desktop-section-3-card-1 />
+    <tpx-client-results-desktop-section-3-card-2 />
+    <tpx-client-results-desktop-section-3-card-3 />
+    <tpx-client-results-desktop-section-3-card-4 />
+    <tpx-client-results-desktop-section-3-card-5 />
+    <article
+      [hidden]="!catalog.visible('HP ProBook 450 G10 i7 13e, 16 Go, 512 Go', 980)"
+      [style.order]="catalog.rank(980)"
+      class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+    >
+      <a
+        class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+        aria-label="HP ProBook 450 G10 i7 13e, 16 Go, 512 Go"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:170px] [height:170px]"
+          tpxVisual
+          symbol="i-laptop"
+        ></svg
+      ></a>
+      <button
+        type="button"
+        aria-label="Ajouter aux favoris"
+        (click)="catalog.toggleFavorite('HP ProBook 450 G10 i7 13e, 16 Go, 512 Go')"
+        [attr.aria-pressed]="catalog.favorite('HP ProBook 450 G10 i7 13e, 16 Go, 512 Go')"
+        [style.color]="catalog.favorite('HP ProBook 450 G10 i7 13e, 16 Go, 512 Go') ? '#007A6C' : '#2E3B37'"
+        class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          [attr.fill]="catalog.favorite('HP ProBook 450 G10 i7 13e, 16 Go, 512 Go') ? '#E3F2EF' : 'none'"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg>
+      </button>
+      <a
+        class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        title="HP ProBook 450 G10 i7 13e, 16 Go, 512 Go"
+        >HP ProBook 450 G10 i7 13e, 16 Go, 512 Go</a
+      >
+      <span class="[display:flex] [align-items:baseline] [gap:6px]"
+        ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >dès</span
+        ><span
+          class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+          tpxPriceTag
+          [value]="ui.money(980)"
+        ></span
+      ></span>
+      <span
+        class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+        >chez UAC – Limete<br /><a
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          class="[font-weight:500] [text-decoration:none]"
+          >Voir les 2 offres</a
+        ></span
+      >
+    </article>
+    <article
+      [hidden]="!catalog.visible('HP 250 G9 i3, 8 Go, 256 Go', 399)"
+      [style.order]="catalog.rank(399)"
+      class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+    >
+      <a
+        class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+        aria-label="HP 250 G9 i3, 8 Go, 256 Go"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:170px] [height:170px]"
+          tpxVisual
+          symbol="i-laptop2"
+        ></svg
+      ></a>
+      <button
+        type="button"
+        aria-label="Ajouter aux favoris"
+        (click)="catalog.toggleFavorite('HP 250 G9 i3, 8 Go, 256 Go')"
+        [attr.aria-pressed]="catalog.favorite('HP 250 G9 i3, 8 Go, 256 Go')"
+        [style.color]="catalog.favorite('HP 250 G9 i3, 8 Go, 256 Go') ? '#007A6C' : '#2E3B37'"
+        class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          [attr.fill]="catalog.favorite('HP 250 G9 i3, 8 Go, 256 Go') ? '#E3F2EF' : 'none'"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg>
+      </button>
+      <a
+        class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        title="HP 250 G9 i3, 8 Go, 256 Go"
+        >HP 250 G9 i3, 8 Go, 256 Go</a
+      >
+      <span class="[display:flex] [align-items:baseline] [gap:6px]"
+        ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >dès</span
+        ><span
+          class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+          tpxPriceTag
+          [value]="ui.money(399)"
+        ></span
+      ></span>
+      <span
+        class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+        >chez UAC – INA<br /><a
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          class="[font-weight:500] [text-decoration:none]"
+          >Voir les 4 offres</a
+        ></span
+      >
+    </article>
+    <article
+      [hidden]="!catalog.visible('HP Smart Tank 580', 179)"
+      [style.order]="catalog.rank(179)"
+      class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+    >
+      <a
+        class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+        aria-label="HP Smart Tank 580"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:170px] [height:170px]"
+          tpxVisual
+          symbol="i-printer2"
+        ></svg
+      ></a>
+      <button
+        type="button"
+        aria-label="Ajouter aux favoris"
+        (click)="catalog.toggleFavorite('HP Smart Tank 580')"
+        [attr.aria-pressed]="catalog.favorite('HP Smart Tank 580')"
+        [style.color]="catalog.favorite('HP Smart Tank 580') ? '#007A6C' : '#2E3B37'"
+        class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          [attr.fill]="catalog.favorite('HP Smart Tank 580') ? '#E3F2EF' : 'none'"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg>
+      </button>
+      <a
+        class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        title="HP Smart Tank 580"
+        >HP Smart Tank 580</a
+      >
+      <span class="[display:flex] [align-items:baseline] [gap:6px]"
+        ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >dès</span
+        ><span
+          class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+          tpxPriceTag
+          [value]="ui.money(179)"
+        ></span
+      ></span>
+      <span
+        class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+        >chez Ujisha Congo<br /><a
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          class="[font-weight:500] [text-decoration:none]"
+          >Voir les 3 offres</a
+        ></span
+      >
+    </article>
+    <article
+      [hidden]="!catalog.visible('HP 220 souris sans fil', 9)"
+      [style.order]="catalog.rank(9)"
+      class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+    >
+      <a
+        class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+        aria-label="HP 220 souris sans fil"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:170px] [height:170px]"
+          tpxVisual
+          symbol="i-mouse"
+        ></svg
+      ></a>
+      <button
+        type="button"
+        aria-label="Ajouter aux favoris"
+        (click)="catalog.toggleFavorite('HP 220 souris sans fil')"
+        [attr.aria-pressed]="catalog.favorite('HP 220 souris sans fil')"
+        [style.color]="catalog.favorite('HP 220 souris sans fil') ? '#007A6C' : '#2E3B37'"
+        class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          [attr.fill]="catalog.favorite('HP 220 souris sans fil') ? '#E3F2EF' : 'none'"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg>
+      </button>
+      <a
+        class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        title="HP 220 souris sans fil"
+        >HP 220 souris sans fil</a
+      >
+      <span class="[display:flex] [align-items:baseline] [gap:6px]"
+        ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >dès</span
+        ><span
+          class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+          tpxPriceTag
+          [value]="ui.money(9)"
+        ></span
+      ></span>
+      <span
+        class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+        >chez Ujisha Congo<br /><a
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          class="[font-weight:500] [text-decoration:none]"
+          >Voir les 6 offres</a
+        ></span
+      >
+    </article>
+  </div>
+</section>
+
+@if (catalog.resultCount() === 0) {
+<p
+  role="status"
+  class="col-span-full p-8 text-center text-[var(--client-muted)]"
+>
+  Aucun produit ne correspond à vos filtres.
+</p>
+}

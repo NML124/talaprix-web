@@ -1,66 +1,70 @@
 import { Route } from '@angular/router';
-
 export const appRoutes: Route[] = [
-  {
-    path: 'auth',
-    loadComponent: () =>
-      import('@talaprix/users').then(
-        ({ UsersFeatureAuth }) => UsersFeatureAuth,
-      ),
-  },
   {
     path: '',
     loadComponent: () =>
-      import('@talaprix/home/feature-web').then(
-        ({ PublicShell }) => PublicShell,
-      ),
+      import('@talaprix/home/feature-web').then((m) => m.ClientShell),
     children: [
       {
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('@talaprix/home/feature-web').then(({ Home }) => Home),
+          import('@talaprix/home/feature-web').then((m) => m.ClientHome),
+      },
+      {
+        path: 'resultats',
+        loadComponent: () =>
+          import('@talaprix/products/feature-web').then((m) => m.ClientResults),
+      },
+      {
+        path: 'recherche',
+        loadComponent: () =>
+          import('@talaprix/products/feature-web').then((m) => m.ClientSearch),
+      },
+      {
+        path: 'produit/:slug',
+        loadComponent: () =>
+          import('@talaprix/products/feature-web').then((m) => m.ClientDetail),
+      },
+      {
+        path: 'compte',
+        loadComponent: () =>
+          import('@talaprix/products/feature-web').then((m) => m.ClientAccount),
       },
       {
         path: 'categories',
         loadComponent: () =>
           import('@talaprix/products/feature-web').then(
-            ({ ProductsCategories }) => ProductsCategories,
+            (m) => m.ClientCategories,
           ),
       },
       {
-        path: 'products',
+        path: 'boutiques',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then(
-            ({ Products }) => Products,
-          ),
+          import('@talaprix/shops/feature-web').then((m) => m.ClientShopPage),
       },
       {
-        path: 'products/:productId',
+        path: 'boutiques/sans-position',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then(
-            ({ ProductDetailPage }) => ProductDetailPage,
-          ),
+          import('@talaprix/shops/feature-web').then((m) => m.ClientUnlocated),
       },
       {
-        path: 'favorites',
+        path: 'commercants',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then(
-            ({ Favorites }) => Favorites,
-          ),
+          import('@talaprix/shops/feature-web').then((m) => m.ClientMerchants),
       },
       {
-        path: 'cart',
+        path: 'panier',
         loadComponent: () =>
-          import('@talaprix/cart/feature-web').then(({ CartPage }) => CartPage),
+          import('@talaprix/cart/feature-web').then((m) => m.ClientCart),
       },
-      {
-        path: 'shops',
-        loadComponent: () =>
-          import('@talaprix/shops/feature-web').then(
-            ({ ShopsPage }) => ShopsPage,
-          ),
-      },
+      { path: 'products', redirectTo: 'resultats', pathMatch: 'full' },
+      { path: 'products/:id', redirectTo: 'produit/:id', pathMatch: 'full' },
+      { path: 'favorites', redirectTo: 'compte', pathMatch: 'full' },
+      { path: 'cart', redirectTo: 'panier', pathMatch: 'full' },
+      { path: 'shops', redirectTo: 'boutiques', pathMatch: 'full' },
+      { path: 'auth', redirectTo: '', pathMatch: 'full' },
+      { path: '**', redirectTo: '' },
     ],
   },
 ];

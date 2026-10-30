@@ -1,0 +1,57 @@
+<nav
+  aria-label="Mon compte"
+  class="[flex:1_1_220px] [max-width:240px] [background:var(--client-surface)] [border-radius:12px] [padding:8px]"
+>
+  <div
+    class="[display:flex] [align-items:center] [gap:10px] [padding:12px_12px_14px] [border-bottom:1px_solid_var(--client-divider)] [margin-bottom:6px]"
+  >
+    <span
+      class="[width:40px] [height:40px] [border-radius:20px] [background:#D9F0EB] [color:var(--client-action-hover)] [display:flex] [align-items:center] [justify-content:center] [font-weight:600]"
+      >M</span
+    ><span class="[display:flex] [flex-direction:column]"
+      ><span class="[font-size:15px] [font-weight:500]">Merdi Pumba</span
+      ><span class="[font-size:12.5px] [color:var(--client-muted)]"
+        >Compte Google</span
+      ></span
+    >
+  </div>
+  <button
+    type="button"
+    aria-current="page"
+    class="[width:100%] [display:flex] [align-items:center] [justify-content:space-between] [height:40px] [padding:0_12px] [border:0] [border-radius:14px] [background:var(--client-page)] [font:inherit] [font-size:14.5px] [font-weight:500] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-row"
+    (click)="ui.accountTab.set('favorites')"
+    [attr.aria-selected]="ui.accountTab() === 'favorites'"
+  >
+    Favoris<span class="[font-size:12.5px] [color:var(--client-muted)]">5</span>
+  </button>
+  <button
+    type="button"
+    aria-current="false"
+    class="[width:100%] [display:flex] [align-items:center] [justify-content:space-between] [height:40px] [padding:0_12px] [border:0] [border-radius:14px] [background:transparent] [font:inherit] [font-size:14.5px] [font-weight:400] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-row"
+    (click)="ui.accountTab.set('searches')"
+    [attr.aria-selected]="ui.accountTab() === 'searches'"
+  >
+    Recherches récentes<span
+      class="[font-size:12.5px] [color:var(--client-muted)]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-current="false"
+    class="[width:100%] [display:flex] [align-items:center] [justify-content:space-between] [height:40px] [padding:0_12px] [border:0] [border-radius:14px] [background:transparent] [font:inherit] [font-size:14.5px] [font-weight:400] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-row"
+    (click)="ui.router.navigate(['/panier'])"
+  >
+    Panier<span class="[font-size:12.5px] [color:var(--client-muted)]">3</span>
+  </button>
+  <button
+    type="button"
+    aria-current="false"
+    class="[width:100%] [display:flex] [align-items:center] [justify-content:space-between] [height:40px] [padding:0_12px] [border:0] [border-radius:14px] [background:transparent] [font:inherit] [font-size:14.5px] [font-weight:400] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-row"
+    (click)="ui.accountTab.set('alerts')"
+    [attr.aria-selected]="ui.accountTab() === 'alerts'"
+  >
+    Notifications<span class="[font-size:12.5px] [color:var(--client-muted)]"
+      >2</span
+    >
+  </button>
+</nav>

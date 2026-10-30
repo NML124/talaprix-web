@@ -1,0 +1,13 @@
+<div
+  class="[padding:10px_12px_20px] [display:flex] [flex-direction:column] [gap:10px]"
+>
+  @for (group of cart.groups(); track group.shop) {
+  <tpx-client-cart-group [group]="group" /> }
+
+  <p
+    class="[margin:2px_4px_0] [font-size:12.5px] [line-height:1.5] [color:var(--client-muted)]"
+  >
+    Vous payez directement en boutique. Contactez le vendeur avant de vous
+    déplacer.
+  </p>
+</div>

@@ -1,0 +1,67 @@
+<tpx-client-shops-desktop-section-1-content-2 />
+<div
+  class="[position:absolute] [right:20px] [bottom:24px] [display:flex] [flex-direction:column] [gap:8px]"
+>
+  <div
+    class="[display:flex] [flex-direction:column] [background:var(--client-surface)] [border-radius:12px] [overflow:hidden] [box-shadow:0_2px_8px_rgba(15,26,23,0.15)]"
+  >
+    <button
+      type="button"
+      aria-label="Zoomer"
+      class="[width:42px] [height:42px] [border:0] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)] [cursor:pointer] client-ctl"
+      (click)="shops.zoom.update(zoomIn)"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-ea740c9f0aa1"
+      ></svg>
+    </button>
+    <span class="[height:1px] [background:var(--client-line)]"></span>
+    <button
+      type="button"
+      aria-label="Dézoomer"
+      class="[width:42px] [height:42px] [border:0] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)] [cursor:pointer] client-ctl"
+      (click)="shops.zoom.update(zoomOut)"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-90a54fd7f3f1"
+      ></svg>
+    </button>
+  </div>
+  <button
+    type="button"
+    aria-label="Centrer sur ma position"
+    class="[width:42px] [height:42px] [border-radius:12px] [border:0] [background:var(--client-surface)] [box-shadow:0_2px_8px_rgba(15,26,23,0.15)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-distance)] [cursor:pointer] client-ctl"
+  >
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      tpxVisual
+      symbol="icon-e8dc7ed1fb62"
+    ></svg>
+  </button>
+</div>

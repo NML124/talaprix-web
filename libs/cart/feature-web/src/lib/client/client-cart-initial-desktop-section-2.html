@@ -1,0 +1,111 @@
+<div
+  class="[display:flex] [flex-wrap:wrap] [gap:20px] [align-items:flex-start]"
+>
+  <section
+    aria-label="Produits du panier"
+    class="[flex:999_1_640px] [min-width:0] [background:var(--client-surface)] [border-radius:16px] [overflow:hidden]"
+  >
+    @for (group of cart.groups(); track group.shop) {
+    <tpx-client-cart-group [group]="group" /> }
+
+    <p
+      class="[margin:0] [padding:14px_22px] [font-size:13px] [color:var(--client-muted)]"
+    >
+      Les prix peuvent changer en boutique. Contactez le vendeur sur WhatsApp
+      avant de vous déplacer.
+    </p>
+  </section>
+  <aside
+    aria-label="Récapitulatif"
+    class="[flex:1_1_300px] [max-width:360px] [display:flex] [flex-direction:column] [gap:14px] [position:sticky] [top:16px]"
+  >
+    <div
+      class="[background:var(--client-surface)] [border-radius:16px] [padding:22px] [display:flex] [flex-direction:column] [gap:14px]"
+    >
+      <h2 class="[margin:0] [font-size:17px] [font-weight:600]">
+        Récapitulatif
+      </h2>
+      <div
+        class="[display:flex] [flex-direction:column] [gap:8px] [font-size:14px]"
+      >
+        <div class="[display:flex] [justify-content:space-between]">
+          <span class="[color:var(--client-text-tertiary)]">Produits</span
+          ><span>{{ cart.items().length }}</span>
+        </div>
+        <div class="[display:flex] [justify-content:space-between]">
+          <span class="[color:var(--client-text-tertiary)]"
+            >Boutiques à visiter</span
+          ><span>2 boutiques</span>
+        </div>
+      </div>
+      <div
+        class="[border-top:1px_solid_var(--client-divider)] [padding-top:14px] [display:flex] [flex-direction:column] [gap:2px]"
+      >
+        <span class="[font-size:13px] [color:var(--client-text-tertiary)]"
+          >Total estimé</span
+        >
+        <span class="[display:flex] [align-items:baseline] [gap:10px]"
+          ><span
+            class="[font-size:30px] [font-weight:700] [letter-spacing:-0.02em] [font-variant-numeric:tabular-nums]"
+            tpxPriceTag
+            [value]="ui.money(cart.originalTotal())"
+          ></span
+        ></span>
+        <span
+          class="[font-size:12.5px] [color:var(--client-muted)] [font-variant-numeric:tabular-nums]"
+          >{{ ui.approximate(cart.originalTotal()) }}</span
+        >
+      </div>
+      <div class="[display:flex] [flex-direction:column] [gap:10px]">
+        <div
+          class="[display:flex] [gap:10px] [align-items:flex-start] [padding:12px_14px] [border-radius:12px] [background:var(--client-mint-soft)] [font-size:13px] [line-height:1.5] [color:var(--client-text-secondary)]"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#007A6C"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="[flex-shrink:0] [margin-top:1px]"
+            tpxVisual
+            symbol="icon-dfbbf6ea15a0"
+          ></svg
+          ><span
+            >Vous pouvez économiser jusqu'à
+            <span
+              class="[font-weight:600] [color:var(--client-action-hover)]"
+              tpxPriceTag
+              [value]="ui.money(57)"
+            ></span>
+            en achetant ailleurs les mêmes produits.</span
+          >
+        </div>
+        <button
+          type="button"
+          class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:15.5px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [gap:10px] client-btn-p"
+          (click)="cart.optimize()"
+          [disabled]="cart.loading()"
+        >
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-57f369db04fb"
+          ></svg
+          >Optimiser mes achats
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>

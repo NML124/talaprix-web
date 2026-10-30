@@ -1,0 +1,49 @@
+<div
+  class="[display:flex] [gap:8px] [overflow-x:auto] [padding:12px] [background:var(--client-surface)] client-rail"
+>
+  <button
+    type="button"
+    aria-pressed="true"
+    (click)="shops.category.set('Toutes')"
+    [attr.aria-pressed]="shops.category() === 'Toutes'"
+    class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-text)] [background:var(--client-text)] [color:var(--client-surface)]"
+  >
+    Toutes
+  </button>
+  <button
+    type="button"
+    aria-pressed="false"
+    (click)="shops.category.set('Téléphones')"
+    [attr.aria-pressed]="shops.category() === 'Téléphones'"
+    class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+  >
+    Téléphones
+  </button>
+  <button
+    type="button"
+    aria-pressed="false"
+    (click)="shops.category.set('Ordinateurs')"
+    [attr.aria-pressed]="shops.category() === 'Ordinateurs'"
+    class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+  >
+    Ordinateurs
+  </button>
+  <button
+    type="button"
+    aria-pressed="false"
+    (click)="shops.category.set('Énergie')"
+    [attr.aria-pressed]="shops.category() === 'Énergie'"
+    class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+  >
+    Énergie
+  </button>
+  <button
+    type="button"
+    aria-pressed="false"
+    (click)="shops.category.set('Maison')"
+    [attr.aria-pressed]="shops.category() === 'Maison'"
+    class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+  >
+    Maison
+  </button>
+</div>

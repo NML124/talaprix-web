@@ -1,0 +1,284 @@
+<div
+  class="[width:390px] [height:844px] [background:var(--client-surface)] [display:flex] [flex-direction:column] [overflow:hidden]"
+>
+  <div
+    class="[height:56px] [display:flex] [align-items:center] [padding:0_6px_0_16px] [border-bottom:1px_solid_#EEF0EF] [flex-shrink:0]"
+  >
+    <a
+      routerLink="/"
+      class="[display:flex] [align-items:center] [gap:8px] [text-decoration:none] [color:var(--client-text)] [margin-right:auto]"
+      ><img
+        src="/client-design/assets/logo-talaprix.png"
+        alt=""
+        class="[width:30px] [height:30px] [object-fit:contain]"
+        tpxShopAvatar
+      /><span
+        class="[font-size:18px] [font-weight:500] [letter-spacing:-0.02em]"
+        >Talaprix</span
+      ></a
+    >
+    <a
+      aria-label="Fermer le menu"
+      routerLink="/"
+      (click)="ui.closeOverlays()"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="ui.closeOverlays()"
+      class="[width:44px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)]"
+      ><svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-6d5dc2706247"
+      ></svg
+    ></a>
+  </div>
+  <nav
+    aria-label="Menu principal"
+    class="[flex:1] [overflow:auto] [padding:16px_16px_24px] [display:flex] [flex-direction:column] [gap:24px] [height:1009px]"
+  >
+    <button
+      type="button"
+      (click)="ui.authenticate()"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="ui.authenticate()"
+      class="[display:flex] [align-items:center] [gap:12px] [padding:14px] [border-radius:16px] [background:#F1F3F2] [text-decoration:none] [color:var(--client-text)]"
+    >
+      <span
+        class="[width:40px] [height:40px] [border-radius:20px] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-tertiary)]"
+        ><svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-5c4ee80f232c"
+        ></svg
+      ></span>
+      <span class="[flex:1] [display:flex] [flex-direction:column] [gap:2px]"
+        ><span class="[font-size:15px] [font-weight:500]">Se connecter</span
+        ><span class="[font-size:13px] [color:var(--client-muted)]"
+          >Gardez vos favoris et votre panier</span
+        ></span
+      >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#7A8580"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-c901e07a9df3"
+      ></svg>
+    </button>
+    <div class="[display:flex] [flex-direction:column]">
+      <span
+        class="[font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.04em] [padding:0_4px_6px]"
+        >EXPLORER</span
+      >
+      <a
+        routerLink="/categories"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Catégories<svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#7A8580"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c901e07a9df3"
+        ></svg
+      ></a>
+      <a
+        routerLink="/resultats"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Meilleures offres<svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#7A8580"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c901e07a9df3"
+        ></svg
+      ></a>
+      <a
+        routerLink="/resultats"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Prix en baisse<svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#7A8580"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c901e07a9df3"
+        ></svg
+      ></a>
+      <a
+        routerLink="/boutiques"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Boutiques et carte<svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#7A8580"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c901e07a9df3"
+        ></svg
+      ></a>
+    </div>
+    <div class="[display:flex] [flex-direction:column]">
+      <span
+        class="[font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.04em] [padding:0_4px_6px]"
+        >RÉGLAGES</span
+      >
+      <div
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:52px] [padding:0_4px] [border-bottom:1px_solid_#F1F3F2]"
+      >
+        <span class="[font-size:16px] [font-weight:500]">Devise</span>
+        <div
+          role="group"
+          aria-label="Devise"
+          class="[display:flex] [padding:2px] [background:#F1F3F2] [border-radius:8px]"
+        >
+          <button
+            type="button"
+            aria-pressed="true"
+            (click)="ui.currency.set('USD')"
+            [attr.aria-pressed]="ui.currency() === 'USD'"
+            [style.background-color]="ui.currency() === 'USD' ? '#FFFFFF' : 'transparent'"
+            [style.color]="ui.currency() === 'USD' ? '#007A6C' : 'inherit'"
+            class="[height:32px] [padding:0_14px] [border:0] [border-radius:6px] [background:var(--client-surface)] [font-size:13px] [font-weight:500] [color:var(--client-text)] [box-shadow:0_1px_2px_rgba(15,26,23,0.08)]"
+          >
+            USD
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="ui.currency.set('CDF')"
+            [attr.aria-pressed]="ui.currency() === 'CDF'"
+            [style.background-color]="ui.currency() === 'CDF' ? '#FFFFFF' : 'transparent'"
+            [style.color]="ui.currency() === 'CDF' ? '#007A6C' : 'inherit'"
+            class="[height:32px] [padding:0_14px] [border:0] [border-radius:6px] [background:transparent] [font-size:13px] [font-weight:500] [color:var(--client-muted)]"
+          >
+            CDF
+          </button>
+        </div>
+      </div>
+      <span
+        class="[font-size:12px] [color:var(--client-muted)] [padding:8px_4px_4px]"
+        >Taux du jour : {{ ui.money(1) }} {{ ui.approximate(1) }}</span
+      >
+      <a
+        href="#"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Langue<span
+          class="[display:flex] [align-items:center] [gap:6px] [font-size:14px] [color:var(--client-muted)]"
+          >Français<svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7A8580"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-c901e07a9df3"
+          ></svg></span
+      ></a>
+      <a
+        routerLink="/boutiques"
+        [queryParams]="{position:'refusee'}"
+        class="[display:flex] [align-items:center] [justify-content:space-between] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Ma position<span
+          class="[display:flex] [align-items:center] [gap:6px] [font-size:14px] [color:var(--client-distance)] [font-weight:500]"
+          >Me localiser<svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7A8580"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-c901e07a9df3"
+          ></svg></span
+      ></a>
+    </div>
+    <div class="[display:flex] [flex-direction:column]">
+      <span
+        class="[font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.04em] [padding:0_4px_6px]"
+        >AIDE ET COMMERÇANTS</span
+      >
+      <a
+        href="#"
+        class="[display:flex] [align-items:center] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Centre d'aide</a
+      >
+      <a
+        href="#"
+        class="[display:flex] [align-items:center] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none] [border-bottom:1px_solid_#F1F3F2]"
+        >Signaler un prix</a
+      >
+      <a
+        routerLink="/commercants"
+        class="[display:flex] [align-items:center] [height:48px] [padding:0_4px] [font-size:16px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Vous êtes commerçant ?</a
+      >
+    </div>
+    <div class="[display:flex] [gap:10px] [padding-top:4px]">
+      <a
+        href="https://play.google.com/store/apps/details?id=com.youngsolver.talaprix"
+        class="[line-height:0]"
+        ><img
+          src="/client-design/assets/badge-google-play.png"
+          alt="Disponible sur Google Play"
+          class="[height:42px] [width:auto]"
+      /></a>
+      <a href="#" class="[line-height:0]"
+        ><img
+          src="/client-design/assets/badge-app-store.png"
+          alt="Disponible sur l'App Store"
+          class="[height:42px] [width:auto]"
+      /></a>
+    </div>
+  </nav>
+</div>

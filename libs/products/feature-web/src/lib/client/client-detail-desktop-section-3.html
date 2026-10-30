@@ -1,0 +1,167 @@
+<div
+  class="[display:flex] [flex-wrap:wrap] [gap:16px] [align-items:flex-start]"
+>
+  <section
+    aria-labelledby="off-t"
+    class="[flex:999_1_640px] [min-width:0] [background:var(--client-surface)] [border-radius:12px] [padding:20px_0_8px]"
+  >
+    <div
+      class="[display:flex] [flex-wrap:wrap] [align-items:center] [justify-content:space-between] [gap:12px] [padding:0_24px_16px]"
+    >
+      <h2
+        id="off-t"
+        class="[margin:0] [font-size:22px] [font-weight:500] [letter-spacing:-0.025em]"
+      >
+        Où l'acheter
+        <span class="[color:var(--client-muted)] [font-weight:500]"
+          >· 6 offres</span
+        >
+      </h2>
+      <div
+        class="[display:flex] [gap:10px] [align-items:center] [flex-wrap:wrap]"
+      >
+        <div role="group" aria-label="État" class="[display:flex] [gap:6px]">
+          <button
+            type="button"
+            aria-pressed="true"
+            (click)="catalog.condition.set('all')"
+            [attr.aria-pressed]="catalog.condition() === 'all'"
+            [style.background-color]="catalog.condition() === 'all' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'all' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-text)] [background:var(--client-text)] [color:var(--client-surface)]"
+          >
+            Tous
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="catalog.condition.set('new')"
+            [attr.aria-pressed]="catalog.condition() === 'new'"
+            [style.background-color]="catalog.condition() === 'new' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'new' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            Neuf
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="catalog.condition.set('refurbished')"
+            [attr.aria-pressed]="catalog.condition() === 'refurbished'"
+            [style.background-color]="catalog.condition() === 'refurbished' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'refurbished' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            Reconditionné
+          </button>
+        </div>
+        <label
+          for="sort"
+          class="[font-size:13px] [color:var(--client-text-tertiary)]"
+          >Trier</label
+        >
+        <tpx-select-card
+          label="Trier les produits"
+          [options]='[{"label":"Prix croissant","value":"price-asc"},{"label":"Plus proches","value":"nearest"}]'
+          (selectionChange)="catalog.sort.set($event)"
+        />
+      </div>
+    </div>
+    <div
+      class="[display:grid] [grid-template-columns:minmax(0,_1fr)_110px_90px_130px_220px] [gap:16px] [padding:10px_24px] [background:#F7F8F9] [font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.03em] client-cols"
+    >
+      <span>BOUTIQUE</span><span>ÉTAT</span><span>DISTANCE</span
+      ><span class="[text-align:right]">PRIX</span><span></span>
+    </div>
+    <tpx-client-detail-desktop-section-3-actions-5 />
+  </section>
+  <aside
+    aria-label="Carte des offres"
+    class="[flex:1_1_320px] [position:sticky] [top:126px] [height:520px] [border-radius:12px] [overflow:hidden] [background:#EAEFEC]"
+  >
+    <svg
+      viewBox="0 0 800 1000"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      class="[position:absolute] [inset:0] [width:100%] [height:100%]"
+    >
+      <rect width="800" height="1000" fill="#E9EEEB"></rect>
+      <path
+        d="M0 0H800V200C730 225 660 160 580 185C500 210 450 130 360 120C270 110 200 170 110 150C60 140 25 145 0 160Z"
+        fill="#C9DFE9"
+      ></path>
+      <rect
+        x="60"
+        y="460"
+        width="140"
+        height="110"
+        rx="12"
+        fill="#D6E7DA"
+      ></rect>
+      <g stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" fill="none">
+        <path d="M0 400C200 385 420 370 800 450"></path>
+        <path d="M300 170L380 1000"></path>
+        <path d="M560 200C590 450 650 700 720 1000"></path>
+      </g>
+      <g stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" fill="none">
+        <path d="M0 560H800"></path>
+        <path d="M0 720H800"></path>
+        <path d="M120 160V1000"></path>
+        <path d="M210 160V1000"></path>
+        <path d="M460 140V1000"></path>
+        <path d="M0 270C150 255 300 250 520 280"></path>
+      </g>
+      <g
+        fill="#8A9692"
+        font-family="system-ui, sans-serif"
+        font-size="17"
+        font-weight="600"
+        letter-spacing="2.5"
+      >
+        <text x="320" y="250">GOMBE</text>
+        <text x="50" y="440">LINGWALA</text>
+        <text x="200" y="650">KASA-VUBU</text>
+        <text x="580" y="800">LIMETE</text>
+      </g>
+    </svg>
+    <span
+      aria-label="Votre position"
+      class="[position:absolute] [left:45%] [top:36%] [width:16px] [height:16px] [border-radius:8px] [background:#2B93CA] [border:3px_solid_var(--client-surface)] [box-shadow:0_0_0_10px_rgba(43,147,202,0.2)]"
+    ></span>
+    <span
+      class="[position:absolute] [left:33%] [top:68%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-action)] [color:var(--client-surface)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(610)"
+    ></span>
+    <span
+      class="[position:absolute] [left:40%] [top:26%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(689)"
+    ></span>
+    <span
+      class="[position:absolute] [left:20%] [top:48%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(695)"
+    ></span>
+    <span
+      class="[position:absolute] [left:48%] [top:31%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(699)"
+    ></span>
+    <span
+      class="[position:absolute] [left:56%] [top:22%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(705)"
+    ></span>
+    <span
+      class="[position:absolute] [left:76%] [top:80%] [transform:translate(-50%,_-100%)] [display:inline-flex] [align-items:center] [height:28px] [padding:0_10px] [border-radius:999px] [font-size:12.5px] [font-weight:600] [font-variant-numeric:tabular-nums] [white-space:nowrap] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_2px_8px_rgba(15,26,23,0.2)]"
+      tpxPriceTag
+      [value]="ui.money(719)"
+    ></span>
+    <a
+      routerLink="/boutiques"
+      class="[position:absolute] [left:50%] [bottom:16px] [transform:translateX(-50%)] [display:inline-flex] [align-items:center] [gap:8px] [height:40px] [padding:0_18px] [border-radius:14px] [background:var(--client-text)] [color:var(--client-surface)] [font-size:14px] [font-weight:500] [text-decoration:none] [white-space:nowrap]"
+      >Agrandir la carte</a
+    >
+  </aside>
+</div>

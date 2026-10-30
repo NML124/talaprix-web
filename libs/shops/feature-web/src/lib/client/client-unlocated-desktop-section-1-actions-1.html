@@ -1,0 +1,177 @@
+<div
+  class="[padding:24px] [display:flex] [flex-direction:column] [gap:18px] [border-bottom:1px_solid_#EEF0EF]"
+>
+  <div
+    class="[display:flex] [flex-direction:column] [gap:14px] [padding:20px] [border-radius:16px] [background:#F1F7FB]"
+  >
+    <span
+      class="[width:40px] [height:40px] [border-radius:20px] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-distance)]"
+      ><svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-fda2071e8d4e"
+      ></svg
+    ></span>
+    <div class="[display:flex] [flex-direction:column] [gap:6px]">
+      <h1 class="[margin:0] [font-size:18px] [font-weight:500]">
+        Voir les boutiques les plus proches
+      </h1>
+      <p class="[margin:0] [font-size:14px] [line-height:1.5] [color:#3D4A46]">
+        Votre position sert uniquement à calculer la distance de chaque boutique
+        et l'itinéraire pour s'y rendre.
+      </p>
+    </div>
+    <a
+      class="[display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [height:54px] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font-size:15px] [font-weight:500] [text-decoration:none] client-btn-p"
+      routerLink="/boutiques"
+      routerLink="/boutiques"
+      >Utiliser ma position</a
+    >
+  </div>
+  <div
+    class="[display:flex] [align-items:center] [gap:12px] [color:var(--client-muted)] [font-size:13px]"
+  >
+    <span class="[flex:1] [height:1px] [background:#E4E7E6]"></span>ou<span
+      class="[flex:1] [height:1px] [background:#E4E7E6]"
+    ></span>
+  </div>
+  <div
+    class="[position:relative] [display:flex] [flex-direction:column] [gap:6px]"
+  >
+    <label for="commune" class="[font-size:14px] [font-weight:500]"
+      >Choisir une commune</label
+    >
+    <button
+      id="commune"
+      type="button"
+      aria-haspopup="listbox"
+      aria-expanded="true"
+      class="[height:54px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_14px] [border:1.5px_solid_var(--client-brand)] [border-radius:20px] [background:var(--client-surface)] [font-size:15px] [color:var(--client-text)] [cursor:pointer]"
+    >
+      <span>Sélectionner</span>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#4A5652"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-f1ea3f8677ee"
+      ></svg>
+    </button>
+    <ul
+      role="listbox"
+      aria-label="Communes"
+      class="[position:absolute] [top:80px] [left:0] [right:0] [z-index:5] [list-style:none] [margin:0] [padding:6px] [background:var(--client-surface)] [border:1px_solid_#E4E7E6] [border-radius:14px] [box-shadow:0_12px_32px_rgba(15,26,23,0.14)] [max-height:300px] [overflow:auto]"
+    >
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Gombe
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Lingwala
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Barumbu
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Kinshasa
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Kasa-Vubu
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Kintambo
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Ngaliema
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Bandalungwa
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Limete
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Lemba
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Matete
+        </button>
+      </li>
+      <li role="option" aria-selected="false">
+        <button
+          type="button"
+          class="[width:100%] [height:40px] [display:flex] [align-items:center] [justify-content:space-between] [padding:0_12px] [border:0] [border-radius:10px] [background:transparent] [font-size:14px] [color:var(--client-text)] [cursor:pointer] [text-align:left] client-opt"
+        >
+          Ndjili
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

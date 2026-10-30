@@ -1,0 +1,40 @@
+<section class="flex flex-col gap-4 rounded-2xl bg-white p-5" role="tabpanel">
+  @if (ui.accountTab() === 'alerts') {
+  <h2 class="text-xl font-medium">Mes alertes</h2>
+  @for (name of catalog.alerts(); track name) {
+  <div class="flex items-center gap-4 border-b border-[#EEF0F1] py-4">
+    <a class="flex-1" routerLink="/produit/samsung-galaxy-s24-128-go"
+      >{{ name }}</a
+    ><button
+      type="button"
+      class="rounded-xl border border-[#CDD3D1] px-3 py-2 text-sm"
+      (click)="catalog.toggleAlert(name)"
+    >
+      Désactiver
+    </button>
+  </div>
+  } @empty {
+  <p class="text-sm text-[#5F6B67]">Aucune alerte active.</p>
+  } } @else {
+  <h2 class="text-xl font-medium">Recherches récentes</h2>
+  @for (query of catalog.recent(); track query) {
+  <div class="flex items-center gap-4 border-b border-[#EEF0F1] py-3">
+    <button
+      type="button"
+      class="flex-1 text-left"
+      (click)="catalog.openRecent(query)"
+    >
+      {{ query }}</button
+    ><button
+      type="button"
+      class="size-10 rounded-full"
+      [attr.aria-label]="'Supprimer la recherche ' + query"
+      (click)="catalog.removeRecent(query)"
+    >
+      ×
+    </button>
+  </div>
+  } @empty {
+  <p class="text-sm text-[#5F6B67]">Aucune recherche récente.</p>
+  } }
+</section>

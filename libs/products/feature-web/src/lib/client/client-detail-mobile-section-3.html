@@ -1,0 +1,76 @@
+<section
+  class="[margin-top:10px] [background:var(--client-surface)] [padding:14px_0_6px]"
+>
+  <div
+    class="[display:flex] [align-items:center] [justify-content:space-between] [padding:0_14px_10px]"
+  >
+    <h2
+      class="[margin:0] [font-size:18px] [font-weight:500] [letter-spacing:-0.02em]"
+    >
+      Où l'acheter
+    </h2>
+    <button
+      type="button"
+      (click)="catalog.filtersOpen.set(true)"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="catalog.filtersOpen.set(true)"
+      class="[display:inline-flex] [align-items:center] [gap:6px] [height:34px] [padding:0_12px] [border-radius:12px] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:13px] [font-weight:500] [text-decoration:none]"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-4541643a3dcd"
+      ></svg
+      >Filtres
+    </button>
+  </div>
+  <div
+    class="[display:flex] [gap:6px] [overflow-x:auto] [padding:0_14px_12px] client-rail"
+  >
+    <button
+      type="button"
+      aria-pressed="true"
+      class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [border:1px_solid_var(--client-text)] [background:var(--client-text)] [color:var(--client-surface)]"
+    >
+      Moins cher
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      Plus proche
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      (click)="catalog.condition.set('new')"
+      [attr.aria-pressed]="catalog.condition() === 'new'"
+      [style.background-color]="catalog.condition() === 'new' ? '#0F1A17' : '#FFFFFF'"
+      [style.color]="catalog.condition() === 'new' ? '#FFFFFF' : '#2E3B37'"
+      class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      Neuf
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      (click)="catalog.condition.set('refurbished')"
+      [attr.aria-pressed]="catalog.condition() === 'refurbished'"
+      [style.background-color]="catalog.condition() === 'refurbished' ? '#0F1A17' : '#FFFFFF'"
+      [style.color]="catalog.condition() === 'refurbished' ? '#FFFFFF' : '#2E3B37'"
+      class="[flex-shrink:0] [height:34px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      Reconditionné
+    </button>
+  </div>
+  <tpx-client-detail-mobile-section-3-cards-3 />
+</section>

@@ -1,0 +1,319 @@
+{
+  "capturedAt": "2026-10-29T02:43:32.745Z",
+  "screenshots": [
+    {
+      "viewport": "desktop",
+      "name": "01-accueil",
+      "path": "desktop/01-accueil.png",
+      "width": 1440,
+      "height": 3249
+    },
+    {
+      "viewport": "desktop",
+      "name": "composant-header",
+      "path": "desktop/composant-header.png",
+      "width": 1440,
+      "height": 169
+    },
+    {
+      "viewport": "desktop",
+      "name": "composant-footer",
+      "path": "desktop/composant-footer.png",
+      "width": 1440,
+      "height": 335
+    },
+    {
+      "viewport": "desktop",
+      "name": "header-menu-categories",
+      "path": "desktop/header-menu-categories.png",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "viewport": "desktop",
+      "name": "accueil-navigation-fixe",
+      "path": "desktop/accueil-navigation-fixe.png",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "viewport": "desktop",
+      "name": "03-resultats",
+      "path": "desktop/03-resultats.png",
+      "width": 1440,
+      "height": 1651
+    },
+    {
+      "viewport": "desktop",
+      "name": "04-fiche-produit",
+      "path": "desktop/04-fiche-produit.png",
+      "width": 1440,
+      "height": 2059
+    },
+    {
+      "viewport": "desktop",
+      "name": "05-boutiques-carte",
+      "path": "desktop/05-boutiques-carte.png",
+      "width": 1440,
+      "height": 1263
+    },
+    {
+      "viewport": "desktop",
+      "name": "06-carte-sans-position",
+      "path": "desktop/06-carte-sans-position.png",
+      "width": 1440,
+      "height": 1263
+    },
+    {
+      "viewport": "desktop",
+      "name": "07-panier",
+      "path": "desktop/07-panier.png",
+      "width": 1440,
+      "height": 1093
+    },
+    {
+      "viewport": "desktop",
+      "name": "07b-panier-optimise",
+      "path": "desktop/07b-panier-optimise.png",
+      "width": 1440,
+      "height": 1252
+    },
+    {
+      "viewport": "desktop",
+      "name": "08-compte-favoris",
+      "path": "desktop/08-compte-favoris.png",
+      "width": 1440,
+      "height": 1445
+    },
+    {
+      "viewport": "desktop",
+      "name": "09-categories",
+      "path": "desktop/09-categories.png",
+      "width": 1440,
+      "height": 1711
+    },
+    {
+      "viewport": "desktop",
+      "name": "10-commercants",
+      "path": "desktop/10-commercants.png",
+      "width": 1440,
+      "height": 2795
+    },
+    {
+      "viewport": "desktop",
+      "name": "01b-accueil-popup-connexion",
+      "path": "desktop/01b-accueil-popup-connexion.png",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "viewport": "desktop",
+      "name": "11-connexion-popup",
+      "path": "desktop/11-connexion-popup.png",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "viewport": "desktop",
+      "name": "01c-accueil-popup-code",
+      "path": "desktop/01c-accueil-popup-code.png",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "viewport": "desktop",
+      "name": "02-recherche-ouverte",
+      "path": "desktop/02-recherche-ouverte.png",
+      "width": 1440,
+      "height": 3249
+    },
+    {
+      "viewport": "mobile",
+      "name": "m01-accueil",
+      "path": "mobile/m01-accueil.png",
+      "width": 780,
+      "height": 6718
+    },
+    {
+      "viewport": "mobile",
+      "name": "composant-m-header",
+      "path": "mobile/composant-m-header.png",
+      "width": 780,
+      "height": 356
+    },
+    {
+      "viewport": "mobile",
+      "name": "composant-m-pied",
+      "path": "mobile/composant-m-pied.png",
+      "width": 780,
+      "height": 1330
+    },
+    {
+      "viewport": "mobile",
+      "name": "accueil-navigation-fixe",
+      "path": "mobile/accueil-navigation-fixe.png",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "viewport": "mobile",
+      "name": "m03-resultats",
+      "path": "mobile/m03-resultats.png",
+      "width": 780,
+      "height": 5114
+    },
+    {
+      "viewport": "mobile",
+      "name": "m04-fiche-produit",
+      "path": "mobile/m04-fiche-produit.png",
+      "width": 780,
+      "height": 4754
+    },
+    {
+      "viewport": "mobile",
+      "name": "m05-boutiques-carte",
+      "path": "mobile/m05-boutiques-carte.png",
+      "width": 780,
+      "height": 4040
+    },
+    {
+      "viewport": "mobile",
+      "name": "m06-carte-sans-position",
+      "path": "mobile/m06-carte-sans-position.png",
+      "width": 780,
+      "height": 3954
+    },
+    {
+      "viewport": "mobile",
+      "name": "m07-panier",
+      "path": "mobile/m07-panier.png",
+      "width": 780,
+      "height": 2874
+    },
+    {
+      "viewport": "mobile",
+      "name": "m07b-panier-optimise",
+      "path": "mobile/m07b-panier-optimise.png",
+      "width": 780,
+      "height": 3320
+    },
+    {
+      "viewport": "mobile",
+      "name": "m08-compte-favoris",
+      "path": "mobile/m08-compte-favoris.png",
+      "width": 780,
+      "height": 4088
+    },
+    {
+      "viewport": "mobile",
+      "name": "m09-categories",
+      "path": "mobile/m09-categories.png",
+      "width": 780,
+      "height": 3834
+    },
+    {
+      "viewport": "mobile",
+      "name": "composant-m-tabbar",
+      "path": "mobile/composant-m-tabbar.png",
+      "width": 780,
+      "height": 148
+    },
+    {
+      "viewport": "mobile",
+      "name": "m10-commercants",
+      "path": "mobile/m10-commercants.png",
+      "width": 780,
+      "height": 6554
+    },
+    {
+      "viewport": "mobile",
+      "name": "m12-menu",
+      "path": "mobile/m12-menu.png",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "viewport": "mobile",
+      "name": "m11-connexion",
+      "path": "mobile/m11-connexion.png",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "viewport": "mobile",
+      "name": "m11b-connexion-code",
+      "path": "mobile/m11b-connexion-code.png",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "viewport": "mobile",
+      "name": "m02-recherche-ouverte",
+      "path": "mobile/m02-recherche-ouverte.png",
+      "width": 780,
+      "height": 1688
+    },
+    {
+      "viewport": "mobile",
+      "name": "m03b-filtres",
+      "path": "mobile/m03b-filtres.png",
+      "width": 780,
+      "height": 1688
+    }
+  ],
+  "checks": [
+    { "name": "desktop/: no horizontal overflow", "passed": true },
+    { "name": "desktop: requested home refinements", "passed": true },
+    {
+      "name": "desktop/resultats?q=hp: no horizontal overflow",
+      "passed": true
+    },
+    { "name": "desktop: price filters and empty state", "passed": true },
+    {
+      "name": "desktop/produit/samsung-galaxy-s24-128-go: no horizontal overflow",
+      "passed": true
+    },
+    { "name": "desktop/boutiques: no horizontal overflow", "passed": true },
+    { "name": "desktop: synchronized shop selection", "passed": true },
+    {
+      "name": "desktop/boutiques?position=refusee: no horizontal overflow",
+      "passed": true
+    },
+    { "name": "desktop/panier: no horizontal overflow", "passed": true },
+    { "name": "desktop: cart optimization", "passed": true },
+    { "name": "desktop/compte: no horizontal overflow", "passed": true },
+    { "name": "desktop: account alternate panels", "passed": true },
+    { "name": "desktop/categories: no horizontal overflow", "passed": true },
+    { "name": "desktop/commercants: no horizontal overflow", "passed": true },
+    { "name": "desktop: merchant phone validation", "passed": true },
+    { "name": "desktop: shared currency conversion", "passed": true },
+    { "name": "desktop: authentication email/code/escape", "passed": true },
+    { "name": "desktop: search suggestions", "passed": true },
+    { "name": "mobile/: no horizontal overflow", "passed": true },
+    { "name": "mobile: requested home refinements", "passed": true },
+    { "name": "mobile/resultats?q=hp: no horizontal overflow", "passed": true },
+    { "name": "mobile: price filters and empty state", "passed": true },
+    {
+      "name": "mobile/produit/samsung-galaxy-s24-128-go: no horizontal overflow",
+      "passed": true
+    },
+    { "name": "mobile/boutiques: no horizontal overflow", "passed": true },
+    { "name": "mobile: synchronized shop selection", "passed": true },
+    {
+      "name": "mobile/boutiques?position=refusee: no horizontal overflow",
+      "passed": true
+    },
+    { "name": "mobile/panier: no horizontal overflow", "passed": true },
+    { "name": "mobile: cart optimization", "passed": true },
+    { "name": "mobile/compte: no horizontal overflow", "passed": true },
+    { "name": "mobile: account alternate panels", "passed": true },
+    { "name": "mobile/categories: no horizontal overflow", "passed": true },
+    { "name": "mobile/commercants: no horizontal overflow", "passed": true },
+    { "name": "mobile: merchant phone validation", "passed": true },
+    { "name": "mobile: shared currency conversion", "passed": true },
+    { "name": "mobile: authentication email/code/escape", "passed": true },
+    { "name": "mobile: filters sheet", "passed": true }
+  ],
+  "pageErrors": [],
+  "forbiddenRequests": []
+}

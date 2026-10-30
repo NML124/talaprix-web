@@ -1,0 +1,262 @@
+@if (ui.accountTab() === 'favorites') {
+<section
+  class="[flex:999_1_640px] [min-width:0] [display:flex] [flex-direction:column] [gap:16px]"
+>
+  <div
+    class="[background:var(--client-surface)] [border-radius:12px] [padding:22px_22px_12px]"
+  >
+    <div
+      class="[display:flex] [align-items:baseline] [justify-content:space-between] [gap:12px] [flex-wrap:wrap] [margin-bottom:14px]"
+    >
+      <h1
+        class="[margin:0] [font-size:26px] [font-weight:500] [letter-spacing:-0.03em]"
+      >
+        Mes favoris
+      </h1>
+      <span class="[font-size:13.5px] [color:var(--client-text-tertiary)]"
+        >Activez l'alerte pour être prévenu quand le prix baisse.</span
+      >
+    </div>
+    <div
+      class="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(200px,_1fr))] [gap:8px]"
+    >
+      <tpx-client-account-desktop-section-2-card-1 />
+      <tpx-client-account-desktop-section-2-card-2 />
+      <article
+        [hidden]="!catalog.favorite('EcoFlow River 2, station d’énergie')"
+        class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:6px_6px_14px]"
+      >
+        <a
+          class="[position:relative] [height:180px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+          aria-label="EcoFlow River 2, station d’énergie"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:150px] [height:150px]"
+            tpxVisual
+            symbol="i-power"
+          ></svg>
+        </a>
+        <button
+          type="button"
+          aria-label="Retirer des favoris"
+          (click)="catalog.toggleFavorite('EcoFlow River 2, station d’énergie')"
+          [attr.aria-pressed]="catalog.favorite('EcoFlow River 2, station d’énergie')"
+          [style.color]="catalog.favorite('EcoFlow River 2, station d’énergie') ? '#007A6C' : '#2E3B37'"
+          class="[position:absolute] [top:14px] [right:14px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-action)] [cursor:pointer]"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            [attr.fill]="catalog.favorite('EcoFlow River 2, station d’énergie') ? '#E3F2EF' : 'none'"
+            tpxVisual
+            symbol="icon-d6d8d482ea7e"
+          ></svg>
+        </button>
+        <a
+          class="[font-size:14px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:38px] [overflow:hidden] client-ptitle client-product-title"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          title="EcoFlow River 2, station d’énergie"
+          >EcoFlow River 2, station d’énergie</a
+        >
+        <span class="[display:flex] [align-items:baseline] [gap:8px]"
+          ><span
+            class="[font-size:19px] [font-weight:600] [letter-spacing:-0.02em] [font-variant-numeric:tabular-nums]"
+            tpxPriceTag
+            [value]="ui.money(289)"
+          ></span
+        ></span>
+        <span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >3 boutiques</span
+        >
+        <button
+          type="button"
+          role="switch"
+          aria-checked="true"
+          (click)="catalog.toggleAlert('Alerte client-account-desktop-section-2')"
+          [attr.aria-checked]="catalog.alert('Alerte client-account-desktop-section-2')"
+          class="[display:flex] [align-items:center] [justify-content:space-between] [gap:8px] [margin-top:4px] [height:40px] [padding:0_6px_0_12px] [border-radius:14px] [border:1px_solid_#DDE1E4] [background:var(--client-surface)] [font:inherit] [font-size:13px] [font-weight:500] [color:var(--client-text)] [cursor:pointer]"
+        >
+          Alerte prix<span
+            [style.background-color]="catalog.alert('Alerte client-account-desktop-section-2') ? '#007A6C' : '#CDD3D1'"
+            class="[position:relative] [width:40px] [height:24px] [border-radius:12px] [background:var(--client-action)] [transition:background_160ms_ease]"
+            ><span
+              [style.left]="catalog.alert('Alerte client-account-desktop-section-2') ? '19px' : '3px'"
+              class="[position:absolute] [top:3px] [left:19px] [width:18px] [height:18px] [border-radius:9px] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.25)] [transition:left_160ms_ease]"
+            ></span
+          ></span>
+        </button>
+      </article>
+      <article
+        [hidden]="!catalog.favorite('Apple AirPods Pro (2e génération)')"
+        class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:6px_6px_14px]"
+      >
+        <a
+          class="[position:relative] [height:180px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+          aria-label="Apple AirPods Pro (2e génération)"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:150px] [height:150px]"
+            tpxVisual
+            symbol="i-buds"
+          ></svg>
+        </a>
+        <button
+          type="button"
+          aria-label="Retirer des favoris"
+          (click)="catalog.toggleFavorite('Apple AirPods Pro (2e génération)')"
+          [attr.aria-pressed]="catalog.favorite('Apple AirPods Pro (2e génération)')"
+          [style.color]="catalog.favorite('Apple AirPods Pro (2e génération)') ? '#007A6C' : '#2E3B37'"
+          class="[position:absolute] [top:14px] [right:14px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-action)] [cursor:pointer]"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            [attr.fill]="catalog.favorite('Apple AirPods Pro (2e génération)') ? '#E3F2EF' : 'none'"
+            tpxVisual
+            symbol="icon-d6d8d482ea7e"
+          ></svg>
+        </button>
+        <a
+          class="[font-size:14px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:38px] [overflow:hidden] client-ptitle client-product-title"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          title="Apple AirPods Pro (2e génération)"
+          >Apple AirPods Pro (2e génération)</a
+        >
+        <span class="[display:flex] [align-items:baseline] [gap:8px]"
+          ><span
+            class="[font-size:19px] [font-weight:600] [letter-spacing:-0.02em] [font-variant-numeric:tabular-nums]"
+            tpxPriceTag
+            [value]="ui.money(249)"
+          ></span
+        ></span>
+        <span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >6 boutiques</span
+        >
+        <button
+          type="button"
+          role="switch"
+          aria-checked="false"
+          (click)="catalog.toggleAlert('Alerte client-account-desktop-section-2')"
+          [attr.aria-checked]="catalog.alert('Alerte client-account-desktop-section-2')"
+          class="[display:flex] [align-items:center] [justify-content:space-between] [gap:8px] [margin-top:4px] [height:40px] [padding:0_6px_0_12px] [border-radius:14px] [border:1px_solid_#DDE1E4] [background:var(--client-surface)] [font:inherit] [font-size:13px] [font-weight:500] [color:var(--client-text)] [cursor:pointer]"
+        >
+          Alerte prix<span
+            [style.background-color]="catalog.alert('Alerte client-account-desktop-section-2') ? '#007A6C' : '#CDD3D1'"
+            class="[position:relative] [width:40px] [height:24px] [border-radius:12px] [background:var(--client-border)] [transition:background_160ms_ease]"
+            ><span
+              [style.left]="catalog.alert('Alerte client-account-desktop-section-2') ? '19px' : '3px'"
+              class="[position:absolute] [top:3px] [left:3px] [width:18px] [height:18px] [border-radius:9px] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.25)] [transition:left_160ms_ease]"
+            ></span
+          ></span>
+        </button>
+      </article>
+      <article
+        [hidden]="!catalog.favorite('HP LaserJet Pro MFP M479fdw')"
+        class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:6px_6px_14px]"
+      >
+        <a
+          class="[position:relative] [height:180px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+          aria-label="HP LaserJet Pro MFP M479fdw"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:150px] [height:150px]"
+            tpxVisual
+            symbol="i-printer"
+          ></svg>
+        </a>
+        <button
+          type="button"
+          aria-label="Retirer des favoris"
+          (click)="catalog.toggleFavorite('HP LaserJet Pro MFP M479fdw')"
+          [attr.aria-pressed]="catalog.favorite('HP LaserJet Pro MFP M479fdw')"
+          [style.color]="catalog.favorite('HP LaserJet Pro MFP M479fdw') ? '#007A6C' : '#2E3B37'"
+          class="[position:absolute] [top:14px] [right:14px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-action)] [cursor:pointer]"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            [attr.fill]="catalog.favorite('HP LaserJet Pro MFP M479fdw') ? '#E3F2EF' : 'none'"
+            tpxVisual
+            symbol="icon-d6d8d482ea7e"
+          ></svg>
+        </button>
+        <a
+          class="[font-size:14px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:38px] [overflow:hidden] client-ptitle client-product-title"
+          routerLink="/produit/samsung-galaxy-s24-128-go"
+          title="HP LaserJet Pro MFP M479fdw"
+          >HP LaserJet Pro MFP M479fdw</a
+        >
+        <span class="[display:flex] [align-items:baseline] [gap:8px]"
+          ><span
+            class="[font-size:19px] [font-weight:600] [letter-spacing:-0.02em] [font-variant-numeric:tabular-nums]"
+            tpxPriceTag
+            [value]="ui.money(590)"
+          ></span
+        ></span>
+        <span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >2 boutiques</span
+        >
+        <button
+          type="button"
+          role="switch"
+          aria-checked="false"
+          (click)="catalog.toggleAlert('Alerte client-account-desktop-section-2')"
+          [attr.aria-checked]="catalog.alert('Alerte client-account-desktop-section-2')"
+          class="[display:flex] [align-items:center] [justify-content:space-between] [gap:8px] [margin-top:4px] [height:40px] [padding:0_6px_0_12px] [border-radius:14px] [border:1px_solid_#DDE1E4] [background:var(--client-surface)] [font:inherit] [font-size:13px] [font-weight:500] [color:var(--client-text)] [cursor:pointer]"
+        >
+          Alerte prix<span
+            [style.background-color]="catalog.alert('Alerte client-account-desktop-section-2') ? '#007A6C' : '#CDD3D1'"
+            class="[position:relative] [width:40px] [height:24px] [border-radius:12px] [background:var(--client-border)] [transition:background_160ms_ease]"
+            ><span
+              [style.left]="catalog.alert('Alerte client-account-desktop-section-2') ? '19px' : '3px'"
+              class="[position:absolute] [top:3px] [left:3px] [width:18px] [height:18px] [border-radius:9px] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.25)] [transition:left_160ms_ease]"
+            ></span
+          ></span>
+        </button>
+      </article>
+    </div>
+  </div>
+  <div
+    class="[background:var(--client-dark)] [border-radius:12px] [padding:18px_22px] [display:flex] [align-items:center] [gap:16px] [flex-wrap:wrap] [color:var(--client-surface)]"
+  >
+    <span class="[flex:1] [font-size:14px]"
+      ><span class="[font-weight:600]">Talaprix Premium</span> · favoris
+      illimités et alertes de prix sur tous vos produits, 5 000 FC par
+      mois.</span
+    >
+    <a
+      href="#"
+      class="[display:inline-flex] [align-items:center] [height:40px] [padding:0_16px] [border-radius:14px] [background:var(--client-surface)] [color:var(--client-dark)] [font-size:13.5px] [font-weight:500] [text-decoration:none]"
+      >En savoir plus</a
+    >
+  </div>
+</section>
+
+} @else { <tpx-client-account-panels /> }

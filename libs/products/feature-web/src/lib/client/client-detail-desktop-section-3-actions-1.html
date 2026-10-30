@@ -1,0 +1,98 @@
+<div
+  class="[display:grid] [grid-template-columns:minmax(0,_1fr)_110px_90px_130px_220px] [gap:16px] [align-items:center] [padding:16px_24px] [border-bottom:1px_solid_var(--client-divider)] [background:var(--client-mint-soft)] client-row"
+  [hidden]="catalog.condition() !== 'all' && catalog.condition() !== 'refurbished'"
+>
+  <div class="[display:flex] [align-items:center] [gap:12px] [min-width:0]">
+    <span
+      class="[width:44px] [height:44px] [border-radius:50%] [background:var(--client-surface)] [border:1px_solid_#E1E8E6] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [box-sizing:border-box]"
+      ><img
+        src="/client-design/assets/logo-talaprix.png"
+        alt=""
+        class="[width:70%] [height:70%] [object-fit:contain]"
+        tpxShopAvatar
+    /></span>
+    <span
+      class="[display:flex] [flex-direction:column] [gap:3px] [min-width:0]"
+    >
+      <span
+        class="[display:flex] [align-items:center] [gap:8px] [flex-wrap:wrap]"
+        ><span class="[font-size:15px] [font-weight:500]">Jouani Congo</span
+        ><span
+          class="[font-size:11.5px] [font-weight:600] [color:var(--client-surface)] [background:var(--client-action)] [border-radius:5px] [padding:2px_7px]"
+          >Meilleur prix</span
+        ></span
+      >
+      <span
+        class="[font-size:12.5px] [color:var(--client-muted)] [white-space:nowrap] [overflow:hidden] [text-overflow:ellipsis]"
+        >Av. Kasa-Vubu, Kasa-Vubu · source : la boutique</span
+      >
+    </span>
+  </div>
+  <span class="[font-size:13.5px] [color:var(--client-text-secondary)]"
+    >Reconditionné</span
+  >
+  <span
+    class="[font-size:13.5px] [color:var(--client-distance)] [font-weight:500]"
+    >4,1 km</span
+  >
+  <span class="[display:flex] [flex-direction:column] [align-items:flex-end]"
+    ><span
+      class="[font-size:19px] [font-weight:600] [letter-spacing:-0.02em] [font-variant-numeric:tabular-nums]"
+      tpxPriceTag
+      [value]="ui.money(610)"
+    ></span
+    ><span
+      class="[font-size:11.5px] [color:var(--client-muted)] [font-variant-numeric:tabular-nums]"
+      >{{ ui.approximate(610) }}</span
+    ></span
+  >
+  <span
+    class="[display:flex] [align-items:center] [justify-content:flex-end] [gap:6px]"
+  >
+    <a
+      href="#"
+      aria-label="Contacter Jouani Congo sur WhatsApp"
+      class="[width:38px] [height:38px] [border-radius:19px] [background:var(--client-page)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)] client-ico"
+      ><svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-665647541809"
+      ></svg
+    ></a>
+    <a
+      aria-label="Itinéraire vers Jouani Congo"
+      class="[width:38px] [height:38px] [border-radius:19px] [background:var(--client-page)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)] client-ico"
+      routerLink="/boutiques"
+      ><svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-b09d6f77f99e"
+      ></svg
+    ></a>
+    <button
+      type="button"
+      aria-pressed="false"
+      (click)="catalog.add('Samsung Galaxy S24 128 Go', 689, 'Jouani Congo')"
+      [attr.aria-pressed]="catalog.added('Samsung Galaxy S24 128 Go')"
+      class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-action)] [background:var(--client-action)] [color:var(--client-surface)] [white-space:nowrap]"
+    >
+      {{ catalog.added('Samsung Galaxy S24 128 Go') ? '✓ Ajouté' : '+ Panier' }}
+    </button>
+  </span>
+</div>

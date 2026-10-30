@@ -1,0 +1,150 @@
+<div
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="m-auth-title"
+  class="[position:absolute] [left:0] [right:0] [bottom:0] [background:var(--client-surface)] [border-radius:28px_28px_0_0] [padding:10px_20px_34px] [display:flex] [flex-direction:column] [gap:18px] [box-shadow:0_-12px_40px_rgba(4,22,19,0.25)]"
+>
+  <span
+    aria-hidden="true"
+    class="[display:block] [width:40px] [height:5px] [border-radius:3px] [background:#D5D9DC] [margin:0_auto]"
+  ></span>
+  <button
+    type="button"
+    aria-label="Fermer"
+    (click)="ui.closeOverlays()"
+    role="button"
+    tabindex="0"
+    (keydown.enter)="ui.closeOverlays()"
+    class="[position:absolute] [top:18px] [right:18px] [width:40px] [height:40px] [border-radius:20px] [border:1px_solid_#DCE5E2] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [box-sizing:border-box]"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      tpxVisual
+      symbol="icon-6d5dc2706247"
+    ></svg>
+  </button>
+  <span
+    class="[width:64px] [height:64px] [border-radius:18px] [background:var(--client-mint-panel)] [display:flex] [align-items:center] [justify-content:center]"
+    ><img
+      src="/client-design/assets/logo-talaprix.png"
+      alt="Talaprix"
+      class="[width:46px] [height:46px] [object-fit:contain]"
+      tpxShopAvatar
+  /></span>
+  <div class="[display:flex] [flex-direction:column] [gap:20px]">
+    <div class="[display:flex] [flex-direction:column] [gap:6px]">
+      <span
+        class="[font-size:12px] [font-weight:600] [letter-spacing:0.18em] [color:var(--client-action)]"
+        >VÉRIFICATION</span
+      >
+      <h2
+        class="[margin:0] [font-size:30px] [line-height:1.08] [font-weight:600] [letter-spacing:-0.03em]"
+      >
+        Entrez le code
+      </h2>
+      <p
+        class="[margin:0] [font-size:14.5px] [line-height:1.5] [color:var(--client-muted)]"
+      >
+        Nous avons envoyé un code à 6 chiffres à votre adresse e-mail. Il est
+        valable 10 minutes.
+      </p>
+    </div>
+    <fieldset class="[border:0] [margin:0] [padding:0]">
+      <legend
+        class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+      >
+        Code de vérification
+      </legend>
+      <div
+        class="[display:grid] [grid-template-columns:repeat(6,_minmax(0,_1fr))] [gap:8px]"
+      >
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 1 du code"
+          value="4"
+          [value]="auth.code().charAt(0).trim()"
+          (input)="auth.digit($event, 0)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 2 du code"
+          value="8"
+          [value]="auth.code().charAt(1).trim()"
+          (input)="auth.digit($event, 1)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 3 du code"
+          value="2"
+          [value]="auth.code().charAt(2).trim()"
+          (input)="auth.digit($event, 2)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 4 du code"
+          value=""
+          [value]="auth.code().charAt(3).trim()"
+          (input)="auth.digit($event, 3)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 5 du code"
+          value=""
+          [value]="auth.code().charAt(4).trim()"
+          (input)="auth.digit($event, 4)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+        <input
+          inputmode="numeric"
+          maxlength="1"
+          aria-label="Chiffre 6 du code"
+          value=""
+          [value]="auth.code().charAt(5).trim()"
+          (input)="auth.digit($event, 5)"
+          (paste)="auth.paste($event)"
+          class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
+        />
+      </div>
+    </fieldset>
+    <a
+      routerLink="/compte"
+      (click)="auth.verify()"
+      class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [text-decoration:none] [width:100%]"
+      >Valider</a
+    >
+    <div
+      class="[display:flex] [justify-content:space-between] [font-size:13.5px]"
+    >
+      <button
+        type="button"
+        (click)="ui.authStep.set('email')"
+        class="[border:0] [background:transparent] [padding:0] [font:inherit] [color:var(--client-text-tertiary)] [cursor:pointer]"
+      >
+        ← Modifier l'adresse
+      </button>
+      <span class="[color:var(--client-muted)]">Renvoyer dans 0:45</span>
+    </div>
+  </div>
+</div>

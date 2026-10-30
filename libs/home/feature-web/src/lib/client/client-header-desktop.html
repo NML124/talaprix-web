@@ -1,0 +1,77 @@
+<div class="[width:100%] [color:var(--client-text)]">
+  <div
+    class="[background:var(--client-surface)] [border-bottom:1px_solid_var(--client-line)] client-util-row"
+  >
+    <div
+      class="[max-width:1320px] [margin:0_auto] [padding:0_24px] [box-sizing:border-box] [height:34px] [display:flex] [align-items:center] [gap:20px] [font-size:12.5px] [color:var(--client-text-tertiary)]"
+    >
+      <span class="[display:flex] [align-items:center] [gap:6px]"
+        ><span
+          class="[width:6px] [height:6px] [border-radius:3px] [background:#16A34A]"
+        ></span
+        >Taux du jour :
+        <span class="[color:var(--client-text)] [font-weight:600]"
+          >1 USD = 2 265 FC</span
+        ></span
+      >
+      <div
+        class="[margin-left:auto] [display:flex] [align-items:center] [gap:20px]"
+      >
+        <a
+          class="[color:var(--client-text-tertiary)] [text-decoration:none] client-util"
+          routerLink="/commercants"
+          >Vendre sur Talaprix</a
+        >
+        <a
+          class="[color:var(--client-text-tertiary)] [text-decoration:none] client-util"
+          routerLink="/"
+          >Télécharger l'application</a
+        >
+        <a
+          href="#"
+          class="[color:var(--client-text-tertiary)] [text-decoration:none] client-util"
+          >Aide</a
+        >
+        <span class="[width:1px] [height:14px] [background:#D5D9DC]"></span>
+
+        <div
+          role="group"
+          aria-label="Devise"
+          class="[display:flex] [gap:2px] [padding:2px] [background:var(--client-page)] [border-radius:7px]"
+        >
+          <button
+            type="button"
+            aria-pressed="true"
+            (click)="ui.currency.set('USD')"
+            [attr.aria-pressed]="ui.currency() === 'USD'"
+            [style.background-color]="ui.currency() === 'USD' ? '#FFFFFF' : 'transparent'"
+            [style.color]="ui.currency() === 'USD' ? '#007A6C' : 'inherit'"
+            class="[height:22px] [padding:0_8px] [border:0] [border-radius:5px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            USD
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="ui.currency.set('CDF')"
+            [attr.aria-pressed]="ui.currency() === 'CDF'"
+            [style.background-color]="ui.currency() === 'CDF' ? '#FFFFFF' : 'transparent'"
+            [style.color]="ui.currency() === 'CDF' ? '#007A6C' : 'inherit'"
+            class="[height:22px] [padding:0_8px] [border:0] [border-radius:5px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-muted)]"
+          >
+            CDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <lib-client-header-desktop-controls-1 />
+  <div
+    aria-hidden="true"
+    class="[height:24px] [background:var(--client-navigation)]"
+  >
+    <div
+      class="[height:24px] [background:var(--client-page)] [border-radius:28px_28px_0_0]"
+    ></div>
+  </div>
+</div>

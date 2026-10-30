@@ -1,0 +1,97 @@
+<section
+  class="overflow-hidden rounded-2xl bg-white min-[768px]:rounded-none min-[768px]:border-b min-[768px]:border-[var(--client-divider)]"
+  [attr.aria-label]="group().shop"
+>
+  <div
+    class="flex items-center gap-3 bg-[#FAFBFB] px-[14px] py-[14px] min-[768px]:px-[22px]"
+  >
+    <span
+      class="flex size-[38px] shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E1E8E6] bg-white"
+      ><img tpxShopAvatar alt="" class="size-[70%] object-contain"
+    /></span>
+    <div
+      class="flex min-w-0 flex-1 flex-col gap-1 min-[768px]:flex-row min-[768px]:items-baseline min-[768px]:gap-[10px]"
+    >
+      <span class="text-[15px] font-semibold">{{ group().shop }}</span>
+      <span class="text-[13px] text-[var(--client-muted)]"
+        >{{ shop()?.commune }} @if (shop()?.distanceKm; as km) { ·
+        <span class="font-medium text-[var(--client-distance)]"
+          >{{ distance(km) }} km</span
+        >
+        }</span
+      >
+    </div>
+    <span
+      class="hidden text-[13px] text-[var(--client-text-tertiary)] min-[768px]:inline"
+      >Sous-total
+      <span
+        tpxPriceTag
+        [value]="ui.money(subtotal())"
+        class="font-semibold text-[var(--client-text)]"
+      ></span
+    ></span>
+    <a
+      routerLink="/boutiques"
+      [attr.aria-label]="'Itinéraire vers ' + group().shop"
+      class="grid size-[34px] place-items-center rounded-full bg-[var(--client-page)]"
+      ><svg
+        tpxVisual
+        symbol="icon-b09d6f77f99e"
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+      ></svg
+    ></a>
+  </div>
+  @for (item of group().items; track item.name) {
+  <div
+    class="flex items-center gap-[12px] border-t border-[#F1F3F2] px-[14px] py-[12px] min-[768px]:gap-[14px] min-[768px]:px-[22px]"
+  >
+    <a
+      routerLink="/produit/samsung-galaxy-s24-128-go"
+      class="grid size-[58px] shrink-0 place-items-center rounded-xl bg-[var(--client-tile)]"
+      ><svg
+        tpxVisual
+        [symbol]="icons[item.name] || 'i-phone'"
+        viewBox="0 0 200 200"
+        class="size-[50px]"
+        aria-hidden="true"
+      ></svg
+    ></a>
+    <span class="flex min-w-0 flex-1 flex-col gap-[3px]"
+      ><a
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        class="truncate text-[14.5px] font-medium text-[var(--client-text)]"
+        >{{ item.name }}</a
+      ><span class="text-[12.5px] text-[var(--client-muted)]"
+        >Neuf · <span class="text-[#15803D]">Disponible</span></span
+      ></span
+    >
+    <span
+      tpxPriceTag
+      [value]="ui.money(item.price)"
+      class="shrink-0 text-[16px] font-bold tabular-nums"
+    ></span>
+    <button
+      type="button"
+      (click)="cart.remove(item.name)"
+      [attr.aria-label]="'Retirer ' + item.name"
+      class="grid size-9 shrink-0 place-items-center rounded-full text-[var(--client-muted)] hover:bg-[#FDECEA] hover:text-[var(--client-error)]"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+      >
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
+    </button>
+  </div>
+  }
+</section>

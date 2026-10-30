@@ -1,0 +1,74 @@
+<div
+  class="tpx-public min-h-screen bg-[var(--client-page)] text-[var(--client-text)]"
+  data-theme="light"
+>
+  @if (!merchantRoute() && !searchRoute()) {
+  <div class="sticky top-0 z-[60] hidden min-[768px]:block">
+    <lib-client-header-desktop />
+  </div>
+  <div class="sticky top-0 z-[60] min-[768px]:hidden">
+    <lib-client-header-mobile />
+  </div>
+  } @if (ui.searchOpen()) {
+  <button
+    aria-label="Fermer la recherche"
+    class="fixed inset-x-0 bottom-0 top-[168px] z-50 hidden bg-[var(--client-text)]/50 min-[768px]:block"
+    (click)="ui.searchOpen.set(false)"
+  ></button>
+  }
+  <router-outlet />
+  @if(showBackToTop()){<button
+    type="button"
+    class="client-back-top"
+    aria-label="Retour en haut"
+    (click)="ui.top()"
+  >
+    <svg
+      class="size-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m6 12 6-6 6 6M12 6v14" />
+    </svg></button
+  >} @if (!searchRoute()) {
+  <div class="hidden min-[768px]:block"><lib-client-footer-desktop /></div>
+  <div class="min-[768px]:hidden"><lib-client-footer-mobile /></div>
+  } @if (ui.menuOpen()) {
+  <div class="fixed inset-0 z-[110] overflow-auto bg-white min-[768px]:hidden">
+    <lib-client-menu />
+  </div>
+  } @if (ui.authOpen()) {
+  <div
+    class="hidden min-[768px]:block"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Connexion à Talaprix"
+  >
+    @if (ui.authStep() === 'email') { <lib-client-auth-desktop-email /> } @else
+    { <lib-client-auth-desktop-code /> }
+  </div>
+  <div
+    class="fixed inset-0 z-[100] bg-[var(--client-dark)]/42 backdrop-blur-[10px] min-[768px]:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Connexion à Talaprix"
+    (click)="closeBackdrop($event)"
+    (keydown.enter)="ui.closeOverlays()"
+  >
+    @if (ui.authStep() === 'email') { <lib-client-auth-mobile-email /> } @else {
+    <lib-client-auth-mobile-code /> }
+  </div>
+  @if (auth.error()) {
+  <p
+    role="alert"
+    class="fixed bottom-4 left-1/2 z-[120] -translate-x-1/2 rounded-xl bg-[#FDECEA] px-4 py-2 text-sm text-[var(--client-error)]"
+  >
+    {{ auth.error() }}
+  </p>
+  } }
+</div>

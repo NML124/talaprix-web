@@ -1,0 +1,98 @@
+<section
+  class="[background:var(--client-surface)] [padding:16px_0_12px] [position:sticky] [top:0] [z-index:5] [box-shadow:0_1px_0_var(--client-line)]"
+>
+  <div
+    class="[padding:0_16px_12px] [display:flex] [flex-direction:column] [gap:2px]"
+  >
+    <h1
+      class="[margin:0] [font-size:20px] [font-weight:600] [letter-spacing:-0.02em]"
+    >
+      Résultats pour « hp »
+    </h1>
+    <span class="[font-size:13px] [color:var(--client-muted)]"
+      >{{ catalog.resultCount() }} produits · prix des boutiques de
+      Kinshasa</span
+    >
+  </div>
+  <div
+    class="[display:flex] [gap:8px] [overflow-x:auto] [padding:0_16px] client-rail"
+  >
+    <button
+      type="button"
+      (click)="catalog.filtersOpen.set(true)"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="catalog.filtersOpen.set(true)"
+      class="[flex-shrink:0] [height:36px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [display:inline-flex] [align-items:center] [gap:6px] [background:var(--client-text)] [color:var(--client-surface)] [text-decoration:none]"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-4541643a3dcd"
+      ></svg
+      >Filtres
+    </button>
+    <div class="min-w-[170px] shrink-0">
+      <tpx-select-card
+        label="Trier les résultats"
+        [options]='[{"label":"Pertinence","value":"relevance"},{"label":"Prix croissant","value":"price-asc"},{"label":"Prix décroissant","value":"price-desc"},{"label":"Nombre de boutiques","value":"shops"}]'
+        [value]="catalog.sort()"
+        (selectionChange)="catalog.sort.set($event)"
+      />
+      <span
+        class="[position:absolute] [right:10px] [display:flex] [pointer-events:none]"
+        ><svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-f1ea3f8677ee"
+        ></svg
+      ></span>
+    </div>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[flex-shrink:0] [height:36px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [display:inline-flex] [align-items:center] [gap:6px] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      − de {{ ui.money(100) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      (click)="catalog.range(1)"
+      class="[flex-shrink:0] [height:36px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [display:inline-flex] [align-items:center] [gap:6px] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      100 à {{ ui.money(500) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      (click)="catalog.range(2)"
+      class="[flex-shrink:0] [height:36px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [display:inline-flex] [align-items:center] [gap:6px] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      500 à {{ ui.money(800) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[flex-shrink:0] [height:36px] [padding:0_14px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [display:inline-flex] [align-items:center] [gap:6px] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+    >
+      + de {{ ui.money(800) }}
+    </button>
+  </div>
+</section>

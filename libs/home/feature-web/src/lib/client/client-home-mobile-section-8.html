@@ -1,0 +1,38 @@
+<section
+  aria-labelledby="m-nl"
+  class="[margin-top:12px] [background:var(--client-surface)] [padding:22px_16px] [display:flex] [flex-direction:column] [gap:10px]"
+>
+  <h2
+    id="m-nl"
+    class="[margin:0] [font-size:20px] [font-weight:600] [letter-spacing:-0.02em]"
+  >
+    Les bonnes affaires, par e-mail
+  </h2>
+  <p
+    class="[margin:0] [font-size:14px] [line-height:1.55] [color:var(--client-text-tertiary)]"
+  >
+    Nouvelles offres et baisses de prix. Désinscription à tout moment.
+  </p>
+  <form
+    (submit)="$event.preventDefault()"
+    class="[display:flex] [gap:8px] [margin:4px_0_0]"
+  >
+    <label
+      for="m-nl-email"
+      class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+      >Adresse e-mail</label
+    ><input
+      id="m-nl-email"
+      type="email"
+      autocomplete="email"
+      placeholder="nom@exemple.com"
+      class="[flex:1] [min-width:0] [height:40px] [padding:0_14px] [border:1px_solid_var(--client-border)] [border-radius:12px] [font:inherit] [font-size:16px] [box-sizing:border-box]"
+    /><button
+      type="button"
+      (click)="subscribe($event)"
+      class="[height:40px] [padding:0_16px] [border:0] [border-radius:12px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:15px] [font-weight:600] [cursor:pointer]"
+    >
+      {{ ui.newsletterSent() ? 'Merci !' : "S’inscrire" }}
+    </button>
+  </form>
+</section>

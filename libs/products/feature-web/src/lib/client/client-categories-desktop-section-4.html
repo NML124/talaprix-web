@@ -1,0 +1,86 @@
+<section
+  class="[background:var(--client-surface)] [border-radius:12px] [padding:22px_20px_16px]"
+>
+  <div
+    class="[display:flex] [align-items:baseline] [justify-content:space-between] [padding:0_4px] [margin-bottom:12px]"
+  >
+    <h2
+      class="[margin:0] [font-size:21px] [font-weight:500] [letter-spacing:-0.025em]"
+    >
+      Énergie
+    </h2>
+    <a
+      routerLink="/resultats"
+      class="[font-size:14px] [font-weight:500] [text-decoration:none]"
+      >Tout voir<span class="inline-flex align-middle"
+        ><svg
+          tpxVisual
+          symbol="client-chevron-right"
+          class="client-chevron"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        ></svg></span
+    ></a>
+  </div>
+  <div
+    class="[display:grid] [grid-template-columns:repeat(auto-fill,_minmax(180px,_1fr))] [gap:8px]"
+  >
+    <a
+      class="[display:flex] [flex-direction:column] [gap:10px] [padding:6px] [text-decoration:none] [color:var(--client-text)] client-tile"
+      routerLink="/resultats"
+    >
+      <span
+        class="[height:150px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-timg"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:126px] [height:126px]"
+          tpxVisual
+          symbol="i-solar"
+        ></svg
+      ></span>
+      <span
+        class="[font-size:15px] [font-weight:500] [padding:0_2px] client-tname"
+        >Panneaux solaires</span
+      >
+    </a>
+    <a
+      class="[display:flex] [flex-direction:column] [gap:10px] [padding:6px] [text-decoration:none] [color:var(--client-text)] client-tile"
+      routerLink="/resultats"
+    >
+      <span
+        class="[height:150px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-timg"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:126px] [height:126px]"
+          tpxVisual
+          symbol="i-power"
+        ></svg
+      ></span>
+      <span
+        class="[font-size:15px] [font-weight:500] [padding:0_2px] client-tname"
+        >Stations d’énergie</span
+      >
+    </a>
+    <a
+      class="[display:flex] [flex-direction:column] [gap:10px] [padding:6px] [text-decoration:none] [color:var(--client-text)] client-tile"
+      routerLink="/resultats"
+    >
+      <span
+        class="[height:150px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-timg"
+        ><svg
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          class="[width:126px] [height:126px]"
+          tpxVisual
+          symbol="i-powerbank"
+        ></svg
+      ></span>
+      <span
+        class="[font-size:15px] [font-weight:500] [padding:0_2px] client-tname"
+        >Batteries externes</span
+      >
+    </a>
+  </div>
+</section>
