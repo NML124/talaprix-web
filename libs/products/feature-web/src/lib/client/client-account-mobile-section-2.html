@@ -1,0 +1,36 @@
+<div
+  role="tablist"
+  aria-label="Mon compte"
+  class="[display:grid] [grid-template-columns:repeat(3,_minmax(0,_1fr))] [padding:3px] [background:#E6E9EB] [border-radius:12px]"
+>
+  <button
+    type="button"
+    role="tab"
+    aria-selected="true"
+    (click)="ui.accountTab.set('favorites')"
+    [attr.aria-selected]="ui.accountTab() === 'favorites'"
+    class="[height:36px] [border:0] [border-radius:9px] [font:inherit] [font-size:13px] [font-weight:600] [cursor:pointer] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)]"
+  >
+    Favoris · 5
+  </button>
+  <button
+    type="button"
+    role="tab"
+    aria-selected="false"
+    (click)="ui.accountTab.set('searches')"
+    [attr.aria-selected]="ui.accountTab() === 'searches'"
+    class="[height:36px] [border:0] [border-radius:9px] [font:inherit] [font-size:13px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-text-tertiary)] [box-shadow:none]"
+  >
+    Recherches
+  </button>
+  <button
+    type="button"
+    role="tab"
+    aria-selected="false"
+    (click)="ui.accountTab.set('alerts')"
+    [attr.aria-selected]="ui.accountTab() === 'alerts'"
+    class="[height:36px] [border:0] [border-radius:9px] [font:inherit] [font-size:13px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-text-tertiary)] [box-shadow:none]"
+  >
+    Alertes · 2
+  </button>
+</div>

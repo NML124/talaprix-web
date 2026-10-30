@@ -1,0 +1,32 @@
+<div
+  class="[display:flex] [flex-wrap:wrap] [align-items:flex-end] [justify-content:space-between] [gap:12px] [margin-bottom:20px]"
+>
+  <div class="[display:flex] [flex-direction:column] [gap:6px]">
+    <h1
+      class="[margin:0] [font-size:28px] [font-weight:600] [letter-spacing:-0.02em]"
+    >
+      Mon panier
+    </h1>
+    <span class="[font-size:14px] [color:var(--client-text-tertiary)]"
+      >{{ cart.items().length }} produits · {{ cart.groups().length }} boutiques
+      · vous payez directement en boutique</span
+    >
+  </div>
+  <a
+    routerLink="/resultats"
+    class="[display:inline-flex] [align-items:center] [gap:6px] [font-size:14px] [font-weight:600] [text-decoration:none]"
+    ><svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      aria-hidden="true"
+      tpxVisual
+      symbol="icon-ea740c9f0aa1"
+    ></svg
+    >Ajouter un produit</a
+  >
+</div>

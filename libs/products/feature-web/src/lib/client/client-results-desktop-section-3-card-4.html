@@ -1,0 +1,64 @@
+<article
+  [hidden]="!catalog.visible('HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD', 420)"
+  [style.order]="catalog.rank(420)"
+  class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+>
+  <a
+    class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+    aria-label="HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD"
+    routerLink="/produit/samsung-galaxy-s24-128-go"
+    ><svg
+      viewBox="0 0 200 200"
+      aria-hidden="true"
+      class="[width:170px] [height:170px]"
+      tpxVisual
+      symbol="i-laptop2"
+    ></svg
+  ></a>
+  <button
+    type="button"
+    aria-label="Ajouter aux favoris"
+    (click)="catalog.toggleFavorite('HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD')"
+    [attr.aria-pressed]="catalog.favorite('HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD')"
+    [style.color]="catalog.favorite('HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD') ? '#007A6C' : '#2E3B37'"
+    class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      [attr.fill]="catalog.favorite('HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD') ? '#E3F2EF' : 'none'"
+      tpxVisual
+      symbol="icon-d6d8d482ea7e"
+    ></svg>
+  </button>
+  <a
+    class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+    routerLink="/produit/samsung-galaxy-s24-128-go"
+    title="HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD"
+    >HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD</a
+  >
+  <span class="[display:flex] [align-items:baseline] [gap:6px]"
+    ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+      >dès</span
+    ><span
+      class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+      tpxPriceTag
+      [value]="ui.money(420)"
+    ></span
+  ></span>
+  <span
+    class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+    >chez Jouani Congo<br /><a
+      routerLink="/produit/samsung-galaxy-s24-128-go"
+      class="[font-weight:500] [text-decoration:none]"
+      >Voir les 2 offres</a
+    ></span
+  >
+</article>

@@ -1,0 +1,101 @@
+<section
+  class="[position:relative] [margin-top:-28px] [background:var(--client-surface)] [border-radius:22px_22px_0_0] [padding:10px_0_8px] [box-shadow:0_-6px_20px_rgba(15,26,23,0.08)]"
+>
+  <span
+    aria-hidden="true"
+    class="[display:block] [width:40px] [height:5px] [border-radius:3px] [background:#D5D9DC] [margin:0_auto_12px]"
+  ></span>
+  <div
+    role="dialog"
+    aria-label="Boutique sélectionnée"
+    data-client-selected=""
+    class="[margin:0_12px] [padding:14px] [border-radius:16px] [background:var(--client-mint-soft)] [display:flex] [flex-direction:column] [gap:12px]"
+  >
+    <div class="[display:flex] [gap:12px] [align-items:center]">
+      <span
+        class="[width:48px] [height:48px] [border-radius:50%] [background:var(--client-surface)] [border:1px_solid_#E1E8E6] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [box-sizing:border-box]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar
+      /></span>
+      <div
+        class="[flex:1] [min-width:0] [display:flex] [flex-direction:column] [gap:2px]"
+      >
+        <span class="[font-size:16px] [font-weight:600]"
+          >{{ shops.selected() }}</span
+        >
+        <span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+          >{{ shops.selectedAddress() }}</span
+        >
+        <span
+          class="[font-size:12.5px] [font-weight:600] [color:var(--client-distance)]"
+          >{{ shops.selectedDistance() }} km de vous</span
+        >
+      </div>
+    </div>
+    <div class="[display:flex] [gap:8px]">
+      <a
+        href="#"
+        class="[flex:1] [display:inline-flex] [align-items:center] [justify-content:center] [gap:6px] [height:40px] [border-radius:14px] [background:var(--client-action)] [color:var(--client-surface)] [font-size:13.5px] [font-weight:600] [text-decoration:none]"
+        ><svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-665647541809"
+        ></svg
+        >WhatsApp</a
+      >
+      <a
+        href="#"
+        class="[flex:1] [display:inline-flex] [align-items:center] [justify-content:center] [gap:6px] [height:40px] [border-radius:14px] [background:var(--client-surface)] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:13.5px] [font-weight:600] [text-decoration:none] [box-sizing:border-box]"
+        ><svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-b09d6f77f99e"
+        ></svg
+        >Itinéraire</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[display:inline-flex] [align-items:center] [justify-content:center] [height:40px] [padding:0_12px] [border-radius:14px] [background:var(--client-surface)] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:13.5px] [font-weight:600] [text-decoration:none] [box-sizing:border-box]"
+        >Produits</a
+      >
+    </div>
+  </div>
+  <div
+    class="[padding:16px_16px_6px] [display:flex] [align-items:baseline] [justify-content:space-between]"
+  >
+    <h1 class="[margin:0] [font-size:17px] [font-weight:600]">
+      Boutiques autour de vous
+    </h1>
+    <a
+      routerLink="/boutiques"
+      [queryParams]="{position:'refusee'}"
+      class="[font-size:13px] [font-weight:600] [text-decoration:none]"
+      >Changer</a
+    >
+  </div>
+  <div
+    class="[padding:0_16px_8px] [font-size:12.5px] [color:var(--client-muted)]"
+  >
+    7 boutiques · de la plus proche à la plus éloignée
+  </div>
+  <tpx-client-shops-mobile-section-3-actions-1 />
+</section>

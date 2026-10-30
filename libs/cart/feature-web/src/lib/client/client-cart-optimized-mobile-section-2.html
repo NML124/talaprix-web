@@ -1,0 +1,68 @@
+<div
+  class="[padding:10px_12px_20px] [display:flex] [flex-direction:column] [gap:10px]"
+>
+  <div
+    class="[background:var(--client-surface)] [border-radius:16px] [padding:14px] [display:flex] [flex-direction:column] [gap:12px]"
+  >
+    <div class="[display:flex] [gap:10px] [align-items:flex-start]">
+      <span
+        class="[width:30px] [height:30px] [border-radius:15px] [background:var(--client-action)] [color:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0]"
+        ><svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-39dda39bd05d"
+        ></svg
+      ></span>
+      <span class="[flex:1] [display:flex] [flex-direction:column] [gap:2px]"
+        ><span class="[font-size:14.5px] [font-weight:600]"
+          >Achats optimisés · − {{ ui.money(cart.savings()) }}</span
+        ><span
+          class="[font-size:12.5px] [line-height:1.45] [color:var(--client-text-tertiary)]"
+          >Chaque produit dans la boutique la moins chère, {{
+          cart.groups().length }} boutiques à Gombe.</span
+        ></span
+      >
+    </div>
+    <div
+      role="radiogroup"
+      aria-label="Mode d'optimisation"
+      class="[display:grid] [grid-template-columns:1fr_1fr] [padding:3px] [background:var(--client-page)] [border-radius:12px]"
+    >
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="cart.plan() === 'cheapest'"
+        (click)="cart.plan.set('cheapest')"
+        class="[height:34px] [border:0] [border-radius:9px] [font:inherit] [font-size:13px] [font-weight:600] [background:var(--client-surface)] [color:var(--client-text)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)]"
+      >
+        Le moins cher
+      </button>
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="cart.plan() === 'fewest'"
+        class="[height:34px] [border:0] [border-radius:9px] [font:inherit] [font-size:13px] [font-weight:600] [background:transparent] [color:var(--client-muted)] [box-shadow:none]"
+        (click)="cart.plan.set('fewest')"
+      >
+        Moins de trajets
+      </button>
+    </div>
+  </div>
+  @for (group of cart.groups(); track group.shop) {
+  <tpx-client-cart-group [group]="group" /> }
+
+  <p
+    class="[margin:2px_4px_0] [font-size:12.5px] [line-height:1.5] [color:var(--client-muted)]"
+  >
+    Vous payez directement en boutique. Contactez le vendeur avant de vous
+    déplacer.
+  </p>
+</div>

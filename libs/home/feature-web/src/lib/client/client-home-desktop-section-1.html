@@ -1,0 +1,138 @@
+<section
+  class="[display:grid] [grid-template-columns:236px_minmax(0,_1fr)_272px] [gap:16px] [height:420px] client-hero"
+  aria-label="À la une"
+>
+  <lib-client-home-desktop-section-1-content-1 />
+  <div
+    class="[position:relative] [border-radius:18px] [overflow:hidden] [background-color:#1A1D1C] client-banner-desktop client-banner-photo"
+  >
+    <span
+      aria-hidden="true"
+      class="[position:absolute] [inset:0] [background:linear-gradient(90deg,_rgba(0,0,0,0.74)_0%,_rgba(0,0,0,0.5)_48%,_rgba(0,0,0,0.22)_100%)]"
+    ></span>
+    <div
+      class="[position:relative] [height:100%] [box-sizing:border-box] [padding:48px_52px] [display:flex] [flex-direction:column] [justify-content:center] [gap:18px] [max-width:480px]"
+    >
+      <h1
+        class="[margin:0] [font-size:48px] [line-height:1.05] [font-weight:600] [letter-spacing:-0.03em] [color:var(--client-surface)]"
+      >
+        Le bon produit,<br />au bon prix.
+      </h1>
+      <p
+        class="[margin:0] [font-size:16.5px] [line-height:1.6] [color:rgba(255,255,255,0.86)] [max-width:400px]"
+      >
+        Voyez à quel prix chaque boutique vend un produit, et choisissez où
+        l'acheter avant de vous déplacer.
+      </p>
+      <div class="[display:flex] [flex-wrap:wrap] [gap:10px] [margin-top:6px]">
+        <a
+          class="[display:inline-flex] [align-items:center] [gap:8px] [height:50px] [padding:0_24px] [border-radius:20px] [background:var(--client-surface)] [color:var(--client-text)] [font-size:15px] [font-weight:600] [text-decoration:none] client-pill-w"
+          routerLink="/resultats"
+          >Voir les meilleures offres<svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-ba84a29ee4fc"
+          ></svg
+        ></a>
+        <a
+          class="[display:inline-flex] [align-items:center] [gap:8px] [height:50px] [padding:0_20px] [border-radius:20px] [border:1px_solid_rgba(255,255,255,0.45)] [color:var(--client-surface)] [font-size:15px] [font-weight:500] [text-decoration:none] client-pill-g"
+          routerLink="/boutiques"
+          ><svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-2e30b98a0d8c"
+          ></svg
+          >Boutiques près de moi</a
+        >
+      </div>
+    </div>
+  </div>
+  <div
+    class="[display:flex] [flex-direction:column] [gap:16px] client-hero-right"
+  >
+    <div
+      class="[flex:1] [background:var(--client-surface)] [border-radius:14px] [padding:22px] [display:flex] [flex-direction:column] [gap:10px]"
+    >
+      <span class="[display:flex] [align-items:center] [gap:10px]"
+        ><span
+          class="[width:40px] [height:40px] [border-radius:20px] [background:var(--client-mint)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-action)]"
+          ><svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-5c4ee80f232c"
+          ></svg></span
+        ><span
+          class="[font-size:16.5px] [font-weight:600] [letter-spacing:-0.01em]"
+          >Bienvenue sur Talaprix</span
+        ></span
+      >
+      <p
+        class="[margin:0] [font-size:13.5px] [line-height:1.55] [color:var(--client-text-tertiary)]"
+      >
+        Suivez les prix de vos produits et retrouvez votre panier sur tous vos
+        appareils.
+      </p>
+      <button
+        type="button"
+        class="[margin-top:auto] [height:40px] [border-radius:15px] [border:0] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:14.5px] [font-weight:600] [cursor:pointer] client-btn-p"
+        (click)="ui.authenticate()"
+      >
+        Se connecter
+      </button>
+    </div>
+    <div
+      class="[flex:1] [position:relative] [overflow:hidden] [background:var(--client-dark)] [border-radius:14px] [padding:22px] [display:flex] [flex-direction:column] [gap:8px]"
+    >
+      <span
+        class="[font-size:12px] [font-weight:600] [color:#7FD3C6] [letter-spacing:0.12em]"
+        >COMMERÇANTS</span
+      >
+      <span
+        class="[font-size:18px] [line-height:1.25] [font-weight:600] [color:var(--client-surface)] [letter-spacing:-0.01em] [max-width:190px]"
+        >Vendez plus, sans quitter votre boutique</span
+      >
+      <span class="[font-size:13px] [color:#B5C9C4]">Inscription gratuite</span>
+      <a
+        class="[margin-top:auto] [align-self:flex-start] [display:inline-flex] [align-items:center] [height:40px] [padding:0_16px] [border-radius:14px] [background:var(--client-surface)] [color:var(--client-dark)] [font-size:13.5px] [font-weight:600] [text-decoration:none] [position:relative] client-pill-w"
+        routerLink="/commercants"
+        >Devenir partenaire</a
+      >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        fill="none"
+        stroke="#1C3F39"
+        stroke-width="1.3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="[position:absolute] [right:-14px] [bottom:-14px] [width:120px] [height:120px]"
+        tpxVisual
+        symbol="icon-d18666fafbe3"
+      ></svg>
+    </div>
+  </div>
+</section>

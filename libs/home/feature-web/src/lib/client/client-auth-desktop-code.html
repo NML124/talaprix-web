@@ -1,0 +1,273 @@
+<div
+  class="[position:fixed] [inset:0] [z-index:100] [display:flex] [align-items:center] [justify-content:center] [padding:24px] [box-sizing:border-box]"
+>
+  <button
+    type="button"
+    aria-label="Fermer la fenêtre de connexion"
+    tabindex="-1"
+    (click)="ui.closeOverlays()"
+    class="[position:absolute] [inset:0] [width:100%] [height:100%] [border:0] [padding:0] [margin:0] [cursor:default] [background:rgba(13,36,32,0.42)] [backdrop-filter:blur(10px)] [-webkit-backdrop-filter:blur(10px)]"
+  ></button>
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="auth-title"
+    class="[position:relative] [width:min(1040px,_100%)] [max-height:calc(100vh_-_48px)] [overflow:auto] [display:grid] [grid-template-columns:repeat(auto-fit,_minmax(min(100%,_400px),_1fr))] [background:var(--client-surface)] [border-radius:28px] [box-shadow:0_32px_90px_rgba(4,22,19,0.32)]"
+  >
+    <div
+      class="[position:relative] [overflow:hidden] [background:linear-gradient(165deg,_var(--client-mint-panel)_0%,_#F5FBFA_70%)] [padding:64px_52px] [display:flex] [flex-direction:column] [gap:22px] client-auth-left"
+    >
+      <span
+        aria-hidden="true"
+        class="[position:absolute] [top:36px] [right:-40px] [width:210px] [height:210px] [border-radius:50%] [border:1px_solid_#CFE7E1]"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="[position:absolute] [top:86px] [right:10px] [width:110px] [height:110px] [border-radius:50%] [border:1px_solid_#DCEEE9]"
+      ></span>
+      <span
+        class="[position:relative] [width:116px] [height:116px] [border-radius:30px] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [box-shadow:0_18px_40px_rgba(0,122,108,0.14)]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt="Talaprix"
+          class="[width:84px] [height:84px] [object-fit:contain]"
+          tpxShopAvatar
+      /></span>
+      <h2
+        class="[position:relative] [margin:10px_0_0] [font-size:29px] [line-height:1.2] [font-weight:600] [letter-spacing:-0.02em] [color:var(--client-text)]"
+      >
+        Accédez à votre espace Talaprix
+      </h2>
+      <p
+        class="[position:relative] [margin:0] [font-size:15.5px] [line-height:1.75] [color:var(--client-text-tertiary)] [max-width:380px]"
+      >
+        Connectez-vous pour retrouver vos favoris, suivre les prix et préparer
+        vos achats plus vite.
+      </p>
+      <div
+        class="[position:relative] [margin-top:18px] [background:rgba(255,255,255,0.88)] [border-radius:22px] [padding:22px_24px] [display:flex] [flex-direction:column] [gap:16px]"
+      >
+        <div
+          class="[display:flex] [align-items:center] [justify-content:space-between] [gap:12px] [padding-bottom:16px] [border-bottom:1px_solid_#E3EFEC]"
+        >
+          <span class="[display:flex] [flex-direction:column] [gap:3px]"
+            ><span
+              class="[font-size:15px] [font-weight:600] [color:var(--client-text)]"
+              >Votre espace personnel</span
+            ><span class="[font-size:13px] [color:var(--client-muted)]"
+              >Simple, rapide et sécurisé.</span
+            ></span
+          >
+          <span
+            class="[width:44px] [height:44px] [border-radius:22px] [background:var(--client-mint)] [color:var(--client-action)] [display:flex] [align-items:center] [justify-content:center]"
+            ><svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              tpxVisual
+              symbol="icon-d6d8d482ea7e"
+            ></svg
+          ></span>
+        </div>
+        <span
+          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
+          ><svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#007A6C"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-d6d8d482ea7e"
+          ></svg
+          >Gardez vos produits favoris.</span
+        >
+        <span
+          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
+          ><svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#007A6C"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-ffb775ad146b"
+          ></svg
+          >Soyez prévenu quand un prix baisse.</span
+        >
+        <span
+          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
+          ><svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#007A6C"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-1670e5a4781a"
+          ></svg
+          >Retrouvez votre panier sur le site et l'app.</span
+        >
+      </div>
+    </div>
+    <div
+      class="[position:relative] [padding:72px_60px_52px] [display:flex] [flex-direction:column] [gap:22px]"
+    >
+      <button
+        type="button"
+        aria-label="Fermer"
+        class="[position:absolute] [top:24px] [right:24px] [width:46px] [height:46px] [border-radius:23px] [border:1px_solid_#DCE5E2] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer] client-xbtn"
+        (click)="ui.closeOverlays()"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-6d5dc2706247"
+        ></svg>
+      </button>
+      <div class="[display:flex] [flex-direction:column] [gap:24px]">
+        <div class="[display:flex] [flex-direction:column] [gap:10px]">
+          <span
+            class="[font-size:12.5px] [font-weight:600] [letter-spacing:0.2em] [color:var(--client-action)]"
+            >VÉRIFICATION</span
+          >
+          <h2
+            class="[margin:0] [font-size:38px] [line-height:1.05] [font-weight:600] [letter-spacing:-0.035em] [color:var(--client-text)]"
+          >
+            Entrez le code
+          </h2>
+          <p
+            class="[margin:0] [font-size:15px] [line-height:1.6] [color:var(--client-muted)]"
+          >
+            Nous avons envoyé un code à 6 chiffres à
+            <strong class="break-all font-medium text-[#2E3B37]"
+              >{{ auth.email() }}</strong
+            >. Il est valable 10 minutes.
+          </p>
+        </div>
+        <fieldset class="[border:0] [margin:0] [padding:0]">
+          <legend
+            class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+          >
+            Code de vérification
+          </legend>
+          <div class="[display:flex] [gap:8px]">
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 1 du code"
+              value="4"
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(0).trim()"
+              (input)="auth.digit($event, 0)"
+              (paste)="auth.paste($event)"
+            />
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 2 du code"
+              value="8"
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(1).trim()"
+              (input)="auth.digit($event, 1)"
+              (paste)="auth.paste($event)"
+            />
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 3 du code"
+              value="2"
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(2).trim()"
+              (input)="auth.digit($event, 2)"
+              (paste)="auth.paste($event)"
+            />
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 4 du code"
+              value=""
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(3).trim()"
+              (input)="auth.digit($event, 3)"
+              (paste)="auth.paste($event)"
+            />
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 5 du code"
+              value=""
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(4).trim()"
+              (input)="auth.digit($event, 4)"
+              (paste)="auth.paste($event)"
+            />
+            <input
+              inputmode="numeric"
+              maxlength="1"
+              aria-label="Chiffre 6 du code"
+              value=""
+              class="[width:48px] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:14px] [font:inherit] [font-size:20px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box] client-fld"
+              [value]="auth.code().charAt(5).trim()"
+              (input)="auth.digit($event, 5)"
+              (paste)="auth.paste($event)"
+            />
+          </div>
+        </fieldset>
+        <button
+          type="button"
+          class="[height:48px] [border:0] [border-radius:16px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] client-btn-p"
+          (click)="auth.verify()"
+        >
+          Valider
+        </button>
+        <div
+          class="[display:flex] [justify-content:space-between] [font-size:14px]"
+        >
+          <button
+            type="button"
+            class="[border:0] [background:transparent] [padding:0] [font:inherit] [color:var(--client-text-tertiary)] [cursor:pointer] inline-flex items-center gap-1.5 client-lnk"
+            (click)="ui.authStep.set('email')"
+          >
+            <svg
+              tpxVisual
+              symbol="client-chevron-right"
+              class="size-[14px] rotate-180"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            ></svg
+            ><span>Modifier l'adresse</span>
+          </button>
+          <span class="[color:var(--client-muted)]"
+            >Renvoyer le code dans 0:45</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

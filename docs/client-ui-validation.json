@@ -1,0 +1,867 @@
+{
+  "browser": {
+    "capturedAt": "2026-10-29T01:42:25.876Z",
+    "screenshots": [
+      {
+        "viewport": "desktop",
+        "name": "01-accueil",
+        "path": "desktop/01-accueil.png",
+        "width": 1440,
+        "height": 3370
+      },
+      {
+        "viewport": "desktop",
+        "name": "composant-header",
+        "path": "desktop/composant-header.png",
+        "width": 1440,
+        "height": 169
+      },
+      {
+        "viewport": "desktop",
+        "name": "composant-footer",
+        "path": "desktop/composant-footer.png",
+        "width": 1440,
+        "height": 380
+      },
+      {
+        "viewport": "desktop",
+        "name": "03-resultats",
+        "path": "desktop/03-resultats.png",
+        "width": 1440,
+        "height": 1750
+      },
+      {
+        "viewport": "desktop",
+        "name": "04-fiche-produit",
+        "path": "desktop/04-fiche-produit.png",
+        "width": 1440,
+        "height": 2116
+      },
+      {
+        "viewport": "desktop",
+        "name": "05-boutiques-carte",
+        "path": "desktop/05-boutiques-carte.png",
+        "width": 1440,
+        "height": 1308
+      },
+      {
+        "viewport": "desktop",
+        "name": "06-carte-sans-position",
+        "path": "desktop/06-carte-sans-position.png",
+        "width": 1440,
+        "height": 1308
+      },
+      {
+        "viewport": "desktop",
+        "name": "07-panier",
+        "path": "desktop/07-panier.png",
+        "width": 1440,
+        "height": 1138
+      },
+      {
+        "viewport": "desktop",
+        "name": "07b-panier-optimise",
+        "path": "desktop/07b-panier-optimise.png",
+        "width": 1440,
+        "height": 1297
+      },
+      {
+        "viewport": "desktop",
+        "name": "08-compte-favoris",
+        "path": "desktop/08-compte-favoris.png",
+        "width": 1440,
+        "height": 1525
+      },
+      {
+        "viewport": "desktop",
+        "name": "09-categories",
+        "path": "desktop/09-categories.png",
+        "width": 1440,
+        "height": 1753
+      },
+      {
+        "viewport": "desktop",
+        "name": "10-commercants",
+        "path": "desktop/10-commercants.png",
+        "width": 1440,
+        "height": 2840
+      },
+      {
+        "viewport": "desktop",
+        "name": "01b-accueil-popup-connexion",
+        "path": "desktop/01b-accueil-popup-connexion.png",
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "viewport": "desktop",
+        "name": "11-connexion-popup",
+        "path": "desktop/11-connexion-popup.png",
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "viewport": "desktop",
+        "name": "01c-accueil-popup-code",
+        "path": "desktop/01c-accueil-popup-code.png",
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "viewport": "desktop",
+        "name": "02-recherche-ouverte",
+        "path": "desktop/02-recherche-ouverte.png",
+        "width": 1440,
+        "height": 3370
+      },
+      {
+        "viewport": "mobile",
+        "name": "m01-accueil",
+        "path": "mobile/m01-accueil.png",
+        "width": 780,
+        "height": 6878
+      },
+      {
+        "viewport": "mobile",
+        "name": "composant-m-header",
+        "path": "mobile/composant-m-header.png",
+        "width": 780,
+        "height": 356
+      },
+      {
+        "viewport": "mobile",
+        "name": "composant-m-pied",
+        "path": "mobile/composant-m-pied.png",
+        "width": 780,
+        "height": 1422
+      },
+      {
+        "viewport": "mobile",
+        "name": "m03-resultats",
+        "path": "mobile/m03-resultats.png",
+        "width": 780,
+        "height": 5260
+      },
+      {
+        "viewport": "mobile",
+        "name": "m04-fiche-produit",
+        "path": "mobile/m04-fiche-produit.png",
+        "width": 780,
+        "height": 4844
+      },
+      {
+        "viewport": "mobile",
+        "name": "m05-boutiques-carte",
+        "path": "mobile/m05-boutiques-carte.png",
+        "width": 780,
+        "height": 4130
+      },
+      {
+        "viewport": "mobile",
+        "name": "m06-carte-sans-position",
+        "path": "mobile/m06-carte-sans-position.png",
+        "width": 780,
+        "height": 4044
+      },
+      {
+        "viewport": "mobile",
+        "name": "m07-panier",
+        "path": "mobile/m07-panier.png",
+        "width": 780,
+        "height": 2964
+      },
+      {
+        "viewport": "mobile",
+        "name": "m07b-panier-optimise",
+        "path": "mobile/m07b-panier-optimise.png",
+        "width": 780,
+        "height": 3410
+      },
+      {
+        "viewport": "mobile",
+        "name": "m08-compte-favoris",
+        "path": "mobile/m08-compte-favoris.png",
+        "width": 780,
+        "height": 4274
+      },
+      {
+        "viewport": "mobile",
+        "name": "m09-categories",
+        "path": "mobile/m09-categories.png",
+        "width": 780,
+        "height": 3924
+      },
+      {
+        "viewport": "mobile",
+        "name": "composant-m-tabbar",
+        "path": "mobile/composant-m-tabbar.png",
+        "width": 780,
+        "height": 148
+      },
+      {
+        "viewport": "mobile",
+        "name": "m10-commercants",
+        "path": "mobile/m10-commercants.png",
+        "width": 780,
+        "height": 6668
+      },
+      {
+        "viewport": "mobile",
+        "name": "m12-menu",
+        "path": "mobile/m12-menu.png",
+        "width": 780,
+        "height": 1688
+      },
+      {
+        "viewport": "mobile",
+        "name": "m11-connexion",
+        "path": "mobile/m11-connexion.png",
+        "width": 780,
+        "height": 1688
+      },
+      {
+        "viewport": "mobile",
+        "name": "m11b-connexion-code",
+        "path": "mobile/m11b-connexion-code.png",
+        "width": 780,
+        "height": 1688
+      },
+      {
+        "viewport": "mobile",
+        "name": "m02-recherche-ouverte",
+        "path": "mobile/m02-recherche-ouverte.png",
+        "width": 780,
+        "height": 1688
+      },
+      {
+        "viewport": "mobile",
+        "name": "m03b-filtres",
+        "path": "mobile/m03b-filtres.png",
+        "width": 780,
+        "height": 1688
+      }
+    ],
+    "checks": [
+      {
+        "name": "desktop/: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop/resultats?q=hp: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop: price filters and empty state",
+        "passed": true
+      },
+      {
+        "name": "desktop/produit/samsung-galaxy-s24-128-go: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop/boutiques: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop: synchronized shop selection",
+        "passed": true
+      },
+      {
+        "name": "desktop/boutiques?position=refusee: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop/panier: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop: cart optimization",
+        "passed": true
+      },
+      {
+        "name": "desktop/compte: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop: account alternate panels",
+        "passed": true
+      },
+      {
+        "name": "desktop/categories: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop/commercants: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "desktop: merchant phone validation",
+        "passed": true
+      },
+      {
+        "name": "desktop: shared currency conversion",
+        "passed": true
+      },
+      {
+        "name": "desktop: authentication email/code/escape",
+        "passed": true
+      },
+      {
+        "name": "desktop: search suggestions",
+        "passed": true
+      },
+      {
+        "name": "mobile/: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile/resultats?q=hp: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile: price filters and empty state",
+        "passed": true
+      },
+      {
+        "name": "mobile/produit/samsung-galaxy-s24-128-go: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile/boutiques: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile: synchronized shop selection",
+        "passed": true
+      },
+      {
+        "name": "mobile/boutiques?position=refusee: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile/panier: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile: cart optimization",
+        "passed": true
+      },
+      {
+        "name": "mobile/compte: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile: account alternate panels",
+        "passed": true
+      },
+      {
+        "name": "mobile/categories: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile/commercants: no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "mobile: merchant phone validation",
+        "passed": true
+      },
+      {
+        "name": "mobile: shared currency conversion",
+        "passed": true
+      },
+      {
+        "name": "mobile: authentication email/code/escape",
+        "passed": true
+      },
+      {
+        "name": "mobile: filters sheet",
+        "passed": true
+      }
+    ],
+    "pageErrors": [],
+    "forbiddenRequests": []
+  },
+  "visualComparison": [
+    {
+      "screen": "desktop/01-accueil.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        3374
+      ],
+      "actual": [
+        1440,
+        3370
+      ],
+      "commonAreaDifferentPercent": 5.46,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/01b-accueil-popup-connexion.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        900
+      ],
+      "actual": [
+        1440,
+        900
+      ],
+      "commonAreaDifferentPercent": 1.16,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/01c-accueil-popup-code.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        900
+      ],
+      "actual": [
+        1440,
+        900
+      ],
+      "commonAreaDifferentPercent": 2.43,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/02-recherche-ouverte.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1424
+      ],
+      "actual": [
+        1440,
+        3370
+      ],
+      "commonAreaDifferentPercent": 44.29,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/03-resultats.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1750
+      ],
+      "actual": [
+        1440,
+        1750
+      ],
+      "commonAreaDifferentPercent": 3.02,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/04-fiche-produit.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        2116
+      ],
+      "actual": [
+        1440,
+        2116
+      ],
+      "commonAreaDifferentPercent": 3.43,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/05-boutiques-carte.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1309
+      ],
+      "actual": [
+        1440,
+        1308
+      ],
+      "commonAreaDifferentPercent": 5.05,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/06-carte-sans-position.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1309
+      ],
+      "actual": [
+        1440,
+        1308
+      ],
+      "commonAreaDifferentPercent": 4.31,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/07-panier.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1142
+      ],
+      "actual": [
+        1440,
+        1138
+      ],
+      "commonAreaDifferentPercent": 6.04,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/07b-panier-optimise.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1303
+      ],
+      "actual": [
+        1440,
+        1297
+      ],
+      "commonAreaDifferentPercent": 6.46,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/08-compte-favoris.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1525
+      ],
+      "actual": [
+        1440,
+        1525
+      ],
+      "commonAreaDifferentPercent": 4.01,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/09-categories.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        1753
+      ],
+      "actual": [
+        1440,
+        1753
+      ],
+      "commonAreaDifferentPercent": 2.09,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/10-commercants.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        2842
+      ],
+      "actual": [
+        1440,
+        2840
+      ],
+      "commonAreaDifferentPercent": 4.37,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/11-connexion-popup.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        900
+      ],
+      "actual": [
+        1440,
+        900
+      ],
+      "commonAreaDifferentPercent": 8.77,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/composant-footer.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        379
+      ],
+      "actual": [
+        1440,
+        380
+      ],
+      "commonAreaDifferentPercent": 3.51,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "desktop/composant-header.png",
+      "status": "compared",
+      "reference": [
+        1440,
+        169
+      ],
+      "actual": [
+        1440,
+        169
+      ],
+      "commonAreaDifferentPercent": 6.91,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "desktop/design-system.png",
+      "status": "not-captured"
+    },
+    {
+      "screen": "mobile/composant-m-header.png",
+      "status": "compared",
+      "reference": [
+        780,
+        356
+      ],
+      "actual": [
+        780,
+        356
+      ],
+      "commonAreaDifferentPercent": 3.91,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/composant-m-pied.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1418
+      ],
+      "actual": [
+        780,
+        1422
+      ],
+      "commonAreaDifferentPercent": 5.34,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/composant-m-tabbar.png",
+      "status": "compared",
+      "reference": [
+        780,
+        148
+      ],
+      "actual": [
+        780,
+        148
+      ],
+      "commonAreaDifferentPercent": 4.8,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m01-accueil.png",
+      "status": "compared",
+      "reference": [
+        780,
+        6878
+      ],
+      "actual": [
+        780,
+        6878
+      ],
+      "commonAreaDifferentPercent": 2.57,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m02-recherche-ouverte.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1688
+      ],
+      "actual": [
+        780,
+        1688
+      ],
+      "commonAreaDifferentPercent": 3.11,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m03-resultats.png",
+      "status": "compared",
+      "reference": [
+        780,
+        5284
+      ],
+      "actual": [
+        780,
+        5260
+      ],
+      "commonAreaDifferentPercent": 8.41,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m03b-filtres.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1688
+      ],
+      "actual": [
+        780,
+        1688
+      ],
+      "commonAreaDifferentPercent": 7.96,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m04-fiche-produit.png",
+      "status": "compared",
+      "reference": [
+        780,
+        5000
+      ],
+      "actual": [
+        780,
+        4844
+      ],
+      "commonAreaDifferentPercent": 7.68,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m05-boutiques-carte.png",
+      "status": "compared",
+      "reference": [
+        780,
+        4130
+      ],
+      "actual": [
+        780,
+        4130
+      ],
+      "commonAreaDifferentPercent": 3.01,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m06-carte-sans-position.png",
+      "status": "compared",
+      "reference": [
+        780,
+        4044
+      ],
+      "actual": [
+        780,
+        4044
+      ],
+      "commonAreaDifferentPercent": 3.74,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m07-panier.png",
+      "status": "compared",
+      "reference": [
+        780,
+        2992
+      ],
+      "actual": [
+        780,
+        2964
+      ],
+      "commonAreaDifferentPercent": 16.2,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m07b-panier-optimise.png",
+      "status": "compared",
+      "reference": [
+        780,
+        3416
+      ],
+      "actual": [
+        780,
+        3410
+      ],
+      "commonAreaDifferentPercent": 14.28,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m08-compte-favoris.png",
+      "status": "compared",
+      "reference": [
+        780,
+        4280
+      ],
+      "actual": [
+        780,
+        4274
+      ],
+      "commonAreaDifferentPercent": 4.49,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m09-categories.png",
+      "status": "compared",
+      "reference": [
+        780,
+        3924
+      ],
+      "actual": [
+        780,
+        3924
+      ],
+      "commonAreaDifferentPercent": 3.03,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m10-commercants.png",
+      "status": "compared",
+      "reference": [
+        780,
+        6656
+      ],
+      "actual": [
+        780,
+        6668
+      ],
+      "commonAreaDifferentPercent": 10.79,
+      "dimensionMatch": false
+    },
+    {
+      "screen": "mobile/m11-connexion.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1688
+      ],
+      "actual": [
+        780,
+        1688
+      ],
+      "commonAreaDifferentPercent": 25.22,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m11b-connexion-code.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1688
+      ],
+      "actual": [
+        780,
+        1688
+      ],
+      "commonAreaDifferentPercent": 30.03,
+      "dimensionMatch": true
+    },
+    {
+      "screen": "mobile/m12-menu.png",
+      "status": "compared",
+      "reference": [
+        780,
+        1688
+      ],
+      "actual": [
+        780,
+        1688
+      ],
+      "commonAreaDifferentPercent": 5.34,
+      "dimensionMatch": true
+    }
+  ]
+}

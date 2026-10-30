@@ -1,0 +1,84 @@
+<section
+  aria-label="Boutiques"
+  class="[width:430px] [flex-shrink:0] [display:flex] [flex-direction:column] [min-height:0] [box-shadow:1px_0_0_var(--client-line)] [position:relative] [z-index:1]"
+>
+  <div
+    class="[padding:20px_20px_12px] [display:flex] [flex-direction:column] [gap:12px]"
+  >
+    <div
+      class="[display:flex] [align-items:baseline] [justify-content:space-between]"
+    >
+      <h1
+        class="[margin:0] [font-size:22px] [font-weight:500] [letter-spacing:-0.025em]"
+      >
+        Boutiques autour de vous
+      </h1>
+      <a
+        routerLink="/boutiques"
+        [queryParams]="{position:'refusee'}"
+        class="[font-size:13.5px] [font-weight:500] [text-decoration:none]"
+        >Changer</a
+      >
+    </div>
+    <span
+      class="[display:inline-flex] [align-items:center] [gap:6px] [font-size:13.5px] [color:var(--client-text-tertiary)]"
+      ><span
+        class="[width:8px] [height:8px] [border-radius:4px] [background:#2B93CA]"
+      ></span
+      >Votre position · Gombe</span
+    >
+    <div class="[display:flex] [gap:6px] [flex-wrap:wrap]">
+      <button
+        type="button"
+        aria-pressed="true"
+        (click)="shops.category.set('Toutes')"
+        [attr.aria-pressed]="shops.category() === 'Toutes'"
+        class="[height:32px] [padding:0_12px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-text)] [background:var(--client-text)] [color:var(--client-surface)]"
+      >
+        Toutes
+      </button>
+      <button
+        type="button"
+        aria-pressed="false"
+        (click)="shops.category.set('Téléphones')"
+        [attr.aria-pressed]="shops.category() === 'Téléphones'"
+        class="[height:32px] [padding:0_12px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+      >
+        Téléphones
+      </button>
+      <button
+        type="button"
+        aria-pressed="false"
+        (click)="shops.category.set('Ordinateurs')"
+        [attr.aria-pressed]="shops.category() === 'Ordinateurs'"
+        class="[height:32px] [padding:0_12px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+      >
+        Ordinateurs
+      </button>
+      <button
+        type="button"
+        aria-pressed="false"
+        (click)="shops.category.set('Énergie')"
+        [attr.aria-pressed]="shops.category() === 'Énergie'"
+        class="[height:32px] [padding:0_12px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+      >
+        Énergie
+      </button>
+      <button
+        type="button"
+        aria-pressed="false"
+        (click)="shops.category.set('Maison')"
+        [attr.aria-pressed]="shops.category() === 'Maison'"
+        class="[height:32px] [padding:0_12px] [border-radius:12px] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-border)] [background:var(--client-surface)] [color:var(--client-text)]"
+      >
+        Maison
+      </button>
+    </div>
+  </div>
+  <div
+    class="[padding:4px_20px_8px] [font-size:12.5px] [color:var(--client-muted)]"
+  >
+    7 boutiques · de la plus proche à la plus éloignée
+  </div>
+  <tpx-client-shops-desktop-section-1-actions-1 />
+</section>

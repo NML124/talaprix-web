@@ -1,0 +1,46 @@
+<div
+  class="[background:var(--client-surface)] [border-bottom:1px_solid_var(--client-line)]"
+>
+  <div
+    class="[max-width:1320px] [margin:0_auto] [padding:0_24px] [box-sizing:border-box] [height:52px] [display:flex] [align-items:center] [gap:16px]"
+  >
+    <span class="[font-size:14px] [color:var(--client-text-secondary)]"
+      ><strong class="[font-variant-numeric:tabular-nums]">9</strong> résultats
+      pour
+      <strong class="[color:var(--client-action-hover)]">« hp »</strong></span
+    >
+    <div
+      class="[margin-left:auto] [display:flex] [align-items:center] [gap:10px]"
+    >
+      <label
+        for="sort"
+        class="[font-size:13.5px] [color:var(--client-text-tertiary)]"
+        >Trier par</label
+      >
+      <tpx-select-card
+        label="Trier les produits"
+        [options]='[{"label":"Pertinence","value":"relevance"},{"label":"Prix croissant","value":"price-asc"},{"label":"Prix décroissant","value":"price-desc"},{"label":"Plus de boutiques","value":"shops"}]'
+        [value]="catalog.sort()"
+        (selectionChange)="catalog.sort.set($event)"
+      />
+      <a
+        routerLink="/boutiques"
+        class="[display:inline-flex] [align-items:center] [gap:6px] [height:36px] [padding:0_14px] [border-radius:8px] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:13.5px] [font-weight:500] [text-decoration:none]"
+        ><svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-3513dee1999b"
+        ></svg
+        >Voir sur la carte</a
+      >
+    </div>
+  </div>
+</div>

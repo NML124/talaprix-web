@@ -1,0 +1,200 @@
+<aside
+  aria-label="Filtres"
+  class="[flex:1_1_240px] [max-width:260px] [background:var(--client-surface)] [border-radius:12px] [padding:20px] [box-sizing:border-box] [display:flex] [flex-direction:column] [gap:22px]"
+>
+  <div class="[display:flex] [flex-direction:column] [gap:8px]">
+    <h2 class="[margin:0] [font-size:14.5px] [font-weight:500]">Catégorie</h2>
+    <button
+      type="button"
+      class="[font-size:13.5px] [color:var(--client-text)] [text-decoration:none] [font-weight:500] client-flt"
+      (click)="catalog.category.set('all')"
+    >
+      Toutes
+    </button>
+    <button
+      type="button"
+      class="[font-size:13.5px] [color:var(--client-text-secondary)] [text-decoration:none] [padding-left:10px] client-flt"
+      (click)="catalog.category.set('Ordinateurs')"
+    >
+      Ordinateurs (4)
+    </button>
+    <button
+      type="button"
+      class="[font-size:13.5px] [color:var(--client-text-secondary)] [text-decoration:none] [padding-left:10px] client-flt"
+      (click)="catalog.category.set('Imprimantes')"
+    >
+      Imprimantes (4)
+    </button>
+    <button
+      type="button"
+      class="[font-size:13.5px] [color:var(--client-text-secondary)] [text-decoration:none] [padding-left:10px] client-flt"
+      (click)="catalog.category.set('Accessoires')"
+    >
+      Accessoires (1)
+    </button>
+  </div>
+  <div class="[display:flex] [flex-direction:column] [gap:8px]">
+    <h2 class="[margin:0] [font-size:14.5px] [font-weight:500]">Prix</h2>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[text-align:left] [border:0] [background:transparent] [padding:0] [font:inherit] [font-size:13.5px] [cursor:pointer] [color:var(--client-text-secondary)] [font-weight:400] client-flt"
+      (click)="catalog.range(0)"
+    >
+      Moins de {{ ui.money(100) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[text-align:left] [border:0] [background:transparent] [padding:0] [font:inherit] [font-size:13.5px] [cursor:pointer] [color:var(--client-text-secondary)] [font-weight:400] client-flt"
+      (click)="catalog.range(1)"
+    >
+      100 à {{ ui.money(500) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[text-align:left] [border:0] [background:transparent] [padding:0] [font:inherit] [font-size:13.5px] [cursor:pointer] [color:var(--client-text-secondary)] [font-weight:400] client-flt"
+      (click)="catalog.range(2)"
+    >
+      500 à {{ ui.money(800) }}
+    </button>
+    <button
+      type="button"
+      aria-pressed="false"
+      class="[text-align:left] [border:0] [background:transparent] [padding:0] [font:inherit] [font-size:13.5px] [cursor:pointer] [color:var(--client-text-secondary)] [font-weight:400] client-flt"
+      (click)="catalog.range(3)"
+    >
+      Plus de {{ ui.money(800) }}
+    </button>
+    <div class="[display:flex] [gap:6px] [align-items:center] [margin-top:4px]">
+      <label
+        for="pmin"
+        class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+        >Prix minimum</label
+      >
+      <input
+        id="pmin"
+        inputmode="numeric"
+        placeholder="Min"
+        type="number"
+        min="0"
+        [value]="catalog.minPrice() ?? ''"
+        (input)="catalog.setPrice($event, 'min')"
+        class="[width:68px] [height:34px] [padding:0_10px] [border:1px_solid_var(--client-border)] [border-radius:8px] [font:inherit] [font-size:13.5px] [box-sizing:border-box]"
+      />
+      <label
+        for="pmax"
+        class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+        >Prix maximum</label
+      >
+      <input
+        id="pmax"
+        inputmode="numeric"
+        placeholder="Max"
+        type="number"
+        min="0"
+        [value]="catalog.maxPrice() ?? ''"
+        (input)="catalog.setPrice($event, 'max')"
+        class="[width:68px] [height:34px] [padding:0_10px] [border:1px_solid_var(--client-border)] [border-radius:8px] [font:inherit] [font-size:13.5px] [box-sizing:border-box]"
+      />
+      <button
+        type="button"
+        class="[height:34px] [padding:0_12px] [border-radius:8px] [border:1px_solid_var(--client-border)] [background:#F7F8F9] [font:inherit] [font-size:13px] [font-weight:500] [cursor:pointer]"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+  <fieldset
+    class="[border:0] [margin:0] [padding:0] [display:flex] [flex-direction:column] [gap:8px]"
+  >
+    <legend
+      class="[font-size:14.5px] [font-weight:500] [padding:0] [margin-bottom:8px]"
+    >
+      Marque
+    </legend>
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        checked=""
+        (change)="catalog.toggleBrand('HP')"
+        [checked]="catalog.brands().includes('HP')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />HP</label
+    >
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.toggleBrand('Canon')"
+        [checked]="catalog.brands().includes('Canon')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Canon</label
+    >
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.toggleBrand('Lenovo')"
+        [checked]="catalog.brands().includes('Lenovo')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Lenovo</label
+    >
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.toggleBrand('Dell')"
+        [checked]="catalog.brands().includes('Dell')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Dell</label
+    >
+    <a
+      href="#"
+      class="[font-size:13px] [font-weight:500] [text-decoration:none]"
+      >Voir plus</a
+    >
+  </fieldset>
+  <fieldset
+    class="[border:0] [margin:0] [padding:0] [display:flex] [flex-direction:column] [gap:8px]"
+  >
+    <legend
+      class="[font-size:14.5px] [font-weight:500] [padding:0] [margin-bottom:8px]"
+    >
+      État
+    </legend>
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.condition.set('new')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Neuf</label
+    >
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.condition.set('used')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Occasion</label
+    >
+    <label
+      class="[display:flex] [align-items:center] [gap:8px] [font-size:13.5px] [cursor:pointer]"
+      ><input
+        type="checkbox"
+        (change)="catalog.condition.set('refurbished')"
+        aria-label="Saisie"
+        class="[width:17px] [height:17px] [accent-color:var(--client-action)] [margin:0]"
+      />Reconditionné</label
+    >
+  </fieldset>
+</aside>

@@ -1,0 +1,20 @@
+<div class="hidden min-[768px]:block">
+  <tpx-client-results-desktop-section-1></tpx-client-results-desktop-section-1
+  ><tpx-client-results-desktop-content></tpx-client-results-desktop-content>
+</div>
+<div class="min-[768px]:hidden">
+  <tpx-client-results-mobile-section-1></tpx-client-results-mobile-section-1
+  ><tpx-client-results-mobile-content></tpx-client-results-mobile-content
+  ><tpx-client-results-mobile-section-4></tpx-client-results-mobile-section-4>
+</div>
+
+@if (catalog.filtersOpen()) {
+<div
+  class="fixed inset-0 z-[90] bg-[var(--client-dark)]/40 min-[768px]:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Filtres"
+>
+  <tpx-client-filters />
+</div>
+}

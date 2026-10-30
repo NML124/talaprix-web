@@ -1,0 +1,177 @@
+<div class="[width:100%] [color:var(--client-text)]">
+  <header
+    class="[background:var(--client-action)] [padding:6px_12px_4px] [display:flex] [flex-direction:column] [gap:10px] [color:var(--client-surface)]"
+  >
+    <div class="[display:flex] [align-items:center] [gap:0] [height:48px]">
+      <a
+        aria-label="Talaprix, accueil"
+        routerLink="/"
+        class="[display:flex] [align-items:center] [gap:8px] [text-decoration:none] [color:var(--client-surface)] [margin-right:auto]"
+        ><span
+          class="[width:32px] [height:32px] [border-radius:9px] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center]"
+          ><img
+            src="/client-design/assets/logo-talaprix.png"
+            alt=""
+            class="[width:26px] [height:26px] [object-fit:contain]"
+            tpxShopAvatar /></span
+        ><span
+          class="[font-size:20px] [font-weight:700] [letter-spacing:-0.02em]"
+          >Talaprix</span
+        ></a
+      >
+      <a
+        aria-label="Compte et favoris"
+        routerLink="/compte"
+        class="[width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
+        ><svg
+          width="23"
+          height="23"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg
+      ></a>
+      <a
+        aria-label="Panier, 3 produits"
+        routerLink="/panier"
+        class="[position:relative] [width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
+        ><svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-1670e5a4781a"
+        ></svg
+        ><span
+          class="[position:absolute] [top:4px] [right:1px] [min-width:18px] [height:18px] [padding:0_4px] [box-sizing:border-box] [border-radius:9px] [background:var(--client-surface)] [color:var(--client-action)] [font-size:11px] [font-weight:700] [display:flex] [align-items:center] [justify-content:center]"
+          >{{ ui.cartCount() }}</span
+        ></a
+      ><button
+        type="button"
+        aria-label="Menu"
+        (click)="ui.menuOpen.set(true)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="ui.menuOpen.set(true)"
+        class="[width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px]"
+      >
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c67fc5c5da6b"
+        ></svg>
+      </button>
+    </div>
+    <a
+      routerLink="/recherche"
+      class="[height:46px] [display:flex] [align-items:center] [gap:10px] [padding:0_14px] [background:var(--client-surface)] [border-radius:12px] [color:var(--client-muted)] [font-size:13px] [text-decoration:none] [white-space:nowrap] [overflow:hidden]"
+      ><span class="[color:var(--client-text)] [display:flex]"
+        ><svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-74dcdc4769ed"
+        ></svg></span
+      >Rechercher un produit, une marque…</a
+    >
+    <div
+      class="[display:flex] [align-items:center] [justify-content:space-between]"
+    >
+      <a
+        routerLink="/boutiques"
+        [queryParams]="{position:'refusee'}"
+        class="[display:inline-flex] [align-items:center] [gap:6px] [height:32px] [color:var(--client-surface)] [font-size:13.5px] [text-decoration:none]"
+        ><svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-2e30b98a0d8c"
+        ></svg
+        >Autour de <span class="[font-weight:600]">me localiser</span
+        ><svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-c901e07a9df3"
+        ></svg
+      ></a>
+      <div
+        role="group"
+        aria-label="Devise"
+        class="client-mobile-currency [display:flex] [padding:2px] [background:rgba(255,255,255,0.18)] [border-radius:999px]"
+      >
+        <button
+          type="button"
+          aria-pressed="true"
+          (click)="ui.currency.set('USD')"
+          [attr.aria-pressed]="ui.currency() === 'USD'"
+          [style.background-color]="ui.currency() === 'USD' ? '#FFFFFF' : 'transparent'"
+          [style.color]="ui.currency() === 'USD' ? '#007A6C' : 'inherit'"
+          class="[height:24px] [padding:0_8px] [border:0] [border-radius:999px] [font:inherit] [font-size:12px] [font-weight:600] [cursor:pointer] [background:var(--client-surface)] [color:var(--client-action)]"
+        >
+          USD
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          (click)="ui.currency.set('CDF')"
+          [attr.aria-pressed]="ui.currency() === 'CDF'"
+          [style.background-color]="ui.currency() === 'CDF' ? '#FFFFFF' : 'transparent'"
+          [style.color]="ui.currency() === 'CDF' ? '#007A6C' : 'inherit'"
+          class="[height:24px] [padding:0_8px] [border:0] [border-radius:999px] [font:inherit] [font-size:12px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-surface)]"
+        >
+          CDF
+        </button>
+      </div>
+    </div>
+  </header>
+  <div
+    aria-hidden="true"
+    class="[height:22px] [background:var(--client-action)]"
+  >
+    <div
+      class="[height:22px] [background:var(--client-surface)] [border-radius:24px_24px_0_0]"
+    ></div>
+  </div>
+</div>

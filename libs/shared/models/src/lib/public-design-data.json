@@ -1,0 +1,379 @@
+{
+  "_note": "Données d'EXEMPLE reprises de la maquette. En production tout vient de l'API (prix, source du prix, disponibilité, distances, taux). Ne pas inventer d'autres chiffres ni de statistiques.",
+  "exchangeRate": {
+    "usdToCdf": 2265,
+    "label": "1 USD = 2 265 FC",
+    "source": "taux du jour (API)"
+  },
+  "user": {
+    "firstName": "Merdi",
+    "fullName": "Merdi Pumba",
+    "provider": "Google",
+    "cartCount": 3
+  },
+  "categories": [
+    "Téléphones",
+    "Ordinateurs",
+    "TV et écrans",
+    "Audio",
+    "Énergie solaire",
+    "Batteries et stations",
+    "Imprimantes",
+    "Accessoires",
+    "Maison",
+    "Bagagerie"
+  ],
+  "shops": [
+    {
+      "id": "uac-gombe",
+      "name": "UAC – Gombe",
+      "commune": "Gombe",
+      "address": "Boulevard du 30 Juin, Gombe",
+      "cats": "High-Tech, Maison",
+      "distanceKm": 1.2,
+      "photo": null
+    },
+    {
+      "id": "uac-commerce",
+      "name": "UAC – Commerce",
+      "commune": "Gombe",
+      "address": "Avenue du Commerce, Gombe",
+      "cats": "High-Tech",
+      "distanceKm": 1.6,
+      "photo": null
+    },
+    {
+      "id": "uac-ina",
+      "name": "UAC – INA",
+      "commune": "Gombe",
+      "address": "Avenue de la Justice, Gombe",
+      "cats": "High-Tech, Bureau",
+      "distanceKm": 1.9,
+      "photo": null
+    },
+    {
+      "id": "goshop-energy",
+      "name": "GoShop Energy",
+      "commune": "Gombe",
+      "address": "Avenue de la Nation, Gombe",
+      "cats": "Énergie solaire",
+      "distanceKm": 2,
+      "photo": null
+    },
+    {
+      "id": "ujisha",
+      "name": "Ujisha Congo Promotion",
+      "commune": "Lingwala",
+      "address": "Avenue Kabinda, Lingwala",
+      "cats": "Téléphones, Accessoires",
+      "distanceKm": 3.4,
+      "photo": null
+    },
+    {
+      "id": "jouani",
+      "name": "Jouani Congo",
+      "commune": "Kasa-Vubu",
+      "address": "Avenue Kasa-Vubu, Kasa-Vubu",
+      "cats": "Téléphones",
+      "distanceKm": 4.1,
+      "photo": null
+    },
+    {
+      "id": "uac-limete",
+      "name": "UAC – Limete",
+      "commune": "Limete",
+      "address": "7e rue, près de l'hôtel Ixoras, Limete",
+      "cats": "High-Tech, Maison",
+      "distanceKm": 6.8,
+      "photo": null
+    },
+    {
+      "id": "dickcom",
+      "name": "Dickcom Shop",
+      "commune": "Gombe",
+      "cats": "Téléphones",
+      "photo": null
+    },
+    {
+      "id": "congo-promotion",
+      "name": "Congo Promotion Store",
+      "commune": "Lingwala",
+      "cats": "Téléphones · Accessoires",
+      "photo": null
+    }
+  ],
+  "shopPhotoRule": "photo == null → afficher le logo Talaprix (70 %, object-fit: contain) dans le cercle blanc bordé #E1E8E6",
+  "homeBestDeals": [
+    {
+      "name": "Samsung Galaxy S24 128 Go",
+      "priceUsd": 610,
+      "shop": "Jouani Congo · Kasa-Vubu",
+      "more": "+ 5 autres boutiques"
+    },
+    {
+      "name": "HP ProBook 440 G9 i5, 16 Go, 512 Go",
+      "priceUsd": 745,
+      "shop": "UAC – Gombe",
+      "more": "+ 2 autres boutiques"
+    },
+    {
+      "name": "EcoFlow River 2, station d’énergie 256 Wh",
+      "priceUsd": 289,
+      "shop": "GoShop Energy · Gombe",
+      "more": "+ 2 autres boutiques"
+    },
+    {
+      "name": "Apple AirPods Pro (2e génération)",
+      "priceUsd": 249,
+      "shop": "UAC – Commerce",
+      "more": "+ 5 autres boutiques"
+    },
+    {
+      "name": "Samsung TV 43\" Crystal UHD 4K",
+      "priceUsd": 365,
+      "shop": "UAC – Gombe",
+      "more": "+ 4 autres boutiques"
+    },
+    {
+      "name": "Tecno Spark 20 Pro 256 Go",
+      "priceUsd": 175,
+      "shop": "Ujisha Congo · Lingwala",
+      "more": "+ 8 autres boutiques"
+    }
+  ],
+  "homePriceDrops": [
+    {
+      "name": "iPhone 15 128 Go",
+      "priceUsd": 735,
+      "oldUsd": 780,
+      "pct": "−6 %",
+      "shops": 8
+    },
+    {
+      "name": "Panneau solaire 200 W monocristallin",
+      "priceUsd": 95,
+      "oldUsd": 110,
+      "pct": "−14 %",
+      "shops": 7
+    },
+    {
+      "name": "HP DeskJet 4120e",
+      "priceUsd": 85,
+      "oldUsd": 92,
+      "pct": "−8 %",
+      "shops": 5
+    },
+    {
+      "name": "JBL Tune 520BT, casque sans fil",
+      "priceUsd": 49,
+      "oldUsd": 55,
+      "pct": "−11 %",
+      "shops": 4
+    },
+    {
+      "name": "Oraimo batterie externe 20 000 mAh",
+      "priceUsd": 18,
+      "oldUsd": 21,
+      "pct": "−14 %",
+      "shops": 12
+    },
+    {
+      "name": "HP 250 G9 i3, 8 Go, 256 Go",
+      "priceUsd": 399,
+      "oldUsd": 429,
+      "pct": "−7 %",
+      "shops": 4
+    }
+  ],
+  "searchResults_hp": [
+    {
+      "name": "HP ProBook 440 G9 tactile i5 12e, 16 Go, 512 Go",
+      "fromUsd": 745,
+      "shop": "UAC – Gombe",
+      "offers": 3
+    },
+    {
+      "name": "HP LaserJet Pro MFP M479fdw",
+      "fromUsd": 590,
+      "shop": "UAC – INA",
+      "offers": 2
+    },
+    {
+      "name": "HP DeskJet 4120e",
+      "fromUsd": 85,
+      "shop": "UAC – Commerce",
+      "offers": 5
+    },
+    {
+      "name": "HP EliteBook x360 1030 G2 i7, 16 Go, 512 Go SSD",
+      "fromUsd": 420,
+      "shop": "Jouani Congo",
+      "offers": 2
+    },
+    {
+      "name": "HP Color LaserJet Pro MFP 3303fdw",
+      "fromUsd": 640,
+      "shop": "UAC – Gombe",
+      "offers": 1
+    },
+    {
+      "name": "HP ProBook 450 G10 i7 13e, 16 Go, 512 Go",
+      "fromUsd": 980,
+      "shop": "UAC – Limete",
+      "offers": 2
+    },
+    {
+      "name": "HP 250 G9 i3, 8 Go, 256 Go",
+      "fromUsd": 399,
+      "shop": "UAC – INA",
+      "offers": 4
+    },
+    {
+      "name": "HP Smart Tank 580",
+      "fromUsd": 179,
+      "shop": "Ujisha Congo",
+      "offers": 3
+    },
+    {
+      "name": "HP 220 souris sans fil",
+      "fromUsd": 9,
+      "shop": "Ujisha Congo",
+      "offers": 6
+    }
+  ],
+  "priceRanges": [
+    "Moins de 100 USD",
+    "100 à 500 USD",
+    "500 à 800 USD",
+    "Plus de 800 USD"
+  ],
+  "productPage": {
+    "brand": "Samsung",
+    "name": "Samsung Galaxy S24 128 Go",
+    "category": "Téléphones",
+    "offers": [
+      {
+        "shop": "UAC – Gombe",
+        "etat": "Neuf",
+        "priceUsd": 689,
+        "distanceKm": 1.2,
+        "source": "la boutique"
+      },
+      {
+        "shop": "UAC – Commerce",
+        "etat": "Neuf",
+        "priceUsd": 699,
+        "distanceKm": 1.6,
+        "source": "la boutique"
+      },
+      {
+        "shop": "GoShop Energy",
+        "etat": "Neuf",
+        "priceUsd": 705,
+        "distanceKm": 2,
+        "source": "Facebook"
+      },
+      {
+        "shop": "Ujisha Congo Promotion",
+        "etat": "Neuf",
+        "priceUsd": 695,
+        "distanceKm": 3.4,
+        "source": "Facebook"
+      },
+      {
+        "shop": "Jouani Congo",
+        "etat": "Reconditionné",
+        "priceUsd": 610,
+        "distanceKm": 4.1,
+        "source": "la boutique"
+      },
+      {
+        "shop": "UAC – Limete",
+        "etat": "Neuf",
+        "priceUsd": 719,
+        "distanceKm": 6.8,
+        "source": "la boutique"
+      }
+    ],
+    "bestNew": {
+      "shop": "UAC – Gombe",
+      "priceUsd": 689
+    }
+  },
+  "cart": {
+    "initial": [
+      {
+        "shop": "UAC – Limete",
+        "items": [["Samsung Galaxy S24 128 Go", 719]]
+      },
+      {
+        "shop": "UAC – Gombe",
+        "items": [
+          ["HP DeskJet 4120e", 92],
+          ["EcoFlow River 2, station d’énergie 256 Wh", 309]
+        ]
+      }
+    ],
+    "optimized_cheapest": [
+      {
+        "shop": "UAC – Gombe",
+        "items": [["Samsung Galaxy S24 128 Go", 689, "−30 USD"]]
+      },
+      {
+        "shop": "UAC – Commerce",
+        "items": [["HP DeskJet 4120e", 85, "−7 USD"]]
+      },
+      {
+        "shop": "GoShop Energy",
+        "items": [["EcoFlow River 2", 289, "−20 USD"]]
+      }
+    ],
+    "optimized_fewestTrips": [
+      {
+        "shop": "UAC – Gombe",
+        "items": [
+          ["Samsung Galaxy S24 128 Go", 689, "−30 USD"],
+          ["HP DeskJet 4120e", 92, ""],
+          ["EcoFlow River 2", 309, ""]
+        ]
+      }
+    ],
+    "totals": {
+      "initialUsd": 1120,
+      "cheapestUsd": 1063,
+      "fewestTripsUsd": 1090
+    }
+  },
+  "communes": [
+    "Gombe",
+    "Lingwala",
+    "Barumbu",
+    "Kinshasa",
+    "Kasa-Vubu",
+    "Kintambo",
+    "Ngaliema",
+    "Bandalungwa",
+    "Limete",
+    "Lemba",
+    "Matete",
+    "Ndjili"
+  ],
+  "merchantFaq": [
+    {
+      "q": "L'inscription est-elle gratuite ?",
+      "a": "Oui. L'inscription et la fiche boutique sont gratuites. Des options de mise en avant existent ; nous vous les présentons si vous le souhaitez."
+    },
+    {
+      "q": "Qui met à jour mes prix ?",
+      "a": "Vous, depuis l'espace commerçant. Notre équipe peut aussi vous aider à les saisir au début."
+    },
+    {
+      "q": "Je n'ai pas de site internet. Puis-je m'inscrire ?",
+      "a": "Oui. Il suffit d'une boutique physique et d'un numéro WhatsApp pour recevoir les clients."
+    },
+    {
+      "q": "Puis-je retirer ma boutique de Talaprix ?",
+      "a": "Oui. Écrivez-nous et nous retirons votre fiche."
+    }
+  ]
+}

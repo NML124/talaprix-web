@@ -1,3 +1,4 @@
+import { CartPreviewStore } from '@talaprix/cart/data-access';
 import {
   ApplicationConfig,
   inject,
@@ -5,10 +6,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import {
-  AuthSessionStore,
-  provideAuthDataAccess,
-} from '@talaprix/users/data-access';
+import { provideAuthDataAccess } from '@talaprix/users/data-access';
 import { provideSupabaseConfig } from '@talaprix/shared/data-access';
 import { provideHomeDataAccess } from '@talaprix/home/data-access';
 import { provideCartDataAccess } from '@talaprix/cart/data-access';
@@ -42,6 +40,8 @@ export const appConfig: ApplicationConfig = {
     provideCartDataAccess(),
     provideShopDataAccess(),
     provideHomeDataAccess(),
-    provideAppInitializer(() => inject(AuthSessionStore).initialize()),
+    provideAppInitializer(() => {
+      inject(CartPreviewStore);
+    }),
   ],
 };

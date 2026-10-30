@@ -1,0 +1,166 @@
+<section
+  id="m-inscription"
+  aria-labelledby="m-form"
+  class="[background:var(--client-surface)] [margin-top:10px] [padding:28px_16px]"
+>
+  <h2
+    id="m-form"
+    class="[margin:0] [font-size:22px] [font-weight:600] [letter-spacing:-0.02em]"
+  >
+    Inscrire ma boutique
+  </h2>
+  <p
+    class="[margin:6px_0_18px] [font-size:14px] [line-height:1.55] [color:var(--client-text-tertiary)]"
+  >
+    Gratuit. Nous vous recontactons sur WhatsApp pour finaliser votre fiche.
+  </p>
+  @if (!shops.merchantSent()) {
+  <form
+    (submit)="shops.submitMerchant($event)"
+    novalidate=""
+    class="[display:flex] [flex-direction:column] [gap:16px] [margin:0]"
+  >
+    <div class="[display:flex] [flex-direction:column] [gap:6px]">
+      <label for="mf-name" class="[font-size:14px] [font-weight:600]"
+        >Nom de la boutique</label
+      ><input
+        id="mf-name"
+        placeholder="Ex. Boutique Élégance"
+        required=""
+        class="[height:54px] [padding:0_16px] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:16px] [color:var(--client-text)] [box-sizing:border-box] [width:100%]"
+      />
+    </div>
+    <div class="[display:flex] [flex-direction:column] [gap:6px]">
+      <label for="mf-commune" class="[font-size:14px] [font-weight:600]"
+        >Commune</label
+      ><tpx-select-card
+        label="Commune"
+        [options]='[{"label":"Choisir","value":"Choisir"},{"label":"Gombe","value":"Gombe"},{"label":"Lingwala","value":"Lingwala"},{"label":"Kinshasa","value":"Kinshasa"},{"label":"Kasa-Vubu","value":"Kasa-Vubu"},{"label":"Limete","value":"Limete"},{"label":"Ngaliema","value":"Ngaliema"}]'
+        (selectionChange)="shops.commune.set($event)"
+      />
+    </div>
+    <div class="[display:flex] [flex-direction:column] [gap:6px]">
+      <label for="mf-wa" class="[font-size:14px] [font-weight:600]"
+        >Numéro WhatsApp</label
+      ><input
+        id="mf-wa"
+        type="tel"
+        value="+243 81 23"
+        aria-invalid="true"
+        aria-describedby="mf-wa-err"
+        required=""
+        class="[height:54px] [padding:0_16px] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:16px] [color:var(--client-text)] [box-sizing:border-box] [width:100%] [border:1.5px_solid_var(--client-error)]"
+      /><span
+        id="mf-wa-err"
+        class="[font-size:13px] [color:var(--client-error)]"
+        >Numéro incomplet : 9 chiffres après +243.</span
+      >
+    </div>
+    <fieldset
+      class="[border:0] [margin:0] [padding:0] [display:flex] [flex-direction:column] [gap:8px]"
+    >
+      <legend
+        class="[font-size:14px] [font-weight:600] [padding:0] [margin-bottom:8px]"
+      >
+        Ce que vous vendez
+      </legend>
+      <div class="[display:flex] [flex-wrap:wrap] [gap:8px]">
+        <button
+          type="button"
+          aria-pressed="true"
+          (click)="shops.toggleMerchantCategory('Téléphones')"
+          [attr.aria-pressed]="shops.merchantCategories().includes('Téléphones')"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_var(--client-brand)] [background:var(--client-mint)] [color:var(--client-navigation)]"
+        >
+          Téléphones
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          (click)="shops.toggleMerchantCategory('Ordinateurs')"
+          [attr.aria-pressed]="shops.merchantCategories().includes('Ordinateurs')"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Ordinateurs
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          (click)="shops.toggleMerchantCategory('Accessoires')"
+          [attr.aria-pressed]="shops.merchantCategories().includes('Accessoires')"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Accessoires
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Audio
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          (click)="shops.toggleMerchantCategory('Énergie solaire')"
+          [attr.aria-pressed]="shops.merchantCategories().includes('Énergie solaire')"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Énergie solaire
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Imprimantes
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          (click)="shops.toggleMerchantCategory('Maison')"
+          [attr.aria-pressed]="shops.merchantCategories().includes('Maison')"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Maison
+        </button>
+        <button
+          type="button"
+          aria-pressed="false"
+          class="[height:40px] [padding:0_14px] [border-radius:14px] [font:inherit] [font-size:13.5px] [font-weight:500] [cursor:pointer] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+        >
+          Autre
+        </button>
+      </div>
+    </fieldset>
+    <label
+      class="[display:flex] [gap:10px] [align-items:flex-start] [font-size:13.5px] [line-height:1.5] [color:var(--client-text-secondary)]"
+      ><input
+        type="checkbox"
+        aria-label="Saisie"
+        required=""
+        class="[width:20px] [height:20px] [margin:1px_0_0] [accent-color:var(--client-action)] [flex-shrink:0]"
+      />J'accepte que Talaprix me contacte sur WhatsApp au sujet de mon
+      inscription.</label
+    >
+    <button
+      type="submit"
+      class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [text-decoration:none] [width:100%] [border-radius:14px]"
+    >
+      Envoyer ma demande
+    </button>
+    @if (shops.merchantError()) {
+    <p role="alert" class="text-sm text-[var(--client-error)]">
+      {{ shops.merchantError() }}
+    </p>
+    }
+  </form>
+  } @else {
+  <div
+    role="status"
+    class="rounded-2xl bg-[var(--client-mint)] p-6 text-[var(--client-action)]"
+  >
+    Demande envoyée
+  </div>
+  }
+</section>

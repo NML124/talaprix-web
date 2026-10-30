@@ -1,0 +1,260 @@
+<div
+  class="w-full h-[100dvh] [position:relative] [overflow:hidden] [background:#F6F6F6]"
+>
+  <div
+    aria-hidden="true"
+    class="[position:absolute] [inset:0] [background:rgba(15,26,23,0.42)]"
+  ></div>
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ft"
+    class="[position:absolute] [left:0] [right:0] [bottom:0] [top:56px] [background:var(--client-surface)] [border-radius:24px_24px_0_0] [display:flex] [flex-direction:column]"
+  >
+    <div class="[display:flex] [justify-content:center] [padding-top:8px]">
+      <span
+        class="[width:40px] [height:5px] [border-radius:3px] [background:#D5DBD8]"
+      ></span>
+    </div>
+    <div
+      class="[display:flex] [align-items:center] [height:52px] [padding:0_8px]"
+    >
+      <button
+        type="button"
+        aria-label="Fermer"
+        (click)="catalog.filtersOpen.set(false)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="catalog.filtersOpen.set(false)"
+        class="[width:44px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)]"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-6d5dc2706247"
+        ></svg>
+      </button>
+      <h1
+        id="ft"
+        class="[flex:1] [margin:0] [text-align:center] [font-size:17px] [font-weight:500]"
+      >
+        Filtres
+      </h1>
+      <button
+        type="button"
+        (click)="catalog.resetFilters()"
+        class="[height:44px] [padding:0_10px] [border:0] [background:transparent] [font-size:14px] [font-weight:500] [color:var(--client-action)]"
+      >
+        Réinitialiser
+      </button>
+    </div>
+    <div class="[flex:1] [overflow:auto] [padding:4px_20px_24px]">
+      <fieldset
+        class="[border:0] [margin:0] [padding:18px_0] [border-bottom:1px_solid_#EEF0EF]"
+      >
+        <legend
+          class="[font-size:16px] [font-weight:500] [padding:0] [margin-bottom:14px] [float:left] [width:100%]"
+        >
+          Prix
+        </legend>
+        <div class="[display:flex] [gap:12px] [clear:both]">
+          <div
+            class="[flex:1] [display:flex] [flex-direction:column] [gap:6px]"
+          >
+            <label
+              for="mmin"
+              class="[font-size:13px] [color:var(--client-text-tertiary)]"
+              >Minimum</label
+            >
+            <div
+              class="[display:flex] [align-items:center] [height:48px] [border:1px_solid_#CFD5D3] [border-radius:12px] [padding:0_12px]"
+            >
+              <input
+                id="mmin"
+                inputmode="numeric"
+                placeholder="0"
+                type="number"
+                min="0"
+                [value]="catalog.minPrice() ?? ''"
+                (input)="catalog.setPrice($event, 'min')"
+                class="[flex:1] [min-width:0] [border:0] [outline:none] [font-size:16px]"
+              /><span class="[font-size:13px] [color:var(--client-muted)]"
+                >USD</span
+              >
+            </div>
+          </div>
+          <div
+            class="[flex:1] [display:flex] [flex-direction:column] [gap:6px]"
+          >
+            <label
+              for="mmax"
+              class="[font-size:13px] [color:var(--client-text-tertiary)]"
+              >Maximum</label
+            >
+            <div
+              class="[display:flex] [align-items:center] [height:48px] [border:1px_solid_#CFD5D3] [border-radius:12px] [padding:0_12px]"
+            >
+              <input
+                id="mmax"
+                inputmode="numeric"
+                placeholder="Aucun"
+                type="number"
+                min="0"
+                [value]="catalog.maxPrice() ?? ''"
+                (input)="catalog.setPrice($event, 'max')"
+                class="[flex:1] [min-width:0] [border:0] [outline:none] [font-size:16px]"
+              /><span class="[font-size:13px] [color:var(--client-muted)]"
+                >USD</span
+              >
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset
+        class="[border:0] [margin:0] [padding:18px_0] [border-bottom:1px_solid_#EEF0EF]"
+      >
+        <legend
+          class="[font-size:16px] [font-weight:500] [padding:0] [margin-bottom:14px] [float:left] [width:100%]"
+        >
+          Marques
+        </legend>
+        <div class="[display:flex] [flex-wrap:wrap] [gap:8px] [clear:both]">
+          <button
+            type="button"
+            aria-pressed="false"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+            (click)="catalog.toggleBrand('Apple')"
+            [attr.aria-pressed]="catalog.brands().includes('Apple')"
+          >
+            Apple
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_var(--client-brand)] [background:var(--client-mint)] [color:var(--client-navigation)]"
+            (click)="catalog.toggleBrand('Samsung')"
+            [attr.aria-pressed]="catalog.brands().includes('Samsung')"
+          >
+            Samsung
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+            (click)="catalog.toggleBrand('Blackview')"
+            [attr.aria-pressed]="catalog.brands().includes('Blackview')"
+          >
+            Blackview
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+            (click)="catalog.toggleBrand('Canon')"
+            [attr.aria-pressed]="catalog.brands().includes('Canon')"
+          >
+            Canon
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+            (click)="catalog.toggleBrand('EcoFlow')"
+            [attr.aria-pressed]="catalog.brands().includes('EcoFlow')"
+          >
+            EcoFlow
+          </button>
+        </div>
+        <button
+          type="button"
+          class="[margin-top:12px] [height:40px] [border:0] [background:transparent] [padding:0] [font-size:14px] [font-weight:500] [color:var(--client-action)] [display:flex] [align-items:center] [gap:4px]"
+        >
+          Afficher les 12 marques<svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-f1ea3f8677ee"
+          ></svg>
+        </button>
+      </fieldset>
+      <fieldset class="[border:0] [margin:0] [padding:18px_0]">
+        <legend
+          class="[font-size:16px] [font-weight:500] [padding:0] [margin-bottom:14px] [float:left] [width:100%]"
+        >
+          État du produit
+        </legend>
+        <div class="[display:flex] [flex-wrap:wrap] [gap:8px] [clear:both]">
+          <button
+            type="button"
+            aria-pressed="true"
+            (click)="catalog.condition.set('all')"
+            [attr.aria-pressed]="catalog.condition() === 'all'"
+            [style.background-color]="catalog.condition() === 'all' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'all' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_var(--client-brand)] [background:var(--client-mint)] [color:var(--client-navigation)]"
+          >
+            Tous
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="catalog.condition.set('new')"
+            [attr.aria-pressed]="catalog.condition() === 'new'"
+            [style.background-color]="catalog.condition() === 'new' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'new' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            Neuf
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="catalog.condition.set('used')"
+            [attr.aria-pressed]="catalog.condition() === 'used'"
+            [style.background-color]="catalog.condition() === 'used' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'used' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            Occasion
+          </button>
+          <button
+            type="button"
+            aria-pressed="false"
+            (click)="catalog.condition.set('refurbished')"
+            [attr.aria-pressed]="catalog.condition() === 'refurbished'"
+            [style.background-color]="catalog.condition() === 'refurbished' ? '#0F1A17' : '#FFFFFF'"
+            [style.color]="catalog.condition() === 'refurbished' ? '#FFFFFF' : '#2E3B37'"
+            class="[height:40px] [padding:0_16px] [border-radius:14px] [font-size:14px] [font-weight:500] [border:1px_solid_#CFD5D3] [background:var(--client-surface)] [color:var(--client-text)]"
+          >
+            Reconditionné
+          </button>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="[padding:12px_20px_28px] [border-top:1px_solid_#EEF0EF] [background:var(--client-surface)]"
+    >
+      <button
+        type="button"
+        (click)="catalog.filtersOpen.set(false)"
+        class="[display:flex] [align-items:center] [justify-content:center] [height:54px] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font-size:16px] [font-weight:500] [text-decoration:none]"
+      >
+        Afficher {{ catalog.resultCount() }} offres
+      </button>
+    </div>
+  </div>
+</div>

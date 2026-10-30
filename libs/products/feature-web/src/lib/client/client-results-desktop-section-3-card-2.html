@@ -1,0 +1,64 @@
+<article
+  [hidden]="!catalog.visible('HP LaserJet Pro MFP M479fdw', 590)"
+  [style.order]="catalog.rank(590)"
+  class="[position:relative] [display:flex] [flex-direction:column] [gap:8px] [padding:10px_10px_16px]"
+>
+  <a
+    class="[height:200px] [border-radius:10px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center] client-pimg"
+    aria-label="HP LaserJet Pro MFP M479fdw"
+    routerLink="/produit/samsung-galaxy-s24-128-go"
+    ><svg
+      viewBox="0 0 200 200"
+      aria-hidden="true"
+      class="[width:170px] [height:170px]"
+      tpxVisual
+      symbol="i-printer"
+    ></svg
+  ></a>
+  <button
+    type="button"
+    aria-label="Ajouter aux favoris"
+    (click)="catalog.toggleFavorite('HP LaserJet Pro MFP M479fdw')"
+    [attr.aria-pressed]="catalog.favorite('HP LaserJet Pro MFP M479fdw')"
+    [style.color]="catalog.favorite('HP LaserJet Pro MFP M479fdw') ? '#007A6C' : '#2E3B37'"
+    class="[position:absolute] [top:18px] [right:18px] [width:32px] [height:32px] [border-radius:16px] [border:0] [background:var(--client-surface)] [box-shadow:0_1px_3px_rgba(15,26,23,0.12)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text-secondary)] [cursor:pointer]"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      [attr.fill]="catalog.favorite('HP LaserJet Pro MFP M479fdw') ? '#E3F2EF' : 'none'"
+      tpxVisual
+      symbol="icon-d6d8d482ea7e"
+    ></svg>
+  </button>
+  <a
+    class="[font-size:14.5px] [line-height:1.35] [color:var(--client-text)] [text-decoration:none] [height:39px] [overflow:hidden] client-ptitle client-product-title"
+    routerLink="/produit/samsung-galaxy-s24-128-go"
+    title="HP LaserJet Pro MFP M479fdw"
+    >HP LaserJet Pro MFP M479fdw</a
+  >
+  <span class="[display:flex] [align-items:baseline] [gap:6px]"
+    ><span class="[font-size:12.5px] [color:var(--client-text-tertiary)]"
+      >dès</span
+    ><span
+      class="[font-size:21px] [font-weight:600] [letter-spacing:-0.025em] [font-variant-numeric:tabular-nums]"
+      tpxPriceTag
+      [value]="ui.money(590)"
+    ></span
+  ></span>
+  <span
+    class="[font-size:12.5px] [color:var(--client-text-tertiary)] [line-height:1.4]"
+    >chez UAC – INA<br /><a
+      routerLink="/produit/samsung-galaxy-s24-128-go"
+      class="[font-weight:500] [text-decoration:none]"
+      >Voir les 2 offres</a
+    ></span
+  >
+</article>

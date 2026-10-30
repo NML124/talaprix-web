@@ -1,0 +1,30 @@
+<div
+  class="[display:flex] [align-items:center] [justify-content:space-between] [padding:16px_16px_4px]"
+>
+  <h1
+    class="[margin:0] [font-size:22px] [font-weight:600] [letter-spacing:-0.02em]"
+  >
+    Mon panier
+    <span class="[font-weight:400] [color:var(--client-muted)]"
+      >· {{ cart.items().length }}</span
+    >
+  </h1>
+  <a
+    routerLink="/resultats"
+    class="[display:inline-flex] [align-items:center] [gap:4px] [font-size:13.5px] [font-weight:600] [text-decoration:none]"
+    ><svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      tpxVisual
+      symbol="icon-ea740c9f0aa1"
+    ></svg
+    >Ajouter</a
+  >
+</div>

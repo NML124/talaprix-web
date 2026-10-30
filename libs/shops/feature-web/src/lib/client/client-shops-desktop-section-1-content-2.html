@@ -1,0 +1,112 @@
+<div
+  role="dialog"
+  aria-label="Boutique sélectionnée"
+  data-client-selected=""
+  class="[position:absolute] [left:24px] [bottom:24px] [width:380px] [background:var(--client-surface)] [border-radius:16px] [box-shadow:0_12px_40px_rgba(15,26,23,0.22)] [padding:18px] [display:flex] [flex-direction:column] [gap:14px]"
+>
+  <div class="[display:flex] [gap:12px] [align-items:flex-start]">
+    <span
+      class="[width:48px] [height:48px] [border-radius:50%] [background:var(--client-surface)] [border:1px_solid_#E1E8E6] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [box-sizing:border-box]"
+      ><img
+        src="/client-design/assets/logo-talaprix.png"
+        alt=""
+        class="[width:70%] [height:70%] [object-fit:contain]"
+        tpxShopAvatar
+    /></span>
+    <div
+      class="[flex:1] [min-width:0] [display:flex] [flex-direction:column] [gap:3px]"
+    >
+      <span class="[font-size:17px] [font-weight:500] [letter-spacing:-0.015em]"
+        >{{ shops.selected() }}</span
+      >
+      <span class="[font-size:13px] [color:var(--client-text-tertiary)]"
+        >{{ shops.selectedAddress() }}</span
+      >
+      <span
+        class="[font-size:13px] [font-weight:500] [color:var(--client-distance)]"
+        >{{ shops.selectedDistance() }} km de vous</span
+      >
+    </div>
+  </div>
+  <div class="[display:flex] [flex-direction:column] [gap:8px]">
+    <span
+      class="[font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.04em]"
+      >DANS CETTE BOUTIQUE</span
+    >
+    <div
+      class="[display:grid] [grid-template-columns:repeat(3,_minmax(0,_1fr))] [gap:8px]"
+    >
+      <a
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        class="[display:flex] [flex-direction:column] [gap:4px] [text-decoration:none] [color:var(--client-text)]"
+        ><span
+          class="[height:70px] [border-radius:8px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center]"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:60px] [height:60px]"
+            tpxVisual
+            symbol="i-phone"
+          ></svg></span
+        ><span
+          class="[font-size:12.5px] [font-weight:600]"
+          tpxPriceTag
+          [value]="ui.money(689)"
+        ></span
+      ></a>
+      <a
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        class="[display:flex] [flex-direction:column] [gap:4px] [text-decoration:none] [color:var(--client-text)]"
+        ><span
+          class="[height:70px] [border-radius:8px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center]"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:60px] [height:60px]"
+            tpxVisual
+            symbol="i-laptop"
+          ></svg></span
+        ><span
+          class="[font-size:12.5px] [font-weight:600]"
+          tpxPriceTag
+          [value]="ui.money(745)"
+        ></span
+      ></a>
+      <a
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        class="[display:flex] [flex-direction:column] [gap:4px] [text-decoration:none] [color:var(--client-text)]"
+        ><span
+          class="[height:70px] [border-radius:8px] [background:var(--client-tile)] [display:flex] [align-items:center] [justify-content:center]"
+          ><svg
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+            class="[width:60px] [height:60px]"
+            tpxVisual
+            symbol="i-tv"
+          ></svg></span
+        ><span
+          class="[font-size:12.5px] [font-weight:600]"
+          tpxPriceTag
+          [value]="ui.money(365)"
+        ></span
+      ></a>
+    </div>
+  </div>
+  <div class="[display:flex] [gap:8px]">
+    <a
+      href="#"
+      class="[flex:1] [display:inline-flex] [align-items:center] [justify-content:center] [gap:6px] [height:40px] [border-radius:14px] [background:var(--client-action)] [color:var(--client-surface)] [font-size:14px] [font-weight:500] [text-decoration:none] client-btn-p"
+      >WhatsApp</a
+    >
+    <a
+      href="#"
+      class="[flex:1] [display:inline-flex] [align-items:center] [justify-content:center] [gap:6px] [height:40px] [border-radius:14px] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:14px] [font-weight:500] [text-decoration:none] client-btn-o"
+      >Itinéraire</a
+    >
+    <a
+      class="[flex:1] [display:inline-flex] [align-items:center] [justify-content:center] [height:40px] [border-radius:14px] [border:1px_solid_var(--client-border)] [color:var(--client-text)] [font-size:14px] [font-weight:500] [text-decoration:none] client-btn-o"
+      routerLink="/resultats"
+      >Produits</a
+    >
+  </div>
+</div>

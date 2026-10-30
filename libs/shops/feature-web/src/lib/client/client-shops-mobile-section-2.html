@@ -1,0 +1,238 @@
+<section
+  aria-label="Carte"
+  class="[position:relative] [height:400px] [background:#E9EEEB] [overflow:hidden]"
+>
+  <svg
+    viewBox="0 0 1000 836"
+    preserveAspectRatio="xMidYMid slice"
+    aria-hidden="true"
+    class="[position:absolute] [inset:0] [width:100%] [height:100%]"
+  >
+    <rect width="1000" height="836" fill="#E9EEEB"></rect>
+    <path
+      d="M0 0H1000V170C910 195 820 135 720 160C620 185 560 110 450 105C340 98 250 150 140 130C75 118 30 124 0 136Z"
+      fill="#C9DFE9"
+    ></path>
+    <rect x="80" y="420" width="150" height="110" rx="12" fill="#D6E7DA"></rect>
+    <rect x="650" y="560" width="120" height="90" rx="12" fill="#D6E7DA"></rect>
+    <rect x="400" y="300" width="80" height="60" rx="10" fill="#D6E7DA"></rect>
+    <g stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" fill="none">
+      <path d="M0 360C250 345 520 335 1000 410"></path>
+      <path d="M380 150L450 836"></path>
+      <path d="M700 170C740 400 800 600 880 836"></path>
+    </g>
+    <g stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" fill="none">
+      <path d="M0 500H1000"></path>
+      <path d="M0 640H1000"></path>
+      <path d="M0 760H1000"></path>
+      <path d="M150 140V836"></path>
+      <path d="M250 140V836"></path>
+      <path d="M580 120V836"></path>
+      <path d="M0 240C190 228 380 222 650 255"></path>
+      <path d="M470 420L1000 270"></path>
+      <path d="M60 140V836"></path>
+      <path d="M960 300V836"></path>
+    </g>
+    <g
+      fill="#8A9692"
+      font-family="system-ui, sans-serif"
+      font-size="15"
+      font-weight="600"
+      letter-spacing="2.5"
+    >
+      <text x="420" y="225">GOMBE</text>
+      <text x="90" y="400">LINGWALA</text>
+      <text x="660" y="320">BARUMBU</text>
+      <text x="260" y="600">KASA-VUBU</text>
+      <text x="760" y="720">LIMETE</text>
+    </g>
+    <text
+      x="700"
+      y="80"
+      fill="#7FA6B8"
+      font-size="17"
+      font-style="italic"
+      font-family="system-ui, sans-serif"
+    >
+      Fleuve Congo
+    </text>
+  </svg>
+  <span
+    aria-label="Votre position"
+    class="[position:absolute] [left:48%] [top:44%] [width:16px] [height:16px] [border-radius:8px] [background:#2B93CA] [border:3px_solid_var(--client-surface)] [box-shadow:0_0_0_10px_rgba(43,147,202,0.2)]"
+  ></span>
+  <button
+    type="button"
+    aria-label="UAC – Gombe"
+    (click)="shops.select('UAC – Gombe')"
+    [attr.aria-pressed]="shops.selected() === 'UAC – Gombe'"
+    [hidden]="!shops.visible('UAC – Gombe')"
+    class="[position:absolute] [left:42%] [top:30%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:3]"
+  >
+    <span
+      class="[height:34px] [padding:0_12px_0_3px] [border-radius:999px] [background:var(--client-text)] [color:var(--client-surface)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+      >UAC – Gombe</span
+    >
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-text)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="UAC – Commerce"
+    (click)="shops.select('UAC – Commerce')"
+    [attr.aria-pressed]="shops.selected() === 'UAC – Commerce'"
+    [hidden]="!shops.visible('UAC – Commerce')"
+    class="[position:absolute] [left:58%] [top:36%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="UAC – INA"
+    (click)="shops.select('UAC – INA')"
+    [attr.aria-pressed]="shops.selected() === 'UAC – INA'"
+    [hidden]="!shops.visible('UAC – INA')"
+    class="[position:absolute] [left:70%] [top:22%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="GoShop Energy"
+    (click)="shops.select('GoShop Energy')"
+    [attr.aria-pressed]="shops.selected() === 'GoShop Energy'"
+    [hidden]="!shops.visible('GoShop Energy')"
+    class="[position:absolute] [left:28%] [top:20%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="Ujisha Congo Promotion"
+    (click)="shops.select('Ujisha Congo Promotion')"
+    [attr.aria-pressed]="shops.selected() === 'Ujisha Congo Promotion'"
+    [hidden]="!shops.visible('Ujisha Congo Promotion')"
+    class="[position:absolute] [left:16%] [top:56%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="Jouani Congo"
+    (click)="shops.select('Jouani Congo')"
+    [attr.aria-pressed]="shops.selected() === 'Jouani Congo'"
+    [hidden]="!shops.visible('Jouani Congo')"
+    class="[position:absolute] [left:36%] [top:74%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="UAC – Limete"
+    (click)="shops.select('UAC – Limete')"
+    [attr.aria-pressed]="shops.selected() === 'UAC – Limete'"
+    [hidden]="!shops.visible('UAC – Limete')"
+    class="[position:absolute] [left:82%] [top:82%] [transform:translate(-50%,_-100%)] [display:flex] [flex-direction:column] [align-items:center] [border:0] [background:transparent] [padding:0] [cursor:pointer] [z-index:1]"
+  >
+    <span
+      class="[height:34px] [padding:0_3px_0_3px] [border-radius:999px] [background:var(--client-surface)] [color:var(--client-text)] [display:flex] [align-items:center] [gap:6px] [font:inherit] [font-size:12.5px] [font-weight:600] [box-shadow:0_2px_8px_rgba(15,26,23,0.25)] [white-space:nowrap]"
+      ><span
+        class="[width:28px] [height:28px] [border-radius:50%] [background:var(--client-surface)] [overflow:hidden] [display:flex] [align-items:center] [justify-content:center]"
+        ><img
+          src="/client-design/assets/logo-talaprix.png"
+          alt=""
+          class="[width:70%] [height:70%] [object-fit:contain]"
+          tpxShopAvatar /></span
+    ></span>
+    <span
+      class="[width:10px] [height:10px] [background:var(--client-surface)] [transform:rotate(45deg)] [margin-top:-6px]"
+    ></span>
+  </button>
+  <button
+    type="button"
+    aria-label="Centrer sur ma position"
+    class="[position:absolute] [right:12px] [top:12px] [width:42px] [height:42px] [border-radius:12px] [border:0] [background:var(--client-surface)] [box-shadow:0_2px_8px_rgba(15,26,23,0.15)] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-distance)] [cursor:pointer]"
+  >
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      tpxVisual
+      symbol="icon-87c2ec511872"
+    ></svg>
+  </button>
+</section>

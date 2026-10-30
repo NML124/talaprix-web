@@ -1,0 +1,93 @@
+<div role="listbox" aria-label="Suggestions" class="client-search-panel">
+  <div class="client-search-panel-grid">
+    <section
+      class="min-w-0 border-b border-[#EEF0F1] p-3 min-[1100px]:border-b-0 min-[1100px]:border-r"
+      aria-label="Suggestions de recherche"
+    >
+      <p
+        class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[.08em] text-[#7A8580]"
+      >
+        Suggestions
+      </p>
+      @for(suggestion of suggestions;track suggestion;let index=$index){<a
+        role="option"
+        [attr.aria-selected]="selected()===index"
+        (focus)="selected.set(index)"
+        routerLink="/resultats"
+        [queryParams]="{q:suggestion}"
+        class="client-search-suggestion"
+        ><svg
+          class="size-4 shrink-0 text-[#7A8580]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="m16 16 4 4" /></svg
+        ><span class="truncate">{{suggestion}}</span></a
+      >}
+    </section>
+    <section class="min-w-0 p-3" aria-label="Produits suggérés">
+      <p
+        class="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[.08em] text-[#7A8580]"
+      >
+        Produits
+      </p>
+      @for(product of products;track product.name;let index=$index){<a
+        role="option"
+        [attr.aria-selected]="selected()===index+suggestions.length"
+        (focus)="selected.set(index+suggestions.length)"
+        routerLink="/produit/samsung-galaxy-s24-128-go"
+        class="client-search-product"
+        ><span
+          class="grid size-[62px] shrink-0 place-items-center rounded-xl bg-[#F5F6F7]"
+          ><svg
+            tpxVisual
+            symbol="i-laptop"
+            class="size-[54px]"
+            viewBox="0 0 200 200"
+            aria-hidden="true"
+          ></svg></span
+        ><span class="min-w-0 flex-1"
+          ><span
+            class="client-product-title text-[13px] font-medium"
+            [title]="product.name"
+            >{{product.name}}</span
+          ><span class="mt-1 block text-[12px] text-[#7A8580]"
+            >{{product.offers}} offres disponibles</span
+          ><span class="mt-1 block text-[14px] font-semibold text-[#007A6C]"
+            >dès {{ui.money(product.price)}}</span
+          ></span
+        ><svg
+          tpxVisual
+          symbol="client-chevron-right"
+          class="client-chevron"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        ></svg></a
+      >}
+    </section>
+  </div>
+  <a
+    role="option"
+    [attr.aria-selected]="selected()===5"
+    (focus)="selected.set(5)"
+    routerLink="/resultats"
+    [queryParams]="{q:ui.query()}"
+    class="flex items-center justify-between gap-3 border-t border-[#EEF0F1] bg-[#FAFBFB] px-5 py-3 text-[13px] font-medium text-[#007A6C]"
+    ><span>Voir tous les résultats pour « {{ui.query() || 'hp'}} »</span
+    ><svg
+      class="client-chevron"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m9 5 7 7-7 7" /></svg
+  ></a>
+</div>

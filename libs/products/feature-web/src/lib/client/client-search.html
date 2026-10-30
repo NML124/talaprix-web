@@ -1,0 +1,236 @@
+<div
+  class="[width:390px] [height:844px] [background:var(--client-surface)] [overflow:hidden] [display:flex] [flex-direction:column]"
+>
+  <div
+    class="[display:flex] [align-items:center] [gap:4px] [padding:12px_16px_12px_4px] [border-bottom:1px_solid_#EEF0EF]"
+  >
+    <a
+      aria-label="Retour"
+      routerLink="/"
+      class="[width:44px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-text)]"
+      ><svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-7c1c461d4513"
+      ></svg
+    ></a>
+    <div
+      class="[flex:1] [height:46px] [display:flex] [align-items:center] [gap:8px] [padding:0_6px_0_12px] [border:2px_solid_var(--client-brand)] [border-radius:12px] [box-sizing:border-box]"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#4A5652"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-74dcdc4769ed"
+      ></svg>
+      <label
+        for="mq"
+        class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+        >Rechercher</label
+      >
+      <input
+        id="mq"
+        type="search"
+        placeholder="Produit, marque ou catégorie"
+        [value]="ui.query()"
+        (input)="ui.setQuery($event)"
+        (keydown.enter)="ui.search()"
+        class="[flex:1] [min-width:0] [height:100%] [border:0] [outline:none] [background:transparent] [font-size:16px] [color:var(--client-text)]"
+      />
+    </div>
+  </div>
+  <div class="[flex:1] [overflow:auto]">
+    <div
+      class="[padding:20px_16px_8px] [display:flex] [align-items:center] [justify-content:space-between]"
+    >
+      <h2 class="[margin:0] [font-size:17px] [font-weight:500]">
+        Recherches récentes
+      </h2>
+      <button
+        type="button"
+        class="[border:0] [background:transparent] [font-size:14px] [font-weight:500] [color:var(--client-action)] [height:44px]"
+      >
+        Effacer
+      </button>
+    </div>
+    <ul class="[list-style:none] [margin:0] [padding:0_8px]">
+      <li class="[display:flex] [align-items:center]">
+        <button
+          type="button"
+          class="[flex:1] [display:flex] [align-items:center] [gap:12px] [height:48px] [padding:0_8px] [border:0] [background:transparent] [font-size:15px] [color:var(--client-text)] [text-align:left]"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7A8580"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-056d97a9b1ae"
+          ></svg
+          >Samsung Galaxy S24 128 Go
+        </button>
+        <button
+          type="button"
+          aria-label="Retirer"
+          class="[width:44px] [height:44px] [border:0] [background:transparent] [color:var(--client-subtle)] [display:flex] [align-items:center] [justify-content:center]"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-6d5dc2706247"
+          ></svg>
+        </button>
+      </li>
+      <li class="[display:flex] [align-items:center]">
+        <button
+          type="button"
+          class="[flex:1] [display:flex] [align-items:center] [gap:12px] [height:48px] [padding:0_8px] [border:0] [background:transparent] [font-size:15px] [color:var(--client-text)] [text-align:left]"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7A8580"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-056d97a9b1ae"
+          ></svg
+          >hp
+        </button>
+        <button
+          type="button"
+          aria-label="Retirer"
+          class="[width:44px] [height:44px] [border:0] [background:transparent] [color:var(--client-subtle)] [display:flex] [align-items:center] [justify-content:center]"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-6d5dc2706247"
+          ></svg>
+        </button>
+      </li>
+      <li class="[display:flex] [align-items:center]">
+        <button
+          type="button"
+          class="[flex:1] [display:flex] [align-items:center] [gap:12px] [height:48px] [padding:0_8px] [border:0] [background:transparent] [font-size:15px] [color:var(--client-text)] [text-align:left]"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7A8580"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-056d97a9b1ae"
+          ></svg
+          >Panneau solaire
+        </button>
+        <button
+          type="button"
+          aria-label="Retirer"
+          class="[width:44px] [height:44px] [border:0] [background:transparent] [color:var(--client-subtle)] [display:flex] [align-items:center] [justify-content:center]"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+            tpxVisual
+            symbol="icon-6d5dc2706247"
+          ></svg>
+        </button>
+      </li>
+    </ul>
+    <div class="[padding:24px_16px_12px]">
+      <h2 class="[margin:0] [font-size:17px] [font-weight:500]">Catégories</h2>
+    </div>
+    <div class="[display:flex] [flex-wrap:wrap] [gap:8px] [padding:0_16px]">
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Téléphones</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Ordinateurs</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Imprimantes</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Audio</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Accessoires</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Énergie solaire</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Maison</a
+      >
+      <a
+        routerLink="/resultats"
+        class="[height:40px] [display:inline-flex] [align-items:center] [padding:0_16px] [border:1px_solid_#E4E7E6] [border-radius:14px] [font-size:14px] [font-weight:500] [color:var(--client-text)] [text-decoration:none]"
+        >Bagagerie</a
+      >
+    </div>
+  </div>
+</div>
