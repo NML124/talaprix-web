@@ -58,6 +58,7 @@ export class SupabaseFunctions {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          apikey: config.supabaseAnonKey,
           Authorization: `Bearer ${session?.access_token ?? config.supabaseAnonKey}`,
         },
         body:
@@ -70,6 +71,20 @@ export class SupabaseFunctions {
           response.status,
         );
       return payload as T;
+    } catch (error) {
+      // Our own timeout: a readable message instead of the browser's
+      // "signal is aborted". Caller cancellations are rethrown untouched.
+      if (controller.signal.aborted && !options.signal?.aborted)
+        throw new SupabaseFunctionError(
+          'Le serveur met trop de temps à répondre. Vérifiez votre connexion et réessayez.',
+          0,
+        );
+      if (error instanceof TypeError && !options.signal?.aborted)
+        throw new SupabaseFunctionError(
+          'Connexion impossible. Vérifiez votre connexion internet.',
+          0,
+        );
+      throw error;
     } finally {
       clearTimeout(timeout);
     }

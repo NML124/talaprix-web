@@ -12,6 +12,8 @@ import {
 export interface SelectCardOption {
   readonly label: string;
   readonly value: string;
+  /** Optional small image shown before the label (e.g. a country flag). */
+  readonly image?: string;
 }
 @Component({
   selector: 'tpx-select-card',
@@ -24,6 +26,27 @@ export class SelectCard {
   readonly options = input.required<readonly SelectCardOption[]>();
   readonly value = input<string | null>(null);
   readonly compact = input(false);
+  readonly displayValue = input<string | null>(null);
+  readonly searchable = input(false);
+  readonly searchPlaceholder = input('Rechercher…');
+  readonly emptyLabel = input('Aucun résultat');
+  readonly query = signal('');
+  readonly filteredOptions = computed(() => {
+    const term = this.query()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+    return term
+      ? this.options().filter((option) =>
+          option.label
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(term),
+        )
+      : this.options();
+  });
   readonly selectionChange = output<string>();
   readonly open = signal(false);
   readonly chosen = signal<string | null>(null);
@@ -32,8 +55,12 @@ export class SelectCard {
   readonly current = computed(
     () => this.value() ?? this.chosen() ?? this.options()[0]?.value ?? '',
   );
+  readonly currentImage = computed(
+    () => this.options().find((o) => o.value === this.current())?.image ?? null,
+  );
   readonly caption = computed(
     () =>
+      this.displayValue() ??
       this.options().find((o) => o.value === this.current())?.label ??
       this.label(),
   );
@@ -42,6 +69,7 @@ export class SelectCard {
     else this.show();
   }
   show(): void {
+    this.query.set('');
     this.open.set(true);
     this.active.set(
       Math.max(
@@ -49,10 +77,17 @@ export class SelectCard {
         this.options().findIndex((o) => o.value === this.current()),
       ),
     );
-    setTimeout(() => this.focusOption());
+    setTimeout(() =>
+      this.searchable()
+        ? this.element.nativeElement
+            .querySelector<HTMLInputElement>('input[type="search"]')
+            ?.focus()
+        : this.focusOption(),
+    );
   }
   choose(value: string): void {
     this.chosen.set(value);
+    this.query.set('');
     this.selectionChange.emit(value);
     this.close();
   }
@@ -61,6 +96,10 @@ export class SelectCard {
     this.element.nativeElement
       .querySelector<HTMLButtonElement>('button')
       ?.focus();
+  }
+  search(event: Event): void {
+    this.query.set((event.target as HTMLInputElement).value);
+    this.active.set(0);
   }
   private focusOption(): void {
     this.element.nativeElement
@@ -93,7 +132,7 @@ export class SelectCard {
       this.show();
       return;
     }
-    const count = this.options().length;
+    const count = this.filteredOptions().length;
     if (!count) return;
     this.active.set(
       event.key === 'Home'
