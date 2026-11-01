@@ -1,0 +1,191 @@
+<main class="mx-auto max-w-[1180px] px-4 pb-16 pt-8 sm:px-6 sm:pt-10">
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1
+        class="m-0 text-[28px] font-semibold tracking-tight text-[var(--client-text)] sm:text-4xl"
+      >
+        Mon panier
+      </h1>
+      @if (cart.items().length) {
+      <p class="m-0 mt-1.5 text-sm text-[var(--client-muted)]">
+        {{ cart.count() }} article{{ cart.count() > 1 ? 's' : '' }} ·
+        {{ groups().length }} boutique{{ groups().length > 1 ? 's' : '' }}
+      </p>
+      }
+    </div>
+    @if (cart.items().length) { @if (confirmClear()) {
+    <div class="flex items-center gap-2 animate-fade-in" role="group">
+      <span class="text-sm text-[var(--client-text-secondary)]"
+        >Vider le panier ?</span
+      >
+      <button
+        type="button"
+        class="inline-flex h-10 items-center justify-center rounded-[15px] bg-[var(--client-error)] px-4 text-[14.5px] font-semibold text-white transition duration-150 active:scale-[0.98]"
+        (click)="clear()"
+      >
+        Vider
+      </button>
+      <button
+        type="button"
+        class="inline-flex h-10 items-center justify-center rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)]"
+        (click)="confirmClear.set(false)"
+      >
+        Annuler
+      </button>
+    </div>
+    } @else {
+    <button
+      type="button"
+      class="inline-flex h-10 items-center justify-center rounded-[15px] px-3 text-[14.5px] font-semibold text-[var(--client-text-secondary)] transition hover:bg-[var(--client-surface)]"
+      (click)="confirmClear.set(true)"
+    >
+      Vider le panier
+    </button>
+    } }
+  </header>
+
+  @if (!gate.ready()) {
+  <div
+    class="h-48 animate-pulse rounded-3xl bg-[var(--client-line)]"
+    role="status"
+    aria-label="Chargement du panier"
+  ></div>
+  } @else if (!cart.items().length) {
+  <section
+    class="flex flex-col items-center gap-3 rounded-3xl bg-[var(--client-surface)] px-6 py-16 text-center"
+  >
+    <span
+      aria-hidden="true"
+      class="flex size-14 items-center justify-center rounded-full bg-[var(--client-mint)] text-[var(--client-action)]"
+      ><svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
+        <circle cx="10" cy="20" r="1" />
+        <circle cx="17" cy="20" r="1" /></svg
+    ></span>
+    <h2 class="m-0 text-xl font-semibold">Votre panier est vide</h2>
+    <p class="m-0 max-w-md text-sm text-[var(--client-muted)]">
+      @if (gate.signedIn()) { Comparez les offres d’un produit et choisissez
+      celle qui vous convient. } @else { Connectez-vous pour retrouver votre
+      panier sur le site et l’application. }
+    </p>
+    <a
+      class="mt-2 inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+      routerLink="/resultats"
+      >Voir les produits</a
+    >
+  </section>
+  } @else {
+  <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div class="flex flex-col gap-4">
+      @for (group of groups(); track group.shopId) {
+      <section
+        class="rounded-3xl bg-[var(--client-surface)] px-5 pt-4 animate-fade-up motion-reduce:animate-none sm:px-6"
+        [attr.aria-label]="'Produits chez ' + group.shopName"
+      >
+        <header
+          class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--client-divider)] pb-3"
+        >
+          <div class="min-w-0">
+            <h2 class="m-0 truncate text-base font-semibold">
+              {{ group.shopName }}
+            </h2>
+            @if (group.shopAddress) {
+            <p class="m-0 mt-0.5 truncate text-[13px] text-[var(--client-muted)]">
+              {{ group.shopAddress }}
+            </p>
+            }
+          </div>
+          @if (group.mapUrl) {
+          <a
+            class="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--client-mint)] px-3 text-[13px] font-semibold text-[var(--client-action)] no-underline transition hover:bg-[var(--client-action)] hover:text-white"
+            [href]="group.mapUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Itinéraire</a
+          >
+          }
+        </header>
+        <ul class="m-0 list-none divide-y divide-[var(--client-divider)] p-0">
+          @for (item of group.items; track item.referenceId) {
+          <li>
+            <tpx-client-live-cart-line
+              [item]="item"
+              (quantityChange)="cart.changeQuantity(item.referenceId, $event)"
+              (remove)="cart.remove(item.referenceId)"
+            />
+          </li>
+          }
+        </ul>
+      </section>
+      }
+    </div>
+
+    <aside
+      class="flex flex-col gap-4 self-start rounded-3xl bg-[var(--client-surface)] p-5 sm:p-6 lg:sticky lg:top-[156px]"
+      aria-labelledby="cart-summary-title"
+    >
+      <h2 id="cart-summary-title" class="m-0 text-lg font-semibold">
+        Récapitulatif
+      </h2>
+      <dl class="m-0 flex flex-col gap-2 text-sm">
+        <div class="flex justify-between">
+          <dt class="text-[var(--client-muted)]">Articles</dt>
+          <dd class="m-0 font-medium tabular-nums">{{ cart.count() }}</dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-[var(--client-muted)]">Boutiques à visiter</dt>
+          <dd class="m-0 font-medium tabular-nums">{{ groups().length }}</dd>
+        </div>
+        <div
+          class="mt-2 flex items-start justify-between border-t border-[var(--client-divider)] pt-3"
+        >
+          <dt class="font-semibold">Total estimé</dt>
+          <dd class="m-0 text-right">
+            @for (total of totals(); track total) {
+            <span class="block text-lg font-semibold tabular-nums">{{
+              total
+            }}</span>
+            }
+          </dd>
+        </div>
+      </dl>
+      <p class="m-0 text-xs leading-relaxed text-[var(--client-muted)]">
+        Les prix sont ceux affichés par les boutiques. Vérifiez la
+        disponibilité avant de vous déplacer.
+      </p>
+      <button
+        type="button"
+        class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
+        [disabled]="cart.saving() || !gate.signedIn()"
+        (click)="cart.save()"
+      >
+        @if (cart.saving()) {
+        <span
+          aria-hidden="true"
+          class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+        ></span>
+        Enregistrement… } @else if (cart.saveStatus() === 'saved') {
+        Sélection enregistrée } @else { Enregistrer ma sélection }
+      </button>
+      @if (cart.saveStatus() === 'error') {
+      <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+        {{ cart.saveError() }}
+      </p>
+      } @else if (cart.saveStatus() === 'saved') {
+      <p role="status" class="m-0 text-[13px] text-[var(--client-action)]">
+        Retrouvez cette sélection dans l’application TalaPrix.
+      </p>
+      }
+    </aside>
+  </div>
+  }
+</main>
