@@ -1,0 +1,168 @@
+@let status = store.status();
+<p class="sr-only" aria-live="polite">
+  @if (status === 'results') { {{ items().length }} produit{{ items().length >
+  1 ? 's' : '' }} trouvé{{ items().length > 1 ? 's' : '' }} } @else if (status
+  === 'empty') { Aucun résultat } @else if (status === 'error') { Recherche
+  momentanément indisponible }
+</p>
+
+@if (status === 'idle') {
+<tpx-search-discovery [surface]="surface()" (picked)="pick($event)" />
+} @else if (status === 'short') {
+<p class="m-0 px-1 py-2 text-sm text-[var(--client-muted)]">
+  Continuez à écrire…
+</p>
+} @else if (showResults()) {
+<div
+  class="animate-fade-in motion-reduce:animate-none"
+  [class]="card()"
+>
+  <p
+    class="m-0 mb-2 px-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
+  >
+    Produits
+  </p>
+  <div
+    role="listbox"
+    [id]="listboxId()"
+    aria-label="Produits suggérés"
+    class="flex flex-col gap-0.5 transition-opacity"
+    [class.opacity-60]="status === 'loading'"
+  >
+    @for (item of items(); track item.id; let index = $index) {
+    <a
+      role="option"
+      tabindex="-1"
+      [id]="optionId(index)"
+      [attr.aria-selected]="active() === index"
+      [routerLink]="['/produit', item.id]"
+      (click)="remember(item)"
+      (mousemove)="active.set(index)"
+      class="flex min-w-0 items-center gap-3 rounded-2xl p-2 text-[var(--client-text)] no-underline transition-colors hover:bg-[var(--client-tile)] aria-selected:bg-[var(--client-tile)]"
+    >
+      <span
+        class="grid size-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-[var(--client-tile)] text-[var(--client-subtle)]"
+      >
+        @if (item.image) {
+        <img
+          [src]="item.image"
+          alt=""
+          loading="lazy"
+          class="size-full object-contain p-1"
+        />
+        } @else {
+        <svg lucideImageOff size="18" aria-hidden="true"></svg>
+        }
+      </span>
+      <span class="min-w-0 flex-1">
+        <span
+          class="block truncate text-[14.5px] font-medium"
+          [title]="item.name"
+          >{{ item.name }}</span
+        >
+        @if (item.categoryName) {
+        <span class="block truncate text-[12.5px] text-[var(--client-muted)]"
+          >{{ item.categoryName }}</span
+        >
+        }
+      </span>
+      <span class="shrink-0 text-right">
+        @if (price(item); as amount) {
+        <span
+          class="block text-[14px] font-semibold text-[var(--client-action)]"
+          >dès {{ amount }}</span
+        >
+        } @if (item.shopsCount) {
+        <span class="block text-[12px] text-[var(--client-muted)]"
+          >{{ item.shopsCount }} {{ item.shopsCount === 1 ? 'boutique' :
+          'boutiques' }}</span
+        >
+        }
+      </span>
+    </a>
+    }
+  </div>
+  <a
+    routerLink="/resultats"
+    [queryParams]="{ q: trimmed() }"
+    class="mt-2 flex items-center justify-between gap-3 rounded-2xl px-3 py-3 text-[14px] font-semibold text-[var(--client-action)] no-underline transition hover:bg-[var(--client-mint)]"
+    ><span class="min-w-0 truncate"
+      >Voir tous les résultats pour « {{ trimmed() }} »</span
+    ><svg
+      lucideChevronRight
+      size="16"
+      class="shrink-0"
+      aria-hidden="true"
+    ></svg
+  ></a>
+</div>
+} @else if (status === 'loading') {
+<div aria-hidden="true" class="flex flex-col gap-0.5" [class]="card()">
+  @for (row of skeletons; track row) {
+  <div class="flex items-center gap-3 p-2">
+    <span
+      class="size-12 shrink-0 animate-pulse rounded-xl bg-[var(--client-tile)] motion-reduce:animate-none"
+    ></span>
+    <span class="flex min-w-0 flex-1 flex-col gap-2">
+      <span
+        class="h-3.5 w-3/5 animate-pulse rounded-full bg-[var(--client-tile)] motion-reduce:animate-none"
+      ></span>
+      <span
+        class="h-3 w-1/3 animate-pulse rounded-full bg-[var(--client-tile)] motion-reduce:animate-none"
+      ></span>
+    </span>
+    <span
+      class="h-3.5 w-16 animate-pulse rounded-full bg-[var(--client-tile)] motion-reduce:animate-none"
+    ></span>
+  </div>
+  }
+</div>
+} @else if (status === 'empty') {
+<div
+  class="flex flex-col items-center px-4 py-8 text-center animate-fade-up motion-reduce:animate-none"
+  [class]="card()"
+>
+  <span
+    class="mb-4 grid size-12 place-items-center rounded-2xl bg-[var(--client-mint)] text-[var(--client-action)]"
+    ><svg lucideSearchX size="22" aria-hidden="true"></svg
+  ></span>
+  <p class="m-0 text-[17px] font-semibold text-[var(--client-text)]">
+    Aucun résultat pour « {{ store.query() }} »
+  </p>
+  <p class="m-0 mb-5 mt-1.5 max-w-sm text-sm text-[var(--client-muted)]">
+    Signalez-le et nous chercherons les boutiques qui le proposent.
+  </p>
+  <tpx-search-demand [query]="store.query()" [source]="source()" />
+</div>
+} @else if (status === 'error') {
+<div
+  role="alert"
+  class="flex flex-col items-center px-4 py-8 text-center animate-fade-up motion-reduce:animate-none"
+  [class]="card()"
+>
+  <span
+    class="mb-4 grid size-12 place-items-center rounded-2xl bg-[var(--client-tile)] text-[var(--client-muted)]"
+    ><svg lucideCircleAlert size="22" aria-hidden="true"></svg
+  ></span>
+  <p class="m-0 text-[17px] font-semibold text-[var(--client-text)]">
+    Recherche momentanément indisponible
+  </p>
+  <p class="m-0 mb-5 mt-1.5 max-w-sm text-sm text-[var(--client-muted)]">
+    Réessayez dans un instant ou parcourez les catégories.
+  </p>
+  <div class="flex flex-wrap justify-center gap-2">
+    <button
+      type="button"
+      class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+      (click)="store.retry()"
+    >
+      <svg lucideRefreshCw size="16" aria-hidden="true"></svg>Réessayer
+    </button>
+    <a
+      routerLink="/categories"
+      class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-5 text-[14.5px] font-semibold text-[var(--client-text)] no-underline transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98]"
+      >Voir les catégories</a
+    >
+  </div>
+</div>
+}

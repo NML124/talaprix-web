@@ -1,0 +1,77 @@
+<main class="mx-auto max-w-[720px] px-4 pb-16 pt-8 sm:px-6 sm:pt-14">
+  <a
+    routerLink="/"
+    class="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[var(--client-text-secondary)] no-underline transition hover:text-[var(--client-text)]"
+    ><svg lucideArrowLeft size="16" aria-hidden="true"></svg>Accueil</a
+  >
+  <h1
+    class="m-0 text-[28px] font-semibold tracking-tight text-[var(--client-text)] sm:text-4xl"
+  >
+    Que cherchez-vous ?
+  </h1>
+  <p class="m-0 mt-2 text-[15px] text-[var(--client-muted)]">
+    Un produit, une marque ou un modèle précis.
+  </p>
+  <form
+    role="search"
+    class="relative mt-6"
+    (submit)="$event.preventDefault()"
+  >
+    <label class="sr-only" for="live-search-query">Rechercher un produit</label>
+    <span
+      aria-hidden="true"
+      class="pointer-events-none absolute left-4 top-1/2 flex -translate-y-1/2 text-[var(--client-subtle)]"
+      ><svg lucideSearch size="18"></svg
+    ></span>
+    <input
+      #queryInput
+      id="live-search-query"
+      type="search"
+      role="combobox"
+      autocomplete="off"
+      enterkeyhint="search"
+      aria-autocomplete="list"
+      aria-controls="search-page-listbox"
+      [attr.aria-expanded]="panel.showResults()"
+      [attr.aria-activedescendant]="panel.activeDescendant()"
+      [attr.maxlength]="maxLength"
+      class="h-12 w-full rounded-2xl border border-[var(--client-line)] bg-[var(--client-surface)] pl-11 pr-11 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:ring-4 focus:ring-[var(--client-action)]/15 [&::-webkit-search-cancel-button]:appearance-none"
+      placeholder="Ex. iPhone 11, laptop HP, climatiseur"
+      [value]="query()"
+      (input)="query.set(queryInput.value)"
+      (keydown)="keydown($event)"
+    />
+    @if (query()) {
+    <button
+      type="button"
+      aria-label="Effacer la recherche"
+      class="absolute right-2.5 top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[var(--client-muted)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-text)]"
+      (click)="clear()"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+    }
+  </form>
+
+  <tpx-search-panel
+    #panel
+    class="mt-6"
+    source="catalog_search"
+    listboxId="search-page-listbox"
+    surface="page"
+    [limit]="20"
+    [(query)]="query"
+    (picked)="focus()"
+  />
+</main>

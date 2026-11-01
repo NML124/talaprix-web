@@ -1,0 +1,106 @@
+<div class="fixed inset-0 z-[95] flex items-end justify-center sm:items-center sm:p-6">
+  <button
+    type="button"
+    tabindex="-1"
+    aria-label="Fermer"
+    class="absolute inset-0 animate-fade-in bg-[var(--client-dark)]/45 backdrop-blur-[2px]"
+    (click)="dismiss.emit()"
+  ></button>
+  <div
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="alert-title"
+    class="relative w-full max-w-md animate-sheet-up rounded-t-[28px] bg-[var(--client-surface)] p-6 pb-[max(24px,env(safe-area-inset-bottom))] motion-reduce:animate-none sm:animate-fade-up sm:rounded-[28px]"
+  >
+    <button
+      type="button"
+      aria-label="Fermer"
+      class="absolute right-4 top-4 inline-flex size-10 items-center justify-center rounded-full text-[var(--client-text-secondary)] transition hover:bg-[var(--client-tile)]"
+      (click)="dismiss.emit()"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+    @if (status() === 'sent') {
+    <div class="flex flex-col items-center gap-3 py-4 text-center">
+      <span
+        class="flex size-14 items-center justify-center rounded-full bg-[var(--client-mint)] text-[var(--client-action)]"
+        aria-hidden="true"
+        ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12 4 4L19 6" /></svg
+      ></span>
+      <h2 id="alert-title" class="m-0 text-xl font-semibold">Alerte créée</h2>
+      <p class="m-0 text-sm text-[var(--client-muted)]">
+        Nous vous préviendrons dès que le prix passe sous
+        {{ value() }} {{ currency() }}.
+      </p>
+      <button
+        type="button"
+        class="mt-2 inline-flex h-10 items-center justify-center rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+        (click)="dismiss.emit()"
+      >
+        Terminé
+      </button>
+    </div>
+    } @else {
+    <h2 id="alert-title" class="m-0 pr-10 text-xl font-semibold">
+      Alerte prix
+    </h2>
+    <p class="m-0 mt-1.5 text-sm text-[var(--client-muted)]">
+      Soyez prévenu quand {{ store.reference()?.name }} passe sous le prix de
+      votre choix.
+      @if (store.priceRange(); as range) { Actuellement dès {{ range.low }}. }
+    </p>
+    <form class="mt-5 flex flex-col gap-3" (submit)="$event.preventDefault(); submit()">
+      <label for="alert-price" class="text-sm font-medium">Prix souhaité</label>
+      <div class="relative">
+        <input
+          #priceInput
+          id="alert-price"
+          type="text"
+          inputmode="decimal"
+          autocomplete="off"
+          placeholder="0"
+          class="h-12 w-full rounded-[14px] border bg-white pl-4 pr-14 text-[16px] tabular-nums text-[var(--client-text)] outline-none transition focus:ring-4"
+          [class]="
+            status() === 'error'
+              ? 'border-[var(--client-error)] focus:ring-[var(--client-error)]/15'
+              : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'
+          "
+          [attr.aria-invalid]="status() === 'error' || null"
+          [attr.aria-describedby]="error() ? 'alert-price-error' : null"
+          [value]="value()"
+          (input)="value.set(priceInput.value); status.set('idle')"
+        />
+        <span
+          class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-[var(--client-muted)]"
+          >{{ currency() }}</span
+        >
+      </div>
+      @if (error()) {
+      <p id="alert-price-error" role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+        {{ error() }}
+      </p>
+      }
+      <button
+        type="submit"
+        class="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
+        [disabled]="status() === 'sending'"
+      >
+        @if (status() === 'sending') {
+        <span aria-hidden="true" class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
+        Création… } @else { Créer l’alerte }
+      </button>
+    </form>
+    }
+  </div>
+</div>

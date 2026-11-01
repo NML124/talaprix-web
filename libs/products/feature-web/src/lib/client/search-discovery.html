@@ -1,0 +1,143 @@
+@if (hydrated() && history.items().length) {
+<section aria-labelledby="search-history-title" class="mb-7">
+  <div class="mb-3 flex items-center justify-between gap-3">
+    <h2
+      id="search-history-title"
+      class="m-0 text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
+    >
+      Historique
+    </h2>
+    <button
+      type="button"
+      class="inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold text-[var(--client-muted)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-text)]"
+      (click)="history.clear()"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" /></svg
+      >Effacer
+    </button>
+  </div>
+  <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+    @for (name of history.items(); track name) {
+    <li class="min-w-0 max-w-full">
+      <button type="button" [class]="chip()" (click)="picked.emit(name)">
+        <span class="truncate">{{ name }}</span>
+      </button>
+    </li>
+    }
+  </ul>
+</section>
+}
+
+<section aria-labelledby="search-categories-title">
+  <div class="mb-3 flex items-center justify-between gap-3">
+    <h2
+      id="search-categories-title"
+      class="m-0 text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
+    >
+      Catégories
+    </h2>
+    <a
+      routerLink="/categories"
+      class="inline-flex h-8 items-center gap-1 rounded-full px-3 text-[13px] font-semibold text-[var(--client-action)] no-underline transition hover:bg-[var(--client-mint)]"
+      >Voir plus<svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m9 6 6 6-6 6" /></svg
+    ></a>
+  </div>
+  @if (status() === 'error') {
+  <button
+    type="button"
+    class="inline-flex h-9 items-center rounded-full px-4 text-sm font-semibold text-[var(--client-action)] transition hover:bg-[var(--client-mint)]"
+    (click)="retry()"
+  >
+    Réessayer le chargement des catégories
+  </button>
+  } @else if (status() === 'loading' || status() === 'idle') {
+  <div class="flex flex-wrap gap-2" aria-hidden="true">
+    @for (width of [96, 120, 84, 132, 104]; track $index) {
+    <span
+      class="h-9 animate-pulse rounded-full motion-reduce:animate-none"
+      [class]="surface() === 'panel' ? 'bg-[var(--client-tile)]' : 'bg-[var(--client-surface)]'"
+      [style.width.px]="width"
+    ></span>
+    }
+  </div>
+  } @else {
+  <ul
+    class="-mx-1 m-0 flex list-none snap-x gap-2.5 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]"
+  >
+    @for (category of categories(); track category.id) {
+    <li class="w-[104px] shrink-0 snap-start">
+      <a
+        routerLink="/resultats"
+        [queryParams]="{ category_id: category.id }"
+        class="group flex flex-col gap-1.5 text-center text-[12.5px] font-medium leading-tight text-[var(--client-text-secondary)] no-underline"
+      >
+        <span
+          class="flex aspect-square items-center justify-center overflow-hidden rounded-2xl"
+          [class]="surface() === 'panel' ? 'bg-[var(--client-tile)]' : 'bg-[var(--client-surface)]'"
+        >
+          @if (category.image) {
+          <img
+            [src]="category.image"
+            alt=""
+            loading="lazy"
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
+          />
+          } @else {
+          <span class="text-xl font-semibold text-[var(--client-action)]">{{
+            category.name.charAt(0)
+          }}</span>
+          }
+        </span>
+        <span class="line-clamp-2 group-hover:text-[var(--client-action)]">{{
+          category.name
+        }}</span>
+      </a>
+    </li>
+    }
+    <li class="w-[104px] shrink-0 snap-start">
+      <a
+        routerLink="/categories"
+        class="group flex flex-col gap-1.5 text-center text-[12.5px] font-semibold leading-tight text-[var(--client-action)] no-underline"
+      >
+        <span
+          class="flex aspect-square items-center justify-center rounded-2xl bg-[var(--client-mint)] transition group-hover:bg-[var(--client-action)] group-hover:text-white"
+          ><svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6" /></svg
+        ></span>
+        Voir plus
+      </a>
+    </li>
+  </ul>
+  }
+</section>
