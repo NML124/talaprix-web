@@ -24,3 +24,6 @@ export { ShopAnalyticsPage } from './lib/shop/pages/shop-analytics-page';
 export { ShopReviewsPage } from './lib/shop/pages/shop-reviews-page';
 export { ShopSettingsPage } from './lib/shop/pages/shop-settings-page';
 export { AdminSelect } from './lib/ui/admin-select';
+export { AdminLiveOverview } from './lib/pages/overview/admin-live-overview';
+export { AdminLiveList } from './lib/pages/live/admin-live-list';
+export { AdminUnavailable } from './lib/pages/live/admin-unavailable';

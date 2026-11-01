@@ -1,0 +1,44 @@
+<tp-admin-page-header
+  title="Vue d’ensemble"
+  subtitle="Indicateurs actuels du catalogue"
+/>
+@if (status() === 'loading') {
+<p class="muted" role="status">Chargement des indicateurs…</p>
+} @else if (status() === 'error') {
+<div class="card" role="alert">
+  <p>{{ error() }}</p>
+  <button class="btn btn-secondary mt-3" type="button" (click)="load()">
+    Réessayer
+  </button>
+</div>
+} @else if (stats(); as values) {
+<section
+  class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+  aria-label="Indicateurs du catalogue"
+>
+  <a class="card block" routerLink="/admin/utilisateurs"
+    ><small>Utilisateurs</small
+    ><strong class="mt-2 block text-3xl">{{ values.users }}</strong></a
+  >
+  <a class="card block" routerLink="/admin/boutiques"
+    ><small>Boutiques</small
+    ><strong class="mt-2 block text-3xl">{{ values.shops }}</strong></a
+  >
+  <a class="card block" routerLink="/admin/catalogue"
+    ><small>Produits actifs</small
+    ><strong class="mt-2 block text-3xl">{{ values.products }}</strong></a
+  >
+  <a class="card block" routerLink="/admin/offres"
+    ><small>Offres</small
+    ><strong class="mt-2 block text-3xl">{{ values.offers }}</strong></a
+  >
+  <a class="card block" routerLink="/admin/categories"
+    ><small>Catégories</small
+    ><strong class="mt-2 block text-3xl">{{ values.categories }}</strong></a
+  >
+  <div class="card">
+    <small>Publicités actives</small
+    ><strong class="mt-2 block text-3xl">{{ values.advertisements }}</strong>
+  </div>
+</section>
+}
