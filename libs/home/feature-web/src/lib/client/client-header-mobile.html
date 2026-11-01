@@ -22,10 +22,10 @@
       <a
         aria-label="Compte et favoris"
         routerLink="/compte"
-        class="[width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
+        class="[width:38px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
         ><svg
-          width="23"
-          height="23"
+          width="26"
+          height="26"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -38,12 +38,12 @@
         ></svg
       ></a>
       <a
-        aria-label="Panier, 3 produits"
+        [attr.aria-label]="'Panier, ' + ui.cartCount() + ' produit' + (ui.cartCount() === 1 ? '' : 's')"
         routerLink="/panier"
-        class="[position:relative] [width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
+        class="[position:relative] [width:38px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
         ><svg
-          width="25"
-          height="25"
+          width="28"
+          height="28"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -65,11 +65,11 @@
         role="button"
         tabindex="0"
         (keydown.enter)="ui.menuOpen.set(true)"
-        class="[width:40px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px]"
+        class="[width:38px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px]"
       >
         <svg
-          width="22"
-          height="22"
+          width="26"
+          height="26"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

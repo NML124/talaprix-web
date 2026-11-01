@@ -12,122 +12,9 @@
     role="dialog"
     aria-modal="true"
     aria-labelledby="auth-title"
-    class="[position:relative] [width:min(1040px,_100%)] [max-height:calc(100vh_-_48px)] [overflow:auto] [display:grid] [grid-template-columns:repeat(auto-fit,_minmax(min(100%,_400px),_1fr))] [background:var(--client-surface)] [border-radius:28px] [box-shadow:0_32px_90px_rgba(4,22,19,0.32)]"
+    class="[position:relative] [width:min(1040px,_100%)] [max-height:calc(100vh_-_48px)] [overflow:auto] [display:grid] [grid-template-columns:repeat(auto-fit,_minmax(min(100%,_400px),_1fr))] [background:var(--client-surface)] [border-radius:28px] shadow-[0_24px_60px_-12px_rgba(4,22,19,0.28)]"
   >
-    <div
-      class="[position:relative] [overflow:hidden] [background:linear-gradient(165deg,_var(--client-mint-panel)_0%,_#F5FBFA_70%)] [padding:64px_52px] [display:flex] [flex-direction:column] [gap:22px] client-auth-left"
-    >
-      <span
-        aria-hidden="true"
-        class="[position:absolute] [top:36px] [right:-40px] [width:210px] [height:210px] [border-radius:50%] [border:1px_solid_#CFE7E1]"
-      ></span>
-      <span
-        aria-hidden="true"
-        class="[position:absolute] [top:86px] [right:10px] [width:110px] [height:110px] [border-radius:50%] [border:1px_solid_#DCEEE9]"
-      ></span>
-      <span
-        class="[position:relative] [width:116px] [height:116px] [border-radius:30px] [background:var(--client-surface)] [display:flex] [align-items:center] [justify-content:center] [box-shadow:0_18px_40px_rgba(0,122,108,0.14)]"
-        ><img
-          src="/client-design/assets/logo-talaprix.png"
-          alt="Talaprix"
-          class="[width:84px] [height:84px] [object-fit:contain]"
-          tpxShopAvatar
-      /></span>
-      <h2
-        class="[position:relative] [margin:10px_0_0] [font-size:29px] [line-height:1.2] [font-weight:600] [letter-spacing:-0.02em] [color:var(--client-text)]"
-      >
-        Accédez à votre espace Talaprix
-      </h2>
-      <p
-        class="[position:relative] [margin:0] [font-size:15.5px] [line-height:1.75] [color:var(--client-text-tertiary)] [max-width:380px]"
-      >
-        Connectez-vous pour retrouver vos favoris, suivre les prix et préparer
-        vos achats plus vite.
-      </p>
-      <div
-        class="[position:relative] [margin-top:18px] [background:rgba(255,255,255,0.88)] [border-radius:22px] [padding:22px_24px] [display:flex] [flex-direction:column] [gap:16px]"
-      >
-        <div
-          class="[display:flex] [align-items:center] [justify-content:space-between] [gap:12px] [padding-bottom:16px] [border-bottom:1px_solid_#E3EFEC]"
-        >
-          <span class="[display:flex] [flex-direction:column] [gap:3px]"
-            ><span
-              class="[font-size:15px] [font-weight:600] [color:var(--client-text)]"
-              >Votre espace personnel</span
-            ><span class="[font-size:13px] [color:var(--client-muted)]"
-              >Simple, rapide et sécurisé.</span
-            ></span
-          >
-          <span
-            class="[width:44px] [height:44px] [border-radius:22px] [background:var(--client-mint)] [color:var(--client-action)] [display:flex] [align-items:center] [justify-content:center]"
-            ><svg
-              width="19"
-              height="19"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              tpxVisual
-              symbol="icon-d6d8d482ea7e"
-            ></svg
-          ></span>
-        </div>
-        <span
-          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
-          ><svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#007A6C"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            tpxVisual
-            symbol="icon-d6d8d482ea7e"
-          ></svg
-          >Gardez vos produits favoris.</span
-        >
-        <span
-          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
-          ><svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#007A6C"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            tpxVisual
-            symbol="icon-ffb775ad146b"
-          ></svg
-          >Soyez prévenu quand un prix baisse.</span
-        >
-        <span
-          class="[display:flex] [align-items:center] [gap:16px] [font-size:14.5px] [color:var(--client-text-secondary)]"
-          ><svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#007A6C"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            tpxVisual
-            symbol="icon-1670e5a4781a"
-          ></svg
-          >Retrouvez votre panier sur le site et l'app.</span
-        >
-      </div>
-    </div>
+    <lib-client-auth-brand-panel />
     <div
       class="[position:relative] [padding:72px_60px_52px] [display:flex] [flex-direction:column] [gap:22px]"
     >
@@ -150,58 +37,142 @@
           symbol="icon-6d5dc2706247"
         ></svg>
       </button>
-      <div class="[display:flex] [flex-direction:column] [gap:22px]">
-        <div class="[display:flex] [flex-direction:column] [gap:10px]">
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-2.5">
           <span
-            class="[font-size:12.5px] [font-weight:600] [letter-spacing:0.2em] [color:var(--client-action)]"
+            class="text-[12.5px] font-semibold tracking-[0.2em] text-[var(--client-action)]"
             >CONNEXION</span
           >
           <h2
             id="auth-title"
-            class="[margin:0] [font-size:38px] [line-height:1.05] [font-weight:600] [letter-spacing:-0.035em] [color:var(--client-text)]"
+            class="m-0 text-[38px] leading-[1.05] font-semibold tracking-[-0.035em] text-[var(--client-text)]"
           >
             Bon retour
           </h2>
-          <p class="[margin:0] [font-size:15px] [color:var(--client-muted)]">
+          <p class="m-0 text-[15px] text-[var(--client-muted)]">
             Recevez un code par e-mail pour vous connecter.
           </p>
         </div>
-        <form
-          (submit)="$event.preventDefault()"
-          class="[display:flex] [flex-direction:column] [gap:18px] [margin:4px_0_0]"
+        @if (gate.reason()) {
+        <p
+          role="status"
+          class="m-0 flex items-start gap-2.5 rounded-2xl bg-[var(--client-mint)] px-4 py-3 text-[14px] font-medium leading-snug text-[var(--client-action)] animate-fade-in motion-reduce:animate-none"
         >
-          <div class="[display:flex] [flex-direction:column] [gap:8px]">
-            <label for="a-email" class="[font-size:14px] [font-weight:600]"
+          <svg
+            class="mt-0.5 shrink-0"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="5" y="11" width="14" height="10" rx="2" />
+            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+          </svg>
+          {{ gate.reason() }}
+        </p>
+        }
+        <form novalidate class="flex flex-col gap-4" (submit)="submit($event)">
+          <div class="flex flex-col gap-2">
+            <label
+              for="a-email"
+              class="text-[14px] font-semibold text-[var(--client-text)]"
               >Adresse e-mail</label
-            ><input
-              id="a-email"
-              type="email"
-              autocomplete="email"
-              placeholder="vous@email.com"
-              class="[height:54px] [padding:0_18px] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:15px] [color:var(--client-text)] [box-sizing:border-box] client-fld"
-              [value]="auth.email()"
-              (input)="auth.setEmail($event)"
-              (keydown.enter)="auth.requestCode()"
-            />
+            >
+            <div class="relative">
+              <svg
+                lucideMail
+                size="18"
+                aria-hidden="true"
+                class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2"
+                [class]="
+                  auth.emailInvalid()
+                    ? 'text-[var(--client-error)]'
+                    : 'text-[var(--client-subtle)]'
+                "
+              ></svg>
+              <input
+                #emailInput
+                id="a-email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="vous@email.com"
+                aria-describedby="a-email-error"
+                [attr.aria-invalid]="auth.emailInvalid()"
+                [value]="auth.email()"
+                [readOnly]="auth.pending()"
+                (input)="auth.setEmail($event)"
+                (blur)="auth.checkEmail()"
+                class="h-11 w-full rounded-[14px] border bg-white pr-10 pl-11 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+                [class]="
+                  auth.emailInvalid()
+                    ? 'border-[var(--client-error)] focus:border-[var(--client-error)] focus:ring-[var(--client-error)]/15'
+                    : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'
+                "
+              />
+              @if (auth.email() && !auth.pending()) {
+              <button
+                type="button"
+                aria-label="Effacer l'adresse e-mail"
+                (mousedown)="$event.preventDefault()"
+                (click)="clear()"
+                class="absolute top-1/2 right-2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-full text-[var(--client-subtle)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-text)] focus-visible:outline-2 focus-visible:outline-[var(--client-action)]"
+              >
+                <svg lucideX size="16" aria-hidden="true"></svg>
+              </button>
+              }
+            </div>
+            <p
+              id="a-email-error"
+              role="alert"
+              class="m-0 flex min-h-5 items-start gap-1.5 text-[13px] text-[var(--client-error)]"
+            >
+              @if (auth.error()) {
+              <svg
+                lucideCircleAlert
+                size="16"
+                aria-hidden="true"
+                class="mt-px shrink-0"
+              ></svg
+              >{{ auth.error() }} }
+            </p>
           </div>
           <button
-            type="button"
-            class="[height:48px] [margin-top:4px] [border:0] [border-radius:16px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] client-btn-p"
-            (click)="auth.requestCode()"
+            type="submit"
+            [disabled]="auth.pending()"
+            [attr.aria-busy]="auth.pending()"
+            class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[15px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
           >
-            Recevoir le code
+            @if (auth.pending()) {
+            <svg
+              lucideLoaderCircle
+              size="18"
+              aria-hidden="true"
+              class="animate-spin motion-reduce:animate-none"
+            ></svg
+            >Envoi du code… } @else { Recevoir le code }
           </button>
         </form>
         <div
-          class="[display:flex] [align-items:center] [gap:16px] [color:var(--client-subtle)] [font-size:12px] [letter-spacing:0.12em]"
+          class="flex items-center gap-4 text-[12px] tracking-[0.12em] text-[var(--client-subtle)]"
         >
-          <span class="[flex:1] [height:1px] [background:#E6ECEA]"></span
-          >OU<span class="[flex:1] [height:1px] [background:#E6ECEA]"></span>
+          <span class="h-px flex-1 bg-[var(--client-line)]"></span>OU<span
+            class="h-px flex-1 bg-[var(--client-line)]"
+          ></span>
         </div>
         <button
           type="button"
-          class="[height:48px] [display:flex] [align-items:center] [justify-content:center] [gap:12px] [border:1px_solid_#DCE5E2] [border-radius:16px] [background:var(--client-surface)] [font:inherit] [font-size:15.5px] [font-weight:500] [color:var(--client-text)] [cursor:pointer] client-gbtn"
-          (click)="ui.signedIn.set(true); ui.authOpen.set(false)"
+          [disabled]="auth.pending()"
+          (click)="auth.signInWithGoogle()"
+          class="inline-flex h-11 w-full items-center justify-center gap-3 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-5 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
         >
           <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
             <path

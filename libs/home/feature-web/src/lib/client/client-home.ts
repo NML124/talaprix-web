@@ -1,4 +1,8 @@
 import { ClientHomeDesktopContent } from './client-home-desktop-content';
+import { ClientHomeDesktopSection1 } from './client-home-desktop-section-1';
+import { ClientHomeDesktopSection6 } from './client-home-desktop-section-6';
+import { ClientLiveHome } from './client-live-home';
+import { SupabaseConfig } from '@talaprix/shared/data-access';
 import { ClientHomeMobileSection1 } from './client-home-mobile-section-1';
 import { ClientHomeMobileSection2 } from './client-home-mobile-section-2';
 import { ClientHomeMobileSection3 } from './client-home-mobile-section-3';
@@ -8,12 +12,15 @@ import { ClientHomeMobileSection6 } from './client-home-mobile-section-6';
 import { ClientHomeMobileSection7 } from './client-home-mobile-section-7';
 import { ClientHomeMobileSection8 } from './client-home-mobile-section-8';
 import { ClientHomeMobileSection9 } from './client-home-mobile-section-9';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 @Component({
   selector: 'lib-client-home',
   imports: [
     ClientHomeDesktopContent,
+    ClientHomeDesktopSection1,
+    ClientHomeDesktopSection6,
+    ClientLiveHome,
     ClientHomeMobileSection1,
     ClientHomeMobileSection2,
     ClientHomeMobileSection3,
@@ -28,4 +35,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientHome {}
+export class ClientHome {
+  readonly configured = inject(SupabaseConfig).isConfigured;
+}

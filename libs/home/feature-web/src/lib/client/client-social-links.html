@@ -1,0 +1,17 @@
+@for (link of links; track link.label) {
+<a
+  [href]="link.href"
+  [attr.aria-label]="link.label"
+  [attr.target]="link.external ? '_blank' : null"
+  [attr.rel]="link.external ? 'noopener noreferrer' : null"
+  class="inline-flex size-10 items-center justify-center rounded-full bg-[var(--client-page)] text-[var(--client-text-secondary)] transition duration-200 hover:-translate-y-0.5 hover:bg-[var(--client-action)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] motion-reduce:transform-none"
+  ><svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    focusable="false"
+    class="size-[18px] shrink-0"
+  >
+    <path [attr.d]="link.path" /></svg
+></a>
+}

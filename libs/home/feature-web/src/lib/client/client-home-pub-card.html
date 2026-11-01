@@ -1,0 +1,62 @@
+<section
+  class="relative h-full min-h-[150px] overflow-hidden rounded-[14px] bg-[var(--client-tile)]"
+  aria-roledescription="carrousel"
+  aria-label="Publicités"
+>
+  @if (current(); as pub) { @for (item of [pub]; track item.id) {
+  <img
+    [src]="item.image"
+    [alt]="item.name"
+    class="absolute inset-0 h-full w-full animate-fade-in object-cover motion-reduce:animate-none"
+  />
+  }
+  <span
+    aria-hidden="true"
+    class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent"
+  ></span>
+  <div
+    class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4"
+  >
+    <div class="min-w-0 text-white">
+      <span
+        class="inline-flex h-5 items-center rounded-full bg-white/20 px-2 text-[10.5px] font-semibold uppercase tracking-[0.12em] backdrop-blur"
+        >Annonce</span
+      >
+      @if (pub.shopName) {
+      <p class="m-0 mt-1.5 truncate text-[13.5px] font-semibold">
+        {{ pub.shopName }}
+      </p>
+      }
+    </div>
+    @if (store.pubs().length > 1) {
+    <div
+      class="flex shrink-0 gap-1.5"
+      role="group"
+      aria-label="Choisir une publicité"
+    >
+      @for (item of store.pubs(); track item.id; let i = $index) {
+      <button
+        type="button"
+        class="h-1.5 rounded-full transition-all duration-300"
+        [class]="i === index() % store.pubs().length ? 'w-5 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/80'"
+        [attr.aria-label]="'Publicité ' + (i + 1)"
+        [attr.aria-current]="i === index() % store.pubs().length ? 'true' : null"
+        (click)="index.set(i)"
+      ></button>
+      }
+    </div>
+    }
+  </div>
+  } @else if (store.status() === 'loading' || store.status() === 'idle') {
+  <div class="h-full w-full animate-pulse bg-[var(--client-line)]"></div>
+  } @else {
+  <div class="flex h-full flex-col justify-center gap-1 p-5">
+    <p class="m-0 text-[15px] font-semibold text-[var(--client-text)]">
+      Votre annonce ici
+    </p>
+    <p class="m-0 text-[13px] text-[var(--client-muted)]">
+      Mettez votre boutique en avant auprès des acheteurs de Kinshasa.
+    </p>
+  </div>
+  }
+</section>

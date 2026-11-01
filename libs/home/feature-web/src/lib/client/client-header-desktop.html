@@ -1,9 +1,9 @@
 <div class="[width:100%] [color:var(--client-text)]">
   <div
-    class="[background:var(--client-surface)] [border-bottom:1px_solid_var(--client-line)] client-util-row"
+    class="[background:#FFFFFF] [border-bottom:1px_solid_var(--client-line)] client-util-row"
   >
     <div
-      class="[max-width:1320px] [margin:0_auto] [padding:0_24px] [box-sizing:border-box] [height:34px] [display:flex] [align-items:center] [gap:20px] [font-size:12.5px] [color:var(--client-text-tertiary)]"
+      class="[max-width:1320px] [margin:0_auto] [padding:0_24px] [box-sizing:border-box] [height:26px] [display:flex] [align-items:center] [gap:20px] [font-size:12.5px] [color:var(--client-text-tertiary)]"
     >
       <span class="[display:flex] [align-items:center] [gap:6px]"
         ><span
@@ -28,7 +28,7 @@
           >Télécharger l'application</a
         >
         <a
-          href="#"
+          href="/commercants#faq"
           class="[color:var(--client-text-tertiary)] [text-decoration:none] client-util"
           >Aide</a
         >
@@ -37,16 +37,16 @@
         <div
           role="group"
           aria-label="Devise"
-          class="[display:flex] [gap:2px] [padding:2px] [background:var(--client-page)] [border-radius:7px]"
+          class="[display:flex] [gap:2px] [padding:2px] [border:1px_solid_#C5D8D2] [background:#E9F2EF] [border-radius:999px]"
         >
           <button
             type="button"
             aria-pressed="true"
             (click)="ui.currency.set('USD')"
             [attr.aria-pressed]="ui.currency() === 'USD'"
-            [style.background-color]="ui.currency() === 'USD' ? '#FFFFFF' : 'transparent'"
-            [style.color]="ui.currency() === 'USD' ? '#007A6C' : 'inherit'"
-            class="[height:22px] [padding:0_8px] [border:0] [border-radius:5px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:var(--client-surface)] [color:var(--client-text)]"
+            [style.background-color]="ui.currency() === 'USD' ? '#006B5E' : 'transparent'"
+            [style.color]="ui.currency() === 'USD' ? '#FFFFFF' : '#355A51'"
+            class="[height:20px] [padding:0_8px] [border:0] [border-radius:999px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:var(--client-surface)] [color:var(--client-text)]"
           >
             USD
           </button>
@@ -55,9 +55,9 @@
             aria-pressed="false"
             (click)="ui.currency.set('CDF')"
             [attr.aria-pressed]="ui.currency() === 'CDF'"
-            [style.background-color]="ui.currency() === 'CDF' ? '#FFFFFF' : 'transparent'"
-            [style.color]="ui.currency() === 'CDF' ? '#007A6C' : 'inherit'"
-            class="[height:22px] [padding:0_8px] [border:0] [border-radius:5px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-muted)]"
+            [style.background-color]="ui.currency() === 'CDF' ? '#006B5E' : 'transparent'"
+            [style.color]="ui.currency() === 'CDF' ? '#FFFFFF' : '#355A51'"
+            class="[height:20px] [padding:0_8px] [border:0] [border-radius:999px] [font:inherit] [font-size:11.5px] [font-weight:600] [cursor:pointer] [background:transparent] [color:var(--client-muted)]"
           >
             CDF
           </button>

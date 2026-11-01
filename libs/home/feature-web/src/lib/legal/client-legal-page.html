@@ -1,0 +1,187 @@
+<main class="mx-auto max-w-[1180px] px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
+  <header class="max-w-3xl">
+    <p
+      class="m-0 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--client-action)]"
+    >
+      {{ doc().slug === 'aide' ? 'Assistance' : 'Informations légales' }}
+    </p>
+    <h1
+      class="m-0 mt-2 text-[30px] font-semibold leading-tight tracking-tight text-[var(--client-text)] sm:text-[42px]"
+    >
+      {{ doc().title }}
+    </h1>
+    @if (doc().intro) {
+    <p
+      class="m-0 mt-4 text-[15.5px] leading-relaxed text-[var(--client-text-tertiary)]"
+    >
+      {{ doc().intro }}
+    </p>
+    }
+    <p
+      class="m-0 mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--client-surface)] px-3 py-1.5 text-[13px] text-[var(--client-muted)]"
+    >
+      <span class="size-1.5 rounded-full bg-[var(--client-action)]"></span>
+      {{ doc().updated }}
+    </p>
+  </header>
+
+  <div
+    class="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-8"
+  >
+    @if (articles().length > 2) {
+    <nav
+      aria-label="Sommaire"
+      class="self-start rounded-3xl bg-[var(--client-surface)] p-4 lg:sticky lg:top-[156px] lg:max-h-[calc(100vh-180px)] lg:overflow-y-auto"
+    >
+      <p
+        class="m-0 mb-2 px-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
+      >
+        Sommaire
+      </p>
+      <ol class="m-0 flex list-none flex-col gap-0.5 p-0">
+        @for (section of articles(); track section.title; let i = $index) {
+        <li>
+          <a
+            [href]="'#' + anchor(i)"
+            (click)="scrollTo($event, anchor(i))"
+            class="flex gap-2 rounded-xl px-2 py-1.5 text-[13.5px] leading-snug text-[var(--client-text-secondary)] no-underline transition hover:bg-[var(--client-tile)] hover:text-[var(--client-action)]"
+          >
+            @if (heading(section.title).number; as number) {
+            <span class="w-5 shrink-0 tabular-nums text-[var(--client-subtle)]"
+              >{{ number }}</span
+            >
+            }
+            <span>{{ heading(section.title).label }}</span>
+          </a>
+        </li>
+        }
+      </ol>
+    </nav>
+    }
+
+    <div
+      class="flex min-w-0 flex-col gap-4"
+      [class]="articles().length <= 2 ? 'lg:col-span-2' : ''"
+    >
+      <article
+        class="rounded-3xl bg-[var(--client-surface)] px-5 py-2 sm:px-8 sm:py-4"
+      >
+        @for (section of articles(); track section.title; let i = $index) {
+        <section
+          [id]="anchor(i)"
+          class="scroll-mt-40 border-b border-[var(--client-divider)] py-6 last:border-b-0"
+        >
+          <h2
+            class="m-0 flex items-baseline gap-3 text-lg font-semibold tracking-tight sm:text-xl"
+          >
+            @if (heading(section.title).number; as number) {
+            <span
+              class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--client-mint)] text-[13px] font-semibold text-[var(--client-action)]"
+              >{{ number }}</span
+            >
+            } {{ heading(section.title).label }}
+          </h2>
+          @for (paragraph of section.paragraphs; track $index) {
+          <p
+            class="m-0 mt-3 text-[15px] leading-[1.75] text-[var(--client-text-secondary)]"
+          >
+            {{ paragraph }}
+          </p>
+          } @if (section.bullets?.length) {
+          <ul class="m-0 mt-3 flex flex-col gap-2 pl-0">
+            @for (bullet of section.bullets; track $index) {
+            <li
+              class="flex gap-3 text-[15px] leading-[1.7] text-[var(--client-text-secondary)]"
+            >
+              <span
+                class="mt-[0.7em] size-1.5 shrink-0 rounded-full bg-[var(--client-action)]"
+              ></span>
+              <span>{{ bullet }}</span>
+            </li>
+            }
+          </ul>
+          }
+        </section>
+        }
+      </article>
+
+      @if (questions().length) {
+      <section
+        aria-labelledby="faq-title"
+        class="rounded-3xl bg-[var(--client-surface)] p-5 sm:p-8"
+      >
+        <h2
+          id="faq-title"
+          class="m-0 mb-3 text-xl font-semibold tracking-tight"
+        >
+          Questions fréquentes
+        </h2>
+        @for (question of questions(); track question.title) {
+        <details
+          class="group border-b border-[var(--client-divider)] last:border-b-0"
+        >
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-[15px] font-semibold text-[var(--client-text)] [&::-webkit-details-marker]:hidden"
+          >
+            {{ heading(question.title).label }}
+            <svg
+              class="shrink-0 transition-transform duration-200 group-open:rotate-45"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <div class="pb-4">
+            @for (paragraph of question.paragraphs; track $index) {
+            <p
+              class="m-0 mt-1 text-[14.5px] leading-[1.7] text-[var(--client-text-secondary)]"
+            >
+              {{ paragraph }}
+            </p>
+            }
+          </div>
+        </details>
+        }
+      </section>
+      }
+
+      <section
+        class="grid gap-4 rounded-3xl bg-[var(--client-dark)] p-6 text-white sm:grid-cols-[1fr_auto] sm:items-center sm:p-8"
+      >
+        <div>
+          <h2 class="m-0 text-lg font-semibold">
+            Une question sur ce document ?
+          </h2>
+          <p class="m-0 mt-1.5 text-sm text-white/75">
+            Le support répond du lundi au samedi, de 8h00 à 16h30 (heure de
+            Kinshasa) : support&#64;talaprix.com
+          </p>
+        </div>
+        <a
+          href="https://wa.me/243980000147"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-white px-5 text-[14.5px] font-semibold text-[var(--client-dark)] no-underline transition duration-150 hover:bg-[var(--client-mint)] active:scale-[0.98]"
+          >Écrire sur WhatsApp</a
+        >
+      </section>
+
+      <nav aria-label="Autres documents" class="flex flex-wrap gap-2">
+        @for (other of others(); track other.slug) {
+        <a
+          [routerLink]="['/', other.slug]"
+          class="inline-flex h-9 items-center rounded-full bg-[var(--client-surface)] px-4 text-[13.5px] font-medium text-[var(--client-text-secondary)] no-underline transition hover:bg-[var(--client-mint)] hover:text-[var(--client-action)]"
+          >{{ other.shortTitle }}</a
+        >
+        }
+      </nav>
+    </div>
+  </div>
+</main>
