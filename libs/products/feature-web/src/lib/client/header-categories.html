@@ -1,0 +1,93 @@
+<button
+  type="button"
+  class="inline-flex h-full shrink-0 items-center gap-2 border-r border-[var(--client-line)] px-4 text-[13px] font-medium text-[var(--client-text)] transition hover:bg-[var(--client-tile)]"
+  aria-haspopup="true"
+  aria-controls="header-categories-panel"
+  [attr.aria-expanded]="open()"
+  (click)="toggle()"
+>
+  Catégories
+  <svg
+    class="transition-transform duration-200"
+    [class.rotate-180]="open()"
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+</button>
+@if (open()) {
+<div
+  id="header-categories-panel"
+  class="absolute inset-x-0 top-[calc(100%+8px)] z-[76] animate-fade-up rounded-3xl border border-[var(--client-line)] bg-white p-4 text-[var(--client-text)] shadow-[0_18px_44px_-18px_rgba(13,36,32,0.28)] motion-reduce:animate-none"
+>
+  <div class="mb-3 flex items-center justify-between gap-3 px-1">
+    <p
+      class="m-0 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
+    >
+      Parcourir par catégorie
+    </p>
+    <a
+      routerLink="/categories"
+      class="inline-flex h-8 items-center gap-1 rounded-full px-3 text-[13px] font-semibold text-[var(--client-action)] no-underline transition hover:bg-[var(--client-mint)]"
+      (click)="open.set(false)"
+      >Voir toutes les catégories<svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m9 6 6 6-6 6" /></svg
+    ></a>
+  </div>
+  @if (status() === 'loading' || status() === 'idle') {
+  <div class="grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4" aria-hidden="true">
+    @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track item) {
+    <div class="h-14 animate-pulse rounded-2xl bg-[var(--client-tile)]"></div>
+    }
+  </div>
+  } @else {
+  <ul class="m-0 grid list-none grid-cols-2 gap-1.5 p-0 lg:grid-cols-3 xl:grid-cols-4">
+    @for (category of categories(); track category.id) {
+    <li class="min-w-0">
+      <a
+        routerLink="/resultats"
+        [queryParams]="{ category_id: category.id }"
+        class="group flex items-center gap-2.5 rounded-2xl p-1.5 pr-2 text-[13px] font-medium text-[var(--client-text-secondary)] no-underline transition hover:bg-[var(--client-tile)] hover:text-[var(--client-action)]"
+        (click)="open.set(false)"
+      >
+        <span
+          class="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[var(--client-tile)]"
+        >
+          @if (category.image) {
+          <img
+            [src]="category.image"
+            alt=""
+            loading="lazy"
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+          } @else {
+          <span class="text-sm font-semibold text-[var(--client-action)]">{{
+            category.name.charAt(0)
+          }}</span>
+          }
+        </span>
+        <span class="line-clamp-2 leading-tight">{{ category.name }}</span>
+      </a>
+    </li>
+    }
+  </ul>
+  }
+</div>
+}

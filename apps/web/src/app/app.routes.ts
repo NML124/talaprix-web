@@ -1,4 +1,8 @@
 import { Route } from '@angular/router';
+import { runtimeConfig } from '../environments/runtime-config.generated';
+const live = Boolean(
+  runtimeConfig.supabaseUrl && runtimeConfig.supabaseAnonKey,
+);
 export const appRoutes: Route[] = [
   {
     path: '',
@@ -8,18 +12,23 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
+        title: 'TalaPrix : comparez les prix des boutiques de Kinshasa',
         loadComponent: () =>
           import('@talaprix/home/feature-web').then((m) => m.ClientHome),
       },
       {
         path: 'resultats',
+        title: 'Tous les produits et leurs prix | TalaPrix',
         loadComponent: () =>
           import('@talaprix/products/feature-web').then((m) => m.ClientResults),
       },
       {
         path: 'recherche',
+        title: 'Rechercher un produit | TalaPrix',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then((m) => m.ClientSearch),
+          import('@talaprix/products/feature-web').then((m) =>
+            live ? m.ClientLiveSearch : m.ClientSearch,
+          ),
       },
       {
         path: 'produit/:slug',
@@ -28,20 +37,27 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'compte',
+        title: 'Mon compte | TalaPrix',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then((m) => m.ClientAccount),
+          import('@talaprix/products/feature-web').then((m) =>
+            live ? m.ClientLiveAccount : m.ClientAccount,
+          ),
       },
       {
         path: 'categories',
+        title: 'Toutes les catégories | TalaPrix',
         loadComponent: () =>
-          import('@talaprix/products/feature-web').then(
-            (m) => m.ClientCategories,
+          import('@talaprix/products/feature-web').then((m) =>
+            live ? m.ClientLiveCategories : m.ClientCategories,
           ),
       },
       {
         path: 'boutiques',
+        title: 'Boutiques à Kinshasa | TalaPrix',
         loadComponent: () =>
-          import('@talaprix/shops/feature-web').then((m) => m.ClientShopPage),
+          import('@talaprix/shops/feature-web').then((m) =>
+            live ? m.ClientLiveShops : m.ClientShopPage,
+          ),
       },
       {
         path: 'boutiques/sans-position',
@@ -50,14 +66,33 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'commercants',
+        title: 'Inscrire ma boutique sur TalaPrix',
         loadComponent: () =>
           import('@talaprix/shops/feature-web').then((m) => m.ClientMerchants),
       },
       {
         path: 'panier',
+        title: 'Mon panier | TalaPrix',
         loadComponent: () =>
-          import('@talaprix/cart/feature-web').then((m) => m.ClientCart),
+          import('@talaprix/cart/feature-web').then((m) =>
+            live ? m.ClientLiveCart : m.ClientCart,
+          ),
       },
+      ...[
+        'conditions-utilisation',
+        'conditions-consommateur',
+        'politique-utilisation',
+        'confidentialite',
+        'suppression-donnees',
+        'aide',
+      ].map(
+        (legal): Route => ({
+          path: legal,
+          data: { legal },
+          loadComponent: () =>
+            import('@talaprix/home/feature-web').then((m) => m.ClientLegalPage),
+        }),
+      ),
       { path: 'products', redirectTo: 'resultats', pathMatch: 'full' },
       { path: 'products/:id', redirectTo: 'produit/:id', pathMatch: 'full' },
       { path: 'favorites', redirectTo: 'compte', pathMatch: 'full' },

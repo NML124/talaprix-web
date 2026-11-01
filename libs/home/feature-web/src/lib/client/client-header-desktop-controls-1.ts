@@ -1,5 +1,4 @@
-import { SelectCard } from '@talaprix/shared/ui-kit';
-import { ClientSearchSuggestions } from './client-search-suggestions';
+import { NgComponentOutlet } from '@angular/common';
 import { ShopAvatar } from '@talaprix/shared/ui-kit';
 import { SvgVisual } from '@talaprix/shared/ui-kit';
 import {
@@ -7,19 +6,18 @@ import {
   Component,
   ElementRef,
   inject,
+  signal,
+  type Type,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PreviewPreferences } from '@talaprix/shared/data-access';
+import {
+  HEADER_SEARCH,
+  PreviewPreferences,
+} from '@talaprix/shared/data-access';
 
 @Component({
   selector: 'lib-client-header-desktop-controls-1',
-  imports: [
-    SelectCard,
-    ClientSearchSuggestions,
-    RouterLink,
-    SvgVisual,
-    ShopAvatar,
-  ],
+  imports: [NgComponentOutlet, RouterLink, SvgVisual, ShopAvatar],
   templateUrl: './client-header-desktop-controls-1.html',
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,13 +25,11 @@ import { PreviewPreferences } from '@talaprix/shared/data-access';
 export class ClientHeaderDesktopControls1 {
   readonly ui = inject(PreviewPreferences);
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
-  focusSuggestion(event: Event): void {
-    event.preventDefault();
-    this.ui.searchOpen.set(true);
-    setTimeout(() =>
-      this.element.nativeElement
-        .querySelector<HTMLElement>('[role="option"]')
-        ?.focus(),
-    );
+  /** Live search bar provided by the app (see `provideHeaderSearch`). */
+  readonly headerSearch = signal<Type<unknown> | null>(null);
+
+  constructor() {
+    const load = inject(HEADER_SEARCH, { optional: true });
+    void load?.().then((component) => this.headerSearch.set(component));
   }
 }

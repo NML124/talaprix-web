@@ -1,3 +1,6 @@
+@if (configured) {
+<tpx-client-live-results />
+} @else {
 <div class="hidden min-[768px]:block">
   <tpx-client-results-desktop-section-1></tpx-client-results-desktop-section-1
   ><tpx-client-results-desktop-content></tpx-client-results-desktop-content>
@@ -17,4 +20,4 @@
 >
   <tpx-client-filters />
 </div>
-}
+} }

@@ -6,10 +6,20 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideAuthDataAccess } from '@talaprix/users/data-access';
-import { provideSupabaseConfig } from '@talaprix/shared/data-access';
+import {
+  AuthSessionStore,
+  provideAuthDataAccess,
+} from '@talaprix/users/data-access';
+import {
+  provideHeaderSearch,
+  provideMapboxConfig,
+  provideSupabaseConfig,
+} from '@talaprix/shared/data-access';
 import { provideHomeDataAccess } from '@talaprix/home/data-access';
-import { provideCartDataAccess } from '@talaprix/cart/data-access';
+import {
+  provideCartDataAccess,
+  provideOfferCart,
+} from '@talaprix/cart/data-access';
 import { provideShopDataAccess } from '@talaprix/shops/data-access';
 import {
   provideCategoriesDataAccess,
@@ -20,7 +30,10 @@ import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
-import { runtimeConfig } from '../environments/runtime-config.generated';
+import {
+  mapboxConfig,
+  runtimeConfig,
+} from '../environments/runtime-config.generated';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,10 +47,18 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideSupabaseConfig(runtimeConfig),
+    provideMapboxConfig(mapboxConfig),
+    provideHeaderSearch(() =>
+      import('@talaprix/products/feature-web').then(
+        (m) => m.ClientHeaderSearch,
+      ),
+    ),
     provideAuthDataAccess(),
+    provideAppInitializer(() => inject(AuthSessionStore).initialize()),
     provideCategoriesDataAccess(),
     provideProductDataAccess(),
     provideCartDataAccess(),
+    provideOfferCart(),
     provideShopDataAccess(),
     provideHomeDataAccess(),
     provideAppInitializer(() => {

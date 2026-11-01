@@ -1,0 +1,123 @@
+@if (store.reference(); as product) {
+<div class="flex flex-wrap items-center gap-2">
+  @if (product.brand) {
+  <span
+    class="inline-flex h-8 items-center rounded-full bg-[var(--client-tile)] px-3 text-[13px] font-semibold text-[var(--client-text-secondary)]"
+    >{{ product.brand }}</span
+  >
+  } @if (product.categoryId && product.categoryName) {
+  <a
+    routerLink="/resultats"
+    [queryParams]="{ category_id: product.categoryId }"
+    class="inline-flex h-8 items-center rounded-full bg-[var(--client-mint)] px-3 text-[13px] font-medium text-[var(--client-action)] no-underline transition hover:bg-[var(--client-action)] hover:text-white"
+    >{{ product.categoryName }}</a
+  >
+  }
+</div>
+<h1
+  class="m-0 mt-3 text-[26px] font-semibold leading-tight tracking-tight text-[var(--client-text)] sm:text-[32px]"
+>
+  {{ product.name }}
+</h1>
+
+<div class="mt-5 rounded-2xl bg-[var(--client-tile)] p-4">
+  @if (store.priceRange(); as range) {
+  <p class="m-0 text-[13px] text-[var(--client-muted)]">
+    {{ range.high ? 'Prix constatés' : 'Prix constaté' }}
+  </p>
+  <p
+    class="m-0 mt-1 text-[28px] font-semibold leading-none tracking-tight tabular-nums text-[var(--client-text)]"
+  >
+    @if (range.high) {
+    <span class="text-base font-medium text-[var(--client-muted)]">de</span>
+    {{ range.low }}
+    <span class="text-base font-medium text-[var(--client-muted)]">à</span>
+    {{ range.high }} } @else { {{ range.low }} }
+  </p>
+  <p
+    class="m-0 mt-2 inline-flex items-center gap-1.5 text-[13px] text-[var(--client-text-secondary)]"
+  >
+    <span class="size-1.5 rounded-full bg-[var(--client-action)]"></span>
+    {{ store.offers().length }} offre{{ store.offers().length > 1 ? 's' : '' }}
+    dans {{ store.shopsCount() }} boutique{{ store.shopsCount() > 1 ? 's' : ''
+    }}
+  </p>
+  } @else {
+  <p class="m-0 text-sm text-[var(--client-muted)]">
+    Aucune boutique ne propose ce produit pour le moment.
+  </p>
+  }
+</div>
+
+<div class="mt-4 flex flex-wrap gap-2">
+  <button
+    type="button"
+    class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98] disabled:opacity-60"
+    [class]="favorite() ? 'text-[#e0245e]' : 'text-[var(--client-text)]'"
+    [attr.aria-pressed]="favorite()"
+    [disabled]="favorites.isPending(product.productId)"
+    (click)="toggleFavorite()"
+  >
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      [attr.fill]="favorite() ? 'currentColor' : 'none'"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 20.5s-7.5-4.4-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.8-7.5 10.2-7.5 10.2Z"
+      />
+    </svg>
+    {{ favorite() ? 'Dans mes favoris' : 'Favori' }}
+  </button>
+  <button
+    type="button"
+    class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98]"
+    (click)="alert.emit()"
+  >
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9a6 6 0 1 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z" />
+      <path d="M10.3 20a1.9 1.9 0 0 0 3.4 0" />
+    </svg>
+    Alerte prix
+  </button>
+  <button
+    type="button"
+    class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98]"
+    (click)="share()"
+  >
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" />
+    </svg>
+    {{ shared() ? 'Lien copié' : 'Partager' }}
+  </button>
+</div>
+@if (favorites.error()) {
+<p role="alert" class="m-0 mt-2 text-[13px] text-[var(--client-error)]">
+  {{ favorites.error() }}
+</p>
+} }

@@ -6,3 +6,4 @@ export * from './lib/client/price-tag';
 export * from './lib/client/shop-avatar';
 
 export * from './lib/client/select-card';
+export * from './lib/client/pagination';

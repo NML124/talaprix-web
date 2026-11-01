@@ -1,9 +1,9 @@
-import { SvgVisual } from '@talaprix/shared/ui-kit';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'tpx-client-merchants-mobile-section-2',
-  imports: [SvgVisual],
+  imports: [RouterLink],
   templateUrl: './client-merchants-mobile-section-2.html',
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,3 +7,4 @@ export * from './lib/client/client-unlocated';
 export * from './lib/client/client-merchants';
 
 export * from './lib/client/client-shop-page';
+export * from './lib/client/client-live-shops';

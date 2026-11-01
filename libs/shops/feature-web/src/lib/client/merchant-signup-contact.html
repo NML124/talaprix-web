@@ -1,0 +1,69 @@
+<div class="flex min-w-0 flex-col gap-1.5 @md:max-w-[26rem]">
+  <label
+    [for]="state.id('wa')"
+    class="text-sm font-medium text-[var(--client-text)]"
+    >Numéro WhatsApp</label
+  >
+  <div
+    class="grid grid-cols-[64px_auto_minmax(0,1fr)] items-center gap-2 [&_.client-select-menu]:min-w-[240px]! [&_.client-select-trigger]:min-h-11! [&_.client-select-trigger]:gap-1! [&_.client-select-trigger]:rounded-[14px]! [&_.client-select-trigger]:px-2! [&_.client-select-trigger]:text-[17px]!"
+  >
+    <tpx-select-card
+      label="Indicatif du pays"
+      searchPlaceholder="Rechercher un pays ou indicatif"
+      emptyLabel="Aucun pays trouvé"
+      [searchable]="true"
+      [displayValue]="shops.phoneFlag()"
+      [options]="shops.phoneCountries"
+      [value]="shops.phoneCountry()"
+      (selectionChange)="shops.phoneCountry.set($event); state.clearError('phone')"
+    />
+    <span class="text-sm font-semibold text-[var(--client-text-secondary)]"
+      >{{ shops.phonePrefix() }}</span
+    >
+    <input
+      [id]="state.id('wa')"
+      data-autofocus
+      name="phone"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel-national"
+      placeholder="Ex. 812 345 678"
+      class="h-11 w-full min-w-0 rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+      [class]="state.fieldClass('phone')"
+      [attr.aria-invalid]="state.errors().phone ? 'true' : null"
+      [attr.aria-describedby]="state.errors().phone ? state.id('wa-err') : null"
+      (input)="state.clearError('phone')"
+    />
+  </div>
+  @if (state.errors().phone) {
+  <p
+    [id]="state.id('wa-err')"
+    class="m-0 text-[13px] text-[var(--client-error)]"
+  >
+    {{ state.errors().phone }}
+  </p>
+  }
+</div>
+<div class="flex flex-col gap-1.5">
+  <label
+    class="flex cursor-pointer items-start gap-2.5 text-sm leading-normal text-[var(--client-text-secondary)]"
+  >
+    <input
+      name="consent"
+      type="checkbox"
+      class="mt-0.5 size-[18px] shrink-0 accent-[var(--client-action)]"
+      [attr.aria-invalid]="state.errors().consent ? 'true' : null"
+      [attr.aria-describedby]="state.errors().consent ? state.id('consent-err') : null"
+      (change)="state.clearError('consent')"
+    />
+    J'accepte que Talaprix me contacte sur WhatsApp au sujet de mon inscription.
+  </label>
+  @if (state.errors().consent) {
+  <p
+    [id]="state.id('consent-err')"
+    class="m-0 text-[13px] text-[var(--client-error)]"
+  >
+    {{ state.errors().consent }}
+  </p>
+  }
+</div>

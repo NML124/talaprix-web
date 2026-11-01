@@ -58,12 +58,12 @@
     aria-modal="true"
     aria-label="Connexion à Talaprix"
     (click)="closeBackdrop($event)"
-    (keydown.enter)="ui.closeOverlays()"
+    (keydown.escape)="ui.closeOverlays()"
   >
     @if (ui.authStep() === 'email') { <lib-client-auth-mobile-email /> } @else {
     <lib-client-auth-mobile-code /> }
   </div>
-  @if (auth.error()) {
+  @if (auth.error() && ui.authStep() !== 'email') {
   <p
     role="alert"
     class="fixed bottom-4 left-1/2 z-[120] -translate-x-1/2 rounded-xl bg-[#FDECEA] px-4 py-2 text-sm text-[var(--client-error)]"

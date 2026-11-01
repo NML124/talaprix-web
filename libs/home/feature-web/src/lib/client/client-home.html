@@ -1,3 +1,24 @@
+@if (configured) {
+<div class="hidden min-[768px]:block">
+  <main class="mx-auto max-w-[1320px] px-6 pt-5">
+    <lib-client-home-desktop-section-1 />
+  </main>
+</div>
+<div class="min-[768px]:hidden">
+  <lib-client-home-mobile-section-2 />
+</div>
+<lib-client-live-home />
+<div class="hidden min-[768px]:block">
+  <main class="mx-auto flex max-w-[1320px] flex-col gap-8 px-6 pb-10">
+    <lib-client-home-desktop-section-6 />
+  </main>
+</div>
+<div class="min-[768px]:hidden">
+  <lib-client-home-mobile-section-6 />
+  <lib-client-home-mobile-section-7 />
+  <lib-client-home-mobile-section-9 />
+</div>
+} @else {
 <div class="hidden min-[768px]:block">
   <lib-client-home-desktop-content></lib-client-home-desktop-content>
 </div>
@@ -12,3 +33,4 @@
   ><lib-client-home-mobile-section-8></lib-client-home-mobile-section-8
   ><lib-client-home-mobile-section-9></lib-client-home-mobile-section-9>
 </div>
+}

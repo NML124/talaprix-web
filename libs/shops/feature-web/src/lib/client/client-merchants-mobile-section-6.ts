@@ -1,15 +1,11 @@
-import { SvgVisual } from '@talaprix/shared/ui-kit';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-
-import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MerchantFaq } from './merchant-faq';
 
 @Component({
   selector: 'tpx-client-merchants-mobile-section-6',
-  imports: [SvgVisual],
+  imports: [MerchantFaq],
   templateUrl: './client-merchants-mobile-section-6.html',
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientMerchantsMobileSection6 {
-  readonly ui = inject(PreviewPreferences);
-}
+export class ClientMerchantsMobileSection6 {}

@@ -1,0 +1,95 @@
+<div
+  class="group relative flex aspect-square items-center justify-center overflow-hidden rounded-3xl bg-[var(--client-tile)] outline-none focus-visible:ring-4 focus-visible:ring-[var(--client-action)]/25"
+  role="group"
+  aria-roledescription="galerie"
+  [attr.aria-label]="'Images de ' + name()"
+  tabindex="0"
+  (keydown.arrowLeft)="step(-1)"
+  (keydown.arrowRight)="step(1)"
+>
+  @if (current(); as image) {
+  <img
+    [src]="image"
+    [alt]="name()"
+    class="h-full w-full animate-fade-in object-contain p-6 mix-blend-multiply motion-reduce:animate-none sm:p-10"
+    fetchpriority="high"
+  />
+  } @else {
+  <span class="text-sm text-[var(--client-muted)]">Image indisponible</span>
+  } @if (images().length > 1) {
+  <button
+    type="button"
+    aria-label="Image précédente"
+    class="absolute left-3 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[var(--client-text)] opacity-0 backdrop-blur transition group-hover:opacity-100 focus-visible:opacity-100"
+    (click)="step(-1)"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m15 6-6 6 6 6" />
+    </svg>
+  </button>
+  <button
+    type="button"
+    aria-label="Image suivante"
+    class="absolute right-3 top-1/2 inline-flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[var(--client-text)] opacity-0 backdrop-blur transition group-hover:opacity-100 focus-visible:opacity-100"
+    (click)="step(1)"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  </button>
+  <span
+    class="absolute bottom-3 right-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium tabular-nums text-[var(--client-text-secondary)] backdrop-blur"
+    >{{ index() + 1 }} / {{ images().length }}</span
+  >
+  }
+</div>
+@if (images().length > 1) {
+<ul
+  class="m-0 mt-3 flex list-none snap-x gap-2 overflow-x-auto p-0 pb-1"
+  aria-label="Images du produit"
+>
+  @for (image of images(); track image; let i = $index) {
+  <li class="snap-start">
+    <button
+      type="button"
+      class="flex size-16 items-center justify-center overflow-hidden rounded-2xl border-2 bg-[var(--client-tile)] transition"
+      [class]="
+        i === index()
+          ? 'border-[var(--client-action)]'
+          : 'border-transparent hover:border-[var(--client-line)]'
+      "
+      [attr.aria-label]="'Afficher l’image ' + (i + 1)"
+      [attr.aria-current]="i === index() ? 'true' : null"
+      (click)="index.set(i)"
+    >
+      <img
+        [src]="image"
+        alt=""
+        loading="lazy"
+        class="h-full w-full object-contain p-1.5 mix-blend-multiply"
+      />
+    </button>
+  </li>
+  }
+</ul>
+}

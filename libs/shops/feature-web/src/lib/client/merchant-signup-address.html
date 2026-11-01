@@ -1,0 +1,170 @@
+<div class="grid gap-5 @md:grid-cols-2">
+  <div class="flex min-w-0 flex-col gap-1.5">
+    <span
+      [id]="state.id('commune-label')"
+      class="text-sm font-medium text-[var(--client-text)]"
+      >Commune</span
+    >
+    <div
+      [id]="state.id('commune')"
+      data-autofocus
+      class="[&_.client-select-trigger]:min-h-11! [&_.client-select-trigger]:rounded-[14px]! [&_.client-select-trigger]:px-4! [&_.client-select-trigger]:text-[15px]!"
+      [class]="state.errors().commune ? '[&_.client-select-trigger]:border-[var(--client-error)]!' : ''"
+    >
+      <tpx-select-card
+        label="Commune"
+        [options]="communes"
+        [value]="shops.merchantCommune() || 'Choisir'"
+        (selectionChange)="selectCommune($event)"
+      />
+    </div>
+    @if (state.errors().commune) {
+    <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+      {{ state.errors().commune }}
+    </p>
+    }
+  </div>
+  <div class="flex min-w-0 flex-col gap-1.5">
+    <label
+      [for]="state.id('district')"
+      class="text-sm font-medium text-[var(--client-text)]"
+      >Quartier</label
+    >
+    <input
+      [id]="state.id('district')"
+      name="district"
+      type="text"
+      placeholder="Ex. Joli Parc"
+      class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+      [class]="state.fieldClass('district')"
+      [attr.aria-invalid]="state.errors().district ? 'true' : null"
+      [attr.aria-describedby]="state.errors().district ? state.id('district-err') : null"
+      (input)="state.clearError('district')"
+    />
+    @if (state.errors().district) {
+    <p
+      [id]="state.id('district-err')"
+      class="m-0 text-[13px] text-[var(--client-error)]"
+    >
+      {{ state.errors().district }}
+    </p>
+    }
+  </div>
+  <div class="flex min-w-0 flex-col gap-1.5 @md:col-span-2">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <label
+        [for]="state.id('address')"
+        class="text-sm font-medium text-[var(--client-text)]"
+        >Adresse de la boutique</label
+      >
+      <button
+        type="button"
+        class="inline-flex h-8 items-center gap-1.5 rounded-full bg-[var(--client-mint)] px-3 text-[13px] font-semibold text-[var(--client-action)] transition hover:bg-[var(--client-action)] hover:text-white disabled:opacity-60"
+        [disabled]="locating() === 'locating'"
+        (click)="locate()"
+      >
+        @if (locating() === 'locating') {
+        <span
+          aria-hidden="true"
+          class="size-3.5 animate-spin rounded-full border-2 border-current/30 border-t-current"
+        ></span>
+        Localisation… } @else {
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="3.5" />
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+          <circle cx="12" cy="12" r="7.5" />
+        </svg>
+        {{ shops.merchantPosition() ? 'Position enregistrée' : 'Utiliser ma
+        position' }} }
+      </button>
+    </div>
+    @if (locateMessage()) {
+    <p
+      role="status"
+      class="m-0 text-[13px]"
+      [class]="locating() === 'denied' ? 'text-[var(--client-error)]' : 'text-[var(--client-action)]'"
+    >
+      {{ locateMessage() }}
+    </p>
+    }
+    <input
+      #addressInput
+      [id]="state.id('address')"
+      name="address"
+      type="text"
+      autocomplete="street-address"
+      placeholder="Avenue, numéro, commune, ville"
+      class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+      [class]="state.fieldClass('address')"
+      [attr.aria-invalid]="state.errors().address ? 'true' : null"
+      [attr.aria-describedby]="state.errors().address ? state.id('address-err') : state.id('address-hint')"
+      (input)="state.clearError('address')"
+    />
+    @if (state.errors().address) {
+    <p
+      [id]="state.id('address-err')"
+      class="m-0 text-[13px] text-[var(--client-error)]"
+    >
+      {{ state.errors().address }}
+    </p>
+    } @else {
+    <p
+      [id]="state.id('address-hint')"
+      class="m-0 text-xs text-[var(--client-muted)]"
+    >
+      Indiquez l'adresse où les clients peuvent réellement vous trouver.
+    </p>
+    }
+  </div>
+  <div class="flex min-w-0 flex-col gap-1.5">
+    <label
+      [for]="state.id('street')"
+      class="text-sm font-medium text-[var(--client-text)]"
+      >Avenue ou rue</label
+    >
+    <input
+      [id]="state.id('street')"
+      name="street"
+      type="text"
+      placeholder="Ex. Avenue de la Paix"
+      class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+      [class]="state.fieldClass('street')"
+      [attr.aria-invalid]="state.errors().street ? 'true' : null"
+      [attr.aria-describedby]="state.errors().street ? state.id('street-err') : null"
+      (input)="state.clearError('street')"
+    />
+    @if (state.errors().street) {
+    <p
+      [id]="state.id('street-err')"
+      class="m-0 text-[13px] text-[var(--client-error)]"
+    >
+      {{ state.errors().street }}
+    </p>
+    }
+  </div>
+  <div class="flex min-w-0 flex-col gap-1.5">
+    <label
+      [for]="state.id('number')"
+      class="text-sm font-medium text-[var(--client-text)]"
+    >
+      Numéro
+      <span class="font-normal text-[var(--client-muted)]">(facultatif)</span>
+    </label>
+    <input
+      [id]="state.id('number')"
+      name="number"
+      type="text"
+      placeholder="Ex. 12"
+      class="h-11 w-full rounded-[14px] border border-[var(--client-border)] bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:ring-4 focus:ring-[var(--client-action)]/15"
+    />
+  </div>
+</div>

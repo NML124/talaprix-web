@@ -2,11 +2,15 @@ import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { PUBLIC_DESIGN_DATA } from '@talaprix/shared/models';
+import { SupabaseClientService } from './supabase-client';
+import { SupabaseConfig } from './supabase-config';
 
 /** Local presentation state only. Never creates a Supabase session or sends a request. */
 @Service()
 export class PreviewPreferences {
   readonly router = inject(Router);
+  readonly #supabase = inject(SupabaseClientService);
+  readonly #configured = inject(SupabaseConfig).isConfigured;
   readonly currency = signal<'USD' | 'CDF'>('USD');
   readonly rate = PUBLIC_DESIGN_DATA.exchangeRate.usdToCdf;
   readonly query = signal('');
@@ -16,9 +20,11 @@ export class PreviewPreferences {
   readonly authStep = signal<'email' | 'code'>('email');
   readonly signedIn = signal(false);
   readonly cartNames = signal<readonly string[]>(
-    PUBLIC_DESIGN_DATA.cart.initial.flatMap((g) =>
-      g.items.map((i) => String(i[0])),
-    ),
+    this.#configured
+      ? []
+      : PUBLIC_DESIGN_DATA.cart.initial.flatMap((g) =>
+          g.items.map((i) => String(i[0])),
+        ),
   );
   readonly cartCount = computed(() => this.cartNames().length);
   readonly addToCart = new Subject<{
@@ -35,7 +41,7 @@ export class PreviewPreferences {
       const query = parsed.queryParams['q'];
       if (typeof query === 'string') this.query.set(query);
       else if (event.urlAfterRedirects.startsWith('/resultats'))
-        this.query.set('hp');
+        this.query.set(this.#configured ? '' : 'hp');
       this.searchOpen.set(false);
       this.menuOpen.set(false);
     });
@@ -69,7 +75,9 @@ export class PreviewPreferences {
     this.searchOpen.set(false);
     this.menuOpen.set(false);
     void this.router.navigate(['/resultats'], {
-      queryParams: { q: this.query().trim() || 'hp' },
+      queryParams: {
+        q: this.query().trim() || (this.#configured ? null : 'hp'),
+      },
     });
   }
   authenticate(): void {
@@ -82,7 +90,8 @@ export class PreviewPreferences {
     this.menuOpen.set(false);
     this.searchOpen.set(false);
   }
-  signOut(): void {
+  async signOut(): Promise<void> {
+    await this.#supabase.client?.auth.signOut();
     this.signedIn.set(false);
     this.accountTab.set('favorites');
     void this.router.navigate(['/']);

@@ -1,0 +1,175 @@
+<div
+  class="mx-auto flex max-w-[1320px] flex-col gap-5 px-3 py-5 min-[768px]:gap-8 min-[768px]:px-6"
+>
+  @if (status() === 'loading') {
+  <p role="status" class="rounded-xl bg-white p-10 text-center text-sm">
+    Chargement du catalogue…
+  </p>
+  } @else if (status() === 'error') {
+  <div
+    role="alert"
+    class="rounded-xl border border-red-200 bg-white p-6 text-sm"
+  >
+    {{ error() }}
+    <button
+      type="button"
+      (click)="load()"
+      class="ml-2 font-semibold text-[var(--client-action)] underline"
+    >
+      Réessayer
+    </button>
+  </div>
+  } @else {
+  <section
+    class="rounded-xl bg-white p-4 min-[768px]:p-6"
+    aria-labelledby="live-products-title"
+  >
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h2
+        id="live-products-title"
+        class="m-0 text-xl font-semibold min-[768px]:text-2xl"
+      >
+        Produits disponibles
+      </h2>
+      <a
+        routerLink="/resultats"
+        class="whitespace-nowrap text-sm font-semibold text-[var(--client-action)] no-underline"
+        >Tout voir ›</a
+      >
+    </div>
+    <div
+      class="grid grid-cols-2 gap-3 min-[640px]:grid-cols-3 min-[960px]:grid-cols-4 min-[1200px]:grid-cols-6"
+    >
+      @for (item of products(); track item.id) {
+      <a
+        [routerLink]="['/produit', item.id]"
+        class="flex min-w-0 flex-col gap-2 text-[var(--client-text)] no-underline"
+      >
+        <span
+          class="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-[var(--client-tile)]"
+        >
+          @if (item.image) {
+          <img
+            [src]="item.image"
+            [alt]="item.name"
+            loading="lazy"
+            class="h-full w-full object-contain p-3"
+          />
+          } @else {
+          <span class="px-2 text-center text-xs text-[var(--client-muted)]"
+            >Image indisponible</span
+          >
+          }
+        </span>
+        <span class="block truncate text-sm font-medium" [title]="item.name"
+          >{{ item.name }}</span
+        >
+        <span class="text-base font-semibold tabular-nums"
+          >{{ price(item) }}</span
+        >
+        <span class="text-xs text-[var(--client-muted)]"
+          >{{ item.shopsCount }} {{ item.shopsCount === 1 ? 'boutique' :
+          'boutiques' }}</span
+        >
+      </a>
+      }
+    </div>
+  </section>
+
+  <section
+    class="rounded-xl bg-white p-4 min-[768px]:p-6"
+    aria-labelledby="live-categories-title"
+  >
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h2
+        id="live-categories-title"
+        class="m-0 text-xl font-semibold min-[768px]:text-2xl"
+      >
+        Catégories
+      </h2>
+      <a
+        routerLink="/categories"
+        class="text-sm font-semibold text-[var(--client-action)] no-underline"
+        >Tout voir ›</a
+      >
+    </div>
+    <div
+      class="grid grid-cols-2 gap-3 min-[640px]:grid-cols-3 min-[960px]:grid-cols-4 min-[1200px]:grid-cols-6"
+    >
+      @for (category of categories().slice(0, 12); track category.id) {
+      <a
+        routerLink="/resultats"
+        [queryParams]="{ category_id: category.id }"
+        class="flex min-w-0 items-center gap-3 rounded-xl border border-[var(--client-line)] p-3 text-[var(--client-text)] no-underline"
+      >
+        @if (category.image) {
+        <img
+          [src]="category.image"
+          [alt]="''"
+          loading="lazy"
+          class="size-12 shrink-0 rounded-lg object-contain"
+        />
+        }
+        <span
+          class="min-w-0 flex-1 truncate text-sm font-medium"
+          [title]="category.name"
+          >{{ category.name }}</span
+        >
+        <span aria-hidden="true" class="text-[var(--client-action)]">›</span>
+      </a>
+      }
+    </div>
+  </section>
+
+  <section
+    class="rounded-xl bg-white p-4 min-[768px]:p-6"
+    aria-labelledby="live-shops-title"
+  >
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h2
+        id="live-shops-title"
+        class="m-0 text-xl font-semibold min-[768px]:text-2xl"
+      >
+        Boutiques
+      </h2>
+      <a
+        routerLink="/boutiques"
+        class="text-sm font-semibold text-[var(--client-action)] no-underline"
+        >Tout voir ›</a
+      >
+    </div>
+    <div
+      class="grid grid-cols-2 gap-3 min-[640px]:grid-cols-3 min-[960px]:grid-cols-6"
+    >
+      @for (shop of shops(); track shop.id) {
+      <a
+        routerLink="/boutiques"
+        class="flex min-w-0 flex-col gap-2 rounded-xl border border-[var(--client-line)] p-3 text-[var(--client-text)] no-underline"
+      >
+        @if (shop.image) {
+        <img
+          [src]="shop.image"
+          [alt]="'Logo de ' + shop.name"
+          loading="lazy"
+          class="h-14 w-14 rounded-lg object-contain"
+        />
+        } @else {
+        <span
+          class="flex size-14 items-center justify-center rounded-lg bg-[var(--client-tile)] text-xs"
+          >Boutique</span
+        >
+        }
+        <span class="block truncate text-sm font-semibold" [title]="shop.name"
+          >{{ shop.name }}</span
+        >
+        @if (shop.address) {
+        <span class="line-clamp-2 text-xs text-[var(--client-muted)]"
+          >{{ shop.address }}</span
+        >
+        }
+      </a>
+      }
+    </div>
+  </section>
+  }
+</div>

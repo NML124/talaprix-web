@@ -123,7 +123,7 @@ export class AdminShell {
         { label: 'Produits', path: '/admin/catalogue' },
         { label: 'Offres', path: '/admin/offres' },
         { label: 'Catégories', path: '/admin/categories' },
-        { label: 'Boutiques', path: '/admin/boutiques', count: 4 },
+        { label: 'Boutiques', path: '/admin/boutiques' },
       ],
     },
     {

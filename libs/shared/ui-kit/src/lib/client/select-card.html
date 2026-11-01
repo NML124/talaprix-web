@@ -7,8 +7,16 @@
   [attr.aria-expanded]="open()"
   (click)="toggle()"
 >
-  <span class="min-w-0 truncate">{{ caption() }}</span
-  ><svg
+  @if (currentImage(); as image) {
+  <img
+    [src]="image"
+    alt=""
+    class="h-4 w-[22px] shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
+  />
+  } @if (caption()) {
+  <span class="min-w-0 truncate">{{ caption() }}</span>
+  }
+  <svg
     class="size-4 shrink-0 transition-transform"
     [class.rotate-180]="open()"
     viewBox="0 0 24 24"
@@ -21,26 +29,65 @@
   </svg>
 </button>
 @if(open()) {
-<div class="client-select-menu" role="listbox" [attr.aria-label]="label()">
-  @for(option of options();track option.value;let index=$index){<button
-    type="button"
-    role="option"
-    [attr.aria-selected]="current()===option.value"
-    class="client-select-option"
-    (focus)="active.set(index)"
-    (click)="choose(option.value)"
-  >
-    <span class="min-w-0 flex-1 truncate">{{option.label}}</span
-    >@if(current()===option.value){<svg
-      class="size-4 shrink-0 text-[#007A6C]"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
+<div class="client-select-menu">
+  @if (searchable()) {
+  <div class="sticky top-0 z-[1] -mx-1.5 -mt-1.5 mb-1 bg-white p-1.5">
+    <span
       aria-hidden="true"
+      class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--client-subtle)]"
+      ><svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" /></svg
+    ></span>
+    <input
+      type="search"
+      class="h-10 w-full rounded-xl border border-[var(--client-line)] bg-[var(--client-tile)] pl-9 pr-3 text-[13.5px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:bg-white focus:ring-4 focus:ring-[var(--client-action)]/15 [&::-webkit-search-cancel-button]:appearance-none"
+      [attr.aria-label]="'Rechercher ' + label()"
+      [placeholder]="searchPlaceholder()"
+      [value]="query()"
+      (input)="search($event)"
+    />
+  </div>
+  }
+  <div role="listbox" [attr.aria-label]="label()">
+    @if (filteredOptions().length === 0) {
+    <p class="px-3 py-2 text-sm text-[var(--client-muted)]">
+      {{ emptyLabel() }}
+    </p>
+    } @for(option of filteredOptions();track option.value;let
+    index=$index){<button
+      type="button"
+      role="option"
+      [attr.aria-selected]="current()===option.value"
+      class="client-select-option"
+      (focus)="active.set(index)"
+      (click)="choose(option.value)"
     >
-      <path d="m5 12 4 4L19 6" /></svg
-    >}</button
-  >}
+      @if (option.image) {<img
+        [src]="option.image"
+        alt=""
+        loading="lazy"
+        class="h-4 w-[22px] shrink-0 rounded-[3px] object-cover ring-1 ring-black/10"
+      />}<span class="min-w-0 flex-1 truncate">{{option.label}}</span
+      >@if(current()===option.value){<svg
+        class="size-4 shrink-0 text-[#007A6C]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="m5 12 4 4L19 6" /></svg
+      >}</button
+    >}
+  </div>
 </div>
 }

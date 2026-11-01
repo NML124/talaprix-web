@@ -9,7 +9,10 @@ import {
   signal,
   type EnvironmentProviders,
 } from '@angular/core';
-import { SupabaseClientService } from '@talaprix/shared/data-access';
+import {
+  SupabaseClientService,
+  SupabaseConfig,
+} from '@talaprix/shared/data-access';
 import type { UserIdentity } from '@talaprix/users/domain';
 import type { User } from '@supabase/supabase-js';
 
@@ -21,7 +24,8 @@ export type AuthSessionState =
 export class AuthSessionStore {
   readonly #supabase = inject(SupabaseClientService);
   readonly #isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  readonly #demoPersistenceEnabled = isDevMode() && this.#isBrowser;
+  readonly #demoPersistenceEnabled =
+    isDevMode() && this.#isBrowser && !inject(SupabaseConfig).isConfigured;
   readonly #demoStorageKey = 'talaprix.private-demo-session.v1';
   readonly #state = signal<AuthSessionState>({
     status: 'anonymous',

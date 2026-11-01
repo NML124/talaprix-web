@@ -1,0 +1,79 @@
+<tp-admin-page-header
+  [title]="titles[resource()]"
+  subtitle="Données du catalogue TalaPrix"
+>
+  <span class="text-sm text-[var(--text-2)]">{{ total() }} entrées</span>
+</tp-admin-page-header>
+<section class="card">
+  <form
+    class="flex flex-wrap items-center gap-3"
+    (submit)="$event.preventDefault(); search()"
+  >
+    <label class="sr-only" for="admin-live-search">Rechercher</label>
+    <input
+      id="admin-live-search"
+      class="input min-w-56 flex-1"
+      name="q"
+      [value]="searchValue"
+      (input)="searchValue = $any($event.target).value"
+      placeholder="Rechercher par nom"
+    />
+    <button class="btn btn-primary" type="submit">Rechercher</button>
+  </form>
+  @if (status() === 'loading') {
+  <p class="muted mt-5" role="status">Chargement des données…</p>
+  } @else if (status() === 'error') {
+  <div class="mt-5" role="alert">
+    <p>{{ error() }}</p>
+    <button class="btn btn-secondary mt-3" type="button" (click)="load()">
+      Réessayer
+    </button>
+  </div>
+  } @else if (rows().length === 0) {
+  <p class="muted mt-5">Aucune entrée trouvée.</p>
+  } @else {
+  <div class="mt-5 overflow-x-auto">
+    <table class="w-full min-w-[640px] text-left text-sm">
+      <thead class="border-b border-[var(--line)] text-[var(--text-2)]">
+        <tr>
+          <th class="py-3 pr-4">Nom</th>
+          <th class="py-3 pr-4">Contexte</th>
+          <th class="py-3 pr-4">Détail</th>
+          <th class="py-3">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+        <tr class="border-b border-[var(--line)] last:border-0">
+          <td class="py-3 pr-4 font-medium">{{ row.title || row.id }}</td>
+          <td class="py-3 pr-4">{{ row.subtitle || '—' }}</td>
+          <td class="py-3 pr-4">{{ row.detail || '—' }}</td>
+          <td class="py-3">{{ row.state }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-5 flex items-center justify-between gap-3">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="page() <= 1"
+      (click)="goToPage(page() - 1)"
+    >
+      Précédent
+    </button>
+    <span class="text-sm text-[var(--text-2)]"
+      >Page {{ page() }} sur {{ totalPages() }}</span
+    >
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="page() >= totalPages()"
+      (click)="goToPage(page() + 1)"
+    >
+      Suivant
+    </button>
+  </div>
+  }
+</section>

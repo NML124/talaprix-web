@@ -1,0 +1,110 @@
+<article class="flex flex-wrap items-center gap-4 py-4 sm:flex-nowrap">
+  <a
+    [routerLink]="['/produit', item().referenceId]"
+    class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--client-tile)]"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    @if (item().image) {
+    <img
+      class="h-full w-full object-contain p-2 mix-blend-multiply"
+      [src]="item().image"
+      alt=""
+      loading="lazy"
+    />
+    }
+  </a>
+  <div class="min-w-0 flex-1">
+    <a
+      class="line-clamp-2 text-[15px] font-semibold leading-snug text-[var(--client-text)] no-underline hover:underline"
+      [routerLink]="['/produit', item().referenceId]"
+      >{{ item().productName }}</a
+    >
+    <p class="m-0 mt-1 text-[13px] text-[var(--client-muted)]">
+      {{ unitPrice() }} l’unité
+    </p>
+    <a
+      class="mt-1 inline-block text-[13px] font-semibold text-[var(--client-action)] no-underline hover:underline"
+      [routerLink]="['/produit', item().referenceId]"
+      >Changer d’offre</a
+    >
+  </div>
+  <div class="flex w-full items-center justify-between gap-4 sm:w-auto">
+    <div
+      class="inline-flex h-10 items-center rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)]"
+      role="group"
+      [attr.aria-label]="'Quantité de ' + item().productName"
+    >
+      <button
+        type="button"
+        class="inline-flex size-10 items-center justify-center rounded-l-[15px] text-[var(--client-text-secondary)] transition hover:bg-[var(--client-tile)] active:scale-95"
+        [attr.aria-label]="
+          item().quantity === 1 ? 'Retirer du panier' : 'Diminuer la quantité'
+        "
+        (click)="quantityChange.emit(-1)"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+        </svg>
+      </button>
+      <span
+        class="min-w-8 text-center text-[14.5px] font-semibold tabular-nums"
+        aria-live="polite"
+        >{{ item().quantity }}</span
+      >
+      <button
+        type="button"
+        class="inline-flex size-10 items-center justify-center rounded-r-[15px] text-[var(--client-text-secondary)] transition hover:bg-[var(--client-tile)] active:scale-95 disabled:opacity-40"
+        aria-label="Augmenter la quantité"
+        [disabled]="item().quantity >= 99"
+        (click)="quantityChange.emit(1)"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </div>
+    <strong
+      class="min-w-[96px] text-right text-[15px] font-semibold tabular-nums"
+      >{{ linePrice() }}</strong
+    >
+    <button
+      type="button"
+      class="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--client-muted)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-error)]"
+      [attr.aria-label]="'Retirer ' + item().productName"
+      (click)="remove.emit()"
+    >
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.9"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
+      </svg>
+    </button>
+  </div>
+</article>

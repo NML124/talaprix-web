@@ -1,12 +1,18 @@
 import { ClientHomeDesktopSection1Content1 } from './client-home-desktop-section-1-content-1';
 import { SvgVisual } from '@talaprix/shared/ui-kit';
+import { ClientHomePubCard } from './client-home-pub-card';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
 
 @Component({
   selector: 'lib-client-home-desktop-section-1',
-  imports: [ClientHomeDesktopSection1Content1, SvgVisual, RouterLink],
+  imports: [
+    ClientHomeDesktopSection1Content1,
+    ClientHomePubCard,
+    SvgVisual,
+    RouterLink,
+  ],
   templateUrl: './client-home-desktop-section-1.html',
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,

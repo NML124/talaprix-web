@@ -5,10 +5,15 @@ import { HomeHero } from './hero/home-hero';
 import { HomeOffers } from './offers/home-offers';
 import { NearbyProducts } from './nearby-products/nearby-products';
 
-
 @Component({
   selector: 'lib-home',
-  imports: [HomeHero, HomeCategories, NearbyProducts, HomeOffers, FooterNewsletter],
+  imports: [
+    HomeHero,
+    HomeCategories,
+    NearbyProducts,
+    HomeOffers,
+    FooterNewsletter,
+  ],
   templateUrl: './home.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

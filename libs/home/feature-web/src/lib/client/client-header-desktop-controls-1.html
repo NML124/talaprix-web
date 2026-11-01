@@ -45,60 +45,14 @@
       >
     </a>
     <div class="relative min-w-0 flex-1">
-      <form
-        role="search"
-        class="w-full [flex:1_1_auto] [display:flex] [height:44px] [border-radius:10px] [background:var(--client-surface)] [overflow:visible] [margin:0] client-hdr-search"
-        (submit)="$event.preventDefault()"
-      >
-        <label
-          for="hdr-scope"
-          class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
-          >Catégorie</label
-        >
-        <tpx-select-card
-          label="Catégorie"
-          [options]='[{"label":"Toutes catégories","value":"Toutes catégories"},{"label":"Téléphones","value":"Téléphones"},{"label":"Ordinateurs","value":"Ordinateurs"},{"label":"Énergie solaire","value":"Énergie solaire"}]'
-          [compact]="true"
-          class="client-search-category"
-        />
-        <label
-          for="hdr-q"
-          class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
-          >Rechercher</label
-        >
-        <input
-          id="hdr-q"
-          type="search"
-          placeholder="Rechercher un produit, une marque ou une boutique"
-          [value]="ui.query()"
-          (input)="ui.setQuery($event)"
-          (keydown.enter)="ui.search()"
-          (focus)="ui.openSearch()"
-          (keydown.arrowdown)="focusSuggestion($event)"
-          class="[flex:1] [min-width:0] [border:0] [outline:none] [padding:0_14px] [font:inherit] [font-size:13px] [color:var(--client-text)]"
-        />
-        <button
-          type="button"
-          aria-label="Lancer la recherche"
-          class="[width:56px] [display:flex] [align-items:center] [justify-content:center] [background:var(--client-dark)] [color:var(--client-surface)]"
-          (click)="ui.search()"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            tpxVisual
-            symbol="icon-74dcdc4769ed"
-          ></svg>
-        </button>
-      </form>
-      @if (ui.searchOpen()) { <lib-client-search-suggestions /> }
+      @if (headerSearch(); as search) {
+      <ng-container *ngComponentOutlet="search" />
+      } @else {
+      <div
+        class="h-11 w-full rounded-[10px] bg-[var(--client-surface)]"
+        aria-hidden="true"
+      ></div>
+      }
     </div>
 
     <a
@@ -122,7 +76,7 @@
     </a>
     <a
       class="[display:flex] [align-items:center] [gap:8px] [padding:6px_10px_6px_8px] [border-radius:8px] [color:var(--client-surface)] [text-decoration:none] [flex-shrink:0] [box-shadow:none] client-hd"
-      aria-label="Panier, 3 produits"
+      [attr.aria-label]="'Panier, ' + ui.cartCount() + ' produit' + (ui.cartCount() === 1 ? '' : 's')"
       routerLink="/panier"
     >
       <span class="relative flex"

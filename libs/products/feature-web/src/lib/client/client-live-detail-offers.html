@@ -1,0 +1,84 @@
+<section aria-labelledby="offers-title" class="flex flex-col gap-3">
+  <header
+    class="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-[var(--client-surface)] px-5 py-3.5"
+  >
+    <h2 id="offers-title" class="m-0 text-lg font-semibold">
+      Offres
+      <span class="ml-1 text-[15px] font-medium text-[var(--client-muted)]">{{
+        store.offers().length
+      }}</span>
+    </h2>
+    <div
+      class="inline-flex rounded-[15px] bg-[var(--client-tile)] p-1"
+      role="group"
+      aria-label="Trier les offres"
+    >
+      <button
+        type="button"
+        class="inline-flex h-8 items-center rounded-[11px] px-3.5 text-[13.5px] font-semibold transition duration-150"
+        [class]="
+          store.sort() === 'best_price'
+            ? 'bg-[var(--client-surface)] text-[var(--client-text)]'
+            : 'text-[var(--client-muted)] hover:text-[var(--client-text)]'
+        "
+        [attr.aria-pressed]="store.sort() === 'best_price'"
+        (click)="store.sortBy('best_price')"
+      >
+        Prix
+      </button>
+      <button
+        type="button"
+        class="inline-flex h-8 items-center gap-1.5 rounded-[11px] px-3.5 text-[13.5px] font-semibold transition duration-150"
+        [class]="
+          store.sort() === 'nearest'
+            ? 'bg-[var(--client-surface)] text-[var(--client-text)]'
+            : 'text-[var(--client-muted)] hover:text-[var(--client-text)]'
+        "
+        [attr.aria-pressed]="store.sort() === 'nearest'"
+        [disabled]="store.sorting()"
+        (click)="store.sortBy('nearest')"
+      >
+        @if (store.sorting()) {
+        <span
+          aria-hidden="true"
+          class="size-3.5 animate-spin rounded-full border-2 border-[var(--client-line)] border-t-[var(--client-action)]"
+        ></span>
+        } Proximité
+      </button>
+    </div>
+  </header>
+  @if (store.geoMessage()) {
+  <p
+    role="status"
+    class="m-0 rounded-2xl bg-amber-50 px-4 py-3 text-[13px] text-amber-800"
+  >
+    {{ store.geoMessage() }}
+  </p>
+  } @if (store.reference(); as reference) {
+  <ul
+    class="m-0 flex list-none flex-col gap-3 p-0 transition-opacity"
+    [class.opacity-60]="store.sorting()"
+  >
+    @for (offer of store.offers(); track offer.id) {
+    <li>
+      <tpx-client-live-detail-offer
+        [offer]="offer"
+        [price]="store.price(offer)"
+        [productName]="reference.name"
+        [best]="offer.id === store.bestOffer()?.id"
+        [inCart]="inCart(offer)"
+        [insight]="store.insight(offer.id)"
+        (choose)="choose.emit(offer)"
+        (showOnMap)="showOnMap.emit(offer)"
+      />
+    </li>
+    } @empty {
+    <li
+      class="rounded-3xl bg-[var(--client-surface)] px-6 py-12 text-center text-sm text-[var(--client-muted)]"
+    >
+      Aucune offre disponible pour ce produit.
+    </li>
+    }
+  </ul>
+  }
+</section>

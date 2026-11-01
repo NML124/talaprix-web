@@ -1,5 +1,5 @@
 <section
-  class="[display:grid] [grid-template-columns:236px_minmax(0,_1fr)_272px] [gap:16px] [height:420px] client-hero"
+  class="[display:grid] [grid-template-columns:264px_minmax(0,_1fr)_272px] [gap:16px] [height:420px] client-hero"
   aria-label="À la une"
 >
   <lib-client-home-desktop-section-1-content-1 />
@@ -66,8 +66,9 @@
   <div
     class="[display:flex] [flex-direction:column] [gap:16px] client-hero-right"
   >
+    @if (!ui.signedIn()) {
     <div
-      class="[flex:1] [background:var(--client-surface)] [border-radius:14px] [padding:22px] [display:flex] [flex-direction:column] [gap:10px]"
+      class="[flex:1] [background:var(--client-surface)] [border-radius:14px] [padding:22px] [display:flex] [flex-direction:column] [gap:10px] animate-fade-in motion-reduce:animate-none"
     >
       <span class="[display:flex] [align-items:center] [gap:10px]"
         ><span
@@ -93,8 +94,7 @@
       <p
         class="[margin:0] [font-size:13.5px] [line-height:1.55] [color:var(--client-text-tertiary)]"
       >
-        Suivez les prix de vos produits et retrouvez votre panier sur tous vos
-        appareils.
+        Retrouvez vos produits favoris et préparez vos achats en boutique.
       </p>
       <button
         type="button"
@@ -104,35 +104,25 @@
         Se connecter
       </button>
     </div>
+    }
     <div
       class="[flex:1] [position:relative] [overflow:hidden] [background:var(--client-dark)] [border-radius:14px] [padding:22px] [display:flex] [flex-direction:column] [gap:8px]"
     >
       <span
-        class="[font-size:12px] [font-weight:600] [color:#7FD3C6] [letter-spacing:0.12em]"
-        >COMMERÇANTS</span
-      >
-      <span
         class="[font-size:18px] [line-height:1.25] [font-weight:600] [color:var(--client-surface)] [letter-spacing:-0.01em] [max-width:190px]"
-        >Vendez plus, sans quitter votre boutique</span
+        >Votre boutique, visible au bon moment.</span
       >
-      <span class="[font-size:13px] [color:#B5C9C4]">Inscription gratuite</span>
+      <p class="merchant-teaser-copy">
+        Présentez vos produits et vos prix aux clients qui les recherchent.
+      </p>
       <a
         class="[margin-top:auto] [align-self:flex-start] [display:inline-flex] [align-items:center] [height:40px] [padding:0_16px] [border-radius:14px] [background:var(--client-surface)] [color:var(--client-dark)] [font-size:13.5px] [font-weight:600] [text-decoration:none] [position:relative] client-pill-w"
         routerLink="/commercants"
-        >Devenir partenaire</a
+        >Inscrire ma boutique <span aria-hidden="true">›</span></a
       >
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        fill="none"
-        stroke="#1C3F39"
-        stroke-width="1.3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="[position:absolute] [right:-14px] [bottom:-14px] [width:120px] [height:120px]"
-        tpxVisual
-        symbol="icon-d18666fafbe3"
-      ></svg>
     </div>
+    @if (ui.signedIn()) {
+    <lib-client-home-pub-card class="min-h-0 flex-1" />
+    }
   </div>
 </section>

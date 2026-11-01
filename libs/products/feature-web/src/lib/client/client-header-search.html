@@ -1,0 +1,86 @@
+<div class="relative w-full min-w-0">
+  <form
+    role="search"
+    class="w-full [flex:1_1_auto] [display:flex] [height:44px] [border-radius:10px] [background:var(--client-surface)] [overflow:hidden] [margin:0] client-hdr-search"
+    (submit)="$event.preventDefault()"
+  >
+    <tpx-header-categories />
+    <label
+      for="hdr-q"
+      class="[position:absolute] [width:1px] [height:1px] [overflow:hidden] [clip:rect(0_0_0_0)]"
+      >Rechercher</label
+    >
+    <input
+      #searchInput
+      id="hdr-q"
+      type="search"
+      role="combobox"
+      autocomplete="off"
+      aria-autocomplete="list"
+      aria-controls="header-search-listbox"
+      [attr.aria-expanded]="ui.searchOpen()"
+      [attr.aria-activedescendant]="panel()?.activeDescendant() ?? null"
+      placeholder="Rechercher un produit, une marque ou un modèle"
+      [value]="ui.query()"
+      (input)="ui.setQuery($event); ui.openSearch()"
+      (focus)="ui.openSearch()"
+      (keydown)="keydown($event)"
+      class="[flex:1] [min-width:0] [border:0] [outline:none] [padding:0_14px] [font:inherit] [font-size:13px] [color:var(--client-text)] [&::-webkit-search-cancel-button]:appearance-none"
+    />
+    @if (ui.query()) {
+    <button
+      type="button"
+      aria-label="Effacer la recherche"
+      class="mr-1 inline-flex size-9 shrink-0 items-center justify-center self-center rounded-full text-[var(--client-muted)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-text)]"
+      (click)="clear()"
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+    }
+    <button
+      type="button"
+      aria-label="Lancer la recherche"
+      class="[width:56px] [display:flex] [align-items:center] [justify-content:center] [background:var(--client-dark)] [color:var(--client-surface)]"
+      (click)="ui.search()"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        tpxVisual
+        symbol="icon-74dcdc4769ed"
+      ></svg>
+    </button>
+  </form>
+  @if (ui.searchOpen()) {
+  <div
+    class="absolute inset-x-0 top-[calc(100%+8px)] z-[75] max-h-[min(70vh,620px)] animate-fade-up overflow-y-auto overscroll-contain rounded-3xl border border-[var(--client-line)] bg-white p-4 text-[var(--client-text)] shadow-[0_18px_44px_-18px_rgba(13,36,32,0.28)] motion-reduce:animate-none"
+  >
+    <tpx-search-panel
+      source="home_search"
+      listboxId="header-search-listbox"
+      surface="panel"
+      [limit]="8"
+      [(query)]="ui.query"
+      (picked)="searchInput.focus()"
+    />
+  </div>
+  }
+</div>

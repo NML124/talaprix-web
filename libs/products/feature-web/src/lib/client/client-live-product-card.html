@@ -1,0 +1,72 @@
+<article
+  class="group relative flex h-full flex-col gap-3 rounded-3xl bg-[var(--client-surface)] p-2.5 transition duration-200 hover:bg-white sm:p-3"
+>
+  <a
+    [routerLink]="['/produit', item().id]"
+    class="relative flex aspect-square items-center justify-center overflow-hidden rounded-[18px] bg-[var(--client-tile)]"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    @if (item().image) {
+    <img
+      [src]="item().image"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      class="h-full w-full object-contain p-4 mix-blend-multiply transition-transform duration-500 ease-out group-hover:scale-[1.05] motion-reduce:transition-none"
+    />
+    } @else {
+    <span class="px-3 text-center text-xs text-[var(--client-muted)]"
+      >Image indisponible</span
+    >
+    }
+  </a>
+  <button
+    type="button"
+    [attr.aria-label]="favorite() ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+    [attr.aria-pressed]="favorite()"
+    [disabled]="pending()"
+    (click)="toggleFavorite.emit()"
+    class="absolute right-5 top-5 z-10 inline-flex size-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition duration-150 hover:scale-105 active:scale-95 disabled:opacity-60"
+    [class]="favorite() ? 'text-[#e0245e]' : 'text-[var(--client-text-secondary)]'"
+  >
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      [attr.fill]="favorite() ? 'currentColor' : 'none'"
+      stroke="currentColor"
+      stroke-width="1.9"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 20.5s-7.5-4.4-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.8-7.5 10.2-7.5 10.2Z"
+      />
+    </svg>
+  </button>
+  <div class="flex min-w-0 flex-1 flex-col gap-1 px-1 pb-1">
+    <a
+      [routerLink]="['/produit', item().id]"
+      [title]="item().name"
+      class="line-clamp-2 min-h-[2.6em] text-[13.5px] font-medium leading-[1.3] text-[var(--client-text)] no-underline after:absolute after:inset-0 after:rounded-3xl after:content-['']"
+    >
+      {{ item().name }}
+    </a>
+    <div class="mt-auto pt-1">
+      <span class="text-[11.5px] text-[var(--client-muted)]">À partir de</span>
+      <div
+        class="text-[17px] font-semibold tabular-nums tracking-tight text-[var(--client-text)]"
+      >
+        {{ price() }}
+      </div>
+      <div
+        class="mt-1 inline-flex items-center gap-1.5 text-xs text-[var(--client-muted)]"
+      >
+        <span class="size-1.5 rounded-full bg-[var(--client-action)]"></span>
+        {{ item().shopsCount }} {{ item().shopsCount === 1 ? 'boutique' :
+        'boutiques' }}
+      </div>
+    </div>
+  </div>
+</article>

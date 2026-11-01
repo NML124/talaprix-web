@@ -1,3 +1,6 @@
+@if (configured) {
+<tpx-client-live-detail />
+} @else {
 <div class="hidden min-[768px]:block">
   <tpx-client-detail-desktop-content></tpx-client-detail-desktop-content>
 </div>
@@ -7,3 +10,5 @@
   ><tpx-client-detail-mobile-section-3></tpx-client-detail-mobile-section-3
   ><tpx-client-detail-mobile-section-4></tpx-client-detail-mobile-section-4>
 </div>
+
+}

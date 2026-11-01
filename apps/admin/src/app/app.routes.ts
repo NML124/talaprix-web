@@ -1,4 +1,9 @@
 import { Route } from '@angular/router';
+import { runtimeConfig } from '../environments/runtime-config.generated';
+
+const live = Boolean(
+  runtimeConfig.supabaseUrl && runtimeConfig.supabaseAnonKey,
+);
 import { adminGuard } from '@talaprix/users/data-access';
 import { shopPreviewGuard } from './shop-preview-guard';
 
@@ -84,52 +89,72 @@ export const appRoutes: Route[] = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ OverviewPage }) => OverviewPage),
+          import('@talaprix/admin').then(
+            ({ AdminLiveOverview, OverviewPage }) =>
+              live ? AdminLiveOverview : OverviewPage,
+          ),
       },
       {
         path: 'rapports',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ ReportsPage }) => ReportsPage),
+          import('@talaprix/admin').then(({ ReportsPage, AdminUnavailable }) =>
+            live ? AdminUnavailable : ReportsPage,
+          ),
       },
       {
         path: 'scraping',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ ScrapingPage }) => ScrapingPage),
+          import('@talaprix/admin').then(
+            ({ ScrapingPage, AdminUnavailable }) =>
+              live ? AdminUnavailable : ScrapingPage,
+          ),
       },
       {
         path: 'catalogue',
+        data: { resource: 'products' },
         loadComponent: () =>
-          import('@talaprix/admin').then(({ CataloguePage }) => CataloguePage),
+          import('@talaprix/admin').then(({ AdminLiveList, CataloguePage }) =>
+            live ? AdminLiveList : CataloguePage,
+          ),
       },
       {
         path: 'offres',
+        data: { resource: 'offers' },
         loadComponent: () =>
-          import('@talaprix/admin').then(({ OffersPage }) => OffersPage),
+          import('@talaprix/admin').then(({ AdminLiveList, OffersPage }) =>
+            live ? AdminLiveList : OffersPage,
+          ),
       },
       {
         path: 'categories',
+        data: { resource: 'categories' },
         loadComponent: () =>
-          import('@talaprix/admin').then(
-            ({ CategoriesPage }) => CategoriesPage,
+          import('@talaprix/admin').then(({ AdminLiveList, CategoriesPage }) =>
+            live ? AdminLiveList : CategoriesPage,
           ),
       },
       {
         path: 'notifications',
         loadComponent: () =>
           import('@talaprix/admin').then(
-            ({ NotificationsPage }) => NotificationsPage,
+            ({ NotificationsPage, AdminUnavailable }) =>
+              live ? AdminUnavailable : NotificationsPage,
           ),
       },
       {
         path: 'boutiques',
+        data: { resource: 'shops' },
         loadComponent: () =>
-          import('@talaprix/admin').then(({ ShopsPage }) => ShopsPage),
+          import('@talaprix/admin').then(({ AdminLiveList, ShopsPage }) =>
+            live ? AdminLiveList : ShopsPage,
+          ),
       },
       {
         path: 'publicites',
         loadComponent: () =>
           import('@talaprix/admin').then(
-            ({ AdvertisementsPage }) => AdvertisementsPage,
+            ({ AdvertisementsPage, AdminUnavailable }) =>
+              live ? AdminUnavailable : AdvertisementsPage,
           ),
       },
       {
@@ -139,23 +164,32 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'utilisateurs',
+        data: { resource: 'users' },
         loadComponent: () =>
-          import('@talaprix/admin').then(({ UsersPage }) => UsersPage),
+          import('@talaprix/admin').then(({ AdminLiveList, UsersPage }) =>
+            live ? AdminLiveList : UsersPage,
+          ),
       },
       {
         path: 'equipe',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ TeamPage }) => TeamPage),
+          import('@talaprix/admin').then(({ TeamPage, AdminUnavailable }) =>
+            live ? AdminUnavailable : TeamPage,
+          ),
       },
       {
         path: 'roles',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ RolesPage }) => RolesPage),
+          import('@talaprix/admin').then(({ RolesPage, AdminUnavailable }) =>
+            live ? AdminUnavailable : RolesPage,
+          ),
       },
       {
         path: 'profil',
         loadComponent: () =>
-          import('@talaprix/admin').then(({ ProfilePage }) => ProfilePage),
+          import('@talaprix/admin').then(({ ProfilePage, AdminUnavailable }) =>
+            live ? AdminUnavailable : ProfilePage,
+          ),
       },
     ],
   },

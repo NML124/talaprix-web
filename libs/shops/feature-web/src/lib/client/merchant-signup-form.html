@@ -1,0 +1,166 @@
+@if (!shops.merchantSent()) {
+<form
+  #form
+  novalidate
+  class="@container flex flex-col gap-6"
+  (submit)="submit($event)"
+>
+  <tpx-merchant-signup-progress [step]="state.step()" />
+
+  <fieldset
+    data-step="1"
+    class="m-0 flex min-w-0 flex-col gap-5 border-0 p-0 transition duration-300 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none"
+    [hidden]="state.step() !== 1"
+  >
+    <legend class="mb-5 p-0 text-lg font-semibold text-[var(--client-text)]">
+      Votre boutique
+    </legend>
+    <div class="grid gap-5 @md:grid-cols-2">
+      <div class="flex min-w-0 flex-col gap-1.5">
+        <label
+          [for]="state.id('name')"
+          class="text-sm font-medium text-[var(--client-text)]"
+          >Nom de la boutique</label
+        >
+        <input
+          [id]="state.id('name')"
+          data-autofocus
+          name="name"
+          type="text"
+          autocomplete="organization"
+          placeholder="Ex. Boutique Élégance"
+          class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+          [class]="state.fieldClass('name')"
+          [attr.aria-invalid]="state.errors().name ? 'true' : null"
+          [attr.aria-describedby]="state.errors().name ? state.id('name-err') : null"
+          (input)="state.clearError('name')"
+        />
+        @if (state.errors().name) {
+        <p
+          [id]="state.id('name-err')"
+          class="m-0 text-[13px] text-[var(--client-error)]"
+        >
+          {{ state.errors().name }}
+        </p>
+        }
+      </div>
+      <div class="flex min-w-0 flex-col gap-1.5">
+        <label
+          [for]="state.id('photo')"
+          class="text-sm font-medium text-[var(--client-text)]"
+        >
+          Photo de la boutique
+          <span class="font-normal text-[var(--client-muted)]"
+            >(facultative)</span
+          >
+        </label>
+        <input
+          [id]="state.id('photo')"
+          name="photo"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          class="peer sr-only"
+          [attr.aria-describedby]="state.id('photo-hint')"
+          (change)="shops.selectMerchantPhoto($event)"
+        />
+        <label
+          [for]="state.id('photo')"
+          class="flex h-11 cursor-pointer items-center justify-between gap-3 rounded-[14px] border border-dashed border-[var(--client-border)] bg-white px-4 text-[15px] text-[var(--client-muted)] transition hover:border-[var(--client-action)] hover:text-[var(--client-action)] peer-focus-visible:border-[var(--client-action)] peer-focus-visible:ring-4 peer-focus-visible:ring-[var(--client-action)]/15"
+        >
+          <span class="min-w-0 truncate"
+            >{{ shops.merchantPhotoName() || 'Choisir une photo' }}</span
+          >
+          <span aria-hidden="true" class="text-lg leading-none">+</span>
+        </label>
+        <p
+          [id]="state.id('photo-hint')"
+          class="m-0 text-xs text-[var(--client-muted)]"
+        >
+          La photo sera à joindre vous-même dans WhatsApp.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2.5">
+      <p class="m-0 text-sm font-medium text-[var(--client-text)]">
+        Ce que vous vendez
+        <span class="font-normal text-[var(--client-muted)]">(facultatif)</span>
+      </p>
+      <div class="flex flex-wrap gap-2">
+        @for (category of categories; track category) {
+        <button
+          type="button"
+          class="h-10 cursor-pointer rounded-xl border border-[var(--client-border)] bg-white px-3.5 text-sm font-medium text-[var(--client-text)] transition-colors duration-150 hover:bg-[var(--client-tile)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] motion-reduce:transition-none aria-pressed:border-[var(--client-brand)] aria-pressed:bg-[var(--client-mint)] aria-pressed:text-[var(--client-navigation)]"
+          [attr.aria-pressed]="shops.merchantCategories().includes(category)"
+          (click)="shops.toggleMerchantCategory(category)"
+        >
+          {{ category }}
+        </button>
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset
+    data-step="2"
+    class="m-0 flex min-w-0 flex-col gap-5 border-0 p-0 transition duration-300 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none"
+    [hidden]="state.step() !== 2"
+  >
+    <legend class="mb-5 p-0 text-lg font-semibold text-[var(--client-text)]">
+      Vos coordonnées
+    </legend>
+    <tpx-merchant-signup-contact />
+  </fieldset>
+
+  <fieldset
+    data-step="3"
+    class="m-0 flex min-w-0 flex-col gap-5 border-0 p-0 transition duration-300 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none"
+    [hidden]="state.step() !== 3"
+  >
+    <legend class="mb-5 p-0 text-lg font-semibold text-[var(--client-text)]">
+      Où vous trouver
+    </legend>
+    <tpx-merchant-signup-address />
+  </fieldset>
+
+  <div
+    class="flex flex-col-reverse gap-3 border-t border-[var(--client-line)] pt-5 @md:flex-row @md:items-center"
+  >
+    @if (state.step() > 1) {
+    <button
+      type="button"
+      class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-5 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] disabled:pointer-events-none disabled:opacity-50 @md:w-auto"
+      (click)="back()"
+    >
+      Retour
+    </button>
+    }
+    <button
+      type="submit"
+      class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] disabled:pointer-events-none disabled:opacity-50 @md:ml-auto @md:w-auto"
+    >
+      {{ state.step() < 3 ? 'Continuer' : 'Envoyer ma demande' }}
+    </button>
+  </div>
+</form>
+} @else {
+<div
+  role="status"
+  class="flex flex-col gap-3 rounded-2xl bg-[var(--client-mint)] p-6 text-[var(--client-action)] transition duration-300 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none"
+>
+  <strong>Informations vérifiées.</strong>
+  <p class="m-0 text-sm font-normal">
+    Pour finaliser votre inscription, votre message WhatsApp est prêt. Vous
+    pourrez le relire avant de l'envoyer.
+  </p>
+  <p class="m-0 whitespace-pre-line text-sm font-normal">
+    {{ shops.merchantSummary() }}
+  </p>
+  <a
+    [href]="shops.merchantWhatsAppUrl()"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex h-10 w-full items-center justify-center gap-2 self-start rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] sm:w-auto"
+    >Continuer sur WhatsApp</a
+  >
+</div>
+}

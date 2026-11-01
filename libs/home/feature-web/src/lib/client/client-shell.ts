@@ -20,8 +20,16 @@ import {
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
-import { PreviewPreferences } from '@talaprix/shared/data-access';
-import { AuthPreviewStore } from '@talaprix/users/data-access';
+import { CatalogSearchStore } from '@talaprix/products/data-access';
+import {
+  OfferCart,
+  PreviewPreferences,
+  SupabaseConfig,
+} from '@talaprix/shared/data-access';
+import {
+  AuthPreviewStore,
+  AuthSessionStore,
+} from '@talaprix/users/data-access';
 @Component({
   selector: 'lib-client-shell',
   imports: [
@@ -36,6 +44,8 @@ import { AuthPreviewStore } from '@talaprix/users/data-access';
     ClientAuthMobileCode,
     RouterOutlet,
   ],
+  // One suggestion store for the header and /recherche: results survive navigation.
+  providers: [CatalogSearchStore],
   templateUrl: './client-shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -45,7 +55,12 @@ export class ClientShell {
     this.showBackToTop.set(window.scrollY > 400);
   }
   readonly ui = inject(PreviewPreferences);
+  /** Instantiates the live cart early so the header badge is right on load. */
+  readonly liveCart = inject(SupabaseConfig).isConfigured
+    ? inject(OfferCart)
+    : null;
   readonly auth = inject(AuthPreviewStore);
+  readonly session = inject(AuthSessionStore);
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly router = inject(Router);
   readonly url = toSignal(
@@ -61,6 +76,7 @@ export class ClientShell {
   readonly searchRoute = computed(() => this.url().startsWith('/recherche'));
   #previousFocus: HTMLElement | null = null;
   constructor() {
+    effect(() => this.ui.signedIn.set(this.session.isAuthenticated()));
     effect(() => {
       if (typeof document === 'undefined') return;
       if (this.ui.authOpen()) {

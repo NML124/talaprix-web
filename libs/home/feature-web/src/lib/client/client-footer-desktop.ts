@@ -1,12 +1,12 @@
 import { ShopAvatar } from '@talaprix/shared/ui-kit';
-import { SvgVisual } from '@talaprix/shared/ui-kit';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { ClientSocialLinks } from './client-social-links';
 
 @Component({
   selector: 'lib-client-footer-desktop',
-  imports: [ShopAvatar, SvgVisual, RouterLink],
+  imports: [ShopAvatar, RouterLink, ClientSocialLinks],
   templateUrl: './client-footer-desktop.html',
   host: { class: 'contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
