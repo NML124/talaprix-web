@@ -22,6 +22,7 @@
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/web",
+        "allowedCommonJsDependencies": ["mapbox-gl", "qrcode"],
         "browser": "apps/web/src/main.ts",
         "tsConfig": "apps/web/tsconfig.app.json",
         "assets": [
@@ -38,6 +39,11 @@
             "glob": "*.svg",
             "input": "node_modules/flag-icons/flags/4x3",
             "output": "assets/flags"
+          },
+          {
+            "glob": "mapbox-gl.css",
+            "input": "node_modules/mapbox-gl/dist",
+            "output": "assets/vendor"
           }
         ],
         "styles": ["libs/shared/ui-kit/src/styles/tailwind.css"],
