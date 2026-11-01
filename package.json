@@ -30,6 +30,7 @@
     "express": "^4.21.2",
     "flag-icons": "^7.5.0",
     "flowbite": "^4.0.2",
+    "mapbox-gl": "3.33.0",
     "qrcode": "^1.5.4",
     "rxjs": "~7.8.0"
   },
