@@ -1,0 +1,195 @@
+<main class="mx-auto max-w-[1320px] px-4 pb-16 pt-8 sm:px-6 sm:pt-10">
+  <header
+    class="mb-6 flex flex-col gap-5 sm:mb-8 md:flex-row md:items-end md:justify-between"
+  >
+    <div>
+      <p
+        class="m-0 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--client-action)]"
+      >
+        Boutiques
+      </p>
+      <h1
+        class="m-0 mt-2 text-[28px] font-semibold tracking-tight text-[var(--client-text)] sm:text-4xl"
+      >
+        Boutiques à Kinshasa
+      </h1>
+    </div>
+    <form
+      role="search"
+      class="relative w-full md:max-w-md"
+      (submit)="$event.preventDefault()"
+    >
+      <label class="sr-only" for="shops-q">Rechercher une boutique</label>
+      <span
+        aria-hidden="true"
+        class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--client-subtle)]"
+        ><svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" /></svg
+      ></span>
+      <input
+        #shopsQuery
+        id="shops-q"
+        type="search"
+        autocomplete="off"
+        placeholder="Nom de boutique ou adresse"
+        class="h-12 w-full rounded-2xl border border-[var(--client-line)] bg-[var(--client-surface)] pl-11 pr-11 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:ring-4 focus:ring-[var(--client-action)]/15 [&::-webkit-search-cancel-button]:appearance-none"
+        [value]="q()"
+        (input)="search(shopsQuery.value)"
+        (keydown.escape)="search('')"
+      />
+      @if (q()) {
+      <button
+        type="button"
+        aria-label="Effacer la recherche"
+        class="absolute right-2.5 top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[var(--client-muted)] transition hover:bg-[var(--client-tile)] hover:text-[var(--client-text)]"
+        (click)="search(''); shopsQuery.focus()"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+      }
+    </form>
+  </header>
+
+  @if (status() === 'loading') {
+  <div
+    class="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
+    role="status"
+    aria-label="Chargement des boutiques"
+  >
+    @for (item of skeletons; track item) {
+    <div
+      class="h-[148px] animate-pulse rounded-3xl bg-[var(--client-line)]"
+    ></div>
+    }
+  </div>
+  } @else if (status() === 'error') {
+  <div
+    role="alert"
+    class="flex flex-col items-center gap-3 rounded-3xl bg-[var(--client-surface)] px-6 py-14 text-center"
+  >
+    <p class="m-0 text-[var(--client-text-secondary)]">{{ error() }}</p>
+    <button
+      type="button"
+      class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+      (click)="load()"
+    >
+      Réessayer
+    </button>
+  </div>
+  } @else if (filtered().length === 0) {
+  <div
+    class="flex flex-col items-center gap-2 rounded-3xl bg-[var(--client-surface)] px-6 py-14 text-center"
+  >
+    <p class="m-0 font-semibold text-[var(--client-text)]">
+      Aucune boutique trouvée
+    </p>
+    <p class="m-0 text-sm text-[var(--client-muted)]">
+      Essayez un autre nom ou une autre adresse.
+    </p>
+  </div>
+  } @else {
+  <p class="mb-3 mt-0 text-sm text-[var(--client-muted)]" aria-live="polite">
+    {{ filtered().length }} boutique{{ filtered().length > 1 ? 's' : '' }}
+  </p>
+  <ul
+    class="m-0 grid list-none gap-3 p-0 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
+  >
+    @for (shop of visible(); track shop.id) {
+    <li
+      class="group flex flex-col gap-4 rounded-3xl border border-transparent bg-[var(--client-surface)] p-4 transition duration-200 hover:border-[var(--client-line)] sm:p-5"
+    >
+      <div class="flex min-w-0 items-center gap-3.5">
+        <span
+          aria-hidden="true"
+          class="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--client-mint)] text-lg font-semibold text-[var(--client-action)]"
+          >{{ shop.name.charAt(0) }} @if (shop.image) {
+          <img
+            #logo
+            class="absolute inset-0 size-full object-cover"
+            [src]="shop.image"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            (error)="logo.hidden = true"
+          />
+          }</span
+        >
+        <div class="min-w-0 flex-1">
+          <h2
+            class="m-0 truncate text-base font-semibold text-[var(--client-text)]"
+          >
+            {{ shop.name }}
+          </h2>
+          <p
+            class="m-0 mt-1 line-clamp-2 text-[13px] leading-snug text-[var(--client-muted)]"
+            [title]="shop.address || 'Kinshasa'"
+          >
+            {{ shop.address || 'Kinshasa' }}
+          </p>
+        </div>
+      </div>
+      <div class="mt-auto flex gap-2">
+        <a
+          class="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+          routerLink="/resultats"
+          [queryParams]="{ shop_ids: shop.id }"
+          >Voir ses produits</a
+        >
+        @if (shop.mapUrl) {
+        <a
+          class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold text-[var(--client-text)] no-underline transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98]"
+          [href]="shop.mapUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'Itinéraire vers ' + shop.name"
+          ><svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z"
+            />
+            <circle cx="12" cy="9.5" r="2.5" /></svg
+          >Itinéraire</a
+        >
+        }
+      </div>
+    </li>
+    }
+  </ul>
+  <tpx-pagination
+    class="mt-8"
+    label="Pagination des boutiques"
+    [page]="page()"
+    [totalPages]="totalPages()"
+    (pageChange)="goToPage($event)"
+  />
+  }
+</main>

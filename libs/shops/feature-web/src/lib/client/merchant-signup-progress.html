@@ -1,0 +1,54 @@
+<p
+  class="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--client-muted)]"
+  aria-live="polite"
+>
+  Étape {{ step() }} sur {{ labels.length }}
+</p>
+<ol class="grid grid-cols-3 gap-2">
+  @for (label of labels; track label; let index = $index) {
+  <li
+    class="flex min-w-0 items-center gap-2"
+    [attr.aria-current]="step() === index + 1 ? 'step' : null"
+  >
+    <span
+      aria-hidden="true"
+      class="grid size-7 shrink-0 place-items-center rounded-full border text-[13px] font-semibold transition-colors duration-200 motion-reduce:transition-none"
+      [class]="
+        step() > index + 1
+          ? 'border-[var(--client-action)] bg-[var(--client-action)] text-white'
+          : step() === index + 1
+            ? 'border-[var(--client-action)] bg-[var(--client-mint)] text-[var(--client-action)]'
+            : 'border-[var(--client-line)] bg-[var(--client-surface)] text-[var(--client-muted)]'
+      "
+    >
+      @if (step() > index + 1) {
+      <svg lucideCheck size="15" stroke-width="2.5"></svg>
+      } @else { {{ index + 1 }} }
+    </span>
+    <span
+      class="truncate text-[13.5px]"
+      [class]="
+        step() === index + 1
+          ? 'font-semibold text-[var(--client-text)]'
+          : 'font-medium text-[var(--client-muted)]'
+      "
+      >{{ label }}@if (step() > index + 1) {<span class="sr-only"
+        >, terminée</span
+      >}</span
+    >
+  </li>
+  }
+</ol>
+<div
+  class="mt-4 h-1 overflow-hidden rounded-full bg-[var(--client-tile)]"
+  role="progressbar"
+  aria-label="Progression de l’inscription"
+  aria-valuemin="1"
+  [attr.aria-valuemax]="labels.length"
+  [attr.aria-valuenow]="step()"
+>
+  <div
+    class="h-full rounded-full bg-[var(--client-action)] transition-[width] duration-500 ease-out motion-reduce:transition-none"
+    [style.width.%]="percent()"
+  ></div>
+</div>

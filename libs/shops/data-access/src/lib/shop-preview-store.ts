@@ -1,5 +1,14 @@
 import { computed, Service, signal } from '@angular/core';
 import { PUBLIC_DESIGN_DATA } from '@talaprix/shared/models';
+import { countries } from 'countries-list';
+export interface MerchantSignup {
+  readonly name: string;
+  readonly phone: string;
+  readonly address: string;
+  readonly street: string;
+  readonly district: string;
+  readonly number: string;
+}
 @Service()
 export class ShopPreviewStore {
   readonly selected = signal('UAC – Gombe');
@@ -18,9 +27,36 @@ export class ShopPreviewStore {
       ? ''
       : String(this.selectedShop().distanceKm).replace('.', ','),
   );
+  readonly phoneCountry = signal('CD');
+  readonly phoneCountries = Object.entries(countries)
+    .filter(([, country]) => country.phone.length > 0)
+    .map(([code, country]) => ({
+      value: code,
+      label: `${code === 'CD' ? 'RDC' : code === 'CG' ? 'Congo' : country.name} (+${country.phone[0]})`,
+      image: `/assets/flags/${code.toLowerCase()}.svg`,
+    }))
+    .sort((a, b) =>
+      a.value === 'CD'
+        ? -1
+        : b.value === 'CD'
+          ? 1
+          : a.label.localeCompare(b.label),
+    );
+  /** Empty caption: the select trigger shows the flag image only. */
+  readonly phoneFlag = computed(() => '');
+  readonly phonePrefix = computed(() => {
+    const code = this.phoneCountry() as keyof typeof countries;
+    return `+${countries[code]?.phone[0] ?? 243}`;
+  });
+  readonly merchantCommune = signal('');
   readonly merchantCategories = signal<readonly string[]>([]);
   readonly merchantSent = signal(false);
-  readonly merchantError = signal('');
+  readonly merchantPhotoName = signal('');
+  readonly merchantSummary = signal('');
+  readonly merchantWhatsAppUrl = computed(
+    () =>
+      `https://wa.me/243980000147?text=${encodeURIComponent(this.merchantSummary())}`,
+  );
   visible(name: string): boolean {
     const shop = PUBLIC_DESIGN_DATA.shops.find((s) => s.name === name);
     if (!shop) return true;
@@ -42,18 +78,46 @@ export class ShopPreviewStore {
       a.includes(name) ? a.filter((n) => n !== name) : [...a, name],
     );
   }
-  submitMerchant(event: Event): void {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const phone = form.querySelector<HTMLInputElement>('input[type="tel"]');
-    const digits = (phone?.value ?? '').replace(/\D/g, '').replace(/^243/, '');
-    if (!/^\d{9}$/.test(digits)) {
-      this.merchantError.set('Numéro incomplet : 9 chiffres après +243.');
-      phone?.focus();
-      return;
-    }
-    if (!form.reportValidity()) return;
-    this.merchantError.set('');
+  selectMerchantPhoto(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    this.merchantPhotoName.set(file?.name ?? '');
+  }
+  merchantDigits(raw: string): string {
+    return raw.replace(/\D/g, '').replace(/^0+/, '');
+  }
+  merchantPhoneError(raw: string): string {
+    const digits = this.merchantDigits(raw);
+    if (!digits) return 'Saisissez votre numéro WhatsApp.';
+    const total = this.phonePrefix().replace(/\D/g, '').length + digits.length;
+    const cd = this.phoneCountry() === 'CD';
+    if (total < 8 || total > 15 || (cd && digits.length !== 9))
+      return cd
+        ? 'Saisissez 9 chiffres après +243.'
+        : 'Vérifiez le numéro pour le pays choisi.';
+    return '';
+  }
+  /** GPS position captured with "Utiliser ma position", if any. */
+  readonly merchantPosition = signal<{ lat: number; lon: number } | null>(null);
+  completeMerchant(fields: MerchantSignup): void {
+    const position = this.merchantPosition();
+    this.merchantSummary.set(
+      [
+        'Bonjour, je souhaite référencer ma boutique sur TalaPrix.',
+        `Boutique : ${fields.name}`,
+        `Téléphone : ${this.phonePrefix()}${this.merchantDigits(fields.phone)}`,
+        `Adresse : ${fields.address}`,
+        `Avenue ou rue : ${fields.street}`,
+        `Quartier : ${fields.district}`,
+        `Numéro : ${fields.number || 'Non indiqué'}`,
+        `Commune : ${this.merchantCommune()}`,
+        ...(position
+          ? [
+              `Position GPS : https://www.google.com/maps?q=${position.lat.toFixed(6)},${position.lon.toFixed(6)}`,
+            ]
+          : []),
+        `Produits : ${this.merchantCategories().join(', ') || 'Non précisés'}`,
+      ].join('\n'),
+    );
     this.merchantSent.set(true);
   }
 }
