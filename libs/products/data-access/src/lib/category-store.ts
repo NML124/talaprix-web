@@ -11,19 +11,18 @@ import {
   visibleCategories,
   type Category,
 } from '@talaprix/products/domain';
-import { SupabaseFunctions } from '@talaprix/shared/data-access';
+import {
+  SupabaseConfig,
+  SupabaseFunctions,
+} from '@talaprix/shared/data-access';
 import { CATEGORY_FIXTURES } from './category-fixtures';
 
 export type CategoryStatus = 'idle' | 'loading' | 'success' | 'empty' | 'error';
 
-type CategorySource = 'fixtures' | 'api';
-
-// Basculer sur 'api' lorsque le endpoint get-categories sera prêt pour le web.
-const categorySource: CategorySource = 'fixtures';
-
 @Service({ autoProvided: false })
 export class CategoryStore {
   readonly #functions = inject(SupabaseFunctions);
+  readonly #config = inject(SupabaseConfig);
   readonly #categories = signal<readonly Category[]>([]);
   readonly #status = signal<CategoryStatus>('idle');
   readonly #error = signal('');
@@ -37,7 +36,7 @@ export class CategoryStore {
     this.#status.set('loading');
     this.#error.set('');
     try {
-      if (categorySource === 'fixtures') {
+      if (!this.#config.isConfigured) {
         this.#categories.set(CATEGORY_FIXTURES);
         this.#status.set('success');
         return;
