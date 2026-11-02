@@ -8,31 +8,17 @@
   >
     @for (item of store.similar(); track item.id) {
     <li class="w-[160px] shrink-0 snap-start sm:w-[190px]">
-      <a
-        [routerLink]="['/produit', item.id]"
-        class="group flex h-full flex-col gap-2 rounded-3xl bg-[var(--client-surface)] p-2.5 text-[var(--client-text)] no-underline"
-      >
-        <span
-          class="flex aspect-square items-center justify-center overflow-hidden rounded-[18px] bg-[var(--client-tile)]"
-        >
-          @if (item.image) {
-          <img
-            [src]="item.image"
-            alt=""
-            loading="lazy"
-            class="h-full w-full object-contain p-3 mix-blend-multiply transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
-          />
-          }
-        </span>
-        <span class="line-clamp-2 px-1 text-[13px] font-medium leading-snug"
-          >{{ item.name }}</span
-        >
-        <span class="mt-auto px-1 pb-1 text-[15px] font-semibold tabular-nums"
-          ><span class="text-[11px] font-normal text-[var(--client-muted)]"
-            >dès </span
-          >{{ store.price(item) }}</span
-        >
-      </a>
+      <tpx-client-live-product-card
+        [item]="item"
+        [price]="store.price(item)"
+        [favorite]="favorite(item)"
+        [pending]="favorites.isPending(item.productId)"
+        [cartQuantity]="cart.quantityFor(item.id)"
+        [cartPending]="cartActions.pending() !== null"
+        (toggleFavorite)="favorites.toggle(item.productId, item.isFavorite)"
+        (addToCart)="cartActions.add(item)"
+        (quantityChange)="cartActions.change(item.id, $event)"
+      />
     </li>
     }
   </ul>

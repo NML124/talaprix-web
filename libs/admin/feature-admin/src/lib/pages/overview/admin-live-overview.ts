@@ -9,12 +9,12 @@ import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { PageHeader } from '../../ui/page-header';
 
 interface DashboardStats {
-  readonly users: number;
-  readonly shops: number;
-  readonly products: number;
-  readonly offers: number;
-  readonly categories: number;
-  readonly advertisements: number;
+  readonly users: number | null;
+  readonly shops: number | null;
+  readonly products: number | null;
+  readonly offers: number | null;
+  readonly categories: number | null;
+  readonly advertisements: number | null;
 }
 
 @Component({
@@ -65,6 +65,6 @@ export class AdminLiveOverview {
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
-function count(value: unknown): number {
-  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
+function count(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }

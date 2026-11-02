@@ -30,7 +30,7 @@ export class ClientLiveHome {
   readonly cartError = this.cartActions.error;
   readonly products = this.#store.products;
   readonly shops = this.#store.shops;
-  readonly categories = this.#categories.categories;
+  readonly categories = this.#categories.displayCategories;
   readonly status = computed(() =>
     this.#store.status() === 'idle' ? 'loading' : this.#store.status(),
   );

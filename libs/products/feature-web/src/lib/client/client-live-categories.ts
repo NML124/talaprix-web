@@ -29,7 +29,7 @@ export class ClientLiveCategories {
   readonly skeletons = TILE_RATIOS.concat(TILE_RATIOS);
   readonly childCounts = computed(() => {
     const counts = new Map<string, number>();
-    for (const category of this.store.categories()) {
+    for (const category of this.store.displayCategories()) {
       const parent = category.parentCategoryId;
       if (parent) counts.set(parent, (counts.get(parent) ?? 0) + 1);
     }

@@ -27,7 +27,7 @@
       class="sticky top-[156px] hidden max-h-[calc(100vh-172px)] self-start overflow-y-auto rounded-3xl bg-[var(--client-surface)] p-5 lg:block"
     >
       <tpx-client-live-filters
-        [categories]="categories()"
+        [categories]="displayCategories()"
         [categoryId]="categoryId()"
         [minPrice]="minPrice()"
         [maxPrice]="maxPrice()"
@@ -42,7 +42,7 @@
 
     <div class="min-w-0">
       <div
-        class="mb-4 flex flex-wrap items-center gap-3 rounded-3xl bg-[var(--client-surface)] p-2.5 pl-3"
+        class="mb-4 flex min-w-0 flex-wrap items-center gap-3 rounded-3xl bg-[var(--client-surface)] p-2.5 pl-3"
       >
         <button
           type="button"
@@ -70,7 +70,7 @@
           >
           }
         </button>
-        <div class="min-w-0 flex-1">
+        <div class="min-w-0 flex-1 overflow-hidden">
           <tpx-client-active-filters
             [filters]="activeFilters()"
             (remove)="removeFilter($event)"
@@ -82,7 +82,7 @@
           >
           }
         </div>
-        <div class="w-[180px] shrink-0">
+        <div class="w-full shrink-0 lg:w-[180px]">
           <tpx-select-card
             label="Trier par"
             [options]="sortOptions"
@@ -225,7 +225,7 @@
     </div>
     <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-4">
       <tpx-client-live-filters
-        [categories]="categories()"
+        [categories]="displayCategories()"
         [categoryId]="categoryId()"
         [minPrice]="minPrice()"
         [maxPrice]="maxPrice()"

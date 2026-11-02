@@ -1,10 +1,10 @@
 @if (filters().length) {
 <ul
-  class="m-0 flex list-none flex-wrap items-center gap-2 p-0"
+  class="m-0 flex list-none flex-nowrap items-center gap-2 overflow-x-auto overscroll-x-contain p-0 pb-1 lg:flex-wrap lg:overflow-visible"
   aria-label="Filtres actifs"
 >
   @for (filter of filters(); track filter.key) {
-  <li class="animate-chip-in motion-reduce:animate-none">
+  <li class="shrink-0 animate-chip-in motion-reduce:animate-none">
     <button
       type="button"
       class="group inline-flex h-8 items-center gap-1.5 rounded-full bg-[var(--client-mint)] pl-3 pr-2 text-[13px] font-medium text-[var(--client-action)] transition duration-150 hover:bg-[var(--client-action)] hover:text-white"
@@ -27,7 +27,7 @@
     </button>
   </li>
   } @if (filters().length > 1) {
-  <li>
+  <li class="shrink-0">
     <button
       type="button"
       class="h-8 rounded-full px-3 text-[13px] font-semibold text-[var(--client-text-secondary)] underline-offset-4 transition hover:text-[var(--client-text)] hover:underline"

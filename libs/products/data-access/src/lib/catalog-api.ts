@@ -81,6 +81,7 @@ export interface CatalogQuery {
   readonly page?: number;
   readonly limit?: number;
   readonly categoryId?: string;
+  readonly categoryIds?: readonly string[];
   readonly shopIds?: readonly string[];
   readonly brandIds?: readonly string[];
   readonly conditions?: readonly ('new' | 'used' | 'refurbished')[];
@@ -103,7 +104,9 @@ export class CatalogApi {
       limit: String(query.limit ?? 20),
     };
     if (query.q?.trim()) params['q'] = query.q.trim();
-    if (query.categoryId) params['category_id'] = query.categoryId;
+    if (query.categoryIds?.length)
+      params['category_ids'] = query.categoryIds.join(',');
+    else if (query.categoryId) params['category_id'] = query.categoryId;
     if (query.shopIds?.length) params['shop_ids'] = query.shopIds.join(',');
     if (query.brandIds?.length) params['brand_ids'] = query.brandIds.join(',');
     if (query.conditions?.length)
