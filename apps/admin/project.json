@@ -91,6 +91,7 @@
       ]
     },
     "test": {
+      "dependsOn": ["web:env"],
       "executor": "@angular/build:unit-test",
       "options": {
         "watch": false
