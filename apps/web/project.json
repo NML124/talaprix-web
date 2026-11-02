@@ -23,6 +23,15 @@
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/web",
+        "security": {
+          "allowedHosts": [
+            "127.0.0.1",
+            "localhost",
+            "talaprix.com",
+            "www.talaprix.com",
+            "staging.talaprix.com"
+          ]
+        },
         "allowedCommonJsDependencies": ["mapbox-gl", "qrcode"],
         "browser": "apps/web/src/main.ts",
         "tsConfig": "apps/web/tsconfig.app.json",
