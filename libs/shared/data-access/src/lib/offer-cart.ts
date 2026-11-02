@@ -31,4 +31,6 @@ export abstract class OfferCart {
   /** Adds (or switches to) the given offer; guests are asked to log in first. */
   abstract choose(selection: CartSelection): void;
   abstract offerFor(referenceId: string): string | null;
+  abstract quantityFor(referenceId: string): number;
+  abstract changeQuantity(referenceId: string, delta: number): void;
 }

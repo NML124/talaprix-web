@@ -35,12 +35,13 @@ export const appRoutes: Route[] = [
         loadComponent: () =>
           import('@talaprix/products/feature-web').then((m) => m.ClientDetail),
       },
+      { path: 'compte', redirectTo: 'favoris', pathMatch: 'full' },
       {
-        path: 'compte',
-        title: 'Mon compte | TalaPrix',
+        path: 'favoris',
+        title: 'Mes favoris | TalaPrix',
         loadComponent: () =>
           import('@talaprix/products/feature-web').then((m) =>
-            live ? m.ClientLiveAccount : m.ClientAccount,
+            live ? m.ClientLiveFavorites : m.ClientFavoritesPage,
           ),
       },
       {
@@ -78,6 +79,20 @@ export const appRoutes: Route[] = [
             live ? m.ClientLiveCart : m.ClientCart,
           ),
       },
+      {
+        path: 'optimisation',
+        title: 'Optimiser mes achats | TalaPrix',
+        loadComponent: () =>
+          import('@talaprix/cart/feature-web').then(
+            (m) => m.ClientLiveOptimization,
+          ),
+      },
+      {
+        path: 'contact',
+        title: 'Nous contacter | TalaPrix',
+        loadComponent: () =>
+          import('@talaprix/home/feature-web').then((m) => m.ClientContactPage),
+      },
       ...[
         'conditions-utilisation',
         'conditions-consommateur',
@@ -95,7 +110,7 @@ export const appRoutes: Route[] = [
       ),
       { path: 'products', redirectTo: 'resultats', pathMatch: 'full' },
       { path: 'products/:id', redirectTo: 'produit/:id', pathMatch: 'full' },
-      { path: 'favorites', redirectTo: 'compte', pathMatch: 'full' },
+      { path: 'favorites', redirectTo: 'favoris', pathMatch: 'full' },
       { path: 'cart', redirectTo: 'panier', pathMatch: 'full' },
       { path: 'shops', redirectTo: 'boutiques', pathMatch: 'full' },
       { path: 'auth', redirectTo: '', pathMatch: 'full' },

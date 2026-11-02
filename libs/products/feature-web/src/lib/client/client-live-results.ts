@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   CatalogApi,
+  CatalogCartActions,
   CatalogPageCache,
   CatalogShopsStore,
   CategoryStore,
@@ -52,6 +53,8 @@ export class ClientLiveResults {
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly favorites = inject(LiveFavoritesStore);
+  readonly cartActions = inject(CatalogCartActions);
+  readonly cart = this.cartActions.cart;
   readonly ui = inject(PreviewPreferences);
 
   readonly items = signal<readonly CatalogReference[]>([]);
@@ -251,4 +254,3 @@ export class ClientLiveResults {
     });
   }
 }
-

@@ -52,13 +52,18 @@
     ></a>
   </div>
   @if (status() === 'loading' || status() === 'idle') {
-  <div class="grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4" aria-hidden="true">
+  <div
+    class="grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4"
+    aria-hidden="true"
+  >
     @for (item of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track item) {
     <div class="h-14 animate-pulse rounded-2xl bg-[var(--client-tile)]"></div>
     }
   </div>
   } @else {
-  <ul class="m-0 grid list-none grid-cols-2 gap-1.5 p-0 lg:grid-cols-3 xl:grid-cols-4">
+  <ul
+    class="m-0 grid list-none grid-cols-2 gap-1.5 p-0 lg:grid-cols-3 xl:grid-cols-4"
+  >
     @for (category of categories(); track category.id) {
     <li class="min-w-0">
       <a
@@ -78,9 +83,9 @@
             class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
           } @else {
-          <span class="text-sm font-semibold text-[var(--client-action)]">{{
-            category.name.charAt(0)
-          }}</span>
+          <span class="text-sm font-semibold text-[var(--client-action)]"
+            >{{ category.name.charAt(0) }}</span
+          >
           }
         </span>
         <span class="line-clamp-2 leading-tight">{{ category.name }}</span>

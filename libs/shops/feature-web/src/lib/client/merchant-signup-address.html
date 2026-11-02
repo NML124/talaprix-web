@@ -13,6 +13,9 @@
     >
       <tpx-select-card
         label="Commune"
+        [searchable]="true"
+        searchPlaceholder="Rechercher une commune"
+        emptyLabel="Aucune commune trouvée"
         [options]="communes"
         [value]="shops.merchantCommune() || 'Choisir'"
         (selectionChange)="selectCommune($event)"

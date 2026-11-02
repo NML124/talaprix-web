@@ -3,6 +3,7 @@ import { ClientHeaderMobile } from './client-header-mobile';
 import { ClientFooterDesktop } from './client-footer-desktop';
 import { ClientFooterMobile } from './client-footer-mobile';
 import { ClientMenu } from './client-menu';
+import { ClientCookieNotice } from './client-cookie-notice';
 import { ClientAuthDesktopEmail } from './client-auth-desktop-email';
 import { ClientAuthDesktopCode } from './client-auth-desktop-code';
 import { ClientAuthMobileEmail } from './client-auth-mobile-email';
@@ -38,6 +39,7 @@ import {
     ClientFooterDesktop,
     ClientFooterMobile,
     ClientMenu,
+    ClientCookieNotice,
     ClientAuthDesktopEmail,
     ClientAuthDesktopCode,
     ClientAuthMobileEmail,

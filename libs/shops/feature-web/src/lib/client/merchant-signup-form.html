@@ -97,6 +97,18 @@
         </button>
         }
       </div>
+      @if (shops.merchantCategories().includes('Autre')) {
+      <input
+        #otherCategory
+        type="text"
+        maxlength="80"
+        aria-label="Précisez ce que vous vendez"
+        placeholder="Précisez ce que vous vendez"
+        class="h-11 w-full animate-fade-up rounded-[14px] border border-[var(--client-border)] bg-white px-4 text-[15px] outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:ring-4 focus:ring-[var(--client-action)]/15 motion-reduce:animate-none"
+        [value]="shops.merchantOtherCategory()"
+        (input)="shops.merchantOtherCategory.set(otherCategory.value)"
+      />
+      }
     </div>
   </fieldset>
 
@@ -145,22 +157,62 @@
 } @else {
 <div
   role="status"
-  class="flex flex-col gap-3 rounded-2xl bg-[var(--client-mint)] p-6 text-[var(--client-action)] transition duration-300 ease-out starting:translate-y-2 starting:opacity-0 motion-reduce:transition-none"
+  class="flex animate-fade-up flex-col items-center gap-4 py-6 text-center motion-reduce:animate-none"
 >
-  <strong>Informations vérifiées.</strong>
-  <p class="m-0 text-sm font-normal">
-    Pour finaliser votre inscription, votre message WhatsApp est prêt. Vous
-    pourrez le relire avant de l'envoyer.
-  </p>
-  <p class="m-0 whitespace-pre-line text-sm font-normal">
-    {{ shops.merchantSummary() }}
+  <span
+    class="relative flex size-20 items-center justify-center"
+    aria-hidden="true"
+  >
+    <span
+      class="absolute inset-0 animate-ping rounded-full bg-[var(--client-mint)] [animation-iteration-count:2] motion-reduce:hidden"
+    ></span>
+    <span
+      class="relative flex size-20 items-center justify-center rounded-full bg-[var(--client-action)] text-white"
+    >
+      <svg
+        width="34"
+        height="34"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          class="[stroke-dasharray:24] [stroke-dashoffset:24] animate-draw motion-reduce:[stroke-dashoffset:0]"
+          d="m5 12.5 4.5 4.5L19 7.5"
+        />
+      </svg>
+    </span>
+  </span>
+  <h3 class="m-0 text-xl font-semibold text-[var(--client-text)]">
+    Demande reçue, merci&nbsp;!
+  </h3>
+  <p
+    class="m-0 max-w-md text-sm leading-relaxed text-[var(--client-text-tertiary)] [text-wrap:balance]"
+  >
+    Votre boutique est en attente de validation. Notre équipe vérifie vos
+    informations et vous contacte sur WhatsApp pour finaliser votre inscription.
   </p>
   <a
     [href]="shops.merchantWhatsAppUrl()"
     target="_blank"
     rel="noopener noreferrer"
-    class="inline-flex h-10 w-full items-center justify-center gap-2 self-start rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] sm:w-auto"
-    >Continuer sur WhatsApp</a
+    class="mt-1 inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
+    >Envoyer ma demande sur WhatsApp</a
   >
+  <details class="w-full max-w-md text-left">
+    <summary
+      class="cursor-pointer text-center text-[13px] font-semibold text-[var(--client-muted)] hover:text-[var(--client-text)]"
+    >
+      Voir le récapitulatif
+    </summary>
+    <p
+      class="m-0 mt-3 whitespace-pre-line text-[13px] leading-relaxed text-[var(--client-text-secondary)] [overflow-wrap:anywhere]"
+    >
+      {{ shops.merchantSummary() }}
+    </p>
+  </details>
 </div>
 }

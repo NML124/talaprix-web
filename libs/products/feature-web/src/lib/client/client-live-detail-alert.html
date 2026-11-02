@@ -1,4 +1,6 @@
-<div class="fixed inset-0 z-[95] flex items-end justify-center sm:items-center sm:p-6">
+<div
+  class="fixed inset-0 z-[95] flex items-end justify-center sm:items-center sm:p-6"
+>
   <button
     type="button"
     tabindex="-1"
@@ -36,12 +38,20 @@
       <span
         class="flex size-14 items-center justify-center rounded-full bg-[var(--client-mint)] text-[var(--client-action)]"
         aria-hidden="true"
-        ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12 4 4L19 6" /></svg
+        ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        >
+          <path d="m5 12 4 4L19 6" /></svg
       ></span>
       <h2 id="alert-title" class="m-0 text-xl font-semibold">Alerte créée</h2>
       <p class="m-0 text-sm text-[var(--client-muted)]">
-        Nous vous préviendrons dès que le prix passe sous
-        {{ value() }} {{ currency() }}.
+        Nous vous préviendrons dès que le prix passe sous {{ value() }} {{
+        currency() }}.
       </p>
       <button
         type="button"
@@ -57,10 +67,13 @@
     </h2>
     <p class="m-0 mt-1.5 text-sm text-[var(--client-muted)]">
       Soyez prévenu quand {{ store.reference()?.name }} passe sous le prix de
-      votre choix.
-      @if (store.priceRange(); as range) { Actuellement dès {{ range.low }}. }
+      votre choix. @if (store.priceRange(); as range) { Actuellement dès {{
+      range.low }}. }
     </p>
-    <form class="mt-5 flex flex-col gap-3" (submit)="$event.preventDefault(); submit()">
+    <form
+      class="mt-5 flex flex-col gap-3"
+      (submit)="$event.preventDefault(); submit()"
+    >
       <label for="alert-price" class="text-sm font-medium">Prix souhaité</label>
       <div class="relative">
         <input
@@ -87,7 +100,11 @@
         >
       </div>
       @if (error()) {
-      <p id="alert-price-error" role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+      <p
+        id="alert-price-error"
+        role="alert"
+        class="m-0 text-[13px] text-[var(--client-error)]"
+      >
         {{ error() }}
       </p>
       }
@@ -97,7 +114,10 @@
         [disabled]="status() === 'sending'"
       >
         @if (status() === 'sending') {
-        <span aria-hidden="true" class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
+        <span
+          aria-hidden="true"
+          class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+        ></span>
         Création… } @else { Créer l’alerte }
       </button>
     </form>

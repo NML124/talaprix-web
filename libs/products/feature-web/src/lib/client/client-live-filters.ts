@@ -42,7 +42,11 @@ export class ClientLiveFilters {
     const term = normalize(this.shopQuery());
     const selected = new Set(this.shopIds());
     return this.shops()
-      .filter((shop) => !term || normalize(`${shop.name} ${shop.address ?? ''}`).includes(term))
+      .filter(
+        (shop) =>
+          !term ||
+          normalize(`${shop.name} ${shop.address ?? ''}`).includes(term),
+      )
       .sort((a, b) => Number(selected.has(b.id)) - Number(selected.has(a.id)));
   });
   readonly priceChange = output<PriceRange>();

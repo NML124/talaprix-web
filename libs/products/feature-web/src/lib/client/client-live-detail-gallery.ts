@@ -23,6 +23,7 @@ export class ClientLiveDetailGallery {
 
   step(delta: number): void {
     const count = this.images().length;
-    if (count > 1) this.index.update((value) => (value + delta + count) % count);
+    if (count > 1)
+      this.index.update((value) => (value + delta + count) % count);
   }
 }

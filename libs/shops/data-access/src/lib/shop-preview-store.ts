@@ -50,6 +50,8 @@ export class ShopPreviewStore {
   });
   readonly merchantCommune = signal('');
   readonly merchantCategories = signal<readonly string[]>([]);
+  /** Free text when "Autre" is selected in "Ce que vous vendez". */
+  readonly merchantOtherCategory = signal('');
   readonly merchantSent = signal(false);
   readonly merchantPhotoName = signal('');
   readonly merchantSummary = signal('');
@@ -115,7 +117,15 @@ export class ShopPreviewStore {
               `Position GPS : https://www.google.com/maps?q=${position.lat.toFixed(6)},${position.lon.toFixed(6)}`,
             ]
           : []),
-        `Produits : ${this.merchantCategories().join(', ') || 'Non précisés'}`,
+        `Produits : ${
+          this.merchantCategories()
+            .map((name) =>
+              name === 'Autre' && this.merchantOtherCategory().trim()
+                ? `Autre (${this.merchantOtherCategory().trim()})`
+                : name,
+            )
+            .join(', ') || 'Non précisés'
+        }`,
       ].join('\n'),
     );
     this.merchantSent.set(true);

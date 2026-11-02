@@ -32,38 +32,45 @@
     </div>
     <nav aria-label="Découvrir">
       <h3>Découvrir</h3>
-      <a href="/categories">Catégories</a
-      ><a href="/resultats">Voir les offres</a
-      ><a href="/boutiques">Boutiques et carte</a>
-    </nav>
-    <nav aria-label="Talaprix">
-      <h3>Talaprix</h3>
-      <a href="/">Accueil</a><a href="/commercants#faq">Comment ça marche</a
-      ><a href="/commercants#contact">Nous contacter</a>
+      <a routerLink="/categories">Catégories</a>
+      <a routerLink="/resultats">Tous les produits</a>
+      <a routerLink="/boutiques">Boutiques et carte</a>
+      <a routerLink="/commercants" fragment="faq">Comment ça marche</a>
     </nav>
     <nav aria-label="Commerçants">
       <h3>Commerçants</h3>
-      <a href="/commercants">Devenir partenaire</a
-      ><a href="/commercants#inscription">Inscrire une boutique</a
-      ><a href="/commercants#faq">Questions fréquentes</a>
+      <a routerLink="/commercants">Devenir partenaire</a>
+      <a routerLink="/commercants" fragment="inscription"
+        >Inscrire une boutique</a
+      >
+      <a routerLink="/commercants" fragment="faq">Questions fréquentes</a>
     </nav>
     <nav aria-label="Assistance">
       <h3>Assistance</h3>
-      <a routerLink="/aide">Centre d'aide</a
-      ><a routerLink="/aide">Contacter le support</a>
+      <a routerLink="/aide">Centre d’aide</a>
+      <a routerLink="/contact">Nous contacter</a>
+      <a routerLink="/contact" [queryParams]="{ type: 'probleme' }"
+        >Signaler un problème</a
+      >
     </nav>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Talaprix SAS · Kinshasa, RDC</span>
-    <nav aria-label="Informations légales" class="footer-legal">
+    <nav aria-label="Informations légales">
+      <h3>Informations légales</h3>
       <a routerLink="/conditions-utilisation">Conditions d’utilisation</a>
       <a routerLink="/conditions-consommateur">Conditions de consommateur</a>
       <a routerLink="/politique-utilisation">Politique d’utilisation</a>
       <a routerLink="/confidentialite">Confidentialité</a>
+      <button
+        type="button"
+        class="border-0 bg-transparent p-0 text-left text-[13.5px] leading-[1.5] text-[var(--client-text-tertiary)] hover:text-[var(--client-action)] hover:underline"
+        (click)="cookieNotice.open()"
+      >
+        Stockage et cookies
+      </button>
       <a routerLink="/suppression-donnees">Suppression des données</a>
     </nav>
-    <a href="mailto:support@talaprix.com?subject=Signalement%20Talaprix"
-      >Signaler un problème</a
-    >
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Talaprix SAS. Tous droits réservés.</span>
+    <span>Kinshasa, République démocratique du Congo</span>
   </div>
 </footer>

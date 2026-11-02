@@ -25,4 +25,12 @@ export class ClientLiveDetailOffers {
   inCart(offer: CatalogOffer): boolean {
     return this.#cart.offerFor(offer.referenceId) === offer.id;
   }
+
+  quantity(offer: CatalogOffer): number {
+    return this.inCart(offer) ? this.#cart.quantityFor(offer.referenceId) : 0;
+  }
+
+  change(offer: CatalogOffer, delta: number): void {
+    if (this.inCart(offer)) this.#cart.changeQuantity(offer.referenceId, delta);
+  }
 }

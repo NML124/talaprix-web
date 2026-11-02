@@ -386,224 +386,128 @@
     {
       "screen": "desktop/01-accueil.png",
       "status": "compared",
-      "reference": [
-        1440,
-        3374
-      ],
-      "actual": [
-        1440,
-        3370
-      ],
+      "reference": [1440, 3374],
+      "actual": [1440, 3370],
       "commonAreaDifferentPercent": 5.46,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/01b-accueil-popup-connexion.png",
       "status": "compared",
-      "reference": [
-        1440,
-        900
-      ],
-      "actual": [
-        1440,
-        900
-      ],
+      "reference": [1440, 900],
+      "actual": [1440, 900],
       "commonAreaDifferentPercent": 1.16,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/01c-accueil-popup-code.png",
       "status": "compared",
-      "reference": [
-        1440,
-        900
-      ],
-      "actual": [
-        1440,
-        900
-      ],
+      "reference": [1440, 900],
+      "actual": [1440, 900],
       "commonAreaDifferentPercent": 2.43,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/02-recherche-ouverte.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1424
-      ],
-      "actual": [
-        1440,
-        3370
-      ],
+      "reference": [1440, 1424],
+      "actual": [1440, 3370],
       "commonAreaDifferentPercent": 44.29,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/03-resultats.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1750
-      ],
-      "actual": [
-        1440,
-        1750
-      ],
+      "reference": [1440, 1750],
+      "actual": [1440, 1750],
       "commonAreaDifferentPercent": 3.02,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/04-fiche-produit.png",
       "status": "compared",
-      "reference": [
-        1440,
-        2116
-      ],
-      "actual": [
-        1440,
-        2116
-      ],
+      "reference": [1440, 2116],
+      "actual": [1440, 2116],
       "commonAreaDifferentPercent": 3.43,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/05-boutiques-carte.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1309
-      ],
-      "actual": [
-        1440,
-        1308
-      ],
+      "reference": [1440, 1309],
+      "actual": [1440, 1308],
       "commonAreaDifferentPercent": 5.05,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/06-carte-sans-position.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1309
-      ],
-      "actual": [
-        1440,
-        1308
-      ],
+      "reference": [1440, 1309],
+      "actual": [1440, 1308],
       "commonAreaDifferentPercent": 4.31,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/07-panier.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1142
-      ],
-      "actual": [
-        1440,
-        1138
-      ],
+      "reference": [1440, 1142],
+      "actual": [1440, 1138],
       "commonAreaDifferentPercent": 6.04,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/07b-panier-optimise.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1303
-      ],
-      "actual": [
-        1440,
-        1297
-      ],
+      "reference": [1440, 1303],
+      "actual": [1440, 1297],
       "commonAreaDifferentPercent": 6.46,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/08-compte-favoris.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1525
-      ],
-      "actual": [
-        1440,
-        1525
-      ],
+      "reference": [1440, 1525],
+      "actual": [1440, 1525],
       "commonAreaDifferentPercent": 4.01,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/09-categories.png",
       "status": "compared",
-      "reference": [
-        1440,
-        1753
-      ],
-      "actual": [
-        1440,
-        1753
-      ],
+      "reference": [1440, 1753],
+      "actual": [1440, 1753],
       "commonAreaDifferentPercent": 2.09,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/10-commercants.png",
       "status": "compared",
-      "reference": [
-        1440,
-        2842
-      ],
-      "actual": [
-        1440,
-        2840
-      ],
+      "reference": [1440, 2842],
+      "actual": [1440, 2840],
       "commonAreaDifferentPercent": 4.37,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/11-connexion-popup.png",
       "status": "compared",
-      "reference": [
-        1440,
-        900
-      ],
-      "actual": [
-        1440,
-        900
-      ],
+      "reference": [1440, 900],
+      "actual": [1440, 900],
       "commonAreaDifferentPercent": 8.77,
       "dimensionMatch": true
     },
     {
       "screen": "desktop/composant-footer.png",
       "status": "compared",
-      "reference": [
-        1440,
-        379
-      ],
-      "actual": [
-        1440,
-        380
-      ],
+      "reference": [1440, 379],
+      "actual": [1440, 380],
       "commonAreaDifferentPercent": 3.51,
       "dimensionMatch": false
     },
     {
       "screen": "desktop/composant-header.png",
       "status": "compared",
-      "reference": [
-        1440,
-        169
-      ],
-      "actual": [
-        1440,
-        169
-      ],
+      "reference": [1440, 169],
+      "actual": [1440, 169],
       "commonAreaDifferentPercent": 6.91,
       "dimensionMatch": true
     },
@@ -614,252 +518,144 @@
     {
       "screen": "mobile/composant-m-header.png",
       "status": "compared",
-      "reference": [
-        780,
-        356
-      ],
-      "actual": [
-        780,
-        356
-      ],
+      "reference": [780, 356],
+      "actual": [780, 356],
       "commonAreaDifferentPercent": 3.91,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/composant-m-pied.png",
       "status": "compared",
-      "reference": [
-        780,
-        1418
-      ],
-      "actual": [
-        780,
-        1422
-      ],
+      "reference": [780, 1418],
+      "actual": [780, 1422],
       "commonAreaDifferentPercent": 5.34,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/composant-m-tabbar.png",
       "status": "compared",
-      "reference": [
-        780,
-        148
-      ],
-      "actual": [
-        780,
-        148
-      ],
+      "reference": [780, 148],
+      "actual": [780, 148],
       "commonAreaDifferentPercent": 4.8,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m01-accueil.png",
       "status": "compared",
-      "reference": [
-        780,
-        6878
-      ],
-      "actual": [
-        780,
-        6878
-      ],
+      "reference": [780, 6878],
+      "actual": [780, 6878],
       "commonAreaDifferentPercent": 2.57,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m02-recherche-ouverte.png",
       "status": "compared",
-      "reference": [
-        780,
-        1688
-      ],
-      "actual": [
-        780,
-        1688
-      ],
+      "reference": [780, 1688],
+      "actual": [780, 1688],
       "commonAreaDifferentPercent": 3.11,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m03-resultats.png",
       "status": "compared",
-      "reference": [
-        780,
-        5284
-      ],
-      "actual": [
-        780,
-        5260
-      ],
+      "reference": [780, 5284],
+      "actual": [780, 5260],
       "commonAreaDifferentPercent": 8.41,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m03b-filtres.png",
       "status": "compared",
-      "reference": [
-        780,
-        1688
-      ],
-      "actual": [
-        780,
-        1688
-      ],
+      "reference": [780, 1688],
+      "actual": [780, 1688],
       "commonAreaDifferentPercent": 7.96,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m04-fiche-produit.png",
       "status": "compared",
-      "reference": [
-        780,
-        5000
-      ],
-      "actual": [
-        780,
-        4844
-      ],
+      "reference": [780, 5000],
+      "actual": [780, 4844],
       "commonAreaDifferentPercent": 7.68,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m05-boutiques-carte.png",
       "status": "compared",
-      "reference": [
-        780,
-        4130
-      ],
-      "actual": [
-        780,
-        4130
-      ],
+      "reference": [780, 4130],
+      "actual": [780, 4130],
       "commonAreaDifferentPercent": 3.01,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m06-carte-sans-position.png",
       "status": "compared",
-      "reference": [
-        780,
-        4044
-      ],
-      "actual": [
-        780,
-        4044
-      ],
+      "reference": [780, 4044],
+      "actual": [780, 4044],
       "commonAreaDifferentPercent": 3.74,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m07-panier.png",
       "status": "compared",
-      "reference": [
-        780,
-        2992
-      ],
-      "actual": [
-        780,
-        2964
-      ],
+      "reference": [780, 2992],
+      "actual": [780, 2964],
       "commonAreaDifferentPercent": 16.2,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m07b-panier-optimise.png",
       "status": "compared",
-      "reference": [
-        780,
-        3416
-      ],
-      "actual": [
-        780,
-        3410
-      ],
+      "reference": [780, 3416],
+      "actual": [780, 3410],
       "commonAreaDifferentPercent": 14.28,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m08-compte-favoris.png",
       "status": "compared",
-      "reference": [
-        780,
-        4280
-      ],
-      "actual": [
-        780,
-        4274
-      ],
+      "reference": [780, 4280],
+      "actual": [780, 4274],
       "commonAreaDifferentPercent": 4.49,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m09-categories.png",
       "status": "compared",
-      "reference": [
-        780,
-        3924
-      ],
-      "actual": [
-        780,
-        3924
-      ],
+      "reference": [780, 3924],
+      "actual": [780, 3924],
       "commonAreaDifferentPercent": 3.03,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m10-commercants.png",
       "status": "compared",
-      "reference": [
-        780,
-        6656
-      ],
-      "actual": [
-        780,
-        6668
-      ],
+      "reference": [780, 6656],
+      "actual": [780, 6668],
       "commonAreaDifferentPercent": 10.79,
       "dimensionMatch": false
     },
     {
       "screen": "mobile/m11-connexion.png",
       "status": "compared",
-      "reference": [
-        780,
-        1688
-      ],
-      "actual": [
-        780,
-        1688
-      ],
+      "reference": [780, 1688],
+      "actual": [780, 1688],
       "commonAreaDifferentPercent": 25.22,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m11b-connexion-code.png",
       "status": "compared",
-      "reference": [
-        780,
-        1688
-      ],
-      "actual": [
-        780,
-        1688
-      ],
+      "reference": [780, 1688],
+      "actual": [780, 1688],
       "commonAreaDifferentPercent": 30.03,
       "dimensionMatch": true
     },
     {
       "screen": "mobile/m12-menu.png",
       "status": "compared",
-      "reference": [
-        780,
-        1688
-      ],
-      "actual": [
-        780,
-        1688
-      ],
+      "reference": [780, 1688],
+      "actual": [780, 1688],
       "commonAreaDifferentPercent": 5.34,
       "dimensionMatch": true
     }

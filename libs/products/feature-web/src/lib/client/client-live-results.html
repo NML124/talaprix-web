@@ -99,8 +99,7 @@
       >
         {{ favorites.error() }}
       </p>
-      }
-      @if (error()) {
+      } @if (error()) {
       <p
         role="alert"
         class="mb-4 mt-0 flex flex-wrap items-center gap-2 rounded-2xl bg-red-50 px-4 py-3 text-sm text-[var(--client-error)]"
@@ -166,6 +165,10 @@
           [favorite]="favorite(item)"
           [pending]="favorites.isPending(item.productId)"
           (toggleFavorite)="toggleFavorite(item)"
+          [cartQuantity]="cart.quantityFor(item.id)"
+          [cartPending]="cartActions.pending() !== null"
+          (addToCart)="cartActions.add(item)"
+          (quantityChange)="cartActions.change(item.id, $event)"
         />
         }
       </div>

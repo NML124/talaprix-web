@@ -1,6 +1,4 @@
-<main
-  class="mx-auto max-w-[1320px] px-4 pb-28 pt-5 sm:px-6 lg:pb-16 lg:pt-7"
->
+<main class="mx-auto max-w-[1320px] px-4 pb-28 pt-5 sm:px-6 lg:pb-16 lg:pt-7">
   <nav aria-label="Fil d’Ariane" class="mb-4 min-w-0">
     <ol
       class="m-0 flex list-none flex-wrap items-center gap-1.5 p-0 text-[13px] text-[var(--client-muted)]"
@@ -87,18 +85,41 @@
           {{ store.price(offer) }}
         </p>
       </div>
+      @if (bestInCart()) {
+      <div
+        class="flex h-11 items-center rounded-[15px] bg-[var(--client-mint)] text-[var(--client-action)]"
+      >
+        <button
+          type="button"
+          class="grid size-11 place-items-center text-lg"
+          aria-label="Diminuer la quantité"
+          (click)="changeBest(-1)"
+        >
+          −
+        </button>
+        <span class="min-w-5 text-center text-sm font-bold tabular-nums"
+          >{{ bestQuantity() }}</span
+        >
+        <button
+          type="button"
+          class="grid size-11 place-items-center text-lg"
+          [disabled]="bestQuantity() >= 99"
+          aria-label="Augmenter la quantité"
+          (click)="changeBest(1)"
+        >
+          +
+        </button>
+      </div>
+      } @else {
       <button
         type="button"
         class="inline-flex h-11 items-center justify-center gap-2 rounded-[15px] px-5 text-[14.5px] font-semibold transition duration-150 active:scale-[0.98]"
-        [class]="
-          bestInCart()
-            ? 'bg-[var(--client-mint)] text-[var(--client-action)]'
-            : 'bg-[var(--client-action)] text-white'
-        "
+        class="bg-[var(--client-action)] text-white"
         (click)="chooseBest()"
       >
-        {{ bestInCart() ? 'Dans le panier' : 'Choisir la meilleure offre' }}
+        Ajouter au panier
       </button>
+      }
     </div>
   </div>
   } }

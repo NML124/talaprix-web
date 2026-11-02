@@ -4,12 +4,15 @@ import { SvgVisual } from '@talaprix/shared/ui-kit';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   signal,
   type Type,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthSessionStore } from '@talaprix/users/data-access';
+import { LiveFavoritesStore } from '@talaprix/products/data-access';
 import {
   HEADER_SEARCH,
   PreviewPreferences,
@@ -19,11 +22,26 @@ import {
   selector: 'lib-client-header-desktop-controls-1',
   imports: [NgComponentOutlet, RouterLink, SvgVisual, ShopAvatar],
   templateUrl: './client-header-desktop-controls-1.html',
-  host: { class: 'contents' },
+  host: {
+    class: 'contents',
+    '(document:click)': 'closeOutside($event)',
+    '(document:keydown.escape)': 'profileOpen.set(false)',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientHeaderDesktopControls1 {
   readonly ui = inject(PreviewPreferences);
+  readonly session = inject(AuthSessionStore);
+  readonly favorites = inject(LiveFavoritesStore);
+  readonly profileOpen = signal(false);
+  readonly username = computed(() => {
+    const user = this.session.user();
+    return (
+      user?.displayName.trim().split(/\s+/u)[0] ||
+      user?.email.split('@')[0] ||
+      'Mon compte'
+    );
+  });
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   /** Live search bar provided by the app (see `provideHeaderSearch`). */
   readonly headerSearch = signal<Type<unknown> | null>(null);
@@ -31,5 +49,15 @@ export class ClientHeaderDesktopControls1 {
   constructor() {
     const load = inject(HEADER_SEARCH, { optional: true });
     void load?.().then((component) => this.headerSearch.set(component));
+  }
+
+  closeOutside(event: MouseEvent): void {
+    if (!this.element.nativeElement.contains(event.target as Node))
+      this.profileOpen.set(false);
+  }
+
+  async signOut(): Promise<void> {
+    this.profileOpen.set(false);
+    await this.ui.signOut();
   }
 }

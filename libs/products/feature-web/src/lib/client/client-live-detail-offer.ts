@@ -16,6 +16,7 @@ import {
   formatMoney,
   initial,
   productLink,
+  splitSources,
   whatsappPhone,
   whatsappUrl,
 } from './client-live-detail-format';
@@ -32,8 +33,10 @@ export class ClientLiveDetailOffer {
   readonly productName = input.required<string>();
   readonly best = input(false);
   readonly inCart = input(false);
+  readonly quantity = input(0);
   readonly insight = input<OfferInsight | null>(null);
   readonly choose = output<void>();
+  readonly quantityChange = output<number>();
   readonly showOnMap = output<void>();
   readonly expanded = signal(false);
 
@@ -60,20 +63,37 @@ export class ClientLiveDetailOffer {
         )
       : null;
   });
-  readonly description = computed(
-    () => this.insight()?.description ?? this.offer().description,
+  readonly description = computed(() =>
+    splitSources(this.insight()?.description ?? this.offer().description),
   );
+  readonly comment = computed(() =>
+    splitSources(this.insight()?.priceComment ?? null),
+  );
+  /** Source links from the note and the description, without duplicates. */
+  readonly sources = computed(() => {
+    const all = [...this.comment().links, ...this.description().links];
+    return all.filter(
+      (link, index) =>
+        all.findIndex((other) => other.url === link.url) === index,
+    );
+  });
   /** Lowest / highest historical prices and where today's price sits. */
   readonly history = computed(() => {
     const insight = this.insight();
     const offer = this.offer();
     if (!insight) return null;
     const values = insight.history.map((point) => point.price);
-    const low = insight.minHistoricalPrice ?? (values.length ? Math.min(...values) : null);
-    const high = insight.maxHistoricalPrice ?? (values.length ? Math.max(...values) : null);
+    const low =
+      insight.minHistoricalPrice ??
+      (values.length ? Math.min(...values) : null);
+    const high =
+      insight.maxHistoricalPrice ??
+      (values.length ? Math.max(...values) : null);
     if (low === null || high === null) return null;
     const position =
-      high > low ? Math.min(1, Math.max(0, (offer.price - low) / (high - low))) : 0.5;
+      high > low
+        ? Math.min(1, Math.max(0, (offer.price - low) / (high - low)))
+        : 0.5;
     return {
       low: formatMoney(low, offer.currency),
       high: formatMoney(high, offer.currency),

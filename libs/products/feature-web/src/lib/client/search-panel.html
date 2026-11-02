@@ -1,8 +1,8 @@
 @let status = store.status();
 <p class="sr-only" aria-live="polite">
-  @if (status === 'results') { {{ items().length }} produit{{ items().length >
-  1 ? 's' : '' }} trouvé{{ items().length > 1 ? 's' : '' }} } @else if (status
-  === 'empty') { Aucun résultat } @else if (status === 'error') { Recherche
+  @if (status === 'results') { {{ items().length }} produit{{ items().length > 1
+  ? 's' : '' }} trouvé{{ items().length > 1 ? 's' : '' }} } @else if (status ===
+  'empty') { Aucun résultat } @else if (status === 'error') { Recherche
   momentanément indisponible }
 </p>
 
@@ -13,10 +13,7 @@
   Continuez à écrire…
 </p>
 } @else if (showResults()) {
-<div
-  class="animate-fade-in motion-reduce:animate-none"
-  [class]="card()"
->
+<div class="animate-fade-in motion-reduce:animate-none" [class]="card()">
   <p
     class="m-0 mb-2 px-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--client-muted)]"
   >
@@ -88,12 +85,7 @@
     class="mt-2 flex items-center justify-between gap-3 rounded-2xl px-3 py-3 text-[14px] font-semibold text-[var(--client-action)] no-underline transition hover:bg-[var(--client-mint)]"
     ><span class="min-w-0 truncate"
       >Voir tous les résultats pour « {{ trimmed() }} »</span
-    ><svg
-      lucideChevronRight
-      size="16"
-      class="shrink-0"
-      aria-hidden="true"
-    ></svg
+    ><svg lucideChevronRight size="16" class="shrink-0" aria-hidden="true"></svg
   ></a>
 </div>
 } @else if (status === 'loading') {

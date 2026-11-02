@@ -33,12 +33,12 @@ describe('catalog search mapping', () => {
     const items = [row('a', 30), row('b', 5), row('a', 20)]
       .map(mapSuggestion)
       .filter((item): item is CatalogSuggestion => item !== null);
-    expect(groupSuggestions(items).map((item) => [item.id, item.price])).toEqual(
-      [
-        ['a', 20],
-        ['b', 5],
-      ],
-    );
+    expect(
+      groupSuggestions(items).map((item) => [item.id, item.price]),
+    ).toEqual([
+      ['a', 20],
+      ['b', 5],
+    ]);
   });
 });
 

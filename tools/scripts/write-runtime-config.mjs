@@ -34,8 +34,14 @@ const config = {
   supabaseAnonKey: values['SUPABASE_ANON_KEY'] ?? '',
 };
 // Public Mapbox token (pk.…), restricted to the site URLs in the Mapbox dashboard.
+const mapboxToken =
+  values['MAPBOX_PUBLIC_TOKEN'] || values['MAPBOX_API_KEY'] || '';
+if (mapboxToken && !mapboxToken.startsWith('pk.'))
+  console.warn(
+    '[runtime-config] Mapbox token ignored: the website needs a public "pk." token, never a secret "sk." one.',
+  );
 const mapboxConfig = {
-  token: values['MAPBOX_PUBLIC_TOKEN'] ?? '',
+  token: mapboxToken.startsWith('pk.') ? mapboxToken : '',
   style: values['MAPBOX_STYLE'] || 'mapbox://styles/mapbox/streets-v12',
 };
 function configSource(value, mapbox) {

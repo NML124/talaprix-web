@@ -22,25 +22,18 @@ interface Favorite {
   readonly price: number | null;
   readonly currency: string;
 }
-interface Profile {
-  readonly name: string | null;
-  readonly email: string | null;
-  readonly phone: string | null;
-}
-
 @Component({
-  selector: 'tpx-client-live-account',
+  selector: 'tpx-client-live-favorites',
   imports: [RouterLink],
-  templateUrl: './client-live-account.html',
+  templateUrl: './client-live-favorites.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientLiveAccount {
+export class ClientLiveFavorites {
   readonly #functions = inject(SupabaseFunctions);
   readonly gate = inject(AuthGate);
   readonly #favoriteStore = inject(LiveFavoritesStore);
   readonly ui = inject(PreviewPreferences);
-  readonly profile = signal<Profile | null>(null);
   readonly #favorites = signal<readonly Favorite[]>([]);
   /** Hides a favorite as soon as it is removed; it comes back if the write fails. */
   readonly favorites = computed(() =>
@@ -57,7 +50,6 @@ export class ClientLiveAccount {
       if (this.gate.signedIn()) void this.load();
       else {
         ++this.#request;
-        this.profile.set(null);
         this.#favorites.set([]);
         this.status.set('idle');
       }
@@ -68,33 +60,24 @@ export class ClientLiveAccount {
     this.status.set('loading');
     this.error.set('');
     try {
-      const [profile, favorites] = await Promise.all([
-        this.#functions.get<unknown>('user-profile'),
-        this.#functions.get<unknown>('get-favorite-products'),
-      ]);
-      if (!isRecord(profile) || !Array.isArray(favorites))
-        throw new Error('Réponse du compte invalide.');
+      const favorites = await this.#functions.get<unknown>(
+        'get-favorite-products',
+      );
+      if (!Array.isArray(favorites))
+        throw new Error('Réponse des favoris invalide.');
       if (request !== this.#request) return;
-      this.profile.set({
-        name: str(profile['name']),
-        email: str(profile['email']),
-        phone: str(profile['phone_number']),
-      });
       this.#favorites.set(favorites.map(mapFavorite).filter(isNotNull));
       this.status.set('ready');
     } catch (error) {
       if (request !== this.#request) return;
       this.error.set(
-        error instanceof Error ? error.message : 'Compte indisponible.',
+        error instanceof Error ? error.message : 'Favoris indisponibles.',
       );
       this.status.set('error');
     }
   }
   remove(item: Favorite): void {
     this.#favoriteStore.toggle(item.productId, true);
-  }
-  signOut(): Promise<void> {
-    return this.ui.signOut();
   }
   price(item: Favorite): string {
     if (item.price === null) return 'Prix indisponible';

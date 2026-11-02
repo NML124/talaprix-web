@@ -81,9 +81,9 @@
               class="h-full w-full object-cover"
             />
             } @else {
-            <span class="text-[11px] font-semibold text-[var(--client-action)]">{{
-              row.category.name.charAt(0)
-            }}</span>
+            <span class="text-[11px] font-semibold text-[var(--client-action)]"
+              >{{ row.category.name.charAt(0) }}</span
+            >
             }
           </span>
           <span class="min-w-0 truncate">{{ row.category.name }}</span>
@@ -180,7 +180,14 @@
           "
         >
           @if (shopIds().includes(shop.id)) {
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2">
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3.2"
+          >
             <path d="m5 12 4 4L19 6" />
           </svg>
           }

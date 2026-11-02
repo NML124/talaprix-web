@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { currentPosition, MapboxApi } from '@talaprix/shared/data-access';
 import { SelectCard } from '@talaprix/shared/ui-kit';
-import { ShopPreviewStore } from '@talaprix/shops/data-access';
+import {
+  KINSHASA_COMMUNES,
+  ShopPreviewStore,
+} from '@talaprix/shops/data-access';
 import { MerchantSignupState } from './merchant-signup-state';
 
 @Component({
@@ -22,14 +25,9 @@ export class MerchantSignupAddress {
   readonly shops = inject(ShopPreviewStore);
   readonly state = inject(MerchantSignupState);
   readonly communes = [
-    'Choisir',
-    'Gombe',
-    'Lingwala',
-    'Kinshasa',
-    'Kasa-Vubu',
-    'Limete',
-    'Ngaliema',
-  ].map((value) => ({ label: value, value }));
+    { label: 'Choisir', value: 'Choisir' },
+    ...KINSHASA_COMMUNES.map((value) => ({ label: value, value })),
+  ];
 
   readonly #mapbox = inject(MapboxApi);
   readonly addressInput =
@@ -54,15 +52,17 @@ export class MerchantSignupAddress {
       .reverseGeocode(position)
       .catch(() => null);
     const input = this.addressInput()?.nativeElement;
-    if (address && input && !input.value.trim()) {
-      input.value = address;
+    if (input && !input.value.trim()) {
+      input.value =
+        address ??
+        `Position GPS ${position.lat.toFixed(5)}, ${position.lon.toFixed(5)}`;
       this.state.clearError('address');
     }
     this.locating.set('done');
     this.locateMessage.set(
       address
         ? 'Position enregistrée et adresse proposée. Vérifiez-la avant d’envoyer.'
-        : 'Position GPS enregistrée. Elle sera jointe à votre demande.',
+        : 'Position GPS enregistrée et ajoutée à l’adresse. Complétez-la si besoin.',
     );
   }
 

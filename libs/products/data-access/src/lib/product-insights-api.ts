@@ -1,12 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
-import {
-  isNotNull,
-  isRecord,
-  number,
-  string,
-  strings,
-} from './api-payload';
+import { isNotNull, isRecord, number, string, strings } from './api-payload';
 
 export interface PricePoint {
   readonly date: string;

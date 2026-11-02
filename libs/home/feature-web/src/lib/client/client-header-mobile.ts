@@ -3,6 +3,7 @@ import { SvgVisual } from '@talaprix/shared/ui-kit';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { LiveFavoritesStore } from '@talaprix/products/data-access';
 
 @Component({
   selector: 'lib-client-header-mobile',
@@ -13,4 +14,5 @@ import { PreviewPreferences } from '@talaprix/shared/data-access';
 })
 export class ClientHeaderMobile {
   readonly ui = inject(PreviewPreferences);
+  readonly favorites = inject(LiveFavoritesStore);
 }

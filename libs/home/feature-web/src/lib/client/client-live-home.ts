@@ -7,6 +7,8 @@ import {
 import { RouterLink } from '@angular/router';
 import {
   CategoryStore,
+  CatalogCartActions,
+  LiveFavoritesStore,
   type CatalogReference,
 } from '@talaprix/products/data-access';
 import { HomeCatalogStore } from '@talaprix/home/data-access';
@@ -21,6 +23,11 @@ import { HomeCatalogStore } from '@talaprix/home/data-access';
 export class ClientLiveHome {
   readonly #store = inject(HomeCatalogStore);
   readonly #categories = inject(CategoryStore);
+  readonly cartActions = inject(CatalogCartActions);
+  readonly cart = this.cartActions.cart;
+  readonly favorites = inject(LiveFavoritesStore);
+  readonly cartPending = this.cartActions.pending;
+  readonly cartError = this.cartActions.error;
   readonly products = this.#store.products;
   readonly shops = this.#store.shops;
   readonly categories = this.#categories.categories;
@@ -36,6 +43,10 @@ export class ClientLiveHome {
 
   load(): void {
     void this.#store.load(true);
+  }
+
+  addToCart(item: CatalogReference): void {
+    this.cartActions.add(item);
   }
 
   price(item: CatalogReference): string {

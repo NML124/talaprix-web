@@ -1,0 +1,273 @@
+<main class="mx-auto max-w-[1080px] px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
+  <div class="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10">
+    <lib-client-contact-info [kind]="kind()" />
+
+    <section
+      class="rounded-3xl bg-[var(--client-surface)] p-5 sm:p-8"
+      aria-live="polite"
+    >
+      @if (status() === 'sent') {
+      <div
+        class="flex animate-fade-up flex-col items-center gap-3 py-10 text-center motion-reduce:animate-none"
+      >
+        <span
+          class="flex size-14 items-center justify-center rounded-full bg-[var(--client-mint)] text-[var(--client-action)]"
+          aria-hidden="true"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+          >
+            <path d="m5 12 4 4L19 6" />
+          </svg>
+        </span>
+        <h2 class="m-0 text-xl font-semibold">Message envoyé</h2>
+        <p class="m-0 max-w-sm text-sm text-[var(--client-muted)]">
+          Merci. Nous vous répondons à {{ email() }} dans les meilleurs délais.
+        </p>
+        <button
+          type="button"
+          class="mt-2 inline-flex h-10 items-center justify-center rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-5 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98]"
+          (click)="reset()"
+        >
+          Envoyer un autre message
+        </button>
+      </div>
+      } @else {
+      <div
+        class="mb-6 inline-flex w-full rounded-[15px] bg-[var(--client-tile)] p-1 sm:w-auto"
+        role="group"
+        aria-label="Type de demande"
+      >
+        @for (option of [{ kind: 'contact', label: 'Nous contacter' }, { kind:
+        'problem', label: 'Signaler un problème' }]; track option.kind) {
+        <button
+          type="button"
+          class="inline-flex h-9 flex-1 items-center justify-center rounded-[11px] px-4 text-[13.5px] font-semibold transition duration-150 sm:flex-none"
+          [class]="kind() === option.kind ? 'bg-[var(--client-surface)] text-[var(--client-text)]' : 'text-[var(--client-muted)] hover:text-[var(--client-text)]'"
+          [attr.aria-pressed]="kind() === option.kind"
+          (click)="setKind($any(option.kind))"
+        >
+          {{ option.label }}
+        </button>
+        }
+      </div>
+
+      <form
+        class="flex flex-col gap-5"
+        novalidate
+        (submit)="$event.preventDefault(); submit()"
+      >
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label
+            class="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-[var(--client-text)]"
+          >
+            Nom <span class="sr-only">(facultatif)</span>
+            <input
+              #nameInput
+              type="text"
+              autocomplete="name"
+              placeholder="Facultatif"
+              class="h-11 w-full rounded-[14px] border border-[var(--client-border)] bg-white px-4 text-[15px] font-normal outline-none transition placeholder:text-[var(--client-subtle)] focus:border-[var(--client-action)] focus:ring-4 focus:ring-[var(--client-action)]/15"
+              [value]="name()"
+              (input)="name.set(nameInput.value)"
+            />
+          </label>
+          <label
+            class="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-[var(--client-text)]"
+          >
+            E-mail
+            <input
+              #emailInput
+              id="contact-email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="vous@email.com"
+              class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] font-normal outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+              [class]="errors().email ? 'border-[var(--client-error)] focus:ring-[var(--client-error)]/15' : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'"
+              [attr.aria-invalid]="errors().email ? 'true' : null"
+              [attr.aria-describedby]="errors().email ? 'contact-email-err' : null"
+              [value]="email()"
+              (input)="email.set(emailInput.value); clear('email')"
+            />
+            @if (errors().email) {
+            <span
+              id="contact-email-err"
+              class="text-[13px] font-normal text-[var(--client-error)]"
+              >{{ errors().email }}</span
+            >
+            }
+          </label>
+        </div>
+
+        <fieldset class="m-0 flex min-w-0 flex-col gap-2 border-0 p-0">
+          <legend class="mb-2 text-sm font-medium text-[var(--client-text)]">
+            Sujet
+          </legend>
+          <div class="flex flex-wrap gap-2">
+            @for (option of topics(); track option) {
+            <button
+              type="button"
+              class="inline-flex h-9 items-center rounded-full px-4 text-[13.5px] font-medium transition duration-150"
+              [class]="topic() === option ? 'bg-[var(--client-action)] text-white' : 'bg-[var(--client-tile)] text-[var(--client-text-secondary)] hover:bg-[var(--client-mint)] hover:text-[var(--client-action)]'"
+              [attr.aria-pressed]="topic() === option"
+              (click)="topic.set(option)"
+            >
+              {{ option }}
+            </button>
+            }
+          </div>
+        </fieldset>
+        @if (topic() === 'Autre') {
+        <label
+          class="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-[var(--client-text)]"
+        >
+          Précisez le sujet
+          <input
+            #otherInput
+            id="contact-other"
+            type="text"
+            maxlength="80"
+            placeholder="Ex. Suggestion d’amélioration"
+            class="h-11 w-full animate-fade-up rounded-[14px] border bg-white px-4 text-[15px] font-normal outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4 motion-reduce:animate-none"
+            [class]="errors().other ? 'border-[var(--client-error)] focus:ring-[var(--client-error)]/15' : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'"
+            [attr.aria-invalid]="errors().other ? 'true' : null"
+            [value]="otherTopic()"
+            (input)="otherTopic.set(otherInput.value); clear('other')"
+          />
+          @if (errors().other) {
+          <span class="text-[13px] font-normal text-[var(--client-error)]"
+            >{{ errors().other }}</span
+          >
+          }
+        </label>
+        } @if (kind() === 'problem') {
+        <label
+          class="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-[var(--client-text)]"
+        >
+          <span>
+            Page concernée
+            <span class="font-normal text-[var(--client-muted)]"
+              >(facultatif)</span
+            >
+          </span>
+          <input
+            #pageInput
+            id="contact-page"
+            type="url"
+            inputmode="url"
+            placeholder="https://talaprix.com/produit/…"
+            class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] font-normal outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+            [class]="errors().page ? 'border-[var(--client-error)] focus:ring-[var(--client-error)]/15' : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'"
+            [attr.aria-invalid]="errors().page ? 'true' : null"
+            [value]="pageUrl()"
+            (input)="pageUrl.set(pageInput.value); clear('page')"
+          />
+          @if (errors().page) {
+          <span class="text-[13px] font-normal text-[var(--client-error)]"
+            >{{ errors().page }}</span
+          >
+          }
+        </label>
+        }
+
+        <label
+          class="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-[var(--client-text)]"
+        >
+          Message
+          <textarea
+            #messageInput
+            id="contact-message"
+            rows="6"
+            [attr.maxlength]="maxMessage"
+            placeholder="{{ kind() === 'problem' ? 'Décrivez le problème : quel produit, quelle boutique, ce que vous avez constaté…' : 'Votre message' }}"
+            class="w-full resize-y rounded-[14px] border bg-white px-4 py-3 text-[15px] font-normal leading-relaxed outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+            [class]="errors().message ? 'border-[var(--client-error)] focus:ring-[var(--client-error)]/15' : 'border-[var(--client-border)] focus:border-[var(--client-action)] focus:ring-[var(--client-action)]/15'"
+            [attr.aria-invalid]="errors().message ? 'true' : null"
+            [attr.aria-describedby]="errors().message ? 'contact-message-err' : 'contact-message-count'"
+            [value]="message()"
+            (input)="message.set(messageInput.value); clear('message')"
+          ></textarea>
+          <span class="flex justify-between gap-3 text-[12.5px] font-normal">
+            <span id="contact-message-err" class="text-[var(--client-error)]"
+              >{{ errors().message }}</span
+            >
+            <span
+              id="contact-message-count"
+              class="shrink-0 tabular-nums text-[var(--client-muted)]"
+              >{{ message().length }} / {{ maxMessage }}</span
+            >
+          </span>
+        </label>
+
+        <label
+          class="absolute -left-[9999px] h-px w-px overflow-hidden"
+          aria-hidden="true"
+        >
+          Ne pas remplir
+          <input
+            #trapInput
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+            (input)="trap.set(trapInput.value)"
+          />
+        </label>
+
+        @if (status() === 'error') {
+        <p
+          role="alert"
+          class="m-0 rounded-2xl bg-red-50 px-4 py-3 text-sm text-[var(--client-error)]"
+        >
+          {{ serverError() }}
+        </p>
+        } @if (status() === 'unavailable') {
+        <div
+          role="status"
+          class="flex flex-col gap-3 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"
+        >
+          <p class="m-0">
+            L’envoi depuis le site n’est pas encore disponible. Votre message
+            est prêt, envoyez-le en un clic :
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <a
+              [href]="mailto()"
+              class="inline-flex h-9 items-center rounded-full bg-white px-4 font-semibold text-[var(--client-text)] no-underline"
+              >Par e-mail</a
+            >
+            <a
+              [href]="whatsapp()"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-9 items-center rounded-full bg-white px-4 font-semibold text-[var(--client-text)] no-underline"
+              >Sur WhatsApp</a
+            >
+          </div>
+        </div>
+        }
+
+        <button
+          type="submit"
+          class="inline-flex h-11 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-6 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60 sm:self-end"
+          [disabled]="status() === 'sending'"
+        >
+          @if (status() === 'sending') {
+          <span
+            aria-hidden="true"
+            class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+          ></span>
+          Envoi… } @else { Envoyer le message }
+        </button>
+      </form>
+      }
+    </section>
+  </div>
+</main>

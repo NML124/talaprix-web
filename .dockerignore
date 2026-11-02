@@ -1,0 +1,10 @@
+.git
+.github
+.nx
+.angular
+node_modules
+dist
+coverage
+.env
+.env.*
+*.log

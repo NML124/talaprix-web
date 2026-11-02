@@ -20,5 +20,7 @@ export const HEADER_SEARCH = new InjectionToken<HeaderSearchLoader>(
 export function provideHeaderSearch(
   loader: HeaderSearchLoader,
 ): EnvironmentProviders {
-  return makeEnvironmentProviders([{ provide: HEADER_SEARCH, useValue: loader }]);
+  return makeEnvironmentProviders([
+    { provide: HEADER_SEARCH, useValue: loader },
+  ]);
 }

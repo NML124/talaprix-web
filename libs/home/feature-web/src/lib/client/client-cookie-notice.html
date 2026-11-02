@@ -1,0 +1,35 @@
+@if (notice.visible()) {
+<aside
+  class="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-[760px] rounded-2xl border border-[var(--client-line)] bg-white p-4 shadow-xl sm:bottom-5 sm:p-5"
+  aria-label="Information sur le stockage local"
+>
+  <div
+    class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div>
+      <strong class="text-sm text-[var(--client-text)]"
+        >Connexion et panier</strong
+      >
+      <p
+        class="m-0 mt-1 text-[13px] leading-relaxed text-[var(--client-muted)]"
+      >
+        Talaprix conserve sur cet appareil les données nécessaires à votre
+        connexion et à votre panier. Aucun traceur de mesure d’audience n’est
+        activé actuellement.
+        <a
+          routerLink="/confidentialite"
+          class="font-medium text-[var(--client-action)] underline"
+          >En savoir plus</a
+        >
+      </p>
+    </div>
+    <button
+      type="button"
+      class="h-10 shrink-0 rounded-xl bg-[var(--client-action)] px-5 text-sm font-semibold text-white"
+      (click)="notice.dismiss()"
+    >
+      Compris
+    </button>
+  </div>
+</aside>
+}
