@@ -35,5 +35,5 @@ jobs:
       - run: npm ci
       - run: npm run format:check
       - run: npm run lint
-      - run: npm test -- --output-style=static
+      - run: npm test -- --output-style=stream
       - run: npm run build
