@@ -35,6 +35,72 @@ export function visibleCategories(
   return categories.filter((category) => isVisible(category, byId));
 }
 
+/** Mirrors the mobile catalogue's presentation rules without changing backend IDs. */
+export function displayCategories(
+  categories: readonly Category[],
+): readonly Category[] {
+  const visible = visibleCategories(categories);
+  const phone = visible.filter((category) =>
+    isPhoneCategoryName(category.name),
+  );
+  const preferred =
+    phone.find((category) => normalize(category.name) === 'smartphones') ??
+    phone[0];
+  const redundantComputers = new Set(
+    visible
+      .filter((category) => {
+        if (normalize(category.name) !== 'ordinateurs') return false;
+        const children = new Set(
+          visible
+            .filter((child) => child.parentCategoryId === category.id)
+            .map((child) => normalize(child.name)),
+        );
+        return (
+          children.has('ordinateurs portables') &&
+          children.has('ordinateurs de bureau')
+        );
+      })
+      .map((category) => category.id),
+  );
+  const house = new Set(
+    visible
+      .filter((category) => normalize(category.name) === 'maison et equipement')
+      .map((category) => category.id),
+  );
+  return visible.flatMap((category) => {
+    if (
+      redundantComputers.has(category.id) ||
+      (isPhoneCategoryName(category.name) && category.id !== preferred?.id)
+    )
+      return [];
+    if (category.id === preferred?.id)
+      return [{ ...category, name: 'Smartphones' }];
+    if (house.has(category.id)) return [{ ...category, name: 'Maison' }];
+    if (category.parentCategoryId && house.has(category.parentCategoryId))
+      return [{ ...category, parentName: 'Maison' }];
+    if (
+      category.parentCategoryId &&
+      redundantComputers.has(category.parentCategoryId)
+    )
+      return [{ ...category, parentCategoryId: null, parentName: null }];
+    return [category];
+  });
+}
+
+export function isPhoneCategoryName(name: string): boolean {
+  return ['telephone', 'telephones', 'smartphone', 'smartphones'].includes(
+    normalize(name).replace(/[^a-z0-9]/g, ''),
+  );
+}
+
+function normalize(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .trim();
+}
+
 function isVisible(
   category: Category,
   byId: ReadonlyMap<string, Category>,

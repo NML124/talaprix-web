@@ -15,7 +15,7 @@
     @if (store.status() === 'success') {
     <span
       class="rounded-full bg-[var(--client-surface)] px-3 py-1.5 text-sm text-[var(--client-muted)]"
-      >{{ store.categories().length }} catégories</span
+      >{{ store.displayCategories().length }} catégories</span
     >
     }
   </header>
@@ -46,7 +46,7 @@
       Réessayer
     </button>
   </div>
-  } @else if (store.categories().length === 0) {
+  } @else if (store.displayCategories().length === 0) {
   <p
     class="rounded-3xl bg-[var(--client-surface)] px-6 py-14 text-center text-[var(--client-muted)]"
   >
@@ -54,7 +54,8 @@
   </p>
   } @else {
   <div class="columns-2 gap-3 sm:gap-5 lg:columns-4 xl:columns-5">
-    @for (category of store.categories(); track category.id; let i = $index) {
+    @for (category of store.displayCategories(); track category.id; let i =
+    $index) {
     <a
       class="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-3xl bg-[var(--client-tile)] outline-none focus-visible:ring-4 focus-visible:ring-[var(--client-action)]/30 sm:mb-5 {{ ratio(i) }}"
       routerLink="/resultats"

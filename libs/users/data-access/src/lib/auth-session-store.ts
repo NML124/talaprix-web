@@ -77,7 +77,7 @@ export class AuthSessionStore {
     try {
       const { data, error } = await client.functions.invoke<{
         subscription?: { title?: string };
-      }>('user-profile');
+      }>('user-profile', { method: 'GET' });
       if (error || !data || user.id !== this.user()?.id) return;
       const role =
         data.subscription?.title === 'admin'

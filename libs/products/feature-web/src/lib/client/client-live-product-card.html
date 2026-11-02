@@ -96,10 +96,27 @@
         } @else {
         <button
           type="button"
-          class="h-10 w-full rounded-xl bg-[var(--client-action)] px-2 text-xs font-semibold text-white transition hover:bg-[var(--client-action-hover)] disabled:opacity-50"
+          class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[var(--client-action)] px-2 text-xs font-semibold text-white transition hover:bg-[var(--client-action-hover)] disabled:opacity-50"
           [disabled]="cartPending() || item().shopsCount < 1"
           (click)="addToCart.emit()"
         >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="9" cy="20" r="1" />
+            <circle cx="19" cy="20" r="1" />
+            <path
+              d="M2 3h2l2.4 11.4a2 2 0 0 0 2 1.6H19a2 2 0 0 0 2-1.6l1-7.4H5"
+            />
+          </svg>
           Ajouter au panier
         </button>
         }

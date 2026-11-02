@@ -7,7 +7,10 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LiveFavoritesStore } from '@talaprix/products/data-access';
+import {
+  CatalogCartActions,
+  LiveFavoritesStore,
+} from '@talaprix/products/data-access';
 import {
   AuthGate,
   PreviewPreferences,
@@ -33,6 +36,8 @@ export class ClientLiveFavorites {
   readonly #functions = inject(SupabaseFunctions);
   readonly gate = inject(AuthGate);
   readonly #favoriteStore = inject(LiveFavoritesStore);
+  readonly cartActions = inject(CatalogCartActions);
+  readonly cart = this.cartActions.cart;
   readonly ui = inject(PreviewPreferences);
   readonly #favorites = signal<readonly Favorite[]>([]);
   /** Hides a favorite as soon as it is removed; it comes back if the write fails. */

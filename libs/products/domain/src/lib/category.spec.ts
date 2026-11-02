@@ -1,4 +1,4 @@
-import { mapCategory, visibleCategories } from './category';
+import { displayCategories, mapCategory, visibleCategories } from './category';
 
 describe('category mapping and visibility', () => {
   it('maps the tolerated API shape and defaults visibility to true', () => {
@@ -39,6 +39,33 @@ describe('category mapping and visibility', () => {
     ];
 
     expect(visibleCategories(categories)).toEqual([]);
+  });
+
+  it('shows one smartphone tile and the two specific computer categories with their API IDs', () => {
+    const entries = [
+      { ...category('phone', null, true), name: 'Téléphones' },
+      { ...category('smart', null, true), name: 'Smartphones' },
+      { ...category('computers', null, true), name: 'Ordinateurs' },
+      {
+        ...category('laptops', 'computers', true),
+        name: 'Ordinateurs portables',
+      },
+      {
+        ...category('desktop', 'computers', true),
+        name: 'Ordinateurs de bureau',
+      },
+    ];
+    expect(
+      displayCategories(entries).map(({ id, name, parentCategoryId }) => [
+        id,
+        name,
+        parentCategoryId,
+      ]),
+    ).toEqual([
+      ['smart', 'Smartphones', null],
+      ['laptops', 'Ordinateurs portables', null],
+      ['desktop', 'Ordinateurs de bureau', null],
+    ]);
   });
 });
 

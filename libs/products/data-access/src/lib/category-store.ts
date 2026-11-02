@@ -7,6 +7,7 @@ import {
   type EnvironmentProviders,
 } from '@angular/core';
 import {
+  displayCategories,
   mapCategory,
   visibleCategories,
   type Category,
@@ -27,6 +28,9 @@ export class CategoryStore {
   readonly #status = signal<CategoryStatus>('idle');
   readonly #error = signal('');
   readonly categories = computed(() => visibleCategories(this.#categories()));
+  readonly displayCategories = computed(() =>
+    displayCategories(this.#categories()),
+  );
   readonly status = this.#status.asReadonly();
   readonly error = this.#error.asReadonly();
 

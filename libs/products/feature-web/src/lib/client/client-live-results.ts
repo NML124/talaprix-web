@@ -19,6 +19,7 @@ import {
   type CatalogReference,
 } from '@talaprix/products/data-access';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { isPhoneCategoryName } from '@talaprix/products/domain';
 import { Pagination, SelectCard } from '@talaprix/shared/ui-kit';
 import { ClientLiveFilters, type PriceRange } from './client-live-filters';
 import {
@@ -72,6 +73,7 @@ export class ClientLiveResults {
   readonly maxPrice = signal('');
   readonly filtersOpen = signal(false);
   readonly categories = this.#categories.categories;
+  readonly displayCategories = this.#categories.displayCategories;
   readonly skeletons = Array.from({ length: 10 }, (_, index) => index);
   readonly currencyLabel = computed(() =>
     this.ui.currency() === 'CDF' ? 'FC' : 'USD',
@@ -115,7 +117,6 @@ export class ClientLiveResults {
   #request = 0;
 
   constructor() {
-    void this.#categories.load();
     void this.#shops.load();
     this.#route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.q.set(params.get('q')?.trim() ?? '');
@@ -128,7 +129,7 @@ export class ClientLiveResults {
       this.page.set(Number.isInteger(page) && page > 0 ? page : 1);
       this.minPrice.set(params.get('min_price') ?? '');
       this.maxPrice.set(params.get('max_price') ?? '');
-      void this.load();
+      void this.#categories.load().then(() => this.load());
     });
   }
 
@@ -139,6 +140,7 @@ export class ClientLiveResults {
       page: this.page(),
       limit: 24,
       categoryId: this.categoryId() || undefined,
+      categoryIds: this.phoneCategoryIds(),
       shopIds: this.shopIds(),
       sort: this.sort(),
       currency: this.ui.currency(),
@@ -165,6 +167,16 @@ export class ClientLiveResults {
       );
       this.status.set('error');
     }
+  }
+
+  private phoneCategoryIds(): readonly string[] | undefined {
+    const selected = this.categories().find(
+      (category) => category.id === this.categoryId(),
+    );
+    if (!selected || !isPhoneCategoryName(selected.name)) return undefined;
+    return this.categories()
+      .filter((category) => isPhoneCategoryName(category.name))
+      .map((category) => category.id);
   }
 
   #show(result: CatalogPage): void {

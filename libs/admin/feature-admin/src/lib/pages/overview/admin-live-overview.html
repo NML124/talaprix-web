@@ -2,43 +2,151 @@
   title="Vue d’ensemble"
   subtitle="Indicateurs actuels du catalogue"
 />
-@if (status() === 'loading') {
-<p class="muted" role="status">Chargement des indicateurs…</p>
-} @else if (status() === 'error') {
-<div class="card" role="alert">
-  <p>{{ error() }}</p>
+@if (status() === 'error') {
+<div class="card mb-5" role="alert">
+  <p class="m-0">{{ error() }}</p>
   <button class="btn btn-secondary mt-3" type="button" (click)="load()">
     Réessayer
   </button>
 </div>
-} @else if (stats(); as values) {
-<section
-  class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
-  aria-label="Indicateurs du catalogue"
->
-  <a class="card block" routerLink="/admin/utilisateurs"
-    ><small>Utilisateurs</small
-    ><strong class="mt-2 block text-3xl">{{ values.users }}</strong></a
-  >
-  <a class="card block" routerLink="/admin/boutiques"
-    ><small>Boutiques</small
-    ><strong class="mt-2 block text-3xl">{{ values.shops }}</strong></a
-  >
-  <a class="card block" routerLink="/admin/catalogue"
-    ><small>Produits actifs</small
-    ><strong class="mt-2 block text-3xl">{{ values.products }}</strong></a
-  >
-  <a class="card block" routerLink="/admin/offres"
-    ><small>Offres</small
-    ><strong class="mt-2 block text-3xl">{{ values.offers }}</strong></a
-  >
-  <a class="card block" routerLink="/admin/categories"
-    ><small>Catégories</small
-    ><strong class="mt-2 block text-3xl">{{ values.categories }}</strong></a
-  >
-  <div class="card">
-    <small>Publicités actives</small
-    ><strong class="mt-2 block text-3xl">{{ values.advertisements }}</strong>
-  </div>
-</section>
 }
+<section class="kpi-band" aria-label="Indicateurs du catalogue">
+  <a class="kpi text-[var(--text)] no-underline" routerLink="/admin/utilisateurs"
+    ><small>Utilisateurs</small
+    ><strong class="number">{{ stats()?.users ?? '—' }}</strong
+    ><small>Comptes</small></a
+  >
+  <a class="kpi text-[var(--text)] no-underline" routerLink="/admin/boutiques"
+    ><small>Boutiques</small
+    ><strong class="number">{{ stats()?.shops ?? '—' }}</strong
+    ><small>Référencées</small></a
+  >
+  <a class="kpi text-[var(--text)] no-underline" routerLink="/admin/catalogue"
+    ><small>Produits</small
+    ><strong class="number">{{ stats()?.products ?? '—' }}</strong
+    ><small>Catalogue</small></a
+  >
+  <a class="kpi text-[var(--text)] no-underline" routerLink="/admin/offres"
+    ><small>Offres</small
+    ><strong class="number">{{ stats()?.offers ?? '—' }}</strong
+    ><small>Disponibles</small></a
+  >
+</section>
+<section class="card admin-engagement" aria-labelledby="engagement-heading">
+  <div class="card-head">
+    <div>
+      <h2 id="engagement-heading">Intérêt pour les vendeurs</h2>
+      <p class="muted small">Contacts et itinéraires</p>
+    </div>
+  </div>
+  <div class="admin-engagement-metrics">
+    <div>
+      <small>Contacter le vendeur</small><strong class="number">—</strong
+      ><span>mesure indisponible</span>
+    </div>
+    <div>
+      <small>Localiser le vendeur</small><strong class="number">—</strong
+      ><span>mesure indisponible</span>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+    <div class="grid gap-3">
+      <h3 class="text-sm font-semibold">Contacts par boutique</h3>
+      <div class="h-28 rounded-lg bg-[var(--surface-muted)]"></div>
+    </div>
+    <div class="grid gap-3">
+      <h3 class="text-sm font-semibold">Itinéraires par boutique</h3>
+      <div class="h-28 rounded-lg bg-[var(--surface-muted)]"></div>
+    </div>
+  </div>
+  <p class="muted small">
+    Les données d’engagement ne sont pas encore exposées par Supabase.
+  </p>
+</section>
+<div class="split items-start">
+  <section class="card wide overview-savings">
+    <div class="card-head">
+      <h2>Économies estimées</h2>
+      <span class="muted small">Données indisponibles</span>
+    </div>
+    <div class="toolbar overview-savings-total">
+      <strong class="hero-number number">—</strong>
+    </div>
+    <div
+      class="flex h-56 items-center justify-center rounded-lg bg-[var(--surface-muted)] text-sm text-[var(--text-2)]"
+      role="status"
+    >
+      Graphique en attente de données fiables
+    </div>
+  </section>
+  <section class="card narrow overview-actions">
+    <div class="card-head">
+      <h2>À traiter</h2>
+      <span class="muted small">Catalogue</span>
+    </div>
+    <a class="item-row" routerLink="/admin/catalogue"
+      ><strong class="number overview-action-count"
+        >{{ stats()?.products ?? '—' }}</strong
+      ><span class="grow"
+        ><strong>Produits</strong><small>Consulter le catalogue</small></span
+      ></a
+    ><a class="item-row" routerLink="/admin/offres"
+      ><strong class="number overview-action-count"
+        >{{ stats()?.offers ?? '—' }}</strong
+      ><span class="grow"
+        ><strong>Offres</strong><small>Consulter les offres</small></span
+      ></a
+    ><a class="item-row" routerLink="/admin/categories"
+      ><strong class="number overview-action-count"
+        >{{ stats()?.categories ?? '—' }}</strong
+      ><span class="grow"
+        ><strong>Catégories</strong
+        ><small>Consulter les catégories</small></span
+      ></a
+    >
+  </section>
+</div>
+<div class="split overview-geography items-start">
+  <section class="card wide">
+    <div class="card-head"><h2>Zones les plus actives</h2></div>
+    <div
+      class="flex h-36 items-center justify-center rounded-lg bg-[var(--surface-muted)] text-sm text-[var(--text-2)]"
+    >
+      Données géographiques indisponibles
+    </div>
+  </section>
+  <section class="card narrow">
+    <div class="card-head"><h2>Prix les plus bas</h2></div>
+    <p class="muted small">
+      Le classement par boutique sera affiché quand les comparaisons seront
+      disponibles.
+    </p>
+  </section>
+</div>
+<div class="split overview-trending-pair items-start">
+  <section class="card wide overview-trending">
+    <div class="card-head"><h2>Produits tendances</h2></div>
+    <div class="table-wrap overflow-x-auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Favoris</th>
+            <th class="align-right">Prix min.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3" class="muted small">
+              Données de tendance indisponibles.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="card narrow overview-activity">
+    <div class="card-head"><h2>Activité de l'équipe</h2></div>
+    <p class="muted small">Journal d’activité indisponible.</p>
+  </section>
+</div>
