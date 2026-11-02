@@ -9,7 +9,8 @@
     "env": {
       "executor": "nx:run-commands",
       "outputs": [
-        "{workspaceRoot}/apps/web/src/environments/runtime-config.generated.ts"
+        "{workspaceRoot}/apps/web/src/environments/runtime-config.generated.ts",
+        "{workspaceRoot}/apps/admin/src/environments/runtime-config.generated.ts"
       ],
       "options": {
         "command": "node tools/scripts/write-runtime-config.mjs"
@@ -113,6 +114,7 @@
       ]
     },
     "test": {
+      "dependsOn": ["env"],
       "executor": "@angular/build:unit-test",
       "options": {
         "watch": false
