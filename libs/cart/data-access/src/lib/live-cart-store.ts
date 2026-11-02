@@ -84,6 +84,13 @@ export class LiveCartStore extends OfferCart {
     );
   }
 
+  quantityFor(referenceId: string): number {
+    return (
+      this.items().find((item) => item.referenceId === referenceId)?.quantity ??
+      0
+    );
+  }
+
   switchOffer(referenceId: string, offer: CartOffer): void {
     this.update((items) =>
       items.map((item) =>

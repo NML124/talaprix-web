@@ -52,6 +52,12 @@ export class ClientLiveDetail {
       !!reference && !!best && this.#cart.offerFor(reference.id) === best.id
     );
   });
+  readonly bestQuantity = computed(() => {
+    const reference = this.store.reference();
+    return reference && this.bestInCart()
+      ? this.#cart.quantityFor(reference.id)
+      : 0;
+  });
 
   constructor() {
     inject(ActivatedRoute)
@@ -81,5 +87,11 @@ export class ClientLiveDetail {
   choose(offer: CatalogOffer): void {
     const reference = this.store.reference();
     if (reference) this.#cart.choose(cartSelection(reference, offer));
+  }
+
+  changeBest(delta: number): void {
+    const reference = this.store.reference();
+    if (reference && this.bestInCart())
+      this.#cart.changeQuantity(reference.id, delta);
   }
 }

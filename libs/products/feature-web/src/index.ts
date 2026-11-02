@@ -15,7 +15,8 @@ export * from './lib/client/client-search';
 
 export * from './lib/client/client-filters';
 export * from './lib/client/client-live-categories';
-export * from './lib/client/client-live-account';
+export * from './lib/client/client-live-favorites';
+export * from './lib/client/client-favorites-page';
 export * from './lib/client/client-live-search';
 export * from './lib/client/search-panel';
 export * from './lib/client/client-header-search';

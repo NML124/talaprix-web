@@ -164,29 +164,12 @@
         Les prix sont ceux affichés par les boutiques. Vérifiez la disponibilité
         avant de vous déplacer.
       </p>
-      <button
-        type="button"
-        class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
-        [disabled]="cart.saving() || !gate.signedIn()"
-        (click)="cart.save()"
+      <a
+        routerLink="/optimisation"
+        class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
       >
-        @if (cart.saving()) {
-        <span
-          aria-hidden="true"
-          class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
-        ></span>
-        Enregistrement… } @else if (cart.saveStatus() === 'saved') { Sélection
-        enregistrée } @else { Enregistrer ma sélection }
-      </button>
-      @if (cart.saveStatus() === 'error') {
-      <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
-        {{ cart.saveError() }}
-      </p>
-      } @else if (cart.saveStatus() === 'saved') {
-      <p role="status" class="m-0 text-[13px] text-[var(--client-action)]">
-        Retrouvez cette sélection dans l’application TalaPrix.
-      </p>
-      }
+        Optimiser mes achats
+      </a>
     </aside>
   </div>
   }

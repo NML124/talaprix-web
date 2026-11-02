@@ -33,8 +33,10 @@ export class ClientLiveDetailOffer {
   readonly productName = input.required<string>();
   readonly best = input(false);
   readonly inCart = input(false);
+  readonly quantity = input(0);
   readonly insight = input<OfferInsight | null>(null);
   readonly choose = output<void>();
+  readonly quantityChange = output<number>();
   readonly showOnMap = output<void>();
   readonly expanded = signal(false);
 

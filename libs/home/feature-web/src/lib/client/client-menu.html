@@ -43,6 +43,33 @@
     aria-label="Menu principal"
     class="[flex:1] [overflow:auto] [padding:16px_16px_24px] [display:flex] [flex-direction:column] [gap:24px] [height:1009px]"
   >
+    @if (session.isAuthenticated()) {
+    <section class="rounded-2xl bg-[var(--client-tile)] p-4">
+      <p class="m-0 truncate text-sm font-semibold">
+        {{ session.user()?.displayName || 'Mon profil' }}
+      </p>
+      <p class="m-0 mt-1 truncate text-xs text-[var(--client-muted)]">
+        {{ session.user()?.email }}
+      </p>
+      <div
+        class="mt-3 flex items-center justify-between border-t border-[var(--client-divider)] pt-3 text-sm"
+      >
+        <a
+          routerLink="/favoris"
+          (click)="ui.closeOverlays()"
+          class="font-semibold text-[var(--client-action)]"
+          >Mes favoris</a
+        >
+        <button
+          type="button"
+          (click)="signOut()"
+          class="font-semibold text-[var(--client-text-secondary)]"
+        >
+          Se déconnecter
+        </button>
+      </div>
+    </section>
+    } @else {
     <button
       type="button"
       (click)="ui.authenticate()"
@@ -87,6 +114,7 @@
         symbol="icon-c901e07a9df3"
       ></svg>
     </button>
+    }
     <div class="[display:flex] [flex-direction:column]">
       <span
         class="[font-size:12px] [font-weight:500] [color:var(--client-muted)] [letter-spacing:0.04em] [padding:0_4px_6px]"

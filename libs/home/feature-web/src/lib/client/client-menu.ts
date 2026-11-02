@@ -3,6 +3,7 @@ import { SvgVisual } from '@talaprix/shared/ui-kit';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { AuthSessionStore } from '@talaprix/users/data-access';
 
 @Component({
   selector: 'lib-client-menu',
@@ -13,4 +14,10 @@ import { PreviewPreferences } from '@talaprix/shared/data-access';
 })
 export class ClientMenu {
   readonly ui = inject(PreviewPreferences);
+  readonly session = inject(AuthSessionStore);
+
+  async signOut(): Promise<void> {
+    this.ui.closeOverlays();
+    await this.ui.signOut();
+  }
 }

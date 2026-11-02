@@ -58,7 +58,7 @@
     <a
       class="[width:44px] [height:44px] [border-radius:8px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [flex-shrink:0] client-hd"
       [attr.aria-label]="'Favoris, ' + favorites.count() + ' produit' + (favorites.count() === 1 ? '' : 's')"
-      routerLink="/compte"
+      routerLink="/favoris"
     >
       <span class="relative flex">
         <svg
@@ -107,33 +107,75 @@
         >Panier</span
       > </a
     >@if (session.isAuthenticated()) {
-    <a
-      routerLink="/compte"
-      class="client-header-login shrink-0 no-underline"
-      aria-label="Mon compte"
-    >
-      @if (session.user()?.avatarUrl; as avatarUrl) {
-      <img
-        [src]="avatarUrl"
-        alt=""
-        referrerpolicy="no-referrer"
-        class="size-[30px] rounded-full bg-white object-cover"
-      />
-      } @else {
-      <svg
-        class="size-[22px]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        aria-hidden="true"
+    <div class="relative shrink-0">
+      <button
+        type="button"
+        class="client-header-login shrink-0"
+        aria-label="Ouvrir le profil"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="profileOpen()"
+        (click)="profileOpen.set(!profileOpen())"
       >
-        <circle cx="12" cy="8" r="3.5" />
-        <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
-      </svg>
+        @if (session.user()?.avatarUrl; as avatarUrl) {
+        <img
+          [src]="avatarUrl"
+          alt=""
+          referrerpolicy="no-referrer"
+          class="size-[30px] rounded-full bg-white object-cover"
+        />
+        } @else {
+        <svg
+          class="size-[22px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+        </svg>
+        }
+        <span class="max-w-[110px] truncate">{{ username() }}</span>
+      </button>
+      @if (profileOpen()) {
+      <div
+        role="menu"
+        class="absolute right-0 top-[calc(100%+10px)] z-[100] w-[270px] rounded-2xl border border-[var(--client-line)] bg-white p-2 text-[var(--client-text)] shadow-[0_16px_48px_rgba(20,45,42,0.15)]"
+      >
+        <div class="border-b border-[var(--client-divider)] px-3 py-3">
+          <p class="m-0 truncate text-sm font-semibold">
+            {{ session.user()?.displayName || username() }}
+          </p>
+          <p class="m-0 mt-0.5 truncate text-xs text-[var(--client-muted)]">
+            {{ session.user()?.email }}
+          </p>
+        </div>
+        <a
+          role="menuitem"
+          routerLink="/favoris"
+          (click)="profileOpen.set(false)"
+          class="mt-1 flex h-10 items-center rounded-xl px-3 text-sm text-[var(--client-text)] no-underline hover:bg-[var(--client-tile)]"
+          >Mes favoris</a
+        >
+        <a
+          role="menuitem"
+          routerLink="/panier"
+          (click)="profileOpen.set(false)"
+          class="flex h-10 items-center rounded-xl px-3 text-sm text-[var(--client-text)] no-underline hover:bg-[var(--client-tile)]"
+          >Mon panier</a
+        >
+        <button
+          role="menuitem"
+          type="button"
+          (click)="signOut()"
+          class="flex h-10 w-full items-center rounded-xl px-3 text-left text-sm text-[var(--client-text)] hover:bg-[var(--client-tile)]"
+        >
+          Se déconnecter
+        </button>
+      </div>
       }
-      <span class="max-w-[110px] truncate">{{ username() }}</span>
-    </a>
+    </div>
     } @else {
     <button
       type="button"

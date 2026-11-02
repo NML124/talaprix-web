@@ -67,8 +67,10 @@
         [productName]="reference.name"
         [best]="offer.id === store.bestOffer()?.id"
         [inCart]="inCart(offer)"
+        [quantity]="quantity(offer)"
         [insight]="store.insight(offer.id)"
         (choose)="choose.emit(offer)"
+        (quantityChange)="change(offer, $event)"
         (showOnMap)="showOnMap.emit(offer)"
       />
     </li>

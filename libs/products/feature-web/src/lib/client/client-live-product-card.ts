@@ -19,5 +19,9 @@ export class ClientLiveProductCard {
   readonly price = input.required<string>();
   readonly favorite = input(false);
   readonly pending = input(false);
+  readonly cartQuantity = input(0);
+  readonly cartPending = input(false);
+  readonly addToCart = output<void>();
+  readonly quantityChange = output<number>();
   readonly toggleFavorite = output<void>();
 }

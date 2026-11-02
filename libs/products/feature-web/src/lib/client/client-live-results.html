@@ -165,6 +165,10 @@
           [favorite]="favorite(item)"
           [pending]="favorites.isPending(item.productId)"
           (toggleFavorite)="toggleFavorite(item)"
+          [cartQuantity]="cart.quantityFor(item.id)"
+          [cartPending]="cartActions.pending() !== null"
+          (addToCart)="cartActions.add(item)"
+          (quantityChange)="cartActions.change(item.id, $event)"
         />
         }
       </div>

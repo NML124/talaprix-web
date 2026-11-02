@@ -105,12 +105,38 @@
             >{{ item.shopsCount }} {{ item.shopsCount === 1 ? 'boutique' :
             'boutiques' }}</span
           >
+          @if (cart.quantityFor(item.id) > 0) {
+          <div
+            class="relative z-10 flex h-9 shrink-0 items-center rounded-xl bg-[var(--client-mint)] text-[var(--client-action)]"
+            [attr.aria-label]="'Quantité : ' + cart.quantityFor(item.id)"
+          >
+            <button
+              type="button"
+              class="grid size-9 place-items-center text-lg"
+              [attr.aria-label]="'Diminuer ' + item.name"
+              (click)="cartActions.change(item.id, -1)"
+            >
+              −
+            </button>
+            <span class="min-w-5 text-center text-sm font-bold tabular-nums"
+              >{{ cart.quantityFor(item.id) }}</span
+            >
+            <button
+              type="button"
+              class="grid size-9 place-items-center text-lg"
+              [disabled]="cart.quantityFor(item.id) >= 99"
+              [attr.aria-label]="'Augmenter ' + item.name"
+              (click)="cartActions.change(item.id, 1)"
+            >
+              +
+            </button>
+          </div>
+          } @else {
           <button
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-xl border border-[var(--client-line)] bg-white text-[var(--client-action)] transition hover:bg-[var(--client-mint)] disabled:opacity-50"
-            [disabled]="cartPending() !== null || item.shopsCount < 1 || cart.offerFor(item.id) !== null"
-            [attr.aria-label]="cart.offerFor(item.id) ? item.name + ' dans le panier' : 'Ajouter ' + item.name + ' au panier'"
-            [attr.aria-pressed]="cart.offerFor(item.id) !== null"
+            [disabled]="cartPending() !== null || item.shopsCount < 1"
+            [attr.aria-label]="'Ajouter ' + item.name + ' au panier'"
             (click)="addToCart(item)"
           >
             <svg
@@ -128,6 +154,7 @@
               <circle cx="18" cy="20" r="1" />
             </svg>
           </button>
+          }
         </div>
       </article>
       }
