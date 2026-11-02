@@ -105,6 +105,9 @@ jobs:
         run: |
           ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
             "docker service update --image '$IMAGE' --with-registry-auth --label-add traefik.http.services.talaprix-web-staging.loadbalancer.server.port=4000 --update-order start-first --update-failure-action rollback --detach=false talaprix-web-staging_talaprix-web-staging"
+          status=$(ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+            "docker service inspect talaprix-web-staging_talaprix-web-staging --format '{{.UpdateStatus.State}} {{.Spec.TaskTemplate.ContainerSpec.Image}}'")
+          test "$status" = "completed $IMAGE" || { echo "Staging update did not complete with the expected image"; exit 1; }
           if ! curl --fail --show-error --silent --retry 8 --retry-delay 5 \
             https://staging.talaprix.com/ > /dev/null; then
             ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
@@ -136,6 +139,9 @@ jobs:
         run: |
           ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
             "docker service update --image '$IMAGE' --with-registry-auth --label-add traefik.http.services.talaprix-web-production.loadbalancer.server.port=4000 --update-order start-first --update-failure-action rollback --detach=false talaprix-web-production_talaprix-web-production"
+          status=$(ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+            "docker service inspect talaprix-web-production_talaprix-web-production --format '{{.UpdateStatus.State}} {{.Spec.TaskTemplate.ContainerSpec.Image}}'")
+          test "$status" = "completed $IMAGE" || { echo "Production update did not complete with the expected image"; exit 1; }
           if ! curl --fail --show-error --silent --retry 8 --retry-delay 5 \
             https://talaprix.com/ > /dev/null; then
             ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
