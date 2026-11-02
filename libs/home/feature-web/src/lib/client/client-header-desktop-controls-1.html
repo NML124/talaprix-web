@@ -57,22 +57,30 @@
 
     <a
       class="[width:44px] [height:44px] [border-radius:8px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [flex-shrink:0] client-hd"
-      aria-label="Favoris"
+      [attr.aria-label]="'Favoris, ' + favorites.count() + ' produit' + (favorites.count() === 1 ? '' : 's')"
       routerLink="/compte"
     >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-        tpxVisual
-        symbol="icon-d6d8d482ea7e"
-      ></svg>
+      <span class="relative flex">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          tpxVisual
+          symbol="icon-d6d8d482ea7e"
+        ></svg>
+        @if (favorites.count() > 0) {
+        <span
+          class="absolute -right-2 -top-2 grid min-w-4 h-4 place-items-center rounded-full bg-white px-0.5 text-[10px] font-bold text-[#007A6C]"
+          >{{ favorites.count() }}</span
+        >
+        }
+      </span>
     </a>
     <a
       class="[display:flex] [align-items:center] [gap:8px] [padding:6px_10px_6px_8px] [border-radius:8px] [color:var(--client-surface)] [text-decoration:none] [flex-shrink:0] [box-shadow:none] client-hd"
@@ -98,7 +106,36 @@
       <span class="[font-size:14px] [font-weight:600] client-hide-md"
         >Panier</span
       > </a
-    ><button
+    >@if (session.isAuthenticated()) {
+    <a
+      routerLink="/compte"
+      class="client-header-login shrink-0 no-underline"
+      aria-label="Mon compte"
+    >
+      @if (session.user()?.avatarUrl; as avatarUrl) {
+      <img
+        [src]="avatarUrl"
+        alt=""
+        referrerpolicy="no-referrer"
+        class="size-[30px] rounded-full bg-white object-cover"
+      />
+      } @else {
+      <svg
+        class="size-[22px]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="8" r="3.5" />
+        <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+      </svg>
+      }
+      <span class="max-w-[110px] truncate">{{ username() }}</span>
+    </a>
+    } @else {
+    <button
       type="button"
       (click)="ui.authenticate()"
       class="client-header-login shrink-0"
@@ -113,9 +150,11 @@
         aria-hidden="true"
       >
         <circle cx="12" cy="8" r="3.5" />
-        <path d="M5 21v-2a7 7 0 0 1 14 0v2" /></svg
-      ><span>Se connecter</span>
+        <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+      </svg>
+      <span>Se connecter</span>
     </button>
+    }
   </div>
   <nav
     class="[background:var(--client-navigation)] client-nav-row"

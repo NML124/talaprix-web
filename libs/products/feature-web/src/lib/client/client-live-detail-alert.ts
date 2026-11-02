@@ -49,8 +49,9 @@ export class ClientLiveDetailAlert {
       return;
     }
     if (!best || !reference) return;
-    this.#gate.require('Connectez-vous pour créer une alerte prix.', () =>
-      void this.send(reference.productId, price, best.deviseId ?? 'xxx'),
+    this.#gate.require(
+      'Connectez-vous pour créer une alerte prix.',
+      () => void this.send(reference.productId, price, best.deviseId ?? 'xxx'),
     );
   }
 

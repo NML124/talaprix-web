@@ -8,8 +8,8 @@
       </h1>
       @if (cart.items().length) {
       <p class="m-0 mt-1.5 text-sm text-[var(--client-muted)]">
-        {{ cart.count() }} article{{ cart.count() > 1 ? 's' : '' }} ·
-        {{ groups().length }} boutique{{ groups().length > 1 ? 's' : '' }}
+        {{ cart.count() }} article{{ cart.count() > 1 ? 's' : '' }} · {{
+        groups().length }} boutique{{ groups().length > 1 ? 's' : '' }}
       </p>
       }
     </div>
@@ -99,7 +99,9 @@
               {{ group.shopName }}
             </h2>
             @if (group.shopAddress) {
-            <p class="m-0 mt-0.5 truncate text-[13px] text-[var(--client-muted)]">
+            <p
+              class="m-0 mt-0.5 truncate text-[13px] text-[var(--client-muted)]"
+            >
               {{ group.shopAddress }}
             </p>
             }
@@ -151,16 +153,16 @@
           <dt class="font-semibold">Total estimé</dt>
           <dd class="m-0 text-right">
             @for (total of totals(); track total) {
-            <span class="block text-lg font-semibold tabular-nums">{{
-              total
-            }}</span>
+            <span class="block text-lg font-semibold tabular-nums"
+              >{{ total }}</span
+            >
             }
           </dd>
         </div>
       </dl>
       <p class="m-0 text-xs leading-relaxed text-[var(--client-muted)]">
-        Les prix sont ceux affichés par les boutiques. Vérifiez la
-        disponibilité avant de vous déplacer.
+        Les prix sont ceux affichés par les boutiques. Vérifiez la disponibilité
+        avant de vous déplacer.
       </p>
       <button
         type="button"
@@ -173,8 +175,8 @@
           aria-hidden="true"
           class="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
         ></span>
-        Enregistrement… } @else if (cart.saveStatus() === 'saved') {
-        Sélection enregistrée } @else { Enregistrer ma sélection }
+        Enregistrement… } @else if (cart.saveStatus() === 'saved') { Sélection
+        enregistrée } @else { Enregistrer ma sélection }
       </button>
       @if (cart.saveStatus() === 'error') {
       <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">

@@ -26,8 +26,7 @@ export class ClientLiveDetailSummary {
   favorite(): boolean {
     const reference = this.store.reference();
     if (!reference) return false;
-    const server =
-      this.store.insights()?.favorite ?? reference.isFavorite;
+    const server = this.store.insights()?.favorite ?? reference.isFavorite;
     return this.favorites.isFavorite(reference.productId, server);
   }
 

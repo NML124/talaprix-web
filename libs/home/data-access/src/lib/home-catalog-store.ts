@@ -5,7 +5,7 @@ import {
   type CatalogReference,
 } from '@talaprix/products/data-access';
 
-const MAX_AGE_MS = 5 * 60_000;
+const MAX_AGE_MS = 15 * 60_000;
 
 /**
  * Home page data kept for the whole session. Coming back to the home page
@@ -37,7 +37,7 @@ export class HomeCatalogStore {
     try {
       const page = await this.#catalog.list({
         page: 1,
-        limit: 12,
+        limit: 24,
         sort: 'name_asc',
       });
       this.products.set(page.items);

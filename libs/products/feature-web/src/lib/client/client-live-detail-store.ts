@@ -135,11 +135,7 @@ export class ClientLiveDetailStore {
     else this.sorting.set(true);
     this.error.set('');
     try {
-      const detail = await this.#api.detail(
-        this.#id,
-        query,
-        controller.signal,
-      );
+      const detail = await this.#api.detail(this.#id, query, controller.signal);
       if (request !== this.#request) return;
       const previous = this.detail()?.reference.productId;
       this.detail.set(detail);

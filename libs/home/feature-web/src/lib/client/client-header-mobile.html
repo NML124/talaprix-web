@@ -20,9 +20,9 @@
         ></a
       >
       <a
-        aria-label="Compte et favoris"
+        [attr.aria-label]="'Compte et favoris, ' + favorites.count() + ' produit' + (favorites.count() === 1 ? '' : 's')"
         routerLink="/compte"
-        class="[width:38px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
+        class="relative [width:38px] [height:44px] [display:flex] [align-items:center] [justify-content:center] [color:var(--client-surface)] [border-radius:12px] [box-shadow:none]"
         ><svg
           width="26"
           height="26"
@@ -36,7 +36,13 @@
           tpxVisual
           symbol="icon-d6d8d482ea7e"
         ></svg
-      ></a>
+        >@if (favorites.count() > 0) {
+        <span
+          class="absolute right-0 top-0 grid min-w-4 h-4 place-items-center rounded-full bg-white px-0.5 text-[10px] font-bold text-[var(--client-action)]"
+          >{{ favorites.count() }}</span
+        >
+        }</a
+      >
       <a
         [attr.aria-label]="'Panier, ' + ui.cartCount() + ' produit' + (ui.cartCount() === 1 ? '' : 's')"
         routerLink="/panier"

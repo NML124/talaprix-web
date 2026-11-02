@@ -68,72 +68,98 @@
       >
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 1 du code"
-          value="4"
+          autocomplete="one-time-code"
           [value]="auth.code().charAt(0).trim()"
           (input)="auth.digit($event, 0)"
+          (keydown.backspace)="auth.backspace($event, 0)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 2 du code"
-          value="8"
           [value]="auth.code().charAt(1).trim()"
           (input)="auth.digit($event, 1)"
+          (keydown.backspace)="auth.backspace($event, 1)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 3 du code"
-          value="2"
           [value]="auth.code().charAt(2).trim()"
           (input)="auth.digit($event, 2)"
+          (keydown.backspace)="auth.backspace($event, 2)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 4 du code"
           value=""
           [value]="auth.code().charAt(3).trim()"
           (input)="auth.digit($event, 3)"
+          (keydown.backspace)="auth.backspace($event, 3)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 5 du code"
           value=""
           [value]="auth.code().charAt(4).trim()"
           (input)="auth.digit($event, 4)"
+          (keydown.backspace)="auth.backspace($event, 4)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
         <input
           inputmode="numeric"
-          maxlength="1"
           aria-label="Chiffre 6 du code"
           value=""
           [value]="auth.code().charAt(5).trim()"
           (input)="auth.digit($event, 5)"
+          (keydown.backspace)="auth.backspace($event, 5)"
           (paste)="auth.paste($event)"
           class="[width:100%] [height:54px] [text-align:center] [border:1px_solid_#D6E3DF] [border-radius:20px] [font:inherit] [font-size:22px] [font-weight:600] [color:var(--client-text)] [box-sizing:border-box]"
         />
       </div>
     </fieldset>
-    <a
-      routerLink="/compte"
-      (click)="auth.verify()"
-      class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [text-decoration:none] [width:100%]"
-      >Valider</a
+    @if (auth.error()) {
+    <p
+      role="alert"
+      class="m-0 flex items-start gap-2 text-[13px] text-[var(--client-error)]"
     >
+      <svg
+        class="mt-0.5 shrink-0"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5M12 16.5v.01" />
+      </svg>
+      {{ auth.error() }}
+    </p>
+    }
+    <button
+      type="button"
+      [disabled]="auth.pending()"
+      (click)="auth.verify()"
+      class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:16px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [width:100%] disabled:opacity-70"
+    >
+      @if (auth.pending()) {<span
+        aria-hidden="true"
+        class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-white/40 border-t-white align-[-3px]"
+      ></span
+      >Vérification…} @else {Valider}
+    </button>
     <div
       class="[display:flex] [justify-content:space-between] [font-size:13.5px]"
     >
@@ -144,7 +170,21 @@
       >
         ← Modifier l'adresse
       </button>
-      <span class="[color:var(--client-muted)]">Renvoyer dans 0:45</span>
+      @if (auth.resendIn() > 0) {
+      <span class="[color:var(--client-muted)] tabular-nums" aria-live="polite"
+        >Renvoyer dans 0:{{ auth.resendIn() < 10 ? '0' : '' }}{{ auth.resendIn()
+        }}</span
+      >
+      } @else {
+      <button
+        type="button"
+        class="[border:0] [background:transparent] [padding:0] [font:inherit] font-semibold text-[var(--client-action)] [cursor:pointer] disabled:opacity-50"
+        [disabled]="auth.pending()"
+        (click)="auth.resend()"
+      >
+        Renvoyer le code
+      </button>
+      }
     </div>
   </div>
 </div>

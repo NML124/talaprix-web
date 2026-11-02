@@ -62,16 +62,18 @@ export class LiveCartStore extends OfferCart {
   }
 
   choose(selection: CartSelection): void {
-    this.#gate.require('Connectez-vous pour ajouter ce produit au panier.', () =>
-      this.update((items) => {
-        const existing = items.find(
-          (item) => item.referenceId === selection.referenceId,
-        );
-        if (!existing) return [...items, { ...selection, quantity: 1 }];
-        return items.map((item) =>
-          item === existing ? { ...item, offer: selection.offer } : item,
-        );
-      }),
+    this.#gate.require(
+      'Connectez-vous pour ajouter ce produit au panier.',
+      () =>
+        this.update((items) => {
+          const existing = items.find(
+            (item) => item.referenceId === selection.referenceId,
+          );
+          if (!existing) return [...items, { ...selection, quantity: 1 }];
+          return items.map((item) =>
+            item === existing ? { ...item, offer: selection.offer } : item,
+          );
+        }),
     );
   }
 

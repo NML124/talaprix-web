@@ -37,7 +37,6 @@
   <p
     class="m-0 mt-2 inline-flex items-center gap-1.5 text-[13px] text-[var(--client-text-secondary)]"
   >
-    <span class="size-1.5 rounded-full bg-[var(--client-action)]"></span>
     {{ store.offers().length }} offre{{ store.offers().length > 1 ? 's' : '' }}
     dans {{ store.shopsCount() }} boutique{{ store.shopsCount() > 1 ? 's' : ''
     }}
@@ -53,7 +52,7 @@
   <button
     type="button"
     class="inline-flex h-10 items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-4 text-[14.5px] font-semibold transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98] disabled:opacity-60"
-    [class]="favorite() ? 'text-[#e0245e]' : 'text-[var(--client-text)]'"
+    [class]="favorite() ? 'text-[var(--client-action)]' : 'text-[var(--client-text)]'"
     [attr.aria-pressed]="favorite()"
     [disabled]="favorites.isPending(product.productId)"
     (click)="toggleFavorite()"

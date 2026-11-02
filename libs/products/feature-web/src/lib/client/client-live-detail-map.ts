@@ -38,7 +38,11 @@ export class ClientLiveDetailMap {
   readonly route = signal<MapRoute | null>(null);
   readonly straightKm = signal<number | null>(null);
   readonly directions = computed(() =>
-    directionsUrl(this.offer().shopLat, this.offer().shopLon, this.offer().shopAddress),
+    directionsUrl(
+      this.offer().shopLat,
+      this.offer().shopLon,
+      this.offer().shopAddress,
+    ),
   );
   #map: MapboxMap | null = null;
 
@@ -58,7 +62,10 @@ export class ClientLiveDetailMap {
   }
 
   formatKm(value: number): string {
-    return `${value < 10 ? value.toFixed(1) : Math.round(value)} km`.replace('.', ',');
+    return `${value < 10 ? value.toFixed(1) : Math.round(value)} km`.replace(
+      '.',
+      ',',
+    );
   }
 
   formatMinutes(value: number): string {
@@ -72,7 +79,10 @@ export class ClientLiveDetailMap {
     const { shopLat, shopLon } = this.offer();
     if (shopLat === null || shopLon === null) return;
     const shop: LatLon = { lat: shopLat, lon: shopLon };
-    const [me, map] = await Promise.all([currentPosition(), this.createMap(shop)]);
+    const [me, map] = await Promise.all([
+      currentPosition(),
+      this.createMap(shop),
+    ]);
     if (!me) {
       this.status.set('denied');
       return;
@@ -83,7 +93,9 @@ export class ClientLiveDetailMap {
     this.route.set(route);
     if (!map) return;
     const { default: mapboxgl } = await import('mapbox-gl');
-    new mapboxgl.Marker({ color: '#1d6e99' }).setLngLat([me.lon, me.lat]).addTo(map);
+    new mapboxgl.Marker({ color: '#1d6e99' })
+      .setLngLat([me.lon, me.lat])
+      .addTo(map);
     const line = route?.coordinates ?? [
       [me.lon, me.lat],
       [shop.lon, shop.lat],
@@ -94,7 +106,10 @@ export class ClientLiveDetailMap {
         data: {
           type: 'Feature',
           properties: {},
-          geometry: { type: 'LineString', coordinates: line.map((p) => [...p]) },
+          geometry: {
+            type: 'LineString',
+            coordinates: line.map((p) => [...p]),
+          },
         },
       });
       map.addLayer({
@@ -130,8 +145,13 @@ export class ClientLiveDetailMap {
       zoom: 13,
       attributionControl: true,
     });
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-    new mapboxgl.Marker({ color: '#007a6c' }).setLngLat([shop.lon, shop.lat]).addTo(map);
+    map.addControl(
+      new mapboxgl.NavigationControl({ showCompass: false }),
+      'top-right',
+    );
+    new mapboxgl.Marker({ color: '#007a6c' })
+      .setLngLat([shop.lon, shop.lat])
+      .addTo(map);
     this.#map = map;
     return map;
   }

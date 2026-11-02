@@ -1,11 +1,16 @@
 import {
+  computed,
   effect,
   inject,
   Service,
   signal,
   type WritableSignal,
 } from '@angular/core';
-import { AuthGate, SupabaseClientService } from '@talaprix/shared/data-access';
+import {
+  AuthGate,
+  SupabaseClientService,
+  SupabaseFunctions,
+} from '@talaprix/shared/data-access';
 
 /**
  * Favorites target the catalogue product (`product_id`), like the mobile app.
@@ -15,20 +20,56 @@ import { AuthGate, SupabaseClientService } from '@talaprix/shared/data-access';
 export class LiveFavoritesStore {
   readonly #gate = inject(AuthGate);
   readonly #supabase = inject(SupabaseClientService);
+  readonly #functions = inject(SupabaseFunctions);
   readonly #overrides = signal<Readonly<Record<string, boolean>>>({});
   readonly #pending = signal<Readonly<Record<string, boolean>>>({});
+  readonly #savedIds = signal<ReadonlySet<string>>(new Set());
+  readonly count = computed(() => {
+    const ids = new Set(this.#savedIds());
+    for (const [id, selected] of Object.entries(this.#overrides())) {
+      if (selected) ids.add(id);
+      else ids.delete(id);
+    }
+    return ids.size;
+  });
   readonly error = signal('');
 
   constructor() {
     // Server flags are per user: forget local choices when the account changes.
     effect(() => {
-      this.#gate.userId();
+      const userId = this.#gate.userId();
       this.#overrides.set({});
+      this.#savedIds.set(new Set());
+      if (userId) void this.load(userId);
     });
   }
 
+  private async load(userId: string): Promise<void> {
+    try {
+      const rows = await this.#functions.get<unknown>('get-favorite-products');
+      if (!Array.isArray(rows) || this.#gate.userId() !== userId) return;
+      this.#savedIds.set(
+        new Set(
+          rows
+            .map((row: unknown) =>
+              row && typeof row === 'object' && 'product_id' in row
+                ? row.product_id
+                : null,
+            )
+            .filter((id): id is string => typeof id === 'string'),
+        ),
+      );
+    } catch {
+      // Keep server-provided flags when the favorite list cannot load.
+    }
+  }
+
   isFavorite(productId: string, serverValue: boolean): boolean {
-    return this.#overrides()[productId] ?? serverValue;
+    if (!this.#gate.userId()) return false;
+    return (
+      this.#overrides()[productId] ??
+      (this.#savedIds().has(productId) || serverValue)
+    );
   }
 
   isPending(productId: string): boolean {
@@ -62,6 +103,12 @@ export class LiveFavoritesStore {
             .eq('product_id', productId);
       // 23505: already a favorite, which is the state we wanted.
       if (error && error.code !== '23505') throw error;
+      this.#savedIds.update((ids) => {
+        const next = new Set(ids);
+        if (value) next.add(productId);
+        else next.delete(productId);
+        return next;
+      });
     } catch {
       this.#overrides.update((map) => {
         const next = { ...map };

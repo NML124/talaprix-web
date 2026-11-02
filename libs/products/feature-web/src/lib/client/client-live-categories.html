@@ -22,7 +22,7 @@
 
   @if (store.status() === 'loading' || store.status() === 'idle') {
   <div
-    class="columns-2 gap-3 sm:gap-5 lg:columns-3 xl:columns-4"
+    class="columns-2 gap-3 sm:gap-5 lg:columns-4 xl:columns-5"
     role="status"
     aria-label="Chargement des catégories"
   >
@@ -53,7 +53,7 @@
     Aucune catégorie disponible pour le moment.
   </p>
   } @else {
-  <div class="columns-2 gap-3 sm:gap-5 lg:columns-3 xl:columns-4">
+  <div class="columns-2 gap-3 sm:gap-5 lg:columns-4 xl:columns-5">
     @for (category of store.categories(); track category.id; let i = $index) {
     <a
       class="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-3xl bg-[var(--client-tile)] outline-none focus-visible:ring-4 focus-visible:ring-[var(--client-action)]/30 sm:mb-5 {{ ratio(i) }}"
@@ -80,11 +80,11 @@
         class="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/75 via-black/30 to-transparent transition-opacity duration-300 group-hover:opacity-90"
       ></span>
       <span
-        class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5"
+        class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5 lg:p-4"
       >
         <span class="min-w-0">
           <strong
-            class="block text-[15px] font-semibold leading-tight text-white sm:text-lg"
+            class="block text-[15px] font-semibold leading-tight text-white sm:text-lg lg:text-base"
             >{{ category.name }}</strong
           >
           <small

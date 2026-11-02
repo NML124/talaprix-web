@@ -78,6 +78,12 @@ export const appRoutes: Route[] = [
             live ? m.ClientLiveCart : m.ClientCart,
           ),
       },
+      {
+        path: 'contact',
+        title: 'Nous contacter | TalaPrix',
+        loadComponent: () =>
+          import('@talaprix/home/feature-web').then((m) => m.ClientContactPage),
+      },
       ...[
         'conditions-utilisation',
         'conditions-consommateur',

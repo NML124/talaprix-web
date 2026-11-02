@@ -94,3 +94,50 @@ export function productLink(referenceId: string): string {
 export function initial(name: string): string {
   return name.trim().charAt(0).toUpperCase() || '?';
 }
+
+export interface SourceLink {
+  readonly url: string;
+  readonly label: string;
+}
+
+/**
+ * Offer notes often end with "Source: https://…" (a long social-media URL).
+ * Splits them into readable text and named links shown as buttons.
+ */
+export function splitSources(text: string | null): {
+  readonly text: string;
+  readonly links: readonly SourceLink[];
+} {
+  if (!text) return { text: '', links: [] };
+  const links: SourceLink[] = [];
+  const clean = text
+    .replace(
+      /(?:source\s*:\s*)?(https?:\/\/[^\s)]+)/gi,
+      (_match, url: string) => {
+        links.push({ url, label: sourceLabel(url) });
+        return '';
+      },
+    )
+    .replace(/\s+([.,;])/g, '$1')
+    .replace(/[\s.:;,-]+$/, '')
+    .trim();
+  return { text: clean ? `${clean}.`.replace(/\.\.$/, '.') : '', links };
+}
+
+function sourceLabel(url: string): string {
+  try {
+    const host = new URL(url).hostname.replace(/^(www|m)\./, '');
+    const known: Record<string, string> = {
+      'facebook.com': 'Facebook',
+      'fb.com': 'Facebook',
+      'instagram.com': 'Instagram',
+      'tiktok.com': 'TikTok',
+      'wa.me': 'WhatsApp',
+      'x.com': 'X',
+      'twitter.com': 'X',
+    };
+    return known[host] ?? host;
+  } catch {
+    return 'Lien';
+  }
+}

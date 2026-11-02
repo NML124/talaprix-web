@@ -4,12 +4,15 @@ import { SvgVisual } from '@talaprix/shared/ui-kit';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   ElementRef,
   inject,
   signal,
   type Type,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthSessionStore } from '@talaprix/users/data-access';
+import { LiveFavoritesStore } from '@talaprix/products/data-access';
 import {
   HEADER_SEARCH,
   PreviewPreferences,
@@ -24,6 +27,16 @@ import {
 })
 export class ClientHeaderDesktopControls1 {
   readonly ui = inject(PreviewPreferences);
+  readonly session = inject(AuthSessionStore);
+  readonly favorites = inject(LiveFavoritesStore);
+  readonly username = computed(() => {
+    const user = this.session.user();
+    return (
+      user?.displayName.trim().split(/\s+/u)[0] ||
+      user?.email.split('@')[0] ||
+      'Mon compte'
+    );
+  });
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
   /** Live search bar provided by the app (see `provideHeaderSearch`). */
   readonly headerSearch = signal<Type<unknown> | null>(null);

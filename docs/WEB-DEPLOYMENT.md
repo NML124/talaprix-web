@@ -1,0 +1,48 @@
+# Déploiement du web Angular
+
+Le dépôt produit une application Angular SSR servie par Node sur le port 4000.
+Sur le VPS, les services Swarm existants sont `talaprix-web-staging_talaprix-web-staging`
+(`staging.talaprix.com`) et `talaprix-web-production_talaprix-web-production`
+(`talaprix.com` et `www.talaprix.com`). Le workflow met à jour ces services en place :
+il ne supprime ni leurs réseaux ni leurs volumes.
+
+## Préparer GitHub Actions
+
+- Variables du dépôt : `SUPABASE_URL` (URL publique de Supabase),
+  `MAPBOX_PUBLIC_TOKEN` (jeton public `pk.`, facultatif), `VPS_HOST`,
+  `GHCR_READ_USER`.
+- Secrets du dépôt ou de l'environnement staging : `SUPABASE_ANON_KEY`
+  (clé publique), `VPS_SSH_PRIVATE_KEY` (clé de déploiement dédiée),
+  `VPS_SSH_KNOWN_HOST` (ligne `known_hosts` vérifiée hors bande),
+  `GHCR_READ_TOKEN` (jeton GitHub avec lecture du package).
+- Créer les environnements GitHub `staging` et `production`. Protéger
+  `production` par des approbateurs obligatoires et restreindre la branche à
+  `master`. La promotion est en plus limitée au lancement manuel avec
+  `promote_to_production=true`.
+- Le compte SSH de déploiement doit pouvoir exécuter `docker login` et
+  `docker service update` sur ces deux services. Ne mettre aucune clé privée
+  dans le dépôt ou l'image.
+- Le GoTrue auto hébergé doit autoriser les retours OAuth exacts
+  `https://staging.talaprix.com` et `https://talaprix.com` en plus de
+  `https://www.talaprix.com` et du développement local. Vérifier la valeur
+  effective de `GOTRUE_URI_ALLOW_LIST` avant de tester Google sur staging.
+
+## Parcours
+
+Un push autorisé sur `master` lance format, lint, tests et build, puis publie
+une image par digest et met à jour **staging uniquement**. Vérifier sur staging
+la connexion Google, la recherche, les favoris, le panier, les pages catégories,
+les routes SSR et la notice de stockage sur desktop et mobile. La production
+requiert ensuite un lancement manuel du workflow et l'approbation de
+l'environnement `production`. Le workflow repasse par staging et promeut le
+même digest. Il ne faut pas exécuter de `docker stack rm`.
+
+Les labels Traefik actuels pointent vers le port 80 de l'ancien web. Le
+workflow les passe à 4000 avec l'image SSR. La première bascule en production
+peut provoquer une courte interruption pendant cette transition de port ;
+planifier cette opération après validation de staging. Conserver le digest
+précédent pour pouvoir utiliser `docker service rollback` si la vérification
+post-déploiement échoue.
+
+Ce workflow ne déploie pas l'application admin. Son authentification et ses
+API privées demandent une chaîne distincte et une validation séparée.

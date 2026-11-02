@@ -1,0 +1,144 @@
+name: Web staging and promotion
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      promote_to_production:
+        description: 'Deploy the staging-verified image to talaprix.com'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: web-deploy
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CI: 'true'
+      NX_DAEMON: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm test -- --output-style=static
+      - run: npm run build
+
+  image:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      ref: ${{ steps.ref.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: name
+        run: echo "value=ghcr.io/${GITHUB_REPOSITORY,,}/web" >> "$GITHUB_OUTPUT"
+      - name: Verify public runtime configuration
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: test -n "$SUPABASE_URL" && test -n "$SUPABASE_ANON_KEY"
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.web
+          push: true
+          tags: ${{ steps.name.outputs.value }}:${{ github.sha }}
+          build-args: |
+            SUPABASE_URL=${{ vars.SUPABASE_URL }}
+            SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+            MAPBOX_PUBLIC_TOKEN=${{ vars.MAPBOX_PUBLIC_TOKEN }}
+      - id: ref
+        env:
+          IMAGE: ${{ steps.name.outputs.value }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: echo "value=$IMAGE@$DIGEST" >> "$GITHUB_OUTPUT"
+
+  staging:
+    needs: image
+    runs-on: ubuntu-latest
+    environment: staging
+    timeout-minutes: 15
+    steps:
+      - name: Configure pinned SSH host key
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOST: ${{ secrets.VPS_SSH_KNOWN_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOST" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - name: Authenticate VPS to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          GHCR_USER: ${{ vars.GHCR_READ_USER }}
+        run: printf '%s' "$GHCR_TOKEN" | ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" "docker login ghcr.io -u '$GHCR_USER' --password-stdin"
+      - name: Deploy immutable image to staging
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          IMAGE: ${{ needs.image.outputs.ref }}
+        run: |
+          ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+            "docker service update --image '$IMAGE' --with-registry-auth --label-add traefik.http.services.talaprix-web-staging.loadbalancer.server.port=4000 --update-order start-first --update-failure-action rollback --detach=false talaprix-web-staging_talaprix-web-staging"
+          if ! curl --fail --show-error --silent --retry 8 --retry-delay 5 \
+            https://staging.talaprix.com/ > /dev/null; then
+            ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+              'docker service rollback talaprix-web-staging_talaprix-web-staging'
+            exit 1
+          fi
+
+  production:
+    if: github.event_name == 'workflow_dispatch' && inputs.promote_to_production
+    needs: [image, staging]
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+    steps:
+      - name: Configure pinned SSH host key
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOST: ${{ secrets.VPS_SSH_KNOWN_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOST" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - name: Promote the staging-verified digest
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          IMAGE: ${{ needs.image.outputs.ref }}
+        run: |
+          ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+            "docker service update --image '$IMAGE' --with-registry-auth --label-add traefik.http.services.talaprix-web-production.loadbalancer.server.port=4000 --update-order start-first --update-failure-action rollback --detach=false talaprix-web-production_talaprix-web-production"
+          if ! curl --fail --show-error --silent --retry 8 --retry-delay 5 \
+            https://talaprix.com/ > /dev/null; then
+            ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+              'docker service rollback talaprix-web-production_talaprix-web-production'
+            exit 1
+          fi

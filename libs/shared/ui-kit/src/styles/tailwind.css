@@ -29,6 +29,13 @@
   --animate-fade-up: tpx-fade-up 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
   --animate-sheet-up: tpx-sheet-up 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
   --animate-fade-in: tpx-fade-in 200ms ease-out;
+  --animate-draw: tpx-draw 500ms 250ms ease-out forwards;
+
+  @keyframes tpx-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
 
   @keyframes tpx-chip-in {
     from {
@@ -1854,14 +1861,6 @@ body:has(.tpx-public [aria-modal='true']) {
 .tpx-public .footer-bottom {
   flex-wrap: wrap;
   align-items: center;
-}
-.tpx-public .footer-refined .footer-legal {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 4px 18px;
-  flex: 1 1 auto;
-  justify-content: center;
 }
 .tpx-public .footer-accordions {
   border-top: 1px solid var(--client-line);
