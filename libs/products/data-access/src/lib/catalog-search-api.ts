@@ -40,7 +40,7 @@ export class CatalogSearchApi {
   ): Promise<readonly CatalogSuggestion[]> {
     const payload = await this.#functions.post<unknown>(
       'search-offer-references',
-      { query, limit },
+      { query: normalizeCatalogQuery(query), limit },
       signal,
     );
     if (!isRecord(payload) || !Array.isArray(payload['data']))
@@ -64,6 +64,14 @@ export class CatalogSearchApi {
       alreadyRequested: value['already_requested'] === true,
     };
   }
+}
+
+/** Correct a known brand spelling without broadening model or capacity terms. */
+export function normalizeCatalogQuery(query: string): string {
+  return query
+    .trim()
+    .replace(/\breadmi\b/giu, 'redmi')
+    .replace(/\b(redmi\s+)note$/giu, '$1no');
 }
 
 export function mapSuggestion(value: unknown): CatalogSuggestion | null {

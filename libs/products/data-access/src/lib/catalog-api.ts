@@ -12,6 +12,7 @@ import {
   string,
   strings,
 } from './api-payload';
+import { normalizeCatalogQuery } from './catalog-search-api';
 
 export interface CatalogReference {
   readonly id: string;
@@ -111,7 +112,7 @@ export class CatalogApi {
       page: String(query.page ?? 1),
       limit: String(query.limit ?? 20),
     };
-    if (query.q?.trim()) params['q'] = query.q.trim();
+    if (query.q?.trim()) params['q'] = normalizeCatalogQuery(query.q);
     if (query.categoryIds?.length)
       params['category_ids'] = query.categoryIds.join(',');
     else if (query.categoryId) params['category_id'] = query.categoryId;
