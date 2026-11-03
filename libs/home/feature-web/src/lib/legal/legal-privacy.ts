@@ -56,7 +56,7 @@ export const PRIVACY: LegalDocument = {
     {
       title: 'Stockage du navigateur et statistiques du site',
       paragraphs: [
-        'Sur le site web, la session Supabase et le panier sont conservés dans le stockage local du navigateur pour maintenir la connexion et retrouver les articles. Ce stockage est nécessaire aux fonctionnalités demandées. Un cookie de choix de confidentialité, valable 180 jours, mémorise votre décision afin de ne pas afficher le panneau à chaque page.',
+        'Sur le site web, la session et le panier sont conservés dans le stockage local du navigateur pour maintenir la connexion et retrouver les articles. Ce stockage est nécessaire aux fonctionnalités demandées. Un cookie de choix de confidentialité, valable 180 jours, mémorise votre décision afin de ne pas afficher le panneau à chaque page.',
         'Lorsque la mesure d’audience sera configurée et que vous l’autoriserez, TalaPrix utilisera Cloudflare Web Analytics pour connaître les visites, les pages vues et les performances du site. Cet outil ne nécessite pas de cookie publicitaire ni d’identifiant individuel TalaPrix. Les nombres de visiteurs sont des estimations statistiques et ne représentent pas un comptage exact de personnes.',
         'Aucun ciblage publicitaire comportemental ni cookie publicitaire tiers n’est activé par TalaPrix. Toute activation future de cette finalité nécessitera une information et un choix distincts.',
       ],

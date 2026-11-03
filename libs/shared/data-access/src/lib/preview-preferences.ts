@@ -22,6 +22,9 @@ export class PreviewPreferences {
   readonly searchOpen = signal(false);
   readonly menuOpen = signal(false);
   readonly authOpen = signal(false);
+  readonly signOutConfirmationOpen = signal(false);
+  readonly signingOut = signal(false);
+  readonly signOutError = signal('');
   readonly authStep = signal<'email' | 'code'>('email');
   readonly signedIn = signal(false);
   readonly cartNames = signal<readonly string[]>(
@@ -129,11 +132,32 @@ export class PreviewPreferences {
     this.menuOpen.set(false);
     this.searchOpen.set(false);
   }
-  async signOut(): Promise<void> {
-    await this.#supabase.client?.auth.signOut();
-    this.signedIn.set(false);
-    this.accountTab.set('favorites');
-    void this.router.navigate(['/']);
+  requestSignOut(): void {
+    this.closeOverlays();
+    this.signOutError.set('');
+    this.signOutConfirmationOpen.set(true);
+  }
+  cancelSignOut(): void {
+    if (!this.signingOut()) this.signOutConfirmationOpen.set(false);
+  }
+  async confirmSignOut(): Promise<void> {
+    if (!this.signOutConfirmationOpen() || this.signingOut()) return;
+    this.signingOut.set(true);
+    this.signOutError.set('');
+    try {
+      const client = this.#supabase.client;
+      if (!client) throw new Error('Session unavailable');
+      const { error } = await client.auth.signOut();
+      if (error) throw error;
+      this.signOutConfirmationOpen.set(false);
+      this.signedIn.set(false);
+      this.accountTab.set('favorites');
+      await this.router.navigate(['/']);
+    } catch {
+      this.signOutError.set('La déconnexion a échoué. Réessayez.');
+    } finally {
+      this.signingOut.set(false);
+    }
   }
   top(): void {
     if (typeof window !== 'undefined')

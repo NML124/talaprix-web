@@ -56,8 +56,8 @@ export class ClientHeaderDesktopControls1 {
       this.profileOpen.set(false);
   }
 
-  async signOut(): Promise<void> {
+  signOut(): void {
     this.profileOpen.set(false);
-    await this.ui.signOut();
+    this.ui.requestSignOut();
   }
 }

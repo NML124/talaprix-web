@@ -46,6 +46,7 @@
   } @if (ui.authOpen()) {
   <div
     class="hidden min-[768px]:block"
+    data-client-modal
     role="dialog"
     aria-modal="true"
     aria-label="Connexion à Talaprix"
@@ -55,6 +56,7 @@
   </div>
   <div
     class="fixed inset-0 z-[100] bg-[var(--client-dark)]/42 backdrop-blur-[10px] min-[768px]:hidden"
+    data-client-modal
     role="dialog"
     aria-modal="true"
     aria-label="Connexion à Talaprix"
@@ -71,5 +73,52 @@
   >
     {{ auth.error() }}
   </p>
-  } }
+  } } @if (ui.signOutConfirmationOpen()) {
+  <div
+    class="fixed inset-0 z-[130] grid place-items-center bg-[var(--client-dark)]/45 p-4 backdrop-blur-[4px]"
+  >
+    <section
+      data-client-modal
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signout-title"
+      aria-describedby="signout-description"
+      class="w-full max-w-[420px] rounded-[22px] bg-white p-6 shadow-xl"
+    >
+      <h2 id="signout-title" class="m-0 text-xl font-semibold">
+        Se déconnecter ?
+      </h2>
+      <p
+        id="signout-description"
+        class="mb-0 mt-2 text-sm leading-relaxed text-[var(--client-muted)]"
+      >
+        Voulez-vous vraiment vous déconnecter de votre compte TalaPrix ?
+      </p>
+      @if (ui.signOutError()) {
+      <p role="alert" class="mb-0 mt-3 text-sm text-[var(--client-error)]">
+        {{ ui.signOutError() }}
+      </p>
+      }
+      <div class="mt-6 grid grid-cols-2 gap-3">
+        <button
+          data-signout-cancel
+          type="button"
+          [disabled]="ui.signingOut()"
+          class="h-11 rounded-[15px] border border-[var(--client-line)] bg-white px-3 text-sm font-semibold text-[var(--client-text)] disabled:opacity-50"
+          (click)="ui.cancelSignOut()"
+        >
+          Rester connecté
+        </button>
+        <button
+          type="button"
+          [disabled]="ui.signingOut()"
+          class="h-11 rounded-[15px] bg-[var(--client-text)] px-3 text-sm font-semibold text-white disabled:opacity-50"
+          (click)="ui.confirmSignOut()"
+        >
+          {{ ui.signingOut() ? 'Déconnexion…' : 'Se déconnecter' }}
+        </button>
+      </div>
+    </section>
+  </div>
+  }
 </div>
