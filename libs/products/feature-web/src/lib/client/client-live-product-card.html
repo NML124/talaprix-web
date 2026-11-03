@@ -9,7 +9,9 @@
   >
     @if (item().image) {
     <img
-      [src]="item().image"
+      [src]="imageUrl(item().image, 320)"
+      [attr.srcset]="imageSrcset(item().image)"
+      sizes="(max-width: 640px) 45vw, (max-width: 1200px) 30vw, 220px"
       alt=""
       loading="lazy"
       decoding="async"

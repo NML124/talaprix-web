@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { PUBLIC_DESIGN_DATA } from '@talaprix/shared/models';
 import { SupabaseClientService } from './supabase-client';
 import { SupabaseConfig } from './supabase-config';
+import { SupabaseFunctions } from './supabase-functions';
 
 /** Local presentation state only. Never creates a Supabase session or sends a request. */
 @Service()
@@ -11,12 +12,19 @@ export class PreviewPreferences {
   readonly router = inject(Router);
   readonly #supabase = inject(SupabaseClientService);
   readonly #configured = inject(SupabaseConfig).isConfigured;
+  readonly #functions = inject(SupabaseFunctions);
   readonly currency = signal<'USD' | 'CDF'>('USD');
+  /** Latest public USD/CDF rate observed from the catalogue API. */
+  readonly liveRate = signal<number | null>(null);
+  #rateRequest: Promise<void> | null = null;
   readonly rate = PUBLIC_DESIGN_DATA.exchangeRate.usdToCdf;
   readonly query = signal('');
   readonly searchOpen = signal(false);
   readonly menuOpen = signal(false);
   readonly authOpen = signal(false);
+  readonly signOutConfirmationOpen = signal(false);
+  readonly signingOut = signal(false);
+  readonly signOutError = signal('');
   readonly authStep = signal<'email' | 'code'>('email');
   readonly signedIn = signal(false);
   readonly cartNames = signal<readonly string[]>(
@@ -46,6 +54,40 @@ export class PreviewPreferences {
       this.menuOpen.set(false);
     });
     inject(DestroyRef).onDestroy(() => subscription.unsubscribe());
+  }
+  ensureLiveRate(): Promise<void> {
+    if (!this.#configured || this.liveRate()) return Promise.resolve();
+    if (this.#rateRequest) return this.#rateRequest;
+    this.#rateRequest = this.#functions
+      .get<unknown>('get-devises')
+      .then((payload) => {
+        if (!Array.isArray(payload)) return;
+        const usd = payload.find((row) => row?.devise_name === 'USD');
+        const rate = Number(usd?.taux);
+        if (Number.isFinite(rate) && rate > 0) this.liveRate.set(rate);
+      })
+      .catch(() => undefined)
+      .finally(() => (this.#rateRequest = null));
+    return this.#rateRequest;
+  }
+  liveMoney(
+    price: number,
+    original: 'USD' | 'CDF',
+    normalizedCdf: number,
+  ): string {
+    const selected = this.currency();
+    const rate = this.liveRate();
+    const canConvert = selected === 'CDF' || !!rate;
+    const target = selected === original || canConvert ? selected : original;
+    const amount =
+      target === original
+        ? price
+        : target === 'CDF'
+          ? normalizedCdf
+          : normalizedCdf / (rate ?? 1);
+    return `${new Intl.NumberFormat('fr-FR', {
+      maximumFractionDigits: target === 'CDF' ? 0 : 2,
+    }).format(amount)} ${target === 'CDF' ? 'FC' : 'USD'}`;
   }
   money(amount: number): string {
     return (
@@ -90,11 +132,32 @@ export class PreviewPreferences {
     this.menuOpen.set(false);
     this.searchOpen.set(false);
   }
-  async signOut(): Promise<void> {
-    await this.#supabase.client?.auth.signOut();
-    this.signedIn.set(false);
-    this.accountTab.set('favorites');
-    void this.router.navigate(['/']);
+  requestSignOut(): void {
+    this.closeOverlays();
+    this.signOutError.set('');
+    this.signOutConfirmationOpen.set(true);
+  }
+  cancelSignOut(): void {
+    if (!this.signingOut()) this.signOutConfirmationOpen.set(false);
+  }
+  async confirmSignOut(): Promise<void> {
+    if (!this.signOutConfirmationOpen() || this.signingOut()) return;
+    this.signingOut.set(true);
+    this.signOutError.set('');
+    try {
+      const client = this.#supabase.client;
+      if (!client) throw new Error('Session unavailable');
+      const { error } = await client.auth.signOut();
+      if (error) throw error;
+      this.signOutConfirmationOpen.set(false);
+      this.signedIn.set(false);
+      this.accountTab.set('favorites');
+      await this.router.navigate(['/']);
+    } catch {
+      this.signOutError.set('La déconnexion a échoué. Réessayez.');
+    } finally {
+      this.signingOut.set(false);
+    }
   }
   top(): void {
     if (typeof window !== 'undefined')

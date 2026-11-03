@@ -35,7 +35,7 @@
         <div class="[display:flex] [justify-content:space-between]">
           <span class="[color:var(--client-text-tertiary)]"
             >Boutiques à visiter</span
-          ><span>2 boutiques</span>
+          ><span>{{ cart.groups().length }} boutiques</span>
         </div>
       </div>
       <div
@@ -55,56 +55,6 @@
           class="[font-size:12.5px] [color:var(--client-muted)] [font-variant-numeric:tabular-nums]"
           >{{ ui.approximate(cart.originalTotal()) }}</span
         >
-      </div>
-      <div class="[display:flex] [flex-direction:column] [gap:10px]">
-        <div
-          class="[display:flex] [gap:10px] [align-items:flex-start] [padding:12px_14px] [border-radius:12px] [background:var(--client-mint-soft)] [font-size:13px] [line-height:1.5] [color:var(--client-text-secondary)]"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#007A6C"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            class="[flex-shrink:0] [margin-top:1px]"
-            tpxVisual
-            symbol="icon-dfbbf6ea15a0"
-          ></svg
-          ><span
-            >Vous pouvez économiser jusqu'à
-            <span
-              class="[font-weight:600] [color:var(--client-action-hover)]"
-              tpxPriceTag
-              [value]="ui.money(57)"
-            ></span>
-            en achetant ailleurs les mêmes produits.</span
-          >
-        </div>
-        <button
-          type="button"
-          class="[height:54px] [border:0] [border-radius:20px] [background:var(--client-action)] [color:var(--client-surface)] [font:inherit] [font-size:15.5px] [font-weight:600] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [gap:10px] client-btn-p"
-          (click)="cart.optimize()"
-          [disabled]="cart.loading()"
-        >
-          <svg
-            width="19"
-            height="19"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            tpxVisual
-            symbol="icon-57f369db04fb"
-          ></svg
-          >Optimiser mes achats
-        </button>
       </div>
     </div>
   </aside>

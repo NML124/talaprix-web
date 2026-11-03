@@ -16,6 +16,7 @@ export class HomeCatalogStore {
   readonly #catalog = inject(CatalogApi);
   readonly #shops = inject(CatalogShopsStore);
   readonly products = signal<readonly CatalogReference[]>([]);
+  readonly usdToCdf = signal<number | null>(null);
   readonly shops = computed(() => this.#shops.shops().slice(0, 6));
   readonly status = signal<'idle' | 'loading' | 'ready' | 'error'>('idle');
   readonly error = signal('');
@@ -41,6 +42,7 @@ export class HomeCatalogStore {
         sort: 'name_asc',
       });
       this.products.set(page.items);
+      this.usdToCdf.set(page.usdToCdf);
       this.#loadedAt = Date.now();
       this.status.set('ready');
     } catch (error) {

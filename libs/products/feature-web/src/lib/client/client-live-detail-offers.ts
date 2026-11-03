@@ -23,7 +23,11 @@ export class ClientLiveDetailOffers {
   readonly showOnMap = output<CatalogOffer>();
 
   inCart(offer: CatalogOffer): boolean {
-    return this.#cart.offerFor(offer.referenceId) === offer.id;
+    const selected = this.#cart.offerFor(offer.referenceId);
+    return (
+      selected === offer.id ||
+      this.store.alternatives(offer).some((item) => item.id === selected)
+    );
   }
 
   quantity(offer: CatalogOffer): number {

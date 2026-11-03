@@ -1,4 +1,4 @@
-<article class="flex flex-wrap items-center gap-4 py-4 sm:flex-nowrap">
+<article class="flex min-w-0 flex-wrap items-center gap-3 py-4 sm:gap-4">
   <a
     [routerLink]="['/produit', item().referenceId]"
     class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--client-tile)]"
@@ -8,7 +8,7 @@
     @if (item().image) {
     <img
       class="h-full w-full object-contain p-2 mix-blend-multiply"
-      [src]="item().image"
+      [src]="imageUrl(item().image, 160)"
       alt=""
       loading="lazy"
     />
@@ -29,7 +29,9 @@
       >Changer d’offre</a
     >
   </div>
-  <div class="flex w-full items-center justify-between gap-4 sm:w-auto">
+  <div
+    class="flex w-full min-w-0 flex-wrap items-center justify-between gap-2 sm:w-auto"
+  >
     <div
       class="inline-flex h-10 items-center rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)]"
       role="group"
@@ -83,7 +85,7 @@
       </button>
     </div>
     <strong
-      class="min-w-[96px] text-right text-[15px] font-semibold tabular-nums"
+      class="min-w-0 flex-1 text-right text-[15px] font-semibold tabular-nums"
       >{{ linePrice() }}</strong
     >
     <button

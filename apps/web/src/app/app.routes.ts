@@ -81,11 +81,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'optimisation',
-        title: 'Optimiser mes achats | TalaPrix',
-        loadComponent: () =>
-          import('@talaprix/cart/feature-web').then(
-            (m) => m.ClientLiveOptimization,
-          ),
+        redirectTo: 'panier',
       },
       {
         path: 'contact',

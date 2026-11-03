@@ -103,11 +103,12 @@
         symbol="icon-c901e07a9df3"
       ></svg></span
   ></a>
-  <a
-    routerLink="/"
-    (click)="ui.signOut()"
+  <button
+    type="button"
+    (click)="ui.requestSignOut()"
     class="[display:flex] [align-items:center] [gap:14px] [height:54px] [padding:0_16px] [border-top:1px_solid_#F1F3F2] [text-decoration:none] [color:var(--client-text)] [font-size:15px]"
-    ><span class="[color:var(--client-text-tertiary)] [display:flex]"
+  >
+    <span class="[color:var(--client-text-tertiary)] [display:flex]"
       ><svg
         width="20"
         height="20"
@@ -135,6 +136,7 @@
         aria-hidden="true"
         tpxVisual
         symbol="icon-c901e07a9df3"
-      ></svg></span
-  ></a>
+      ></svg
+    ></span>
+  </button>
 </section>

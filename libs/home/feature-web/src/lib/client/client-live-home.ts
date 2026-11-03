@@ -12,6 +12,8 @@ import {
   type CatalogReference,
 } from '@talaprix/products/data-access';
 import { HomeCatalogStore } from '@talaprix/home/data-access';
+import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { productImageSrcset, productImageUrl } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'lib-client-live-home',
@@ -21,7 +23,11 @@ import { HomeCatalogStore } from '@talaprix/home/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveHome {
+  readonly imageUrl = productImageUrl;
+  readonly imageSrcset = (source: string | null) =>
+    productImageSrcset(source, [320, 640]);
   readonly #store = inject(HomeCatalogStore);
+  readonly #preferences = inject(PreviewPreferences);
   readonly #categories = inject(CategoryStore);
   readonly cartActions = inject(CatalogCartActions);
   readonly cart = this.cartActions.cart;
@@ -50,8 +56,22 @@ export class ClientLiveHome {
   }
 
   price(item: CatalogReference): string {
+    const selected = this.#preferences.currency();
+    const rate = this.#store.usdToCdf();
+    const amount =
+      selected === item.currency
+        ? item.price
+        : selected === 'CDF'
+          ? item.normalizedPriceCdf
+          : rate && rate > 0
+            ? item.normalizedPriceCdf / rate
+            : item.price;
+    const currency =
+      selected === item.currency || selected === 'CDF' || (rate && rate > 0)
+        ? selected
+        : item.currency;
     return `${new Intl.NumberFormat('fr-FR', {
-      maximumFractionDigits: item.currency === 'CDF' ? 0 : 2,
-    }).format(item.price)} ${item.currency === 'CDF' ? 'FC' : 'USD'}`;
+      maximumFractionDigits: currency === 'CDF' ? 0 : 2,
+    }).format(amount)} ${currency === 'CDF' ? 'FC' : 'USD'}`;
   }
 }

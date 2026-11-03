@@ -44,7 +44,7 @@ export function conditionLabel(condition: string | null): string | null {
     case 'refurbished':
       return 'Reconditionné';
     default:
-      return null;
+      return 'État non précisé';
   }
 }
 

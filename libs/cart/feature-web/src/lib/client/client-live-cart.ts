@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LiveCartStore, type LiveCartItem } from '@talaprix/cart/data-access';
-import { AuthGate } from '@talaprix/shared/data-access';
+import { AuthGate, PreviewPreferences } from '@talaprix/shared/data-access';
 import { ClientLiveCartLine } from './client-live-cart-line';
 
 interface ShopGroup {
@@ -28,6 +28,7 @@ interface ShopGroup {
 export class ClientLiveCart {
   readonly cart = inject(LiveCartStore);
   readonly gate = inject(AuthGate);
+  readonly #preferences = inject(PreviewPreferences);
   readonly confirmClear = signal(false);
   readonly groups = computed<readonly ShopGroup[]>(() => {
     const groups = new Map<string, ShopGroup>();
@@ -49,6 +50,17 @@ export class ClientLiveCart {
   });
   /** Offers keep their own currency, so totals are shown per currency. */
   readonly totals = computed(() => {
+    const selected = this.#preferences.currency();
+    const rate = this.#preferences.liveRate();
+    if (selected === 'CDF' || (rate && rate > 0)) {
+      const normalized = this.cart.totalCdf();
+      return [
+        format(
+          selected === 'CDF' ? normalized : normalized / (rate ?? 1),
+          selected,
+        ),
+      ];
+    }
     const sums = { USD: 0, CDF: 0 };
     for (const item of this.cart.items())
       sums[item.offer.currency] += item.offer.price * item.quantity;
