@@ -26,19 +26,28 @@ export class CookieNoticeStore {
       ));
   readonly visible = signal(false);
   readonly analytics = signal(false);
+  readonly draftAnalytics = signal(false);
   readonly settingsOpen = signal(false);
 
   constructor() {
     afterNextRender(() => {
       const choice = readChoice();
       this.analytics.set(choice === 'analytics' && this.analyticsAvailable);
+      this.draftAnalytics.set(choice === 'analytics');
       this.visible.set(choice === null);
     });
   }
 
   open(): void {
+    this.draftAnalytics.set(readChoice() === 'analytics');
     this.visible.set(true);
     this.settingsOpen.set(true);
+  }
+
+  toggleSettings(): void {
+    if (!this.settingsOpen())
+      this.draftAnalytics.set(readChoice() === 'analytics');
+    this.settingsOpen.update((open) => !open);
   }
 
   rejectOptional(): void {
@@ -46,18 +55,18 @@ export class CookieNoticeStore {
   }
 
   acceptAnalytics(): void {
-    if (this.analyticsAvailable) this.save(true);
+    this.save(true);
   }
 
   save(analytics: boolean): void {
-    const selected = analytics && this.analyticsAvailable;
-    const shouldStopTracking = this.analytics() && !selected;
-    this.analytics.set(selected);
+    const shouldStopTracking = this.analytics() && !analytics;
+    this.analytics.set(analytics && this.analyticsAvailable);
+    this.draftAnalytics.set(analytics);
     this.visible.set(false);
     this.settingsOpen.set(false);
     try {
       const secure = location.protocol === 'https:' ? '; Secure' : '';
-      document.cookie = `${COOKIE_NAME}=${selected ? 'analytics' : 'essential'}; Path=/; Max-Age=${COOKIE_AGE_SECONDS}; SameSite=Lax${secure}`;
+      document.cookie = `${COOKIE_NAME}=${analytics ? 'analytics' : 'essential'}; Path=/; Max-Age=${COOKIE_AGE_SECONDS}; SameSite=Lax${secure}`;
     } catch {
       // With cookies disabled, the choice applies only until the page reloads.
     }
