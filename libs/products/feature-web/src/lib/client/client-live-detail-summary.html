@@ -21,21 +21,9 @@
 </h1>
 
 <div class="mt-5 rounded-2xl bg-[var(--client-tile)] p-4">
-  @if (store.priceRange(); as range) {
-  <p class="m-0 text-[13px] text-[var(--client-muted)]">
-    {{ range.high ? 'Prix constatés' : 'Prix constaté' }}
-  </p>
+  @if (store.offers().length) {
   <p
-    class="m-0 mt-1 text-[28px] font-semibold leading-none tracking-tight tabular-nums text-[var(--client-text)]"
-  >
-    @if (range.high) {
-    <span class="text-base font-medium text-[var(--client-muted)]">de</span>
-    {{ range.low }}
-    <span class="text-base font-medium text-[var(--client-muted)]">à</span>
-    {{ range.high }} } @else { {{ range.low }} }
-  </p>
-  <p
-    class="m-0 mt-2 inline-flex items-center gap-1.5 text-[13px] text-[var(--client-text-secondary)]"
+    class="m-0 inline-flex items-center gap-1.5 text-[13px] text-[var(--client-text-secondary)]"
   >
     {{ store.offers().length }} offre{{ store.offers().length > 1 ? 's' : '' }}
     dans {{ store.shopsCount() }} boutique{{ store.shopsCount() > 1 ? 's' : ''

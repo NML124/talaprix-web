@@ -140,7 +140,36 @@
       <section
         class="flex flex-col items-center gap-3 rounded-3xl bg-[var(--client-surface)] px-6 py-16 text-center"
       >
-        <h2 class="m-0 text-xl font-semibold">Aucun résultat</h2>
+        <h2 class="m-0 text-xl font-semibold">
+          {{ suggestions().length ? 'Produits proches' : 'Aucun résultat' }}
+        </h2>
+        @if (suggestions().length) {
+        <ul
+          class="m-0 grid w-full max-w-2xl list-none gap-2 p-0 text-left sm:grid-cols-2"
+        >
+          @for (suggestion of suggestions(); track suggestion.id) {
+          <li>
+            <a
+              [routerLink]="['/produit', suggestion.id]"
+              class="flex min-w-0 items-center gap-3 rounded-2xl bg-[var(--client-tile)] p-3 text-sm font-medium text-[var(--client-text)] no-underline hover:text-[var(--client-action)]"
+            >
+              @if (suggestion.image) {
+              <img
+                [src]="imageUrl(suggestion.image, 160)"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="size-12 shrink-0 rounded-lg object-contain"
+              />
+              }
+              <span class="min-w-0 flex-1 line-clamp-2"
+                >{{ suggestion.name }}</span
+              ><span aria-hidden="true">›</span>
+            </a>
+          </li>
+          }
+        </ul>
+        }
         <p class="m-0 text-sm text-[var(--client-muted)]">
           Essayez un autre terme ou retirez un filtre.
         </p>

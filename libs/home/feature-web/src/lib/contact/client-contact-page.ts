@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SupportApi, type SupportKind } from '@talaprix/home/data-access';
 import { ClientContactInfo } from './client-contact-info';
 
@@ -44,7 +45,8 @@ type Field = 'email' | 'message' | 'other' | 'page';
 export class ClientContactPage {
   readonly #api = inject(SupportApi);
   readonly #document = inject(DOCUMENT);
-  readonly #query = inject(ActivatedRoute).snapshot.queryParamMap;
+  readonly #route = inject(ActivatedRoute);
+  readonly #query = this.#route.snapshot.queryParamMap;
   readonly maxMessage = MAX_MESSAGE;
   readonly kind = signal<SupportKind>(
     this.#query.get('type') === 'probleme' ? 'problem' : 'contact',
@@ -72,6 +74,16 @@ export class ClientContactPage {
     () =>
       `https://wa.me/243980000147?text=${encodeURIComponent(`${this.topic()}\n\n${this.message()}`)}`,
   );
+
+  constructor() {
+    this.#route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const requested =
+        params.get('type') === 'probleme' ? 'problem' : 'contact';
+      if (requested !== this.kind()) this.setKind(requested);
+      const page = params.get('page');
+      if (page) this.pageUrl.set(page);
+    });
+  }
 
   setKind(kind: SupportKind): void {
     this.kind.set(kind);

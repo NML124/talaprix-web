@@ -5,6 +5,7 @@ import {
   input,
   linkedSignal,
 } from '@angular/core';
+import { productImageSrcset, productImageUrl } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'tpx-client-live-detail-gallery',
@@ -13,6 +14,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveDetailGallery {
+  readonly imageUrl = productImageUrl;
+  readonly heroImageSrcset = (source: string) =>
+    productImageSrcset(source, [640, 960, 1280]);
   readonly images = input.required<readonly string[]>();
   readonly name = input.required<string>();
   readonly index = linkedSignal({

@@ -63,6 +63,7 @@
     <li>
       <tpx-client-live-detail-offer
         [offer]="offer"
+        [alternatives]="store.alternatives(offer)"
         [price]="store.price(offer)"
         [productName]="reference.name"
         [best]="offer.id === store.bestOffer()?.id"
@@ -70,6 +71,7 @@
         [quantity]="quantity(offer)"
         [insight]="store.insight(offer.id)"
         (choose)="choose.emit(offer)"
+        (chooseVariant)="choose.emit($event)"
         (quantityChange)="change(offer, $event)"
         (showOnMap)="showOnMap.emit(offer)"
       />

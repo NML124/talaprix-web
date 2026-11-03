@@ -20,7 +20,6 @@ export class HomeFooter {
       links: [
         { label: 'Catégories', href: '#categories' },
         { label: 'Meilleures offres', href: '#offres' },
-        { label: 'Prix en baisse', href: '#' },
         { label: 'Produits populaires', href: '#' },
         { label: 'Magasins', href: '#' },
       ],

@@ -78,6 +78,7 @@ export class ClientShell {
   readonly searchRoute = computed(() => this.url().startsWith('/recherche'));
   #previousFocus: HTMLElement | null = null;
   constructor() {
+    void this.ui.ensureLiveRate();
     effect(() => this.ui.signedIn.set(this.session.isAuthenticated()));
     effect(() => {
       if (typeof document === 'undefined') return;

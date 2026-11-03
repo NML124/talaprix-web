@@ -9,7 +9,9 @@ il ne supprime ni leurs réseaux ni leurs volumes.
 ## Préparer GitHub Actions
 
 - Variables du dépôt : `SUPABASE_URL` (URL publique de Supabase),
-  `MAPBOX_PUBLIC_TOKEN` (jeton public `pk.`, facultatif), `VPS_HOST`,
+  `MAPBOX_PUBLIC_TOKEN` (jeton public `pk.`, facultatif),
+  `WEB_ANALYTICS_TOKEN` (facultatif : remplace le jeton public Cloudflare Web
+  Analytics intégré), `VPS_HOST`,
   `GHCR_READ_USER`.
 - Secrets du dépôt ou de l'environnement staging : `SUPABASE_ANON_KEY`
   (clé publique), `VPS_SSH_PRIVATE_KEY` (clé de déploiement dédiée),
@@ -26,13 +28,20 @@ il ne supprime ni leurs réseaux ni leurs volumes.
   `https://staging.talaprix.com` et `https://talaprix.com` en plus de
   `https://www.talaprix.com` et du développement local. Vérifier la valeur
   effective de `GOTRUE_URI_ALLOW_LIST` avant de tester Google sur staging.
+- Dans Cloudflare Web Analytics, `Manage site` doit proposer **Install JS
+  Snippet**. Vérifier aussi dans le HTML public que Cloudflare n'injecte pas
+  déjà le beacon avant consentement. Le jeton public du site est intégré au build ; le script ne se
+  charge qu'après accord sur `talaprix.com` ou `www.talaprix.com`. Sur staging,
+  aucune mesure n'est envoyée ; `localhost` est autorisé pour le test local.
 
 ## Parcours
 
 Un push autorisé sur `master` lance format, lint, tests et build, puis publie
 une image par digest et met à jour **staging uniquement**. Vérifier sur staging
 la connexion Google, la recherche, les favoris, le panier, les pages catégories,
-les routes SSR et la notice de stockage sur desktop et mobile. La production
+les routes SSR et le choix de confidentialité sur desktop et mobile. Vérifier
+dans l'onglet Réseau du navigateur qu'aucune requête vers
+`static.cloudflareinsights.com` ne part avant accord ou après refus. La production
 requiert ensuite un lancement manuel du workflow et l'approbation de
 l'environnement `production`. Le workflow repasse par staging et promeut le
 même digest. Il ne faut pas exécuter de `docker stack rm`.

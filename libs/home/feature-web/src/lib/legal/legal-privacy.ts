@@ -6,7 +6,7 @@ export const PRIVACY: LegalDocument = {
   shortTitle: 'Confidentialité',
   description:
     'Données utilisées par TalaPrix, localisation, notifications et vos droits.',
-  updated: 'Dernière mise à jour : 5 juin 2026',
+  updated: 'Dernière mise à jour : 3 novembre 2026',
   intro:
     'Cette page explique de façon simple quelles informations peuvent être utilisées par TalaPrix, pourquoi elles le sont et comment elles sont traitées.',
   sections: [
@@ -54,6 +54,14 @@ export const PRIVACY: LegalDocument = {
       ],
     },
     {
+      title: 'Stockage du navigateur et statistiques du site',
+      paragraphs: [
+        'Sur le site web, la session Supabase et le panier sont conservés dans le stockage local du navigateur pour maintenir la connexion et retrouver les articles. Ce stockage est nécessaire aux fonctionnalités demandées. Un cookie de choix de confidentialité, valable 180 jours, mémorise votre décision afin de ne pas afficher le panneau à chaque page.',
+        'Lorsque la mesure d’audience sera configurée et que vous l’autoriserez, TalaPrix utilisera Cloudflare Web Analytics pour connaître les visites, les pages vues et les performances du site. Cet outil ne nécessite pas de cookie publicitaire ni d’identifiant individuel TalaPrix. Les nombres de visiteurs sont des estimations statistiques et ne représentent pas un comptage exact de personnes.',
+        'Aucun ciblage publicitaire comportemental ni cookie publicitaire tiers n’est activé par TalaPrix. Toute activation future de cette finalité nécessitera une information et un choix distincts.',
+      ],
+    },
+    {
       title: 'Localisation',
       paragraphs: [
         "Lorsque l'utilisateur autorise la localisation, TalaPrix utilise cette information pour afficher les boutiques les plus proches et mieux comparer leurs prix afin de proposer les offres les plus avantageuses à proximité.",
@@ -82,7 +90,9 @@ export const PRIVACY: LegalDocument = {
     },
     {
       title: "Choix de l'utilisateur",
-      paragraphs: [],
+      paragraphs: [
+        'Le choix relatif aux statistiques peut être modifié depuis « Stockage et cookies » dans le pied de page. Le refus n’empêche pas la navigation. Si des statistiques avaient été autorisées, le site recharge la page après leur retrait pour arrêter le script de mesure.',
+      ],
     },
     {
       title: 'Contact',
@@ -91,7 +101,7 @@ export const PRIVACY: LegalDocument = {
       ],
       bullets: [
         'Téléphone : +243 976 885 689',
-        'E-mail : elielkahindirwa@gmail.com',
+        'E-mail : support@talaprix.com',
       ],
     },
     {

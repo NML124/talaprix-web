@@ -158,17 +158,11 @@
         <span
           aria-hidden="true"
           class="relative flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[var(--client-tile)] text-[11px] font-semibold text-[var(--client-action)]"
-          >{{ shop.name.charAt(0) }} @if (shop.image) {
-          <img
-            #logo
-            [src]="shop.image"
+          ><img
+            src="/client-design/assets/logo-talaprix-large.png"
             alt=""
-            loading="lazy"
-            class="absolute inset-0 size-full bg-white object-contain"
-            (error)="logo.hidden = true"
-          />
-          }</span
-        >
+            class="size-6 object-contain"
+        /></span>
         <span class="min-w-0 flex-1 truncate">{{ shop.name }}</span>
         <span
           aria-hidden="true"

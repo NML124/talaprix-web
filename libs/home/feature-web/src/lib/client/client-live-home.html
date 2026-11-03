@@ -57,7 +57,9 @@
         >
           @if (item.image) {
           <img
-            [src]="item.image"
+            [src]="imageUrl(item.image, 320)"
+            [attr.srcset]="imageSrcset(item.image)"
+            sizes="(max-width: 640px) 45vw, (max-width: 1200px) 30vw, 220px"
             [alt]="item.name"
             loading="lazy"
             class="h-full w-full object-contain p-3"
@@ -231,19 +233,12 @@
         routerLink="/boutiques"
         class="flex min-w-0 flex-col gap-2 rounded-xl border border-[var(--client-line)] p-3 text-[var(--client-text)] no-underline"
       >
-        @if (shop.image) {
         <img
-          [src]="shop.image"
-          [alt]="'Logo de ' + shop.name"
+          src="/client-design/assets/logo-talaprix-large.png"
+          alt=""
           loading="lazy"
           class="h-14 w-14 rounded-lg object-contain"
         />
-        } @else {
-        <span
-          class="flex size-14 items-center justify-center rounded-lg bg-[var(--client-tile)] text-xs"
-          >Boutique</span
-        >
-        }
         <span class="block truncate text-sm font-semibold" [title]="shop.name"
           >{{ shop.name }}</span
         >

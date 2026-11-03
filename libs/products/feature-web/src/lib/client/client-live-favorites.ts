@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { productImageSrcset, productImageUrl } from '@talaprix/shared/utils';
 import {
   CatalogCartActions,
   LiveFavoritesStore,
@@ -23,7 +24,8 @@ interface Favorite {
   readonly name: string;
   readonly image: string | null;
   readonly price: number | null;
-  readonly currency: string;
+  readonly currency: 'USD' | 'CDF';
+  readonly normalizedPriceCdf: number | null;
 }
 @Component({
   selector: 'tpx-client-live-favorites',
@@ -33,6 +35,9 @@ interface Favorite {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveFavorites {
+  readonly imageUrl = productImageUrl;
+  readonly imageSrcset = (source: string | null) =>
+    productImageSrcset(source, [320, 640]);
   readonly #functions = inject(SupabaseFunctions);
   readonly gate = inject(AuthGate);
   readonly #favoriteStore = inject(LiveFavoritesStore);
@@ -61,6 +66,7 @@ export class ClientLiveFavorites {
     });
   }
   async load(): Promise<void> {
+    void this.ui.ensureLiveRate();
     const request = ++this.#request;
     this.status.set('loading');
     this.error.set('');
@@ -86,6 +92,12 @@ export class ClientLiveFavorites {
   }
   price(item: Favorite): string {
     if (item.price === null) return 'Prix indisponible';
+    if (item.normalizedPriceCdf !== null)
+      return this.ui.liveMoney(
+        item.price,
+        item.currency,
+        item.normalizedPriceCdf,
+      );
     return `${new Intl.NumberFormat('fr-FR', { maximumFractionDigits: item.currency === 'CDF' ? 0 : 2 }).format(item.price)} ${item.currency === 'CDF' ? 'FC' : 'USD'}`;
   }
 }
@@ -100,7 +112,8 @@ function mapFavorite(value: unknown): Favorite | null {
     referenceId: str(value['offer_reference_id']),
     image: str(value['product_picture']),
     price: num(value['price']),
-    currency: str(value['devise_name']) ?? 'CDF',
+    currency: value['devise_name'] === 'USD' ? 'USD' : 'CDF',
+    normalizedPriceCdf: num(value['normalized_price_cdf']),
   };
 }
 function isRecord(value: unknown): value is Record<string, unknown> {
