@@ -16,8 +16,7 @@ export class ClientMenu {
   readonly ui = inject(PreviewPreferences);
   readonly session = inject(AuthSessionStore);
 
-  async signOut(): Promise<void> {
-    this.ui.closeOverlays();
-    await this.ui.signOut();
+  signOut(): void {
+    this.ui.requestSignOut();
   }
 }

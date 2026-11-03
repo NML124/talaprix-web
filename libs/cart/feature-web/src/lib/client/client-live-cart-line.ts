@@ -2,11 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { LiveCartItem } from '@talaprix/cart/data-access';
+import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { productImageUrl } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'tpx-client-live-cart-line',
@@ -16,22 +19,24 @@ import type { LiveCartItem } from '@talaprix/cart/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveCartLine {
+  readonly imageUrl = productImageUrl;
+  readonly #preferences = inject(PreviewPreferences);
   readonly item = input.required<LiveCartItem>();
   readonly quantityChange = output<number>();
   readonly remove = output<void>();
-  readonly unitPrice = computed(() =>
-    format(this.item().offer.price, this.item().offer.currency),
-  );
+  readonly unitPrice = computed(() => {
+    const offer = this.item().offer;
+    return this.#preferences.liveMoney(
+      offer.price,
+      offer.currency,
+      offer.normalizedPriceCdf,
+    );
+  });
   readonly linePrice = computed(() =>
-    format(
+    this.#preferences.liveMoney(
       this.item().offer.price * this.item().quantity,
       this.item().offer.currency,
+      this.item().offer.normalizedPriceCdf * this.item().quantity,
     ),
   );
-}
-
-function format(value: number, currency: 'USD' | 'CDF'): string {
-  return `${new Intl.NumberFormat('fr-FR', {
-    maximumFractionDigits: currency === 'CDF' ? 0 : 2,
-  }).format(value)} ${currency === 'CDF' ? 'FC' : 'USD'}`;
 }

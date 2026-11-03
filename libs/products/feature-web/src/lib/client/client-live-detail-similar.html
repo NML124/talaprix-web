@@ -1,10 +1,31 @@
 @if (store.similar().length) {
 <section aria-labelledby="similar-title" class="mt-10">
-  <h2 id="similar-title" class="m-0 mb-4 text-xl font-semibold tracking-tight">
-    Produits similaires
-  </h2>
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <h2 id="similar-title" class="m-0 text-xl font-semibold tracking-tight">
+      Produits similaires
+    </h2>
+    <div class="hidden items-center gap-2 md:flex">
+      <button
+        type="button"
+        class="grid size-10 place-items-center rounded-full border border-[var(--client-line)] bg-white text-lg"
+        aria-label="Produits précédents"
+        (click)="scroll(-1)"
+      >
+        ‹
+      </button>
+      <button
+        type="button"
+        class="grid size-10 place-items-center rounded-full border border-[var(--client-line)] bg-white text-lg"
+        aria-label="Produits suivants"
+        (click)="scroll(1)"
+      >
+        ›
+      </button>
+    </div>
+  </div>
   <ul
-    class="-mx-4 m-0 flex list-none snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0"
+    #rail
+    class="-mx-4 m-0 flex list-none snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden"
   >
     @for (item of store.similar(); track item.id) {
     <li class="w-[160px] shrink-0 snap-start sm:w-[190px]">
@@ -22,5 +43,10 @@
     </li>
     }
   </ul>
+  <a
+    routerLink="/resultats"
+    class="mx-auto mt-5 flex w-fit items-center gap-1 rounded-[15px] border border-[var(--client-line)] bg-white px-5 py-2.5 text-sm font-semibold text-[var(--client-action)] no-underline"
+    >Voir tous les produits <span aria-hidden="true">›</span></a
+  >
 </section>
 }

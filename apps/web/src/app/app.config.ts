@@ -15,7 +15,10 @@ import {
   provideMapboxConfig,
   provideSupabaseConfig,
 } from '@talaprix/shared/data-access';
-import { provideHomeDataAccess } from '@talaprix/home/data-access';
+import {
+  AUDIENCE_ANALYTICS_TOKEN,
+  provideHomeDataAccess,
+} from '@talaprix/home/data-access';
 import {
   provideCartDataAccess,
   provideOfferCart,
@@ -33,6 +36,7 @@ import {
 import {
   mapboxConfig,
   runtimeConfig,
+  webAnalyticsToken,
 } from '../environments/runtime-config.generated';
 
 export const appConfig: ApplicationConfig = {
@@ -47,6 +51,7 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideSupabaseConfig(runtimeConfig),
+    { provide: AUDIENCE_ANALYTICS_TOKEN, useValue: webAnalyticsToken },
     provideMapboxConfig(mapboxConfig),
     provideHeaderSearch(() =>
       import('@talaprix/products/feature-web').then(

@@ -78,21 +78,27 @@ export class ClientShell {
   readonly searchRoute = computed(() => this.url().startsWith('/recherche'));
   #previousFocus: HTMLElement | null = null;
   constructor() {
+    void this.ui.ensureLiveRate();
     effect(() => this.ui.signedIn.set(this.session.isAuthenticated()));
     effect(() => {
       if (typeof document === 'undefined') return;
-      if (this.ui.authOpen()) {
+      const authOpen = this.ui.authOpen();
+      const signOutOpen = this.ui.signOutConfirmationOpen();
+      if (authOpen || signOutOpen) {
         if (!this.#previousFocus)
           this.#previousFocus = document.activeElement as HTMLElement;
-        this.ui.authStep();
-        setTimeout(() =>
-          (
-            this.focusable().find((e) => e.tagName === 'INPUT') ??
-            this.focusable()[0]
-          )?.focus(),
-        );
+        if (authOpen) this.ui.authStep();
+        setTimeout(() => {
+          const target = signOutOpen
+            ? this.element.nativeElement.querySelector<HTMLElement>(
+                '[data-signout-cancel]',
+              )
+            : (this.focusable().find((e) => e.tagName === 'INPUT') ??
+              this.focusable()[0]);
+          target?.focus();
+        });
       } else {
-        this.#previousFocus?.focus();
+        if (this.#previousFocus?.isConnected) this.#previousFocus.focus();
         this.#previousFocus = null;
       }
     });
@@ -103,7 +109,7 @@ export class ClientShell {
   private focusable(): HTMLElement[] {
     return [
       ...this.element.nativeElement.querySelectorAll<HTMLElement>(
-        '[role="dialog"] button, [role="dialog"] input, [role="dialog"] a[href]',
+        '[data-client-modal] button, [data-client-modal] input, [data-client-modal] a[href]',
       ),
     ].filter((e) => e.getClientRects().length > 0);
   }
@@ -111,10 +117,15 @@ export class ClientShell {
     event: KeyboardEvent,
   ): void {
     if (event.key === 'Escape') {
-      this.ui.closeOverlays();
+      if (this.ui.signOutConfirmationOpen()) this.ui.cancelSignOut();
+      else this.ui.closeOverlays();
       return;
     }
-    if (event.key !== 'Tab' || !this.ui.authOpen()) return;
+    if (
+      event.key !== 'Tab' ||
+      (!this.ui.authOpen() && !this.ui.signOutConfirmationOpen())
+    )
+      return;
     const elements = this.focusable();
     const first = elements[0];
     const last = elements.at(-1);

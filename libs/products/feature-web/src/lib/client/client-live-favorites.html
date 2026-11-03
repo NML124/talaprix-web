@@ -83,7 +83,9 @@
       >
         @if (item.image) {
         <img
-          [src]="item.image"
+          [src]="imageUrl(item.image, 320)"
+          [attr.srcset]="imageSrcset(item.image)"
+          sizes="(max-width: 640px) 45vw, 280px"
           alt=""
           loading="lazy"
           class="h-full w-full object-contain p-4 mix-blend-multiply"

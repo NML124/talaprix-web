@@ -1,5 +1,8 @@
 import { inject, Service } from '@angular/core';
-import { SupabaseFunctions } from '@talaprix/shared/data-access';
+import {
+  PreviewPreferences,
+  SupabaseFunctions,
+} from '@talaprix/shared/data-access';
 import {
   currency,
   firstString,
@@ -94,6 +97,11 @@ export interface CatalogQuery {
 @Service()
 export class CatalogApi {
   readonly #functions = inject(SupabaseFunctions);
+  readonly #preferences = inject(PreviewPreferences);
+  readonly #detailCache = new Map<
+    string,
+    { at: number; value: CatalogReferenceDetail }
+  >();
 
   async list(
     query: CatalogQuery = {},
@@ -133,6 +141,8 @@ export class CatalogApi {
       : {};
     const page = number(payload['page']) ?? 1;
     const total = number(pagination['total']) ?? number(payload['count']) ?? 0;
+    const usdToCdf = number(exchangeRates['usd_cdf']);
+    if (usdToCdf && usdToCdf > 0) this.#preferences.liveRate.set(usdToCdf);
     return {
       items: payload['data'].map(mapReference).filter(isNotNull),
       page,
@@ -140,7 +150,7 @@ export class CatalogApi {
       totalPages:
         number(pagination['totalPages']) ??
         Math.ceil(total / (query.limit ?? 20)),
-      usdToCdf: number(exchangeRates['usd_cdf']),
+      usdToCdf,
     };
   }
 
@@ -149,6 +159,10 @@ export class CatalogApi {
     query: CatalogDetailQuery = {},
     signal?: AbortSignal,
   ): Promise<CatalogReferenceDetail> {
+    const cacheable =
+      (query.sort ?? 'best_price') === 'best_price' && query.lat === undefined;
+    const cached = cacheable ? this.#detailCache.get(id) : null;
+    if (cached && Date.now() - cached.at < 5 * 60_000) return cached.value;
     const params: Record<string, string> = {
       offer_reference_id: id,
       page: '1',
@@ -195,7 +209,7 @@ export class CatalogApi {
     const usd = offers.find(
       (offer) => offer.currency === 'USD' && offer.price > 0,
     );
-    return {
+    const detail: CatalogReferenceDetail = {
       reference,
       offers,
       totalOffers: number(pagination['total']) ?? offers.length,
@@ -206,6 +220,10 @@ export class CatalogApi {
           ? usd.normalizedPriceCdf / usd.price
           : null,
     };
+    if (detail.usdToCdf && detail.usdToCdf > 0)
+      this.#preferences.liveRate.set(detail.usdToCdf);
+    if (cacheable) this.#detailCache.set(id, { at: Date.now(), value: detail });
+    return detail;
   }
 }
 

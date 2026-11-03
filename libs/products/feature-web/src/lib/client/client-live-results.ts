@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   CatalogApi,
+  CatalogSearchApi,
   CatalogCartActions,
   CatalogPageCache,
   CatalogShopsStore,
@@ -17,9 +18,11 @@ import {
   type CatalogPage,
   type CatalogQuery,
   type CatalogReference,
+  type CatalogSuggestion,
 } from '@talaprix/products/data-access';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
 import { isPhoneCategoryName } from '@talaprix/products/domain';
+import { productImageUrl } from '@talaprix/shared/utils';
 import { Pagination, SelectCard } from '@talaprix/shared/ui-kit';
 import { ClientLiveFilters, type PriceRange } from './client-live-filters';
 import {
@@ -46,7 +49,9 @@ import { ClientLiveProductCard } from './client-live-product-card';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveResults {
+  readonly imageUrl = productImageUrl;
   readonly #api = inject(CatalogApi);
+  readonly #searchApi = inject(CatalogSearchApi);
   readonly #cache = inject(CatalogPageCache);
   readonly #shops = inject(CatalogShopsStore);
   readonly shops = this.#shops.shops;
@@ -59,6 +64,7 @@ export class ClientLiveResults {
   readonly ui = inject(PreviewPreferences);
 
   readonly items = signal<readonly CatalogReference[]>([]);
+  readonly suggestions = signal<readonly CatalogSuggestion[]>([]);
   readonly total = signal(0);
   readonly page = signal(1);
   readonly totalPages = signal(1);
@@ -135,6 +141,7 @@ export class ClientLiveResults {
 
   async load(): Promise<void> {
     const request = ++this.#request;
+    this.suggestions.set([]);
     const query: CatalogQuery = {
       q: this.q(),
       page: this.page(),
@@ -150,8 +157,11 @@ export class ClientLiveResults {
     const key = this.#cache.key(query);
     const cached = this.#cache.get(key);
     // Back navigation paints the last known page at once, then refreshes it.
-    if (cached) this.#show(cached.page);
-    else this.status.set('loading');
+    if (cached) {
+      this.#show(cached.page);
+      if (!cached.page.items.length && query.q && query.page === 1)
+        void this.#loadSuggestions(query.q, request);
+    } else this.status.set('loading');
     this.error.set('');
     if (cached && Date.now() - cached.at < 60_000) return;
     try {
@@ -159,6 +169,8 @@ export class ClientLiveResults {
       if (request !== this.#request) return;
       this.#cache.set(key, result);
       this.#show(result);
+      if (!result.items.length && query.q && query.page === 1)
+        void this.#loadSuggestions(query.q, request);
     } catch (error) {
       if (request !== this.#request || cached) return;
       this.items.set([]);
@@ -166,6 +178,31 @@ export class ClientLiveResults {
         error instanceof Error ? error.message : 'Catalogue indisponible.',
       );
       this.status.set('error');
+    }
+  }
+
+  async #loadSuggestions(q: string, request: number): Promise<void> {
+    const words = q.trim().split(/\s+/);
+    // A later misspelt word must not erase useful suggestions shown while typing.
+    for (
+      let length = words.length;
+      length > 0 && length >= words.length - 2;
+      length--
+    ) {
+      try {
+        const suggestions = await this.#searchApi.suggest(
+          words.slice(0, length).join(' '),
+          8,
+        );
+        if (request !== this.#request) return;
+        if (suggestions.length) {
+          this.suggestions.set(suggestions);
+          return;
+        }
+      } catch {
+        // The main catalogue remains usable when the suggestion index is down.
+        return;
+      }
     }
   }
 

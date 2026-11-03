@@ -70,6 +70,7 @@ jobs:
             SUPABASE_URL=${{ vars.SUPABASE_URL }}
             SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
             MAPBOX_PUBLIC_TOKEN=${{ vars.MAPBOX_PUBLIC_TOKEN }}
+            WEB_ANALYTICS_TOKEN=${{ vars.WEB_ANALYTICS_TOKEN }}
       - id: ref
         env:
           IMAGE: ${{ steps.name.outputs.value }}

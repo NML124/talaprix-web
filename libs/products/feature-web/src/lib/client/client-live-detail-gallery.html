@@ -9,7 +9,9 @@
 >
   @if (current(); as image) {
   <img
-    [src]="image"
+    [src]="imageUrl(image, 960)"
+    [attr.srcset]="heroImageSrcset(image)"
+    sizes="(max-width: 768px) 100vw, 700px"
     [alt]="name()"
     class="h-full w-full animate-fade-in object-contain p-6 mix-blend-multiply motion-reduce:animate-none sm:p-10"
     fetchpriority="high"
@@ -83,7 +85,7 @@
       (click)="index.set(i)"
     >
       <img
-        [src]="image"
+        [src]="imageUrl(image, 160)"
         alt=""
         loading="lazy"
         class="h-full w-full object-contain p-1.5 mix-blend-multiply"
