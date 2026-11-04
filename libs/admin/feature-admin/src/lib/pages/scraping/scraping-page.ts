@@ -4,196 +4,96 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeader } from '../../ui/page-header';
-import { StatusDot } from '../../ui/status-dot';
-import { ScrapingReviewDialog } from './scraping-review-dialog';
-import { ScrapingNetworkAnimation } from './scraping-network-animation';
 import { ScrapingReviewApi } from './scraping-review-api';
-import type {
-  CandidateDetail,
-  CandidateSummary,
-  ReviewState,
-} from './scraping-review.models';
+import type { WorkbookOverview } from './scraping-review.models';
+import { ScrapingRunsSheet } from './scraping-runs-sheet';
+import { ScrapingCandidatesSheet } from './scraping-candidates-sheet';
+import { ScrapingMediaSheet } from './scraping-media-sheet';
+import { ScrapingJournalSheet } from './scraping-journal-sheet';
+import { ScrapingPilotSheet } from './scraping-pilot-sheet';
 
-const PAGE_SIZE = 25;
+type Sheet =
+  | 'runs'
+  | 'raw'
+  | 'analysis'
+  | 'matches'
+  | 'media'
+  | 'review'
+  | 'journal'
+  | 'pilot';
+
+const sheets: ReadonlyArray<{ key: Sheet; number: string; label: string }> = [
+  { key: 'runs', number: '01', label: 'Exécutions' },
+  { key: 'raw', number: '02', label: 'Données brutes' },
+  { key: 'analysis', number: '03', label: 'Traitement' },
+  { key: 'matches', number: '04', label: 'Correspondances' },
+  { key: 'media', number: '05', label: 'Médias' },
+  { key: 'review', number: '06', label: 'Validation' },
+  { key: 'journal', number: '07', label: 'Journal' },
+  { key: 'pilot', number: '08', label: 'Essais' },
+];
 
 @Component({
   selector: 'tp-scraping-page',
   imports: [
     PageHeader,
-    StatusDot,
-    ScrapingReviewDialog,
-    ScrapingNetworkAnimation,
+    ScrapingRunsSheet,
+    ScrapingCandidatesSheet,
+    ScrapingMediaSheet,
+    ScrapingJournalSheet,
+    ScrapingPilotSheet,
   ],
   templateUrl: './scraping-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingPage {
   readonly #api = inject(ScrapingReviewApi);
-  protected readonly rows = signal<CandidateSummary[]>([]);
-  protected readonly selected = signal<CandidateDetail | null>(null);
-  protected readonly filter = signal<ReviewState>('needs_review');
-  protected readonly loading = signal(true);
-  protected readonly detailLoading = signal(false);
-  protected readonly saving = signal(false);
-  protected readonly offset = signal(0);
-  protected readonly hasNext = signal(false);
-  protected readonly error = signal('');
-  protected readonly notice = signal('');
+  readonly #route = inject(ActivatedRoute);
+  readonly #router = inject(Router);
+  protected readonly sheets = sheets;
+  protected readonly active = signal<Sheet>('runs');
+  protected readonly selectedRun = signal<string | null>(null);
+  protected readonly overview = signal<WorkbookOverview | null>(null);
+  protected readonly overviewLoading = signal(true);
+  protected readonly overviewError = signal(false);
 
   constructor() {
-    void this.load();
+    const requested = this.#route.snapshot.queryParamMap.get('tab');
+    if (sheets.some(({ key }) => key === requested))
+      this.active.set(requested as Sheet);
+    void this.loadOverview();
   }
 
-  protected async load(offset = this.offset()): Promise<void> {
-    this.loading.set(true);
-    this.error.set('');
+  protected async loadOverview(): Promise<void> {
+    this.overviewLoading.set(true);
+    this.overviewError.set(false);
     try {
-      const page = await this.#api.list(this.filter(), PAGE_SIZE, offset);
-      this.rows.set(page.items);
-      this.offset.set(page.offset);
-      this.hasNext.set(page.has_next);
-    } catch (error) {
-      this.error.set(this.errorText(error));
-      this.rows.set([]);
+      this.overview.set(await this.#api.overview());
+    } catch {
+      this.overviewError.set(true);
     } finally {
-      this.loading.set(false);
+      this.overviewLoading.set(false);
     }
   }
 
-  protected async setFilter(state: ReviewState): Promise<void> {
-    this.filter.set(state);
-    this.notice.set('');
-    await this.load(0);
+  protected setSheet(sheet: Sheet): void {
+    this.active.set(sheet);
+    void this.#router.navigate([], {
+      relativeTo: this.#route,
+      queryParams: { tab: sheet },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
-  protected previous(): void {
-    void this.load(Math.max(0, this.offset() - PAGE_SIZE));
-  }
-  protected next(): void {
-    if (this.hasNext()) void this.load(this.offset() + PAGE_SIZE);
+  protected openRun(runId: string): void {
+    this.selectedRun.set(runId);
+    this.setSheet('raw');
   }
 
-  protected async open(row: CandidateSummary): Promise<void> {
-    this.selected.set(null);
-    this.detailLoading.set(true);
-    this.error.set('');
-    this.notice.set('');
-    try {
-      const detail = await this.#api.detail(row.candidate_id);
-      const previews = await Promise.all(
-        detail.staged_media.map(async (media) => {
-          try {
-            const signed = await this.#api.mediaUrl(
-              detail.candidate_id,
-              media.media_id,
-            );
-            return [media.media_id, signed.url] as const;
-          } catch {
-            return [media.media_id, ''] as const;
-          }
-        }),
-      );
-      this.selected.set({
-        ...detail,
-        mediaPreviewUrls: Object.fromEntries(previews),
-      });
-    } catch (error) {
-      this.error.set(this.errorText(error));
-    } finally {
-      this.detailLoading.set(false);
-    }
-  }
-
-  protected async decide(event: {
-    candidateId: string;
-    decision: ReviewState;
-    reason: string;
-  }): Promise<void> {
-    const candidate = this.selected();
-    if (
-      !candidate ||
-      event.candidateId !== candidate.candidate_id ||
-      event.decision === 'needs_review'
-    )
-      return;
-    this.saving.set(true);
-    try {
-      const result = await this.#api.decide({
-        candidate_id: candidate.candidate_id,
-        expected_version: candidate.version,
-        decision: event.decision,
-        reason: event.reason || undefined,
-      });
-      this.selected.set(null);
-      this.notice.set(
-        result.review_state === 'approved'
-          ? 'Candidat approuvé et décision enregistrée dans le journal d’audit. Il reste non publié.'
-          : 'Candidat rejeté et motif enregistré dans le journal d’audit.',
-      );
-      await this.load();
-    } catch (error) {
-      const message = this.errorText(error);
-      this.error.set(message);
-      if (error instanceof Error && 'status' in error && error.status === 409) {
-        await this.load();
-        this.error.set(message);
-      }
-    } finally {
-      this.saving.set(false);
-    }
-  }
-
-  protected offerCount(): number {
-    return this.rows().filter((row) => row.candidate_kind === 'offer').length;
-  }
-  protected sellerCount(): number {
-    return this.rows().filter((row) => row.candidate_kind === 'seller').length;
-  }
-  protected unknownPriceCount(): number {
-    return this.rows().filter((row) => !row.price || !row.currency).length;
-  }
-  protected displayPrice(row: CandidateSummary): string {
-    return row.price && row.currency
-      ? `${row.price} ${row.currency}`
-      : 'À confirmer';
-  }
-  protected stateLabel(state: ReviewState): string {
-    return state === 'needs_review'
-      ? 'À examiner'
-      : state === 'approved'
-        ? 'Approuvé · non publié'
-        : 'Rejeté';
-  }
-  protected tone(state: ReviewState): 'warning' | 'success' | 'danger' {
-    return state === 'needs_review'
-      ? 'warning'
-      : state === 'approved'
-        ? 'success'
-        : 'danger';
-  }
-  protected json(value: unknown): string {
-    return JSON.stringify(value, null, 2);
-  }
-  protected pageStart(): number {
-    return this.rows().length ? this.offset() + 1 : 0;
-  }
-  protected pageEnd(): number {
-    return this.offset() + this.rows().length;
-  }
-
-  private errorText(error: unknown): string {
-    if (error && typeof error === 'object' && 'status' in error) {
-      const status = Number(error.status);
-      if (status === 401 || status === 403)
-        return 'Accès réservé aux administrateurs connectés. Vérifiez votre session.';
-      if (status === 503)
-        return 'Le service de revue ou la base de scraping est indisponible.';
-      if (status === 409)
-        return 'Ce candidat a changé depuis son ouverture. Rechargez-le avant de décider.';
-    }
-    return error instanceof Error
-      ? error.message
-      : 'Impossible de charger les candidats de scraping.';
+  protected clearRun(): void {
+    this.selectedRun.set(null);
   }
 }

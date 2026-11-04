@@ -1,0 +1,196 @@
+<section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
+  <div class="workbook-sheet-heading">
+    <div>
+      <span class="workbook-eyebrow">PILOTE</span>
+      <h2>Préparer un essai de collecte</h2>
+      <p>
+        Le prévol vérifie les canaux du classeur sans contacter Apify ni OpenAI.
+      </p>
+    </div>
+  </div>
+
+  <div class="workbook-pilot-fields">
+    <label
+      >Publications par canal
+      <input
+        class="input"
+        type="number"
+        min="20"
+        max="100"
+        [(ngModel)]="posts"
+        (ngModelChange)="invalidatePreview()"
+      />
+    </label>
+    <label
+      >Période en jours
+      <input
+        class="input"
+        type="number"
+        min="30"
+        max="730"
+        [(ngModel)]="days"
+        (ngModelChange)="invalidatePreview()"
+      />
+    </label>
+    <label
+      >Plafond par collecte (USD)
+      <select
+        class="input"
+        [(ngModel)]="cap"
+        (ngModelChange)="invalidatePreview()"
+      >
+        <option value="0.08">0,08</option>
+        <option value="0.10">0,10</option>
+        <option value="0.20">0,20</option>
+        <option value="0.50">0,50</option>
+      </select>
+    </label>
+  </div>
+  <button
+    class="btn btn-secondary"
+    type="button"
+    [disabled]="busy()"
+    (click)="runPreview()"
+  >
+    {{ busy() ? 'Vérification…' : 'Vérifier le prévol' }}
+  </button>
+
+  @if (error()) {
+  <p class="workbook-pilot-error" role="alert">{{ error() }}</p>
+  } @if (preview(); as result) {
+  <div class="workbook-pilot-result">
+    <h3>Prévol terminé</h3>
+    <div class="workbook-pilot-metrics">
+      <div>
+        <small>Canaux Facebook</small
+        ><strong>{{ metric(result, 'facebook_channels') }}</strong>
+      </div>
+      <div>
+        <small>Publications maximum</small
+        ><strong>{{ metric(result, 'max_posts') }}</strong>
+      </div>
+      <div>
+        <small>Réservation Apify (USD)</small
+        ><strong>{{ metric(result, 'reserved_apify_usd') }}</strong>
+      </div>
+      <div>
+        <small>Canaux non pris en charge</small
+        ><strong>{{ metric(result, 'unsupported_channels') }}</strong>
+      </div>
+    </div>
+    @if (metricNumber(result, 'unsupported_channels') > 0 ||
+    metricNumber(result, 'facebook_channels') === 0) {
+    <p class="workbook-pilot-error">
+      Lancement indisponible : aucun canal éligible ou certains liens Facebook
+      ne sont pas pris en charge.
+    </p>
+    }
+    <details>
+      <summary>Voir les données complètes du prévol</summary>
+      <pre>{{ detail(result) }}</pre>
+    </details>
+  </div>
+  <div class="workbook-pilot-launch">
+    <h3>Lancer cette campagne</h3>
+    <p>
+      Cette action peut consommer des crédits Apify et OpenAI. Les plafonds sont
+      contrôlés côté serveur.
+    </p>
+    <div class="workbook-pilot-fields">
+      <label
+        >Crédit Apify disponible (USD, maximum 5)
+        <input
+          class="input"
+          type="number"
+          min="0.01"
+          max="5"
+          step="0.01"
+          [(ngModel)]="credit"
+        />
+      </label>
+      <label
+        >Appels texte maximum
+        <input
+          class="input"
+          type="number"
+          min="0"
+          max="500"
+          [(ngModel)]="maxTextCalls"
+        />
+      </label>
+    </div>
+    <label class="workbook-pilot-confirm">
+      <input type="checkbox" [(ngModel)]="budgetConfirmed" />
+      J’ai vérifié le budget et je confirme le lancement de cet essai.
+    </label>
+    <button
+      class="btn btn-primary"
+      type="button"
+      [disabled]="!canStart()"
+      (click)="start()"
+    >
+      Démarrer la collecte
+    </button>
+  </div>
+  }
+
+  <div class="workbook-pilot-status">
+    <h3>Suivre une campagne</h3>
+    <div class="workbook-pilot-status-row">
+      <input
+        class="input"
+        type="text"
+        [(ngModel)]="campaignInput"
+        placeholder="Identifiant de campagne"
+        aria-label="Identifiant de campagne"
+      />
+      <button
+        class="btn btn-secondary"
+        type="button"
+        [disabled]="busy()"
+        (click)="refresh()"
+      >
+        Actualiser l’état
+      </button>
+      @if (activeId()) {
+      <button
+        class="btn btn-secondary"
+        type="button"
+        [disabled]="busy()"
+        (click)="stop()"
+      >
+        Arrêter les tâches restantes
+      </button>
+      }
+    </div>
+    @if (campaign(); as state) {
+    <p class="muted small">
+      Un appel Apify déjà lancé peut se terminer après l’arrêt.
+    </p>
+    <div class="workbook-pilot-result">
+      <div class="workbook-pilot-metrics">
+        <div>
+          <small>Captures</small
+          ><strong>{{ metric(state, 'observations') }}</strong>
+        </div>
+        <div>
+          <small>Canaux collectés</small
+          ><strong>{{ metric(state, 'collected_channels') }}</strong>
+        </div>
+        <div>
+          <small>Tâches en cours</small
+          ><strong>{{ metric(state, 'running_jobs') }}</strong>
+        </div>
+        <div>
+          <small>Tâches échouées</small
+          ><strong>{{ metric(state, 'failed_jobs') }}</strong>
+        </div>
+      </div>
+      <details>
+        <summary>Voir toutes les étapes et erreurs</summary>
+        <pre>{{ detail(state) }}</pre>
+      </details>
+    </div>
+    }
+  </div>
+</section>

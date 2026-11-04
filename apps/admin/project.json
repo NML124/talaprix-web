@@ -29,6 +29,11 @@
           {
             "glob": "**/*",
             "input": "apps/admin/public"
+          },
+          {
+            "glob": "*.woff2",
+            "input": "apps/web/public/client-design/fonts",
+            "output": "client-design/fonts"
           }
         ],
         "styles": [

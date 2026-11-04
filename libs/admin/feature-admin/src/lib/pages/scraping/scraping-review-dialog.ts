@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   input,
   output,
   signal,
@@ -18,7 +19,11 @@ import type { CandidateDetail, ReviewState } from './scraping-review.models';
 })
 export class ScrapingReviewDialog {
   readonly candidate = input.required<CandidateDetail>();
+  readonly initialView = input<
+    'raw' | 'analysis' | 'matches' | 'media' | 'review'
+  >('raw');
   readonly saving = input(false);
+  readonly actionError = input('');
   readonly closed = output<void>();
   readonly decided = output<{
     candidateId: string;
@@ -28,6 +33,13 @@ export class ScrapingReviewDialog {
   protected readonly decision = signal<'approved' | 'rejected' | null>(null);
   protected readonly reason = signal('');
   protected readonly error = signal('');
+  protected readonly view = signal<
+    'raw' | 'analysis' | 'matches' | 'media' | 'review'
+  >('raw');
+
+  constructor() {
+    effect(() => this.view.set(this.initialView()));
+  }
 
   protected json(value: unknown): string {
     return JSON.stringify(value, null, 2);

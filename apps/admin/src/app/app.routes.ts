@@ -104,10 +104,7 @@ export const appRoutes: Route[] = [
       {
         path: 'scraping',
         loadComponent: () =>
-          import('@talaprix/admin').then(
-            ({ ScrapingPage, AdminUnavailable }) =>
-              live ? AdminUnavailable : ScrapingPage,
-          ),
+          import('@talaprix/admin').then(({ ScrapingPage }) => ScrapingPage),
       },
       {
         path: 'catalogue',

@@ -17,6 +17,12 @@ interface DashboardStats {
   readonly advertisements: number | null;
 }
 
+interface RecentProduct {
+  readonly id: string;
+  readonly name: string;
+  readonly category: string;
+}
+
 @Component({
   selector: 'tp-admin-live-overview',
   imports: [RouterLink, PageHeader],
@@ -26,6 +32,7 @@ interface DashboardStats {
 export class AdminLiveOverview {
   readonly #functions = inject(SupabaseFunctions);
   readonly stats = signal<DashboardStats | null>(null);
+  readonly recentProducts = signal<readonly RecentProduct[]>([]);
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly error = signal('');
 
@@ -50,6 +57,19 @@ export class AdminLiveOverview {
         categories: count(values['categories_count']),
         advertisements: count(values['active_ads_count']),
       });
+      this.recentProducts.set(
+        Array.isArray(response['products'])
+          ? response['products']
+              .filter(isRecord)
+              .map((item) => ({
+                id: string(item['product_id']),
+                name: string(item['name']),
+                category: string(item['category_name']),
+              }))
+              .filter((item) => item.id && item.name)
+              .slice(0, 5)
+          : [],
+      );
       this.status.set('ready');
     } catch (error) {
       this.error.set(
@@ -67,4 +87,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 function count(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function string(value: unknown): string {
+  return typeof value === 'string' ? value : '';
 }

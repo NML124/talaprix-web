@@ -1,0 +1,220 @@
+<section class="workbook-panel" [attr.aria-busy]="loading()">
+  <header class="workbook-panel-head">
+    <div>
+      <p class="workbook-eyebrow">
+        {{ mode() === 'runs' ? 'HISTORIQUE DES SOURCES' : 'CAPTURES D’ORIGINE'
+        }}
+      </p>
+      <h2>
+        {{ mode() === 'runs' ? 'Exécutions importées' : 'Données brutes' }}
+      </h2>
+      <p class="muted small">
+        {{ mode() === 'runs' ? 'Chaque exécution garde sa source, ses dates, son
+        volume et son coût déclaré.' : 'Les lignes restent reliées à leur
+        exécution et à leur annonce d’origine.' }}
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="load()"
+      [disabled]="loading()"
+    >
+      Actualiser
+    </button>
+  </header>
+
+  @if (mode() === 'raw' && runId()) {
+  <div class="workbook-active-filter">
+    <span>Exécution <strong>{{ runId() }}</strong></span>
+    <button type="button" (click)="clearRun()">
+      Afficher toutes les captures <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  } @if (error()) {
+  <div class="workbook-alert" role="alert">
+    <span>{{ error() }}</span>
+    <button type="button" class="btn btn-secondary" (click)="load()">
+      Réessayer
+    </button>
+  </div>
+  }
+
+  <div class="workbook-table-wrap">
+    <table class="workbook-table">
+      @if (mode() === 'runs') {
+      <thead>
+        <tr>
+          <th>Exécution</th>
+          <th>Source</th>
+          <th>Importée le</th>
+          <th>Captures</th>
+          <th>Candidats</th>
+          <th>Coût</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) { @for (row of [1, 2, 3, 4]; track row) {
+        <tr>
+          <td colspan="7"><span class="workbook-shimmer"></span></td>
+        </tr>
+        } } @else { @for (run of runs(); track run.run_id) {
+        <tr>
+          <td>
+            <strong class="workbook-cell-title">{{ run.run_id }}</strong>
+            <small
+              >{{ run.completed_at ? 'Import terminé' : 'Import incomplet'
+              }}</small
+            >
+          </td>
+          <td>{{ run.actor_slug }}</td>
+          <td>{{ run.imported_at | date:'dd MMM yyyy, HH:mm' }}</td>
+          <td class="workbook-number">{{ run.observation_count }}</td>
+          <td class="workbook-number">{{ run.candidate_count }}</td>
+          <td class="workbook-number">
+            {{ run.cost_usd === null ? '—' : run.cost_usd + ' USD' }}
+          </td>
+          <td>
+            <button
+              type="button"
+              class="workbook-row-link"
+              (click)="runSelected.emit(run.run_id)"
+            >
+              Voir les captures <span aria-hidden="true">›</span>
+            </button>
+          </td>
+        </tr>
+        } @empty { @if (!error()) {
+        <tr>
+          <td colspan="7">
+            <div class="workbook-empty">
+              <strong>Aucune exécution importée</strong
+              ><span>Les runs apparaîtront ici après leur import privé.</span>
+            </div>
+          </td>
+        </tr>
+        } } }
+      </tbody>
+      } @else {
+      <thead>
+        <tr>
+          <th>Publication reçue</th>
+          <th>Exécution</th>
+          <th>Importée le</th>
+          <th>Candidats</th>
+          <th>Source</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) { @for (row of [1, 2, 3, 4]; track row) {
+        <tr>
+          <td colspan="6"><span class="workbook-shimmer"></span></td>
+        </tr>
+        } } @else { @for (observation of observations(); track
+        observation.run_id + ':' + observation.item_index) {
+        <tr>
+          <td>
+            <strong class="workbook-cell-title"
+              >{{ observation.text_preview || 'Publication sans texte
+              exploitable' }}</strong
+            >
+            <small
+              >Ligne {{ observation.item_index + 1 }} · empreinte
+              conservée</small
+            >
+          </td>
+          <td class="workbook-cell-id">{{ observation.run_id }}</td>
+          <td>{{ observation.imported_at | date:'dd MMM yyyy, HH:mm' }}</td>
+          <td class="workbook-number">{{ observation.candidate_count }}</td>
+          <td>
+            @if (observation.source_url) {
+            <a
+              class="workbook-row-link"
+              [href]="observation.source_url"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Annonce ↗</a
+            >
+            } @else { <span class="muted">—</span> }
+          </td>
+          <td>
+            <button
+              type="button"
+              class="workbook-row-link"
+              (click)="open(observation)"
+            >
+              Voir la capture <span aria-hidden="true">›</span>
+            </button>
+          </td>
+        </tr>
+        } @empty { @if (!error()) {
+        <tr>
+          <td colspan="6">
+            <div class="workbook-empty">
+              <strong>Aucune capture dans cette sélection</strong
+              ><span
+                >Choisissez une autre exécution ou actualisez la liste.</span
+              >
+            </div>
+          </td>
+        </tr>
+        } } }
+      </tbody>
+      }
+    </table>
+  </div>
+
+  <footer class="workbook-pagination">
+    <span
+      >{{ loading() ? 'Chargement…' : (offset() + (mode() === 'runs' ?
+      runs().length : observations().length)) + ' éléments parcourus' }}</span
+    >
+    <div>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="previous()"
+        [disabled]="loading() || offset() === 0"
+      >
+        Précédent
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="next()"
+        [disabled]="loading() || !hasNext()"
+      >
+        Suivant
+      </button>
+    </div>
+  </footer>
+</section>
+
+@if (detailLoading()) {
+<div class="workbook-inline-status" role="status">Ouverture de la capture…</div>
+} @if (selected(); as observation) {
+<tp-admin-dialog
+  [title]="'Capture · ' + observation.run_id + ' / ' + (observation.item_index + 1)"
+  (closed)="selected.set(null)"
+>
+  <div class="workbook-detail-summary">
+    <span class="workbook-pill">Source brute</span>
+    <span>{{ observation.imported_at | date:'dd MMM yyyy, HH:mm' }}</span>
+    @if (observation.source_url) {
+    <a [href]="observation.source_url" target="_blank" rel="noopener noreferrer"
+      >Ouvrir l’annonce ↗</a
+    >
+    }
+  </div>
+  <p class="workbook-detail-intro">
+    Capture conservée telle qu’importée. Les champs manquants restent visibles
+    comme tels.
+  </p>
+  <pre class="workbook-code">{{ raw(observation.raw_json) }}</pre>
+  <p class="workbook-hash">
+    Empreinte SHA-256 : {{ observation.content_sha256 || 'non disponible' }}
+  </p>
+</tp-admin-dialog>
+}

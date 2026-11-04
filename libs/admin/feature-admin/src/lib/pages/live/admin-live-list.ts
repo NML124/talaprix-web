@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { combineLatest } from 'rxjs';
+import { LucidePause, LucidePencil, LucideTrash2 } from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
 
 type Resource = 'products' | 'offers' | 'shops' | 'categories' | 'users';
@@ -17,11 +18,12 @@ interface Row {
   readonly subtitle: string;
   readonly detail: string;
   readonly state: string;
+  readonly image?: string;
 }
 
 @Component({
   selector: 'tp-admin-live-list',
-  imports: [PageHeader],
+  imports: [PageHeader, LucidePause, LucidePencil, LucideTrash2],
   templateUrl: './admin-live-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -144,6 +146,7 @@ function mapRow(value: unknown, resource: Resource): Row | null {
       subtitle: relationName(value['categories']),
       detail: relationName(value['brands']),
       state: number(value['state_id']) === 0 ? 'Actif' : 'Inactif',
+      image: productImage(value['product_picture']),
     };
   if (resource === 'offers')
     return {
@@ -216,4 +219,20 @@ function number(value: unknown): number | null {
 }
 function isNotNull<T>(value: T | null): value is T {
   return value !== null;
+}
+
+function productImage(value: unknown): string {
+  if (Array.isArray(value)) return productImage(value[0]);
+  if (typeof value !== 'string') return '/admin-assets/logo-talaprix.png';
+  const trimmed = value.trim();
+  if (trimmed.startsWith('[')) {
+    try {
+      return productImage(JSON.parse(trimmed));
+    } catch {
+      return '/admin-assets/logo-talaprix.png';
+    }
+  }
+  return /^https:\/\//i.test(trimmed)
+    ? trimmed
+    : '/admin-assets/logo-talaprix.png';
 }

@@ -1,227 +1,96 @@
 <tp-admin-page-header
   title="Scraping"
-  subtitle="Consultez les annonces collectées, leurs preuves et les analyses avant toute décision."
->
-</tp-admin-page-header>
+  subtitle="Suivez les collectes, les preuves et les décisions depuis un seul espace."
+/>
 
-@if(!error() && notice()){
-<div class="toast" role="status">{{notice()}}</div>
-} @if(error()){
-<div class="notice notice-compact" role="alert">
-  <strong>Chargement ou action impossible</strong><span>{{error()}}</span>
+<div class="workbook-summary-line">
+  <span>
+    @if (overview(); as totals) { {{ totals.enabled_sources }} source{{
+    totals.enabled_sources > 1 ? 's' : '' }} active{{ totals.enabled_sources > 1
+    ? 's' : '' }} } @else { Suivi des collectes et validations }
+  </span>
   <button
     type="button"
     class="btn btn-secondary"
-    (click)="load()"
-    [disabled]="loading()"
+    (click)="loadOverview()"
+    [disabled]="overviewLoading()"
   >
-    Actualiser
+    Actualiser les chiffres
   </button>
 </div>
-} @if(!error()){
-<section class="scrape-kpis" aria-label="Résumé des candidats affichés">
-  <article>
-    <small>Sur cette page</small><strong>{{rows().length}}</strong
-    ><span>candidats reçus de l’API</span>
-  </article>
-  <article>
-    <small>Offres</small><strong>{{offerCount()}}</strong
-    ><span>à rapprocher ou vérifier</span>
-  </article>
-  <article>
-    <small>Vendeurs</small><strong>{{sellerCount()}}</strong
-    ><span>à identifier ou contacter</span>
-  </article>
-  <article>
-    <small>Prix à confirmer</small><strong>{{unknownPriceCount()}}</strong
-    ><span>prix/devise absents conservés comme tels</span>
-  </article>
-</section>
 
-<section class="card">
-  <div class="card-head scrape-queue-head">
-    <div>
-      <h2>File de validation</h2>
-      <p class="muted small">
-        Chaque ligne ouvre les données reçues, la source, les médias et
-        l’analyse associée.
-      </p>
-    </div>
-    <div class="toolbar">
-      <button
-        type="button"
-        class="btn"
-        [class.btn-primary]="filter()==='needs_review'"
-        [class.btn-secondary]="filter()!=='needs_review'"
-        (click)="setFilter('needs_review')"
-      >
-        À examiner
-      </button>
-      <button
-        type="button"
-        class="btn"
-        [class.btn-primary]="filter()==='approved'"
-        [class.btn-secondary]="filter()!=='approved'"
-        (click)="setFilter('approved')"
-      >
-        Approuvés
-      </button>
-      <button
-        type="button"
-        class="btn"
-        [class.btn-primary]="filter()==='rejected'"
-        [class.btn-secondary]="filter()!=='rejected'"
-        (click)="setFilter('rejected')"
-      >
-        Rejetés
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="load()"
-        [disabled]="loading()"
-      >
-        Actualiser
-      </button>
-    </div>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Annonce reçue</th>
-          <th>Vendeur</th>
-          <th>Prix indiqué</th>
-          <th>Connecteur</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if(loading()) {
-        <tr>
-          <td colspan="5">
-            <p class="empty-state">
-              Chargement des candidats depuis la base de scraping…
-            </p>
-          </td>
-        </tr>
-        } @else { @for(row of rows();track row.candidate_id){
-        <tr>
-          <td>
-            <button class="scrape-row-open" type="button" (click)="open(row)">
-              <strong
-                >{{row.product_name||row.seller_name||'Annonce sans
-                titre'}}</strong
-              ><small
-                >{{row.candidate_kind==='seller'?'Vendeur':'Offre'}} ·
-                {{row.candidate_id}}</small
-              >
-            </button>
-          </td>
-          <td>{{row.seller_name||'À identifier'}}</td>
-          <td>{{displayPrice(row)}}</td>
-          <td><small>{{row.source_actor}}</small></td>
-          <td>
-            <tp-status-dot
-              [label]="stateLabel(row.review_state)"
-              [tone]="tone(row.review_state)"
-            />
-          </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="5">
-            <p class="empty-state">Aucun candidat dans cet état.</p>
-          </td>
-        </tr>
-        } }
-      </tbody>
-    </table>
-  </div>
-  <div class="scrape-pagination">
-    <span class="muted small"
-      >{{pageStart()}}–{{pageEnd()}} · page de
-      {{filter()==='needs_review'?'candidats à
-      examiner':filter()==='approved'?'candidats approuvés':'candidats
-      rejetés'}}</span
+<section class="workbook-metrics" aria-label="Résumé de la collecte">
+  <article class="workbook-metric">
+    <span>Exécutions importées</span>
+    <strong>{{ overview()?.runs ?? '—' }}</strong>
+    <small
+      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+      'Chargement…' : 'Runs enregistrés' }}</small
     >
-    <div class="toolbar">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="previous()"
-        [disabled]="loading()||offset()===0"
-      >
-        Précédent</button
-      ><button
-        type="button"
-        class="btn btn-secondary"
-        (click)="next()"
-        [disabled]="loading()||!hasNext()"
-      >
-        Suivant
-      </button>
-    </div>
-  </div>
+  </article>
+  <article class="workbook-metric">
+    <span>Captures brutes</span>
+    <strong>{{ overview()?.observations ?? '—' }}</strong>
+    <small
+      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+      'Chargement…' : 'Lignes reçues des sources' }}</small
+    >
+  </article>
+  <article class="workbook-metric">
+    <span>À examiner</span>
+    <strong>{{ overview()?.needs_review ?? '—' }}</strong>
+    <small
+      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+      'Chargement…' : 'Sur ' + overview()?.candidates + ' candidats' }}</small
+    >
+  </article>
+  <article class="workbook-metric">
+    <span>Tâches en cours</span>
+    <strong>{{ overview()?.running_jobs ?? '—' }}</strong>
+    <small
+      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+      'Chargement…' : 'Travaux du pipeline privé' }}</small
+    >
+  </article>
 </section>
 
-<section class="card scrape-run-card" aria-labelledby="run-title">
-  <div class="scrape-run-head">
-    <div>
-      <p class="eyebrow">Flux de traitement</p>
-      <h2 id="run-title">De la collecte à la revue humaine</h2>
-      <p class="muted small">
-        Apify collecte → données préparées → Gemini suggère → l’admin décide
-      </p>
-    </div>
-    <span class="scrape-review-policy">Aucune publication automatique</span>
-  </div>
-  <tp-scraping-network-animation />
-  <ol class="scrape-stage-list">
-    <li class="complete">
-      <span class="scrape-stage-index">1</span>
-      <div>
-        <strong>Collecte Apify</strong
-        ><small>Observations enregistrées dans le schéma privé</small>
-      </div>
-    </li>
-    <li class="complete">
-      <span class="scrape-stage-index">2</span>
-      <div>
-        <strong>Préparation</strong
-        ><small>Déduplication et candidats vendeur/offre</small>
-      </div>
-    </li>
-    <li class="complete">
-      <span class="scrape-stage-index">3</span>
-      <div>
-        <strong>Analyse Gemini</strong
-        ><small>Suggestions reliées à la preuve collectée</small>
-      </div>
-    </li>
-    <li class="current">
-      <span class="scrape-stage-index">4</span>
-      <div>
-        <strong>Revue humaine</strong
-        ><small>Décision auditée, sans publication au catalogue</small>
-      </div>
-    </li>
-  </ol>
-  <p class="muted small scrape-demo-note">
-    L’animation illustre le parcours ; les candidats et décisions ci-dessous
-    proviennent de l’API privée.
-  </p>
-</section>
-
-@if(detailLoading()){
-<div class="notice notice-compact" role="status">
-  Chargement du candidat et des médias privés…
+<div class="workbook-tabs-wrap">
+  <nav class="workbook-tabs" aria-label="Onglets du classeur scraping">
+    @for (sheet of sheets; track sheet.key) {
+    <button
+      type="button"
+      class="workbook-tab"
+      [class.is-active]="active() === sheet.key"
+      [attr.aria-current]="active() === sheet.key ? 'page' : null"
+      (click)="setSheet(sheet.key)"
+    >
+      <span class="workbook-tab-number">{{ sheet.number }}</span>
+      {{ sheet.label }}
+    </button>
+    }
+  </nav>
 </div>
-} @if(selected();as candidate){
-<tp-scraping-review-dialog
-  [candidate]="candidate"
-  [saving]="saving()"
-  (closed)="selected.set(null)"
-  (decided)="decide($event)"
-/>
-} }
+
+<div class="workbook-sheet">
+  @switch (active()) { @case ('runs') {
+  <tp-scraping-runs-sheet mode="runs" (runSelected)="openRun($event)" />
+  } @case ('raw') {
+  <tp-scraping-runs-sheet
+    mode="raw"
+    [runId]="selectedRun()"
+    (runCleared)="clearRun()"
+  />
+  } @case ('analysis') {
+  <tp-scraping-candidates-sheet mode="analysis" />
+  } @case ('matches') {
+  <tp-scraping-candidates-sheet mode="matches" />
+  } @case ('media') {
+  <tp-scraping-media-sheet />
+  } @case ('review') {
+  <tp-scraping-candidates-sheet mode="review" />
+  } @case ('journal') {
+  <tp-scraping-journal-sheet />
+  } @case ('pilot') {
+  <tp-scraping-pilot-sheet />
+  } }
+</div>

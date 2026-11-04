@@ -8,6 +8,23 @@
 .admin-app .admin-engagement .card-head p {
   margin: var(--space-2) 0 0;
 }
+.admin-app .admin-live-empty {
+  display: flex;
+  align-items: center;
+  min-height: 72px;
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  color: var(--text-2);
+  font-size: var(--type-small);
+  line-height: 1.5;
+}
+.admin-app .admin-live-empty-chart {
+  justify-content: center;
+  min-height: 190px;
+  text-align: center;
+}
 .admin-engagement-metrics,
 .shop-engagement-list {
   display: grid;
