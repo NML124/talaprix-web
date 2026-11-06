@@ -1,0 +1,943 @@
+/* =====================================================================
+   TalaPrix Admin — UI kit « style Apple » (zone de contenu uniquement)
+   À importer dans les styles globaux de l'admin (ex. styles.css ou
+   admin.css). Ne touche PAS à la sidebar existante.
+   Toutes les classes sont préfixées `tp-` pour éviter les collisions.
+   ===================================================================== */
+
+/* ---------- 1. Tokens ---------- */
+.tp-admin {
+  /* Couleurs */
+  --tp-bg: #f6f6f6; /* fond de page */
+  --tp-surface: #ffffff; /* cartes */
+  --tp-surface-2: #f7f7f8; /* panneaux internes, sous-cartes */
+  --tp-surface-3: #f2f2f4; /* champs, pistes, vignettes */
+  --tp-track: #e9e9ec; /* piste des contrôles segmentés */
+  --tp-hairline: #f0f0f2; /* séparateurs internes */
+  --tp-hairline-strong: #e9e9ec; /* bas d'en-tête de tableau */
+  --tp-text: #1d1d1f;
+  --tp-text-2: #3a3a3c;
+  --tp-text-muted: #6e6e73; /* minimum autorisé pour du texte (4.5:1) */
+  --tp-icon-muted: #8e8e93; /* icônes décoratives uniquement, jamais du texte */
+
+  --tp-brand: #009788; /* couleur de marque : remplissages, barres, points */
+  --tp-brand-strong: #00796d; /* boutons primaires, liens (contraste AA sur blanc) */
+  --tp-brand-hover: #006a5f;
+  --tp-brand-text: #00695f; /* texte teal sur fond teinté */
+  --tp-brand-tint: #e3f3f1;
+  --tp-brand-tint-2: #edf7f5; /* ligne sélectionnée */
+
+  --tp-amber-tint: #fff1da;
+  --tp-amber-text: #8a4b00;
+  --tp-red-tint: #fdecec;
+  --tp-red-text: #b42318;
+  --tp-blue-tint: #e8f0fd;
+  --tp-blue-text: #2457c5;
+  --tp-violet-tint: #f0ecfb;
+  --tp-violet-text: #5b3fb8;
+  --tp-gray-tint: #f0f0f2;
+  --tp-gray-text: #515154;
+
+  /* Rayons */
+  --tp-r-card: 22px;
+  --tp-r-panel: 16px;
+  --tp-r-tile: 9px;
+  --tp-r-pill: 999px;
+
+  /* Typo */
+  --tp-font:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Inter',
+    'Helvetica Neue', Arial, sans-serif;
+  --tp-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace;
+
+  font-family: var(--tp-font);
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -0.011em;
+  color: var(--tp-text);
+  background: var(--tp-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.tp-admin a {
+  color: var(--tp-brand-strong);
+  text-decoration: none;
+}
+.tp-admin a:hover {
+  color: var(--tp-brand-hover);
+}
+
+/* ---------- 2. Utilitaires typo ---------- */
+.tp-mono {
+  font-family: var(--tp-mono);
+  letter-spacing: 0;
+}
+.tp-num {
+  font-variant-numeric: tabular-nums;
+}
+.tp-muted {
+  color: var(--tp-text-muted);
+}
+.tp-label {
+  font-size: 12.5px;
+  color: var(--tp-text-muted);
+}
+.tp-eyebrow {
+  font-size: 12.5px;
+  color: var(--tp-text-muted);
+}
+.tp-h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.15;
+}
+.tp-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--tp-text-muted);
+}
+.tp-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.tp-card-sub {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--tp-text-muted);
+}
+.tp-figure-xl {
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.tp-figure-l {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.tp-figure-m {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.tp-icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.tp-icon-sm {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* ---------- 3. Mise en page ---------- */
+.tp-page {
+  box-sizing: border-box;
+  padding: 26px 36px 56px;
+}
+.tp-page-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tp-page-inner--wide {
+  max-width: 1240px;
+  gap: 18px;
+}
+.tp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: stretch;
+}
+.tp-col-2 {
+  flex: 2 1 520px;
+  min-width: 0;
+}
+.tp-col-1 {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .tp-page {
+    padding: 20px 16px 40px;
+  }
+  .tp-h1 {
+    font-size: 26px;
+  }
+}
+
+/* ---------- 4. En-tête de page ---------- */
+.tp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tp-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tp-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- 5. Cartes ---------- */
+.tp-card {
+  background: var(--tp-surface);
+  border-radius: var(--tp-r-card);
+  border: 0;
+  box-shadow: none;
+}
+.tp-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px 0;
+}
+.tp-card-body {
+  padding: 16px 22px 22px;
+}
+.tp-subpanel {
+  background: var(--tp-surface-2);
+  border-radius: var(--tp-r-panel);
+  padding: 14px 16px;
+}
+
+/* Bande d'indicateurs : UNE carte découpée en colonnes */
+.tp-kpi-band {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  overflow: hidden;
+}
+.tp-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px;
+  color: var(--tp-text) !important;
+  border-left: 1px solid var(--tp-hairline);
+}
+.tp-kpi:first-child {
+  border-left: 0;
+}
+.tp-kpi:hover {
+  background: #fcfcfc;
+}
+.tp-kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--tp-text-2);
+}
+.tp-kpi-head .tp-chevron {
+  margin-left: auto;
+  color: var(--tp-icon-muted);
+}
+.tp-kpi-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--tp-text-muted);
+}
+
+/* ---------- 6. Boutons (capsules) ---------- */
+.tp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--tp-r-pill);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.tp-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.tp-btn:focus-visible {
+  outline: 2px solid var(--tp-brand);
+  outline-offset: 2px;
+}
+.tp-btn--sm {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 13px;
+  gap: 6px;
+}
+.tp-btn--primary {
+  background: var(--tp-brand-strong);
+  color: #fff !important;
+}
+.tp-btn--primary:hover:not(:disabled) {
+  background: var(--tp-brand-hover);
+}
+.tp-btn--secondary {
+  background: var(--tp-surface);
+  color: var(--tp-text) !important;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.09);
+}
+.tp-btn--secondary:hover:not(:disabled) {
+  background: #fafafa;
+}
+.tp-btn--ghost {
+  background: transparent;
+  color: var(--tp-text-2);
+}
+.tp-btn--ghost:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+.tp-btn--danger {
+  background: var(--tp-surface);
+  color: var(--tp-red-text);
+  box-shadow: inset 0 0 0 1px rgba(180, 35, 24, 0.25);
+}
+.tp-btn--icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+
+/* ---------- 7. Contrôle segmenté ---------- */
+.tp-seg {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--tp-track);
+  border-radius: var(--tp-r-pill);
+  gap: 2px;
+}
+.tp-seg button {
+  height: 30px;
+  padding: 0 13px;
+  border-radius: var(--tp-r-pill);
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: var(--tp-text-2);
+  cursor: pointer;
+}
+.tp-seg button[aria-pressed='true'] {
+  background: #fff;
+  color: var(--tp-text);
+  font-weight: 500;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+/* ---------- 8. Champ de recherche ---------- */
+.tp-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 6px 0 14px;
+  border-radius: var(--tp-r-pill);
+  background: var(--tp-surface);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07);
+  color: var(--tp-text-muted);
+  min-width: 220px;
+  box-sizing: border-box;
+}
+.tp-search--filled {
+  height: 30px;
+  padding: 0 12px;
+  background: var(--tp-surface-3);
+  box-shadow: none;
+  min-width: 0;
+}
+.tp-search input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--tp-text);
+  flex: 1;
+  min-width: 0;
+}
+.tp-search input::placeholder {
+  color: var(--tp-text-muted);
+}
+.tp-kbd {
+  font-family: var(--tp-mono);
+  font-size: 11px;
+  color: var(--tp-gray-text);
+  background: var(--tp-surface-3);
+  border-radius: 7px;
+  padding: 3px 7px;
+}
+
+/* ---------- 9. Badges, pastilles, tuiles ---------- */
+.tp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: var(--tp-r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tp-badge--teal {
+  background: var(--tp-brand-tint);
+  color: var(--tp-brand-text);
+}
+.tp-badge--amber {
+  background: var(--tp-amber-tint);
+  color: var(--tp-amber-text);
+}
+.tp-badge--red {
+  background: var(--tp-red-tint);
+  color: var(--tp-red-text);
+}
+.tp-badge--blue {
+  background: var(--tp-blue-tint);
+  color: var(--tp-blue-text);
+}
+.tp-badge--gray {
+  background: var(--tp-gray-tint);
+  color: var(--tp-gray-text);
+}
+.tp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  display: inline-block;
+  flex: none;
+  background: currentColor;
+}
+.tp-dot--live {
+  background: var(--tp-brand);
+  box-shadow: 0 0 0 4px var(--tp-brand-tint);
+}
+.tp-tile {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--tp-r-tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.tp-tile--teal {
+  background: var(--tp-brand-tint);
+  color: var(--tp-brand-strong);
+}
+.tp-tile--amber {
+  background: var(--tp-amber-tint);
+  color: #a55b00;
+}
+.tp-tile--blue {
+  background: var(--tp-blue-tint);
+  color: var(--tp-blue-text);
+}
+.tp-tile--violet {
+  background: var(--tp-violet-tint);
+  color: var(--tp-violet-text);
+}
+.tp-tile--gray {
+  background: var(--tp-gray-tint);
+  color: var(--tp-gray-text);
+}
+
+/* ---------- 10. Listes « iOS inset » ---------- */
+.tp-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px;
+  color: var(--tp-text) !important;
+  position: relative;
+}
+.tp-list-row:hover {
+  background: #fafafb;
+}
+.tp-list-row + .tp-list-row::before {
+  content: '';
+  position: absolute;
+  left: 64px;
+  right: 22px;
+  top: 0;
+  height: 1px;
+  background: var(--tp-hairline);
+}
+.tp-list-row-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tp-list-row-text strong {
+  font-weight: 500;
+  font-size: 13.5px;
+}
+.tp-list-row-text small {
+  font-size: 12px;
+  color: var(--tp-text-muted);
+}
+.tp-list-row .tp-chevron {
+  color: var(--tp-icon-muted);
+}
+
+/* ---------- 11. Barres de progression ---------- */
+.tp-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--tp-gray-tint);
+  overflow: hidden;
+}
+.tp-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tp-brand);
+}
+
+/* ---------- 12. Tableau « liste » (Produits récents) ---------- */
+.tp-table-wrap {
+  overflow-x: auto;
+}
+.tp-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+.tp-table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--tp-text-muted);
+  height: 36px;
+  padding: 0 14px;
+  border-bottom: 1px solid #eeeef0;
+  white-space: nowrap;
+  background: #fbfbfc;
+}
+.tp-table td {
+  height: 52px;
+  padding: 0 14px;
+  border-bottom: 1px solid #f3f3f5;
+  white-space: nowrap;
+}
+.tp-table th:first-child,
+.tp-table td:first-child {
+  padding-left: 22px;
+}
+.tp-table tbody tr:hover td {
+  background: #fafafb;
+}
+.tp-table tr:last-child td {
+  border-bottom: 0;
+}
+.tp-thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--tp-surface-3);
+  color: var(--tp-icon-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+}
+.tp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- 13. Data grid « Supabase Table Editor » ---------- */
+.tp-grid-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.tp-grid-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--tp-hairline);
+}
+.tp-grid-toolbar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.tp-grid-divider {
+  width: 1px;
+  height: 18px;
+  background: #e5e5ea;
+  margin: 0 4px;
+}
+.tp-grid-selbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #f7fbfa;
+  border-bottom: 1px solid #e6f2ef;
+  font-size: 13px;
+  color: var(--tp-brand-text);
+}
+.tp-grid-scroll {
+  overflow: auto;
+  max-height: 560px;
+}
+.tp-grid {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  min-width: 100%;
+}
+.tp-grid th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fafafb;
+  text-align: left;
+  font-weight: 500;
+  height: 38px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--tp-hairline-strong);
+  border-right: 1px solid var(--tp-hairline);
+  white-space: nowrap;
+  color: var(--tp-text);
+}
+.tp-grid td {
+  height: 38px;
+  padding: 0 12px;
+  border-bottom: 1px solid #f1f1f3;
+  border-right: 1px solid #f1f1f3;
+  white-space: nowrap;
+  background: #fff;
+}
+.tp-grid tbody tr:hover td {
+  background: #fafafb;
+}
+.tp-grid tr.is-selected td {
+  background: var(--tp-brand-tint-2);
+}
+.tp-grid td.is-focused {
+  box-shadow: inset 0 0 0 2px var(--tp-brand);
+}
+.tp-grid .tp-col-check {
+  width: 40px;
+  padding: 0;
+  text-align: center;
+}
+.tp-grid .tp-col-check input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--tp-brand-strong);
+  margin: 0;
+  cursor: pointer;
+}
+.tp-grid .tp-col-rownum {
+  width: 44px;
+  padding: 0;
+  text-align: center;
+  color: var(--tp-text-muted);
+  font-family: var(--tp-mono);
+  font-size: 11.5px;
+}
+.tp-grid .tp-cell-mono {
+  font-family: var(--tp-mono);
+  font-size: 12.5px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.tp-grid .tp-cell-right {
+  text-align: right;
+}
+.tp-grid .tp-cell-truncate {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tp-th {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tp-th-type {
+  font-family: var(--tp-mono);
+  font-size: 11px;
+  color: var(--tp-text-muted);
+  font-weight: 400;
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+.tp-grid-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--tp-hairline);
+  font-size: 12.5px;
+  color: var(--tp-text-muted);
+}
+.tp-pager {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--tp-surface-3);
+  border-radius: 999px;
+  padding: 3px;
+}
+.tp-pager button {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: var(--tp-text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.tp-pager button:hover:not(:disabled) {
+  background: #fff;
+}
+.tp-pager button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.tp-conf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tp-conf-track {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background: #ececef;
+  overflow: hidden;
+}
+.tp-conf-bar {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+.tp-src {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tp-src-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ---------- 14. Barre d'étapes (Scraping) ---------- */
+.tp-steps {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: #ebebed;
+  border-radius: 18px;
+  overflow-x: auto;
+}
+.tp-steps-phase {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: none;
+}
+.tp-steps-phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tp-text-muted);
+  padding: 4px 10px 0;
+  letter-spacing: 0.02em;
+}
+.tp-steps-row {
+  display: flex;
+  gap: 4px;
+}
+.tp-steps-sep {
+  width: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 8px 2px;
+  flex: none;
+}
+.tp-step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  padding: 0 14px 0 8px;
+  border-radius: 13px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--tp-text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tp-step:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.tp-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--tp-mono);
+  font-size: 11px;
+  color: var(--tp-gray-text);
+}
+.tp-step-count {
+  font-size: 12px;
+  color: var(--tp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.tp-step.is-active {
+  background: #fff;
+  color: var(--tp-text);
+  font-weight: 500;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.07),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
+.tp-step.is-active .tp-step-num {
+  background: var(--tp-brand);
+  color: #fff;
+}
+
+/* ---------- 15. Panneau inspecteur ---------- */
+.tp-inspector {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tp-fields {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tp-field {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 11px 0;
+  border-top: 1px solid #f1f1f3;
+  font-size: 13px;
+}
+.tp-field:first-child {
+  border-top: 0;
+}
+.tp-field dt {
+  color: var(--tp-text-muted);
+}
+.tp-field dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tp-media-placeholder {
+  height: 168px;
+  border-radius: var(--tp-r-panel);
+  background: var(--tp-surface-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--tp-text-muted);
+  font-size: 12.5px;
+  overflow: hidden;
+}
+
+/* ---------- 16. État vide (donnée non disponible) ---------- */
+.tp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 28px 20px;
+  border-radius: var(--tp-r-panel);
+  background: var(--tp-surface-2);
+  color: var(--tp-text-muted);
+  font-size: 13px;
+  min-height: 140px;
+}
+.tp-empty strong {
+  color: var(--tp-text-2);
+  font-weight: 500;
+  font-size: 13.5px;
+}
+
+/* ---------- 17. Alerte ---------- */
+.tp-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--tp-r-panel);
+  background: var(--tp-amber-tint);
+  color: var(--tp-amber-text);
+  font-size: 13px;
+}
+
+/* ---------- 18. Mouvement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tp-admin * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

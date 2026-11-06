@@ -36,19 +36,64 @@
     <table class="w-full min-w-[640px] text-left text-sm">
       <thead class="border-b border-[var(--line)] text-[var(--text-2)]">
         <tr>
-          <th class="py-3 pr-4">Nom</th>
+          <th class="py-3 pr-4">
+            {{ resource() === 'products' ? 'Produit' : 'Nom' }}
+          </th>
           <th class="py-3 pr-4">Contexte</th>
           <th class="py-3 pr-4">Détail</th>
           <th class="py-3">Statut</th>
+          @if (resource() === 'products') {
+          <th class="py-3">Actions</th>
+          }
         </tr>
       </thead>
       <tbody>
         @for (row of rows(); track row.id) {
         <tr class="border-b border-[var(--line)] last:border-0">
-          <td class="py-3 pr-4 font-medium">{{ row.title || row.id }}</td>
+          <td class="py-3 pr-4 font-medium">
+            @if (resource() === 'products') {
+            <div class="product-cell">
+              <img class="thumb" [src]="row.image" alt="" loading="lazy" />
+              <strong>{{ row.title || row.id }}</strong>
+            </div>
+            } @else { {{ row.title || row.id }} }
+          </td>
           <td class="py-3 pr-4">{{ row.subtitle || '—' }}</td>
           <td class="py-3 pr-4">{{ row.detail || '—' }}</td>
           <td class="py-3">{{ row.state }}</td>
+          @if (resource() === 'products') {
+          <td class="py-3">
+            <div class="table-actions" aria-label="Actions produit à connecter">
+              <button
+                class="table-action"
+                type="button"
+                disabled
+                title="Modification non disponible"
+                [attr.aria-label]="'Modifier ' + row.title"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                class="table-action"
+                type="button"
+                disabled
+                title="Suspension non disponible"
+                [attr.aria-label]="'Suspendre ' + row.title"
+              >
+                <svg lucidePause size="16" aria-hidden="true"></svg>
+              </button>
+              <button
+                class="table-action danger"
+                type="button"
+                disabled
+                title="Suppression non disponible"
+                [attr.aria-label]="'Supprimer ' + row.title"
+              >
+                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+              </button>
+            </div>
+          </td>
+          }
         </tr>
         }
       </tbody>

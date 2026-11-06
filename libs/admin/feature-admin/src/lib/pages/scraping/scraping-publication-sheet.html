@@ -1,0 +1,168 @@
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Plans de publication</h2>
+      <p class="muted small">
+        Chaque ligne fige une annonce, une boutique et un produit précis.
+        Vérifiez la source avant d'approuver puis de publier.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-secondary workbook-refresh"
+      (click)="load()"
+      [disabled]="loading()"
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser les plans de publication"
+      title="Actualiser"
+    ></button>
+  </header>
+
+  @if (error()) {
+  <div class="workbook-alert" role="alert">{{ error() }}</div>
+  } @if (message()) {
+  <p class="notice notice-compact" role="status">{{ message() }}</p>
+  } @if (pending(); as choice) {
+  <div
+    class="notice notice-compact workbook-publication-confirm"
+    role="group"
+    aria-label="Confirmer le changement de catalogue"
+  >
+    <div>
+      <strong
+        >{{ choice.action === 'approve' ? 'Approuver ce plan ?' : 'Publier cette
+        offre ?' }}</strong
+      >
+      <p>
+        {{ choice.plan.offer_name || choice.plan.product_name || 'Offre sans
+        nom' }} · {{ choice.plan.price }} {{ choice.plan.currency_code }}
+      </p>
+      <small
+        >Annonce du {{ choice.plan.source_published_at | date:'dd MMM yyyy,
+        HH:mm' }}</small
+      >
+    </div>
+    <div class="toolbar">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="pending.set(null)"
+        [disabled]="saving()"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="confirm()"
+        [disabled]="saving()"
+      >
+        {{ saving() ? 'Vérification…' : 'Confirmer' }}
+      </button>
+    </div>
+  </div>
+  }
+
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
+      <thead>
+        <tr>
+          <th>Annonce</th>
+          <th>Boutique annoncée</th>
+          <th>Produit proposé</th>
+          <th>Prix</th>
+          <th>État</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) { @for (row of [1, 2, 3, 4]; track row) {
+        <tr>
+          <td colspan="6"><span class="workbook-shimmer"></span></td>
+        </tr>
+        } } @else { @for (plan of rows(); track plan.plan_id) {
+        <tr>
+          <td>
+            <a
+              [href]="plan.source_url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Voir la source ↗</a
+            >
+            <small>{{ plan.source_published_at | date:'dd MMM yyyy' }}</small>
+          </td>
+          <td>
+            <strong class="workbook-cell-title"
+              >{{ plan.seller_name || 'Nom non établi' }}</strong
+            >
+            <small class="workbook-cell-id">{{ plan.shop_id }}</small>
+          </td>
+          <td>
+            <strong class="workbook-cell-title"
+              >{{ plan.product_name || plan.offer_name || 'Produit à vérifier'
+              }}</strong
+            >
+            <small class="workbook-cell-id">{{ plan.product_id }}</small>
+          </td>
+          <td class="workbook-number">
+            {{ plan.price }} {{ plan.currency_code }}
+          </td>
+          <td>
+            <span
+              class="workbook-pill"
+              [class.is-approved]="plan.state !== 'draft'"
+            >
+              {{ plan.state === 'draft' ? 'À approuver' : plan.state ===
+              'approved' ? 'Approuvé' : 'Publié' }}
+            </span>
+            @if (plan.action) { <small>{{ plan.action }}</small> }
+          </td>
+          <td>
+            @if (plan.state === 'draft') {
+            <button
+              type="button"
+              class="workbook-row-link"
+              (click)="select(plan, 'approve')"
+            >
+              Approuver <span aria-hidden="true">›</span>
+            </button>
+            } @else if (plan.state === 'approved') {
+            <button
+              type="button"
+              class="workbook-row-link"
+              (click)="select(plan, 'publish')"
+            >
+              Publier <span aria-hidden="true">›</span>
+            </button>
+            } @else { <span class="muted small">Terminé</span> }
+          </td>
+        </tr>
+        } @empty { @if (!error()) {
+        <tr>
+          <td colspan="6">
+            <div class="workbook-empty">
+              <strong>Aucun plan pour le moment</strong>
+              <span
+                >Ouvrez un candidat approuvé dans « Correspondances » pour
+                préparer une offre.</span
+              >
+            </div>
+          </td>
+        </tr>
+        } } }
+      </tbody>
+    </table>
+  </div>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="rows().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
+</section>

@@ -1,0 +1,95 @@
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Médias collectés</h2>
+      <p class="muted small">
+        Images conservées dans l’espace privé. Les aperçus expirent
+        automatiquement et aucune image n’est publiée ici.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-secondary workbook-refresh"
+      (click)="load()"
+      [disabled]="loading()"
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser les médias"
+      title="Actualiser"
+    ></button>
+  </header>
+  @if (error()) {
+  <div class="workbook-alert" role="alert">
+    <span>{{ error() }}</span
+    ><button type="button" class="btn btn-secondary" (click)="load()">
+      Réessayer
+    </button>
+  </div>
+  }
+  <div class="workbook-media-grid">
+    @if (loading()) { @for (slot of [1, 2, 3, 4, 5, 6]; track slot) {
+    <div class="workbook-media-card">
+      <div class="workbook-media-image">
+        <span class="workbook-shimmer"></span>
+      </div>
+      <div class="workbook-media-copy">
+        <span class="workbook-shimmer"></span>
+      </div>
+    </div>
+    } } @else { @for (media of rows(); track media.media_id) {
+    <article class="workbook-media-card">
+      <div class="workbook-media-image">
+        @if (previews()[media.media_id]) {
+        <img
+          [src]="previews()[media.media_id]"
+          [alt]="'Image collectée pour ' + (media.product_name || media.seller_name || 'une annonce')"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          (error)="refreshPreview(media)"
+        />
+        } @else if (previewsLoading()) {
+        <span class="workbook-shimmer"></span> } @else {
+        <span>Aperçu privé indisponible</span> }
+        <span
+          class="workbook-media-state"
+          [class.is-approved]="media.review_state === 'approved'"
+          [class.is-rejected]="media.review_state === 'rejected'"
+          >{{ media.review_state === 'needs_review' ? 'À examiner' :
+          media.review_state === 'approved' ? 'Approuvé' : 'Rejeté' }}</span
+        >
+      </div>
+      <div class="workbook-media-copy">
+        <small>{{ media.seller_name || 'Boutique à identifier' }}</small>
+        <h3>
+          {{ media.product_name || 'Publication sans produit identifié' }}
+        </h3>
+        <p>
+          {{ media.width }} × {{ media.height }} px · {{ media.staged_at |
+          date:'dd MMM yyyy' }}
+        </p>
+        <a [href]="media.source_url" target="_blank" rel="noopener noreferrer"
+          >Voir la publication <span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </article>
+    } @empty { @if (!error()) {
+    <div class="workbook-empty workbook-media-empty">
+      <strong>Aucun média collecté</strong
+      ><span
+        >Les images préparées apparaîtront ici après la collecte et la mise en
+        attente privée.</span
+      >
+    </div>
+    } } }
+  </div>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="rows().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
+</section>

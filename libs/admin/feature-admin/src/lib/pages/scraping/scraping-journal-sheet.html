@@ -1,0 +1,152 @@
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Journal des opérations</h2>
+      <p class="muted small">
+        Suivez les tâches du pipeline et les décisions enregistrées par les
+        administrateurs.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-secondary workbook-refresh"
+      (click)="load()"
+      [disabled]="loading()"
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser le journal"
+      title="Actualiser"
+    ></button>
+  </header>
+  <div class="workbook-filter-bar" aria-label="Type de journal">
+    <button
+      type="button"
+      [class.is-active]="view() === 'jobs'"
+      (click)="selectView('jobs')"
+    >
+      Tâches du pipeline
+    </button>
+    <button
+      type="button"
+      [class.is-active]="view() === 'decisions'"
+      (click)="selectView('decisions')"
+    >
+      Décisions de revue
+    </button>
+  </div>
+  @if (error()) {
+  <div class="workbook-alert" role="alert">
+    <span>{{ error() }}</span>
+    <button type="button" class="btn btn-secondary" (click)="load()">
+      Réessayer
+    </button>
+  </div>
+  }
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid">
+      @if (view() === 'jobs') {
+      <thead>
+        <tr>
+          <th>Tâche</th>
+          <th>Type</th>
+          <th>Exécution</th>
+          <th>État</th>
+          <th>Essais</th>
+          <th>Créée le</th>
+          <th>Terminée le</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) { @for (row of [1, 2, 3, 4]; track row) {
+        <tr>
+          <td colspan="7"><span class="workbook-shimmer"></span></td>
+        </tr>
+        } } @else { @for (job of jobs(); track job.job_id) {
+        <tr>
+          <td class="workbook-cell-id">{{ job.job_id }}</td>
+          <td><strong>{{ job.job_kind }}</strong></td>
+          <td class="workbook-cell-id">{{ job.run_id || '—' }}</td>
+          <td>
+            <span
+              class="workbook-pill"
+              [class.is-approved]="job.state === 'succeeded'"
+              [class.is-rejected]="job.state === 'failed'"
+              >{{ job.state }}</span
+            >
+            @if (job.error_code) { <small>{{ job.error_code }}</small> }
+          </td>
+          <td class="workbook-number">{{ job.attempts }}</td>
+          <td>{{ job.created_at | date:'dd MMM yyyy, HH:mm' }}</td>
+          <td>
+            {{ job.finished_at ? (job.finished_at | date:'dd MMM yyyy, HH:mm') :
+            '—' }}
+          </td>
+        </tr>
+        } @empty { @if (!error()) {
+        <tr>
+          <td colspan="7">
+            <div class="workbook-empty">
+              <strong>Aucune tâche enregistrée</strong
+              ><span>Les traitements apparaîtront après une collecte.</span>
+            </div>
+          </td>
+        </tr>
+        } } }
+      </tbody>
+      } @else {
+      <thead>
+        <tr>
+          <th>Décision</th>
+          <th>Candidat</th>
+          <th>Version</th>
+          <th>Administrateur</th>
+          <th>Motif</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) { @for (row of [1, 2, 3, 4]; track row) {
+        <tr>
+          <td colspan="6"><span class="workbook-shimmer"></span></td>
+        </tr>
+        } } @else { @for (event of decisions(); track event.event_id) {
+        <tr>
+          <td>
+            <span
+              class="workbook-pill"
+              [class.is-approved]="event.decision === 'approved'"
+              [class.is-rejected]="event.decision === 'rejected'"
+              >{{ event.decision === 'approved' ? 'Approuvé' : 'Rejeté' }}</span
+            >
+          </td>
+          <td class="workbook-cell-id">{{ event.candidate_id }}</td>
+          <td class="workbook-number">{{ event.candidate_version }}</td>
+          <td class="workbook-cell-id">{{ event.actor_uid }}</td>
+          <td>{{ event.reason || '—' }}</td>
+          <td>{{ event.decided_at | date:'dd MMM yyyy, HH:mm' }}</td>
+        </tr>
+        } @empty { @if (!error()) {
+        <tr>
+          <td colspan="6">
+            <div class="workbook-empty">
+              <strong>Aucune décision enregistrée</strong
+              ><span>Les validations et rejets seront conservés ici.</span>
+            </div>
+          </td>
+        </tr>
+        } } }
+      </tbody>
+      }
+    </table>
+  </div>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="view() === 'jobs' ? jobs().length : decisions().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
+</section>

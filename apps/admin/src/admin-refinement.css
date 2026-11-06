@@ -4,8 +4,18 @@
 }
 .admin-app
   .main-inner
-  :is(tp-overview-page, tp-reports-page, tp-scraping-page) {
+  :is(
+    tp-overview-page,
+    tp-admin-live-overview,
+    tp-reports-page,
+    tp-scraping-page
+  ) {
   gap: var(--space-8);
+}
+.admin-app tp-admin-live-overview {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-6);
 }
 .admin-app .card {
   border-radius: var(--radius-lg);

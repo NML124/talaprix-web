@@ -5,8 +5,17 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  LucideChevronRight,
+  LucidePackage,
+  LucideRefreshCw,
+  LucideStore,
+  LucideTag,
+  LucideUsers,
+} from '@lucide/angular';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { PageHeader } from '../../ui/page-header';
+import { ScrapingReviewApi } from '../scraping/scraping-review-api';
 
 interface DashboardStats {
   readonly users: number | null;
@@ -17,15 +26,33 @@ interface DashboardStats {
   readonly advertisements: number | null;
 }
 
+interface RecentProduct {
+  readonly id: string;
+  readonly name: string;
+  readonly category: string;
+}
+
 @Component({
   selector: 'tp-admin-live-overview',
-  imports: [RouterLink, PageHeader],
+  imports: [
+    RouterLink,
+    PageHeader,
+    LucideChevronRight,
+    LucidePackage,
+    LucideRefreshCw,
+    LucideStore,
+    LucideTag,
+    LucideUsers,
+  ],
   templateUrl: './admin-live-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLiveOverview {
   readonly #functions = inject(SupabaseFunctions);
+  readonly #scraping = inject(ScrapingReviewApi);
+  readonly reviewCount = signal<number | null>(null);
   readonly stats = signal<DashboardStats | null>(null);
+  readonly recentProducts = signal<readonly RecentProduct[]>([]);
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly error = signal('');
 
@@ -36,6 +63,7 @@ export class AdminLiveOverview {
   async load(): Promise<void> {
     this.status.set('loading');
     this.error.set('');
+    void this.loadReviewCount();
     try {
       const response = await this.#functions.get<unknown>('get-dashboard-data');
       if (!isRecord(response) || !isRecord(response['stats'])) {
@@ -50,6 +78,19 @@ export class AdminLiveOverview {
         categories: count(values['categories_count']),
         advertisements: count(values['active_ads_count']),
       });
+      this.recentProducts.set(
+        Array.isArray(response['products'])
+          ? response['products']
+              .filter(isRecord)
+              .map((item) => ({
+                id: string(item['product_id']),
+                name: string(item['name']),
+                category: string(item['category_name']),
+              }))
+              .filter((item) => item.id && item.name)
+              .slice(0, 5)
+          : [],
+      );
       this.status.set('ready');
     } catch (error) {
       this.error.set(
@@ -60,6 +101,13 @@ export class AdminLiveOverview {
       this.status.set('error');
     }
   }
+  private async loadReviewCount(): Promise<void> {
+    try {
+      this.reviewCount.set((await this.#scraping.overview()).needs_review);
+    } catch {
+      this.reviewCount.set(null);
+    }
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -67,4 +115,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 function count(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function string(value: unknown): string {
+  return typeof value === 'string' ? value : '';
 }

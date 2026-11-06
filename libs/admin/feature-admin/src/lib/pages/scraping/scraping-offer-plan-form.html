@@ -1,0 +1,172 @@
+<section
+  class="dialog-section"
+  aria-label="Préparer la publication d'une offre"
+>
+  <h3>Préparer une offre</h3>
+  <p class="muted small">
+    Sélectionnez la ligne exacte de l'annonce, puis confirmez la boutique et le
+    produit. Les ressemblances ci-dessous sont des pistes à vérifier sur la
+    source.
+  </p>
+
+  <div
+    class="workbook-publication-choices"
+    aria-label="Produits extraits de l'annonce"
+  >
+    @for (entry of candidate().catalog_preparation?.items ?? []; track
+    entry.entry_key) {
+    <button
+      type="button"
+      class="workbook-publication-choice"
+      [class.is-active]="entryKey() === entry.entry_key"
+      (click)="chooseItem(entry.entry_key)"
+    >
+      <strong
+        >{{ entry.product?.name || entry.offer?.name || 'Produit non identifié'
+        }}</strong
+      >
+      <small
+        >{{ entry.offer?.price || 'Prix absent' }} {{ entry.offer?.currency_code
+        || '' }}</small
+      >
+    </button>
+    }
+  </div>
+
+  @if (item()) {
+  <div class="toolbar">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="search()"
+      [disabled]="loading()"
+    >
+      {{ loading() ? 'Recherche…' : 'Chercher dans le catalogue' }}
+    </button>
+  </div>
+  } @if (matches(); as found) {
+  <div class="workbook-publication-columns">
+    <div>
+      <h4>Boutiques possibles</h4>
+      @for (shop of found.shops; track shop.shop_id) {
+      <button
+        type="button"
+        class="workbook-publication-choice"
+        [class.is-active]="shopId() === shop.shop_id"
+        [disabled]="shop.banned === true"
+        (click)="chooseShop(shop.shop_id)"
+      >
+        <strong>{{ shop.name }}</strong><small>{{ shop.basis }}</small>
+      </button>
+      } @empty {
+      <p class="muted small">Aucune boutique proposée. Identité à vérifier.</p>
+      }
+    </div>
+    <div>
+      <h4>Produits possibles</h4>
+      @for (product of found.products; track product.product_id) {
+      <button
+        type="button"
+        class="workbook-publication-choice"
+        [class.is-active]="productId() === product.product_id"
+        (click)="chooseProduct(product.product_id)"
+      >
+        <strong>{{ product.name }}</strong><small>{{ product.basis }}</small>
+      </button>
+      } @empty {
+      <p class="muted small">
+        Aucun produit proposé. Création à traiter séparément.
+      </p>
+      }
+    </div>
+  </div>
+  } @if (shopId() && productId()) {
+  <div class="toolbar">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="searchOffers()"
+      [disabled]="loading()"
+    >
+      Vérifier les offres de cette boutique
+    </button>
+  </div>
+  } @if (offersLoaded()) {
+  <div class="workbook-publication-choices">
+    <h4>Offre à rattacher</h4>
+    @for (offer of offers(); track offer.offer_id) {
+    <button
+      type="button"
+      class="workbook-publication-choice"
+      [class.is-active]="offerId() === offer.offer_id"
+      (click)="chooseOffer(offer)"
+    >
+      <strong>{{ offer.name }}</strong>
+      <small
+        >{{ offer.price || 'Prix non établi' }} · {{ offer.product_condition ||
+        'État non précisé' }}</small
+      >
+    </button>
+    } @empty {
+    <p class="muted small">Aucune offre existante pour cette paire.</p>
+    }
+    <button
+      type="button"
+      class="workbook-publication-choice"
+      [class.is-active]="offerId() === null"
+      (click)="clearOffer()"
+    >
+      <strong>Nouvelle offre</strong
+      ><small>Créer seulement si aucune offre équivalente n'existe</small>
+    </button>
+  </div>
+  @if (offerId() === null) {
+  <div class="workbook-filter-bar" aria-label="État de la nouvelle offre">
+    <button
+      type="button"
+      [class.is-active]="condition() === null"
+      (click)="condition.set(null)"
+    >
+      Non précisé
+    </button>
+    <button
+      type="button"
+      [class.is-active]="condition() === 'new'"
+      (click)="condition.set('new')"
+    >
+      Neuf
+    </button>
+    <button
+      type="button"
+      [class.is-active]="condition() === 'used'"
+      (click)="condition.set('used')"
+    >
+      Occasion
+    </button>
+    <button
+      type="button"
+      [class.is-active]="condition() === 'refurbished'"
+      (click)="condition.set('refurbished')"
+    >
+      Reconditionné
+    </button>
+  </div>
+  } } @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (created()) {
+  <p class="notice notice-compact" role="status">
+    Plan enregistré sans écrire dans le catalogue. Retrouvez-le dans l'onglet
+    Publication.
+  </p>
+  }
+  <div class="toolbar dialog-actions">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="prepare()"
+      [disabled]="!item() || !shopId() || !productId() || !offersLoaded() || saving()"
+    >
+      {{ saving() ? 'Vérification…' : 'Préparer le plan' }}
+    </button>
+  </div>
+</section>

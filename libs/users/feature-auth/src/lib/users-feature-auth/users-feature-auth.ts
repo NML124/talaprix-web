@@ -11,7 +11,10 @@ import {
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRight, LucideMail } from '@lucide/angular';
-import { SupabaseClientService } from '@talaprix/shared/data-access';
+import {
+  SupabaseClientService,
+  SupabaseConfig,
+} from '@talaprix/shared/data-access';
 import { AuthSessionStore } from '@talaprix/users/data-access';
 import type { UserRole } from '@talaprix/users/domain';
 import { AuthBrandPanel } from './auth-brand-panel';
@@ -31,6 +34,7 @@ import { AuthBrandPanel } from './auth-brand-panel';
 })
 export class UsersFeatureAuth {
   readonly #supabase = inject(SupabaseClientService);
+  readonly #supabaseConfig = inject(SupabaseConfig);
   readonly #route = inject(ActivatedRoute);
   readonly #router = inject(Router);
   readonly #session = inject(AuthSessionStore);
@@ -38,7 +42,7 @@ export class UsersFeatureAuth {
   protected readonly privatePortal = this.#privatePortal;
   protected readonly googleSignInVisible = !this.#privatePortal;
   protected readonly demoCredentialsVisible =
-    isDevMode() && this.#privatePortal;
+    isDevMode() && this.#privatePortal && !this.#supabaseConfig.isConfigured;
   protected readonly otpInputs =
     viewChildren<ElementRef<HTMLInputElement>>('otpInput');
   protected email = '';

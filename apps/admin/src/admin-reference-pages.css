@@ -1,0 +1,475 @@
+/* The reference kit is scoped to the two content pages; the application sidebar is unchanged. */
+.admin-app .tp-admin {
+  --surface: #fff;
+  --surface-muted: #f7f7f8;
+  --surface-quiet: #fafafb;
+  --text: #1d1d1f;
+  --text-2: #6e6e73;
+  --text-3: #6e6e73;
+  --line: #e9e9ec;
+  --line-soft: #f0f0f2;
+  --brand: #009788;
+  --brand-tint: #e3f3f1;
+}
+.admin-app .main:has(.tp-admin),
+.admin-app .main-inner:has(.tp-admin) {
+  background: var(--bg);
+}
+.admin-app .main-inner:has(.tp-admin) {
+  max-width: none;
+  padding: 0;
+  display: block;
+}
+.admin-app .tp-admin.tp-page {
+  min-width: 0;
+  min-height: calc(100dvh - 80px);
+}
+.admin-app .tp-admin .tp-page-inner {
+  width: 100%;
+}
+.admin-app .tp-admin .page-header {
+  padding: 0;
+  margin: 0 0 4px;
+}
+.admin-app .tp-admin .page-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.admin-app .tp-admin .page-header h1 {
+  margin: 0;
+  color: var(--tp-text);
+  font: 600 30px/1.15 var(--tp-font);
+  letter-spacing: -0.028em;
+}
+.admin-app .tp-admin .page-header p {
+  color: var(--tp-text-muted);
+  font-size: 14px;
+}
+.admin-app .tp-admin .page-header .tp-eyebrow {
+  color: var(--tp-text-muted);
+  font-size: 12.5px;
+}
+.admin-app .tp-admin .page-header .page-actions {
+  gap: 10px;
+}
+.admin-app .tp-admin .tp-kpi-band {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.admin-app .tp-admin .tp-kpi {
+  min-width: 0;
+  justify-content: space-between;
+  min-height: 145px;
+  gap: 12px;
+}
+.admin-app .tp-admin .tp-kpi:first-child {
+  border-left: 0;
+}
+.admin-app .tp-admin .tp-kpi strong {
+  color: var(--tp-text);
+}
+.admin-app .tp-admin .tp-figure-review {
+  color: #8a4b00 !important;
+}
+.admin-app .tp-admin .tp-row > * {
+  min-width: 0;
+}
+.admin-app .tp-admin .tp-card {
+  color: var(--tp-text);
+}
+.admin-app .tp-admin .tp-card-head {
+  padding-bottom: 0;
+}
+.admin-app .tp-admin .tp-card-body {
+  display: grid;
+  gap: 14px;
+}
+.admin-app .tp-admin .tp-overview-placeholder {
+  min-height: 220px;
+}
+.admin-app .tp-admin .tp-overview-chart {
+  min-height: 240px;
+}
+.admin-app .tp-admin .tp-overview-team {
+  min-height: 270px;
+}
+.admin-app .tp-admin .tp-overview-metric-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-app .tp-admin .tp-overview-metric-pair .tp-subpanel {
+  display: grid;
+  gap: 12px;
+}
+.admin-app .tp-admin .tp-overview-list {
+  padding: 12px 0;
+}
+.admin-app .tp-admin .tp-list-row .tp-num {
+  color: var(--tp-text-2);
+  font-size: 13px;
+}
+.admin-app .tp-admin .tp-list-row:hover {
+  text-decoration: none;
+}
+.admin-app .tp-admin .tp-table {
+  min-width: 520px;
+}
+.admin-app .tp-admin .tp-table strong {
+  font-weight: 500;
+}
+.admin-app .tp-admin .tp-table td {
+  color: var(--tp-text);
+}
+.admin-app .tp-admin .tp-table td:first-child {
+  max-width: 290px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-app .tp-admin .tp-source-badge {
+  min-height: 30px;
+  height: auto;
+  padding: 3px 13px;
+}
+.admin-app .tp-admin .tp-step {
+  transition: background 0.15s ease;
+}
+.admin-app .tp-admin .tp-step:focus-visible {
+  outline: 2px solid var(--tp-brand);
+  outline-offset: -3px;
+}
+.admin-app .tp-admin .tp-workbook-sheet {
+  min-width: 0;
+}
+.admin-app .tp-admin .workbook-panel,
+.admin-app .tp-admin .workbook-pilot {
+  border: 0;
+  border-radius: var(--tp-r-card);
+  box-shadow: none;
+  background: var(--tp-surface);
+  color: var(--tp-text);
+}
+.admin-app .tp-admin .workbook-panel {
+  padding: 0;
+  overflow: hidden;
+}
+.admin-app .tp-admin .workbook-panel-head {
+  padding: 20px 22px;
+  margin: 0;
+  border-bottom: 1px solid var(--tp-hairline);
+  align-items: center;
+}
+.admin-app .tp-admin .workbook-panel-head h2 {
+  margin: 0 0 4px;
+  color: var(--tp-text);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.admin-app .tp-admin .workbook-panel-head p:last-child {
+  color: var(--tp-text-muted);
+  font-size: 13px;
+}
+.admin-app .tp-admin .workbook-panel-head .btn,
+.admin-app .tp-admin .workbook-pagination .btn,
+.admin-app .tp-admin .workbook-alert .btn {
+  min-height: 34px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--tp-hairline-strong);
+  border-radius: 999px;
+  background: var(--tp-surface);
+  color: var(--tp-text);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.admin-app .tp-admin .workbook-panel-head .btn:hover,
+.admin-app .tp-admin .workbook-pagination .btn:hover {
+  background: var(--tp-surface-2);
+}
+.admin-app .tp-admin .workbook-filter-bar {
+  margin: 0;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--tp-hairline);
+}
+.admin-app .tp-admin .workbook-filter-bar button {
+  min-height: 32px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--tp-surface-3);
+  color: var(--tp-text-2);
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-filter-bar button.is-active {
+  background: var(--tp-brand-tint);
+  color: var(--tp-brand-strong);
+}
+.admin-app .tp-admin .workbook-active-filter {
+  margin: 12px 18px;
+  border-radius: 999px;
+  background: var(--tp-blue-tint);
+  color: var(--tp-blue-text);
+}
+.admin-app .tp-admin .workbook-table-wrap {
+  border: 0;
+  border-radius: 0;
+  max-height: 560px;
+}
+.admin-app .tp-admin .workbook-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 760px;
+}
+.admin-app .tp-admin .workbook-table th {
+  top: 0;
+  padding: 0 14px;
+  height: 41px;
+  border-bottom: 1px solid var(--tp-hairline-strong);
+  border-right: 1px solid var(--tp-hairline);
+  background: var(--tp-surface-2);
+  color: var(--tp-text-2);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.admin-app .tp-admin .workbook-table td {
+  height: 47px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--tp-hairline);
+  border-right: 1px solid var(--tp-hairline);
+  background: var(--tp-surface);
+  color: var(--tp-text);
+  font-size: 13px;
+}
+.admin-app .tp-admin .workbook-table tbody tr:hover td {
+  background: var(--tp-surface-2);
+}
+.admin-app .tp-admin .workbook-table :is(th, td):first-child {
+  padding-left: 22px;
+}
+.admin-app .tp-admin .workbook-action-table :is(th, td):last-child {
+  min-width: 120px;
+  box-shadow: -1px 0 0 var(--tp-hairline);
+}
+.admin-app .tp-admin .workbook-action-table td:last-child {
+  background: var(--tp-surface);
+}
+.admin-app .tp-admin .workbook-action-table tbody tr:hover td:last-child {
+  background: var(--tp-surface-2);
+}
+.admin-app .tp-admin .workbook-cell-title {
+  color: var(--tp-text);
+  font-size: 13px;
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-cell-id {
+  color: var(--tp-text-muted);
+}
+.admin-app .tp-admin .workbook-number {
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-row-link {
+  color: var(--tp-brand-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-pill {
+  background: var(--tp-amber-tint);
+  color: var(--tp-amber-text);
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-pill.is-approved {
+  background: var(--tp-brand-tint);
+  color: var(--tp-brand-text);
+}
+.admin-app .tp-admin .workbook-pill.is-rejected {
+  background: var(--tp-red-tint);
+  color: var(--tp-red-text);
+}
+.admin-app .tp-admin .workbook-pagination {
+  padding: 11px 18px;
+  border-top: 1px solid var(--tp-hairline);
+  color: var(--tp-text-muted);
+}
+.admin-app .tp-admin .workbook-empty {
+  padding: 40px 20px;
+  color: var(--tp-text-muted);
+}
+.admin-app .tp-admin .workbook-empty strong {
+  color: var(--tp-text-2);
+  font-weight: 500;
+}
+.admin-app .tp-admin .workbook-alert {
+  margin: 12px 18px;
+  border: 0;
+  border-radius: var(--tp-r-panel);
+  background: var(--tp-amber-tint);
+  color: var(--tp-amber-text);
+}
+.admin-app .tp-admin .workbook-media-grid {
+  padding: 18px;
+}
+.admin-app .tp-admin .workbook-media-card {
+  border: 0;
+  background: var(--tp-surface-2);
+}
+.admin-app .tp-admin .workbook-media-image {
+  background: var(--tp-surface-3);
+}
+.admin-app[data-theme='dark'] .tp-admin {
+  --surface: #1c1d21;
+  --surface-muted: #26272c;
+  --surface-quiet: #18191d;
+  --text: #f2f2f4;
+  --text-2: #b9b9c2;
+  --text-3: #9e9ea9;
+  --line: #393a42;
+  --line-soft: #303138;
+  --brand-tint: #19332f;
+  --tp-bg: #101114;
+  --tp-surface: #1c1d21;
+  --tp-surface-2: #26272c;
+  --tp-surface-3: #2d2e34;
+  --tp-track: #27282d;
+  --tp-hairline: #303138;
+  --tp-hairline-strong: #393a42;
+  --tp-text: #f2f2f4;
+  --tp-text-2: #d4d4dc;
+  --tp-text-muted: #b9b9c2;
+  --tp-icon-muted: #a2a2ad;
+  --tp-brand: #3cc5b5;
+  --tp-brand-strong: #7cddd2;
+  --tp-brand-hover: #a0eee5;
+  --tp-brand-text: #a0eee5;
+  --tp-brand-tint: #19332f;
+  --tp-brand-tint-2: #203934;
+  --tp-amber-tint: #382c1d;
+  --tp-amber-text: #ffd08b;
+  --tp-red-tint: #3b2427;
+  --tp-red-text: #ffb7b1;
+  --tp-blue-tint: #1f2e42;
+  --tp-blue-text: #afceff;
+  --tp-violet-tint: #2d2640;
+  --tp-violet-text: #d0bcff;
+  --tp-gray-tint: #32333a;
+  --tp-gray-text: #d0d0d8;
+}
+.admin-app[data-theme='dark'] .tp-admin :is(.tp-kpi, .tp-list-row):hover,
+.admin-app[data-theme='dark']
+  .tp-admin
+  :is(.tp-btn--secondary, .tp-btn--ghost):hover:not(:disabled),
+.admin-app[data-theme='dark'] .tp-admin .tp-table tbody tr:hover td,
+.admin-app[data-theme='dark'] .tp-admin .tp-grid tbody tr:hover td {
+  background: var(--tp-surface-2);
+}
+.admin-app[data-theme='dark'] .tp-admin :is(.tp-table, .tp-grid) th,
+.admin-app[data-theme='dark'] .tp-admin .tp-steps,
+.admin-app[data-theme='dark'] .tp-admin .tp-step-num {
+  background: var(--tp-track);
+}
+.admin-app[data-theme='dark'] .tp-admin :is(.tp-table, .tp-grid) td,
+.admin-app[data-theme='dark']
+  .tp-admin
+  :is(.tp-step.is-active, .tp-seg button[aria-pressed='true']) {
+  background: var(--tp-surface);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-step:hover {
+  background: var(--tp-surface-3);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-step.is-active:hover {
+  background: var(--tp-surface);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-grid td,
+.admin-app[data-theme='dark'] .tp-admin .tp-field {
+  border-color: var(--tp-hairline);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-grid-selbar {
+  background: var(--tp-brand-tint);
+  border-color: var(--tp-hairline);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-grid-divider {
+  background: var(--tp-hairline-strong);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-pager button:hover:not(:disabled) {
+  background: var(--tp-surface);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-btn--primary,
+.admin-app[data-theme='dark'] .tp-admin .tp-step.is-active .tp-step-num {
+  background: #00776d;
+  color: #fff;
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-btn--primary:hover:not(:disabled) {
+  background: #00645b;
+}
+.admin-app[data-theme='dark'] .tp-admin .workbook-media-copy a {
+  color: var(--tp-brand-strong);
+}
+.admin-app[data-theme='dark'] .tp-admin .tp-figure-review {
+  color: var(--tp-amber-text) !important;
+}
+.admin-app .tp-admin .workbook-pilot {
+  padding: 24px;
+}
+.admin-app .tp-admin .workbook-pilot-metrics > div {
+  border: 0;
+  background: var(--tp-surface-2);
+}
+@media (max-width: 1000px) {
+  .admin-app .tp-admin .tp-kpi-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-app .tp-admin .tp-kpi:nth-child(odd) {
+    border-left: 0;
+  }
+  .admin-app .tp-admin .tp-kpi:nth-child(n + 3) {
+    border-top: 1px solid var(--tp-hairline);
+  }
+}
+@media (max-width: 640px) {
+  .admin-app .tp-admin.tp-page {
+    padding: 20px 16px 40px;
+  }
+  .admin-app .tp-admin .page-header h1 {
+    font-size: 26px;
+  }
+  .admin-app .tp-admin .page-header .page-actions {
+    width: 100%;
+  }
+  .admin-app .tp-admin .tp-kpi-band {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-app .tp-admin .tp-kpi {
+    min-height: 112px;
+    padding: 18px 20px;
+    border-left: 0;
+  }
+  .admin-app .tp-admin .tp-kpi + .tp-kpi {
+    border-top: 1px solid var(--tp-hairline);
+  }
+  .admin-app .tp-admin .tp-kpi strong {
+    font-size: 27px;
+  }
+  .admin-app .tp-admin .tp-kpi-head {
+    font-size: 12px;
+  }
+  .admin-app .tp-admin .tp-overview-metric-pair {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-app .tp-admin .tp-steps {
+    max-width: 100%;
+  }
+  .admin-app .tp-admin .workbook-panel-head {
+    padding: 17px 16px;
+  }
+  .admin-app .tp-admin .workbook-panel-head .btn {
+    flex: 0 0 auto;
+  }
+  .admin-app .tp-admin .workbook-media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+  .admin-app .tp-admin .workbook-pagination {
+    align-items: flex-start;
+  }
+}

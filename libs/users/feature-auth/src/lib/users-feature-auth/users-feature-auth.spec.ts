@@ -4,7 +4,10 @@ import {
   convertToParamMap,
   provideRouter,
 } from '@angular/router';
-import { SupabaseClientService } from '@talaprix/shared/data-access';
+import {
+  SupabaseClientService,
+  SupabaseConfig,
+} from '@talaprix/shared/data-access';
 import { AuthSessionStore } from '@talaprix/users/data-access';
 import { UsersFeatureAuth } from './users-feature-auth';
 
@@ -13,11 +16,13 @@ describe('UsersFeatureAuth', () => {
   const authenticateDemo = vi.fn(() => true);
   const signInWithOtp = vi.fn();
   const verifyOtp = vi.fn();
+  let configured = false;
 
   beforeEach(async () => {
     authenticateDemo.mockClear();
     signInWithOtp.mockClear();
     verifyOtp.mockClear();
+    configured = false;
     await TestBed.configureTestingModule({
       imports: [UsersFeatureAuth],
       providers: [
@@ -28,6 +33,14 @@ describe('UsersFeatureAuth', () => {
             snapshot: {
               data: { privatePortal: true },
               queryParamMap: convertToParamMap({}),
+            },
+          },
+        },
+        {
+          provide: SupabaseConfig,
+          useValue: {
+            get isConfigured() {
+              return configured;
             },
           },
         },
@@ -103,5 +116,27 @@ describe('UsersFeatureAuth', () => {
     expect(authenticateDemo).toHaveBeenCalledWith('admin.demo@talaprix.cd');
     expect(signInWithOtp).not.toHaveBeenCalled();
     expect(verifyOtp).not.toHaveBeenCalled();
+  });
+
+  it('uses real OTP when Supabase is configured in development', async () => {
+    configured = true;
+    signInWithOtp.mockResolvedValue({ error: null });
+    fixture.destroy();
+    fixture = TestBed.createComponent(UsersFeatureAuth);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const page = fixture.nativeElement as HTMLElement;
+    expect(page.textContent).not.toContain('admin.demo@talaprix.cd');
+    const email = page.querySelector<HTMLInputElement>('#auth-email');
+    expect(email).toBeTruthy();
+    if (!email) return;
+    email.value = 'admin@talaprix.com';
+    email.dispatchEvent(new Event('input', { bubbles: true }));
+    page
+      .querySelector('form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(signInWithOtp).toHaveBeenCalled();
+    expect(authenticateDemo).not.toHaveBeenCalled();
   });
 });

@@ -1,10 +1,12 @@
-<tp-admin-page-header
-  title="Fonction non connectée"
-  subtitle="Cette section requiert un contrat API vérifié."
-/>
-<section class="card">
-  <p>
-    Les données de cette section ne sont pas encore disponibles depuis le
-    backend Supabase.
-  </p>
-</section>
+<tp-admin-page-header [title]="section.title" [subtitle]="section.subtitle" />
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+  @for (card of section.cards; track card) {
+  <section class="card min-w-0">
+    <div class="card-head"><h2>{{ card }}</h2></div>
+    <div class="admin-live-empty" role="status">
+      Données indisponibles pour le moment. Cette carte sera remplie dès que sa
+      source sera disponible.
+    </div>
+  </section>
+  }
+</div>

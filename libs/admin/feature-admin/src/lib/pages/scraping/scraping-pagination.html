@@ -1,0 +1,52 @@
+<footer
+  class="workbook-pagination tp-grid-foot"
+  aria-label="Pagination du tableau"
+>
+  <span>
+    @if (loading()) { Chargement… } @else if (count()) { Lignes {{ offset() + 1
+    }}–{{ offset() + count() }} · Page {{ currentPage() }} } @else { Aucune
+    ligne · Page {{ currentPage() }} }
+  </span>
+  <nav aria-label="Pages du tableau">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="select(currentPage() - 1)"
+      [disabled]="loading() || currentPage() === 1"
+    >
+      Précédent
+    </button>
+    @if (pages()[0] > 1) {
+    <button
+      type="button"
+      class="btn btn-secondary workbook-page-index"
+      (click)="select(1)"
+      aria-label="Page 1"
+    >
+      1
+    </button>
+    @if (pages()[0] > 2) {
+    <span class="workbook-page-ellipsis" aria-hidden="true">…</span> } } @for
+    (page of pages(); track page) {
+    <button
+      type="button"
+      class="btn btn-secondary workbook-page-index"
+      [class.workbook-page-active]="page === currentPage()"
+      [attr.aria-label]="'Page ' + page"
+      [attr.aria-current]="page === currentPage() ? 'page' : null"
+      (click)="select(page)"
+      [disabled]="loading() || page === currentPage()"
+    >
+      {{ page }}
+    </button>
+    }
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="select(currentPage() + 1)"
+      [disabled]="loading() || !hasNext()"
+    >
+      Suivant
+    </button>
+  </nav>
+</footer>
