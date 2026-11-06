@@ -74,14 +74,6 @@ export class ScrapingMediaSheet {
     }
   }
 
-  protected previous(): void {
-    void this.load(Math.max(0, this.offset() - PAGE_SIZE));
-  }
-
-  protected next(): void {
-    if (this.hasNext()) void this.load(this.offset() + PAGE_SIZE);
-  }
-
   protected async refreshPreview(media: WorkbookMedia): Promise<void> {
     const request = this.#request;
     if (this.#retried.has(media.media_id)) {

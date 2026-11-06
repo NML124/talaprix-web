@@ -85,14 +85,6 @@ export class ScrapingRunsSheet {
     }
   }
 
-  protected previous(): void {
-    void this.load(Math.max(0, this.offset() - PAGE_SIZE));
-  }
-
-  protected next(): void {
-    if (this.hasNext()) void this.load(this.offset() + PAGE_SIZE);
-  }
-
   protected async open(row: WorkbookObservation): Promise<void> {
     this.detailLoading.set(true);
     this.error.set('');

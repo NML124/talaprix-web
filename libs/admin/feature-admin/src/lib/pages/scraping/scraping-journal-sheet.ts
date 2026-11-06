@@ -66,12 +66,4 @@ export class ScrapingJournalSheet {
       if (request === this.#request) this.loading.set(false);
     }
   }
-
-  protected previous(): void {
-    void this.load(Math.max(0, this.offset() - PAGE_SIZE));
-  }
-
-  protected next(): void {
-    if (this.hasNext()) void this.load(this.offset() + PAGE_SIZE);
-  }
 }
