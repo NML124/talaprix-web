@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { ScrapingReviewApi } from './scraping-review-api';
+import { ScrapingPagination } from './scraping-pagination';
 import type {
   WorkbookObservation,
   WorkbookObservationDetail,
@@ -18,14 +19,18 @@ import type {
 } from './scraping-review.models';
 
 const PAGE_SIZE = 25;
+const usdFormatter = new Intl.NumberFormat('fr-FR', {
+  maximumFractionDigits: 8,
+});
 
 @Component({
   selector: 'tp-scraping-runs-sheet',
-  imports: [DatePipe, AdminDialog],
+  imports: [DatePipe, AdminDialog, ScrapingPagination],
   templateUrl: './scraping-runs-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingRunsSheet {
+  protected readonly pageSize = PAGE_SIZE;
   readonly #api = inject(ScrapingReviewApi);
   readonly mode = input.required<'runs' | 'raw'>();
   readonly runId = input<string | null>(null);
@@ -110,5 +115,11 @@ export class ScrapingRunsSheet {
 
   protected raw(value: unknown): string {
     return JSON.stringify(value, null, 2);
+  }
+
+  protected formatUsd(value: string | null): string {
+    if (value === null) return '—';
+    const amount = Number(value);
+    return Number.isFinite(amount) ? `${usdFormatter.format(amount)} USD` : '—';
   }
 }

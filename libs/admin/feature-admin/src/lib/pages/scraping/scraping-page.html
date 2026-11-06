@@ -1,96 +1,122 @@
-<tp-admin-page-header
-  title="Scraping"
-  subtitle="Suivez les collectes, les preuves et les décisions depuis un seul espace."
-/>
+<div class="tp-admin tp-page tp-scraping">
+  <div class="tp-page-inner tp-page-inner--wide">
+    <tp-admin-page-header
+      eyebrow="Administration › Collecte"
+      title="Scraping"
+      subtitle="Suivez les collectes, les preuves et les décisions depuis un seul espace."
+    >
+      @if (overview(); as totals) {
+      <span class="tp-badge tp-badge--teal tp-source-badge"
+        ><span class="tp-dot tp-dot--live" aria-hidden="true"></span>{{
+        totals.enabled_sources }} source{{ totals.enabled_sources > 1 ? 's' : ''
+        }} active{{ totals.enabled_sources > 1 ? 's' : '' }}</span
+      >
+      }
+      <button
+        type="button"
+        class="tp-btn tp-btn--secondary workbook-refresh"
+        (click)="loadOverview()"
+        [disabled]="overviewLoading()"
+        [attr.aria-busy]="overviewLoading()"
+        aria-label="Actualiser les chiffres du scraping"
+        title="Actualiser"
+      ></button>
+      <button
+        type="button"
+        class="tp-btn tp-btn--primary"
+        (click)="setSheet('pilot')"
+      >
+        Préparer une collecte
+      </button>
+    </tp-admin-page-header>
 
-<div class="workbook-summary-line">
-  <span>
-    @if (overview(); as totals) { {{ totals.enabled_sources }} source{{
-    totals.enabled_sources > 1 ? 's' : '' }} active{{ totals.enabled_sources > 1
-    ? 's' : '' }} } @else { Suivi des collectes et validations }
-  </span>
-  <button
-    type="button"
-    class="btn btn-secondary"
-    (click)="loadOverview()"
-    [disabled]="overviewLoading()"
-  >
-    Actualiser les chiffres
-  </button>
-</div>
-
-<section class="workbook-metrics" aria-label="Résumé de la collecte">
-  <article class="workbook-metric">
-    <span>Exécutions importées</span>
-    <strong>{{ overview()?.runs ?? '—' }}</strong>
-    <small
-      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
-      'Chargement…' : 'Runs enregistrés' }}</small
-    >
-  </article>
-  <article class="workbook-metric">
-    <span>Captures brutes</span>
-    <strong>{{ overview()?.observations ?? '—' }}</strong>
-    <small
-      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
-      'Chargement…' : 'Lignes reçues des sources' }}</small
-    >
-  </article>
-  <article class="workbook-metric">
-    <span>À examiner</span>
-    <strong>{{ overview()?.needs_review ?? '—' }}</strong>
-    <small
-      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
-      'Chargement…' : 'Sur ' + overview()?.candidates + ' candidats' }}</small
-    >
-  </article>
-  <article class="workbook-metric">
-    <span>Tâches en cours</span>
-    <strong>{{ overview()?.running_jobs ?? '—' }}</strong>
-    <small
-      >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
-      'Chargement…' : 'Travaux du pipeline privé' }}</small
-    >
-  </article>
-</section>
-
-<div class="workbook-tabs-wrap">
-  <nav class="workbook-tabs" aria-label="Onglets du classeur scraping">
-    @for (sheet of sheets; track sheet.key) {
-    <button
-      type="button"
-      class="workbook-tab"
-      [class.is-active]="active() === sheet.key"
-      [attr.aria-current]="active() === sheet.key ? 'page' : null"
-      (click)="setSheet(sheet.key)"
-    >
-      <span class="workbook-tab-number">{{ sheet.number }}</span>
-      {{ sheet.label }}
-    </button>
+    @if (overviewError()) {
+    <div class="tp-alert" role="alert">
+      Impossible de charger les indicateurs. Les feuillets restent accessibles.
+    </div>
     }
-  </nav>
-</div>
 
-<div class="workbook-sheet">
-  @switch (active()) { @case ('runs') {
-  <tp-scraping-runs-sheet mode="runs" (runSelected)="openRun($event)" />
-  } @case ('raw') {
-  <tp-scraping-runs-sheet
-    mode="raw"
-    [runId]="selectedRun()"
-    (runCleared)="clearRun()"
-  />
-  } @case ('analysis') {
-  <tp-scraping-candidates-sheet mode="analysis" />
-  } @case ('matches') {
-  <tp-scraping-candidates-sheet mode="matches" />
-  } @case ('media') {
-  <tp-scraping-media-sheet />
-  } @case ('review') {
-  <tp-scraping-candidates-sheet mode="review" />
-  } @case ('journal') {
-  <tp-scraping-journal-sheet />
-  } @case ('pilot') {
-  <tp-scraping-pilot-sheet />
-  } }
+    <section class="tp-card tp-kpi-band" aria-label="Résumé de la collecte">
+      <div class="tp-kpi">
+        <span class="tp-kpi-head">Exécutions importées</span
+        ><strong class="tp-figure-xl">{{ overview()?.runs ?? '—' }}</strong
+        ><span class="tp-kpi-foot"
+          >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+          'Chargement…' : 'Collectes enregistrées' }}</span
+        >
+      </div>
+      <div class="tp-kpi">
+        <span class="tp-kpi-head">Captures brutes</span
+        ><strong class="tp-figure-xl"
+          >{{ overview()?.observations ?? '—' }}</strong
+        ><span class="tp-kpi-foot"
+          >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+          'Chargement…' : 'Lignes reçues des sources' }}</span
+        >
+      </div>
+      <div class="tp-kpi">
+        <span class="tp-kpi-head">À examiner</span
+        ><strong class="tp-figure-xl tp-figure-review"
+          >{{ overview()?.needs_review ?? '—' }}</strong
+        ><span class="tp-kpi-foot"
+          >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+          'Chargement…' : overview() ? 'Sur ' + overview()!.candidates + '
+          candidats' : 'Candidats à vérifier' }}</span
+        >
+      </div>
+      <div class="tp-kpi">
+        <span class="tp-kpi-head">Tâches en cours</span
+        ><strong class="tp-figure-xl"
+          >{{ overview()?.running_jobs ?? '—' }}</strong
+        ><span class="tp-kpi-foot"
+          >{{ overviewError() ? 'Chargement impossible' : overviewLoading() ?
+          'Chargement…' : 'Pipeline privé' }}</span
+        >
+      </div>
+    </section>
+
+    <nav class="tp-steps" aria-label="Étapes du scraping">
+      @for (phase of phases; track phase.label) {
+      <div class="tp-steps-phase">
+        <span class="tp-steps-phase-label">{{ phase.label }}</span>
+        <div class="tp-steps-row">
+          @for (sheet of phase.steps; track sheet.key) {
+          <button
+            type="button"
+            class="tp-step"
+            [class.is-active]="active() === sheet.key"
+            [attr.aria-current]="active() === sheet.key ? 'step' : null"
+            [attr.title]="sheet.detail"
+            (click)="setSheet(sheet.key)"
+          >
+            <span class="tp-step-num">{{ sheet.number }}</span
+            ><span>{{ sheet.label }}</span> @if (stepCount(sheet.key) !== null)
+            {
+            <span class="tp-step-count">{{ stepCount(sheet.key) }}</span>
+            }
+          </button>
+          }
+        </div>
+      </div>
+      @if (!$last) { <span class="tp-steps-sep" aria-hidden="true"></span> } }
+    </nav>
+
+    <div class="tp-workbook-sheet">
+      @switch (active()) { @case ('runs') {
+      <tp-scraping-runs-sheet mode="runs" (runSelected)="openRun($event)" /> }
+      @case ('raw') {
+      <tp-scraping-runs-sheet
+        mode="raw"
+        [runId]="selectedRun()"
+        (runCleared)="clearRun()"
+      />
+      } @case ('analysis') { <tp-scraping-candidates-sheet mode="analysis" /> }
+      @case ('matches') { <tp-scraping-candidates-sheet mode="matches" /> }
+      @case ('media') { <tp-scraping-media-sheet /> } @case ('review') {
+      <tp-scraping-candidates-sheet mode="review" /> } @case ('publication') {
+      <tp-scraping-publication-sheet /> } @case ('journal') {
+      <tp-scraping-journal-sheet /> } @case ('pilot') {
+      <tp-scraping-pilot-sheet /> } }
+    </div>
+  </div>
 </div>

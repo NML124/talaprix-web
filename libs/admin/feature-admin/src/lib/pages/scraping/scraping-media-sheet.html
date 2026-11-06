@@ -1,7 +1,9 @@
-<section class="workbook-panel" [attr.aria-busy]="loading()">
-  <header class="workbook-panel-head">
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
     <div>
-      <p class="workbook-eyebrow">PREUVES VISUELLES</p>
       <h2>Médias collectés</h2>
       <p class="muted small">
         Images conservées dans l’espace privé. Les aperçus expirent
@@ -10,12 +12,13 @@
     </div>
     <button
       type="button"
-      class="btn btn-secondary"
+      class="btn btn-secondary workbook-refresh"
       (click)="load()"
       [disabled]="loading()"
-    >
-      Actualiser
-    </button>
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser les médias"
+      title="Actualiser"
+    ></button>
   </header>
   @if (error()) {
   <div class="workbook-alert" role="alert">
@@ -81,28 +84,12 @@
     </div>
     } } }
   </div>
-  <footer class="workbook-pagination">
-    <span
-      >{{ loading() ? 'Chargement…' : (offset() + rows().length) + ' médias
-      parcourus' }}</span
-    >
-    <div>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="previous()"
-        [disabled]="loading() || offset() === 0"
-      >
-        Précédent
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="next()"
-        [disabled]="loading() || !hasNext()"
-      >
-        Suivant
-      </button>
-    </div>
-  </footer>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="rows().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
 </section>

@@ -159,7 +159,10 @@
         </div>
       </dl>
     </section>
-    } @case ('media') {
+    @if (candidate().review_state === 'approved' &&
+    candidate().catalog_preparation) {
+    <tp-scraping-offer-plan-form [candidate]="candidate()" />
+    } } @case ('media') {
     <section class="dialog-section">
       <h3>Images et vidéos collectées</h3>
       @if (candidate().staged_media.length) {

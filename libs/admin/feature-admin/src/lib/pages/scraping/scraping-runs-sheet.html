@@ -1,10 +1,9 @@
-<section class="workbook-panel" [attr.aria-busy]="loading()">
-  <header class="workbook-panel-head">
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
     <div>
-      <p class="workbook-eyebrow">
-        {{ mode() === 'runs' ? 'HISTORIQUE DES SOURCES' : 'CAPTURES D’ORIGINE'
-        }}
-      </p>
       <h2>
         {{ mode() === 'runs' ? 'Exécutions importées' : 'Données brutes' }}
       </h2>
@@ -16,12 +15,13 @@
     </div>
     <button
       type="button"
-      class="btn btn-secondary"
+      class="btn btn-secondary workbook-refresh"
       (click)="load()"
       [disabled]="loading()"
-    >
-      Actualiser
-    </button>
+      [attr.aria-busy]="loading()"
+      [attr.aria-label]="mode() === 'runs' ? 'Actualiser les exécutions' : 'Actualiser les données brutes'"
+      title="Actualiser"
+    ></button>
   </header>
 
   @if (mode() === 'raw' && runId()) {
@@ -40,8 +40,8 @@
   </div>
   }
 
-  <div class="workbook-table-wrap">
-    <table class="workbook-table">
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
       @if (mode() === 'runs') {
       <thead>
         <tr>
@@ -72,9 +72,7 @@
           <td>{{ run.imported_at | date:'dd MMM yyyy, HH:mm' }}</td>
           <td class="workbook-number">{{ run.observation_count }}</td>
           <td class="workbook-number">{{ run.candidate_count }}</td>
-          <td class="workbook-number">
-            {{ run.cost_usd === null ? '—' : run.cost_usd + ' USD' }}
-          </td>
+          <td class="workbook-number">{{ formatUsd(run.cost_usd) }}</td>
           <td>
             <button
               type="button"
@@ -166,30 +164,14 @@
     </table>
   </div>
 
-  <footer class="workbook-pagination">
-    <span
-      >{{ loading() ? 'Chargement…' : (offset() + (mode() === 'runs' ?
-      runs().length : observations().length)) + ' éléments parcourus' }}</span
-    >
-    <div>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="previous()"
-        [disabled]="loading() || offset() === 0"
-      >
-        Précédent
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="next()"
-        [disabled]="loading() || !hasNext()"
-      >
-        Suivant
-      </button>
-    </div>
-  </footer>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="mode() === 'runs' ? runs().length : observations().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
 </section>
 
 @if (detailLoading()) {

@@ -2,8 +2,11 @@ import { inject, Service } from '@angular/core';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import type {
   CandidateDetail,
+  CatalogMatches,
   CandidatePage,
+  CreateOfferPlanInput,
   DecisionResult,
+  OfferPlanRow,
   ReviewState,
   SignedMediaUrl,
   WorkbookJob,
@@ -161,6 +164,55 @@ export class ScrapingReviewApi {
     return this.#functions.post<{ stopped: boolean }>('admin-scraping-review', {
       resource: 'campaign_stop',
       campaign_id: campaignId,
+    });
+  }
+
+  catalogCheck(lookup: Record<string, unknown>): Promise<CatalogMatches> {
+    return this.#functions.post<CatalogMatches>('admin-scraping-review', {
+      resource: 'catalog_check',
+      lookup,
+    });
+  }
+
+  offerPlans(limit = 25, offset = 0): Promise<WorkbookPage<OfferPlanRow>> {
+    return this.#functions.get<WorkbookPage<OfferPlanRow>>(
+      'admin-scraping-review',
+      {
+        resource: 'offer_plans',
+        limit: String(limit),
+        offset: String(offset),
+      },
+    );
+  }
+
+  createOfferPlan(input: CreateOfferPlanInput): Promise<{
+    plan_id: string;
+    plan_sha256: string;
+    state: OfferPlanRow['state'];
+  }> {
+    return this.#functions.post('admin-scraping-review', {
+      resource: 'offer_plan_create',
+      ...input,
+    });
+  }
+
+  approveOfferPlan(plan: OfferPlanRow): Promise<void> {
+    return this.#functions.post('admin-scraping-review', {
+      resource: 'offer_plan_approve',
+      plan_id: plan.plan_id,
+      plan_sha256: plan.plan_sha256,
+    });
+  }
+
+  publishOfferPlan(plan: OfferPlanRow): Promise<{
+    offer_id: string;
+    action: string;
+    public_writes: number;
+  }> {
+    return this.#functions.post('admin-scraping-review', {
+      resource: 'offer_plan_publish',
+      plan_id: plan.plan_id,
+      plan_sha256: plan.plan_sha256,
     });
   }
 }

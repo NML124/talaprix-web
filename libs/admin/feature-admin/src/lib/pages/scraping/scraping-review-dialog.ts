@@ -10,10 +10,11 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminDialog } from '../../ui/admin-dialog';
 import type { CandidateDetail, ReviewState } from './scraping-review.models';
+import { ScrapingOfferPlanForm } from './scraping-offer-plan-form';
 
 @Component({
   selector: 'tp-scraping-review-dialog',
-  imports: [AdminDialog, FormsModule, DatePipe],
+  imports: [AdminDialog, FormsModule, DatePipe, ScrapingOfferPlanForm],
   templateUrl: './scraping-review-dialog.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

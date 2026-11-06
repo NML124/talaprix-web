@@ -32,22 +32,22 @@
   color-scheme: dark;
   --brand: #20b5a6;
   --brand-hover: #159f92;
-  --brand-tint: #173a39;
-  --bg: #111718;
-  --surface: #1b2425;
-  --surface-muted: #202b2c;
-  --input-bg: #263132;
-  --text: #f3f7f6;
-  --text-2: #b4c2c0;
-  --text-3: #9baba8;
-  --line: #354344;
-  --line-soft: #303d3e;
-  --chart-previous: #6e807d;
+  --brand-tint: #19332f;
+  --bg: #101114;
+  --surface: #1c1d21;
+  --surface-muted: #26272c;
+  --input-bg: #2b2c32;
+  --text: #f2f2f4;
+  --text-2: #b9b9c2;
+  --text-3: #9e9ea9;
+  --line: #393a42;
+  --line-soft: #303138;
+  --chart-previous: #73747d;
   --chart-fill: rgba(32, 181, 166, 0.12);
   --chart-label: #79decf;
-  --surface-quiet: #192223;
-  --tree: #667575;
-  --selected-row: #263637;
+  --surface-quiet: #18191d;
+  --tree: #666770;
+  --selected-row: #2b2d33;
   --success: #77ddba;
   --warning: #f5bb78;
   --danger: #ffa49e;
@@ -70,7 +70,7 @@
   border-color: var(--line);
 }
 .admin-app[data-theme='dark'] .topbar.scrolled {
-  background: rgba(27, 36, 37, 0.9);
+  background: rgba(28, 29, 33, 0.92);
 }
 .admin-app[data-theme='dark'] .group-toggle,
 .admin-app[data-theme='dark'] .nav-child a {
@@ -102,7 +102,7 @@
 }
 .admin-app[data-theme='dark'] .field select,
 .admin-app[data-theme='dark'] .theme-picker select {
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"%3E%3Cpath d="m5 7.5 5 5 5-5" stroke="%23b4c2c0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E');
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"%3E%3Cpath d="m5 7.5 5 5 5-5" stroke="%23b9b9c2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E');
 }
 .admin-app[data-theme='dark'] .field :is(input, textarea, select):focus {
   background: var(--surface);
@@ -121,7 +121,7 @@
 .admin-app[data-theme='dark'] .badge.success,
 .admin-app[data-theme='dark'] .notice.success,
 .admin-app[data-theme='dark'] .toast {
-  background: #1e3b34;
+  background: #203129;
   color: #8de3c3;
 }
 .admin-app[data-theme='dark'] .badge.danger,

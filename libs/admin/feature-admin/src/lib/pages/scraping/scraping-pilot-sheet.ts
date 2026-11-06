@@ -23,6 +23,7 @@ export class ScrapingPilotSheet {
   protected budgetConfirmed = false;
   protected campaignInput = '';
   protected readonly busy = signal(false);
+  protected readonly refreshing = signal(false);
   protected readonly error = signal('');
   protected readonly preview = signal<Record<string, unknown> | null>(null);
   protected readonly campaign = signal<Record<string, unknown> | null>(null);
@@ -84,7 +85,12 @@ export class ScrapingPilotSheet {
       this.error.set('Renseignez un identifiant de campagne valide.');
       return;
     }
-    await this.run(async () => this.readStatus(id));
+    this.refreshing.set(true);
+    try {
+      await this.run(async () => this.readStatus(id));
+    } finally {
+      this.refreshing.set(false);
+    }
   }
 
   protected async stop(): Promise<void> {

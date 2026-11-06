@@ -6,6 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { ScrapingReviewApi } from './scraping-review-api';
+import { ScrapingPagination } from './scraping-pagination';
 import type {
   WorkbookJob,
   WorkbookReviewEvent,
@@ -16,11 +17,12 @@ type JournalView = 'jobs' | 'decisions';
 
 @Component({
   selector: 'tp-scraping-journal-sheet',
-  imports: [DatePipe],
+  imports: [DatePipe, ScrapingPagination],
   templateUrl: './scraping-journal-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingJournalSheet {
+  protected readonly pageSize = PAGE_SIZE;
   readonly #api = inject(ScrapingReviewApi);
   protected readonly view = signal<JournalView>('jobs');
   protected readonly jobs = signal<WorkbookJob[]>([]);

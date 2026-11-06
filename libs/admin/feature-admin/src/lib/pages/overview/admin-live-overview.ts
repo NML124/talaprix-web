@@ -5,8 +5,17 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import {
+  LucideChevronRight,
+  LucidePackage,
+  LucideRefreshCw,
+  LucideStore,
+  LucideTag,
+  LucideUsers,
+} from '@lucide/angular';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { PageHeader } from '../../ui/page-header';
+import { ScrapingReviewApi } from '../scraping/scraping-review-api';
 
 interface DashboardStats {
   readonly users: number | null;
@@ -25,12 +34,23 @@ interface RecentProduct {
 
 @Component({
   selector: 'tp-admin-live-overview',
-  imports: [RouterLink, PageHeader],
+  imports: [
+    RouterLink,
+    PageHeader,
+    LucideChevronRight,
+    LucidePackage,
+    LucideRefreshCw,
+    LucideStore,
+    LucideTag,
+    LucideUsers,
+  ],
   templateUrl: './admin-live-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLiveOverview {
   readonly #functions = inject(SupabaseFunctions);
+  readonly #scraping = inject(ScrapingReviewApi);
+  readonly reviewCount = signal<number | null>(null);
   readonly stats = signal<DashboardStats | null>(null);
   readonly recentProducts = signal<readonly RecentProduct[]>([]);
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
@@ -43,6 +63,7 @@ export class AdminLiveOverview {
   async load(): Promise<void> {
     this.status.set('loading');
     this.error.set('');
+    void this.loadReviewCount();
     try {
       const response = await this.#functions.get<unknown>('get-dashboard-data');
       if (!isRecord(response) || !isRecord(response['stats'])) {
@@ -78,6 +99,13 @@ export class AdminLiveOverview {
           : 'Tableau de bord indisponible.',
       );
       this.status.set('error');
+    }
+  }
+  private async loadReviewCount(): Promise<void> {
+    try {
+      this.reviewCount.set((await this.#scraping.overview()).needs_review);
+    } catch {
+      this.reviewCount.set(null);
     }
   }
 }

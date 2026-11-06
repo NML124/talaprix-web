@@ -9,6 +9,7 @@ import {
   untracked,
 } from '@angular/core';
 import { ScrapingReviewApi } from './scraping-review-api';
+import { ScrapingPagination } from './scraping-pagination';
 import { ScrapingReviewDialog } from './scraping-review-dialog';
 import type {
   CandidateDetail,
@@ -19,30 +20,23 @@ import type {
 type CandidateMode = 'analysis' | 'matches' | 'media' | 'review';
 const PAGE_SIZE = 25;
 
-const titles: Record<
-  CandidateMode,
-  { eyebrow: string; title: string; description: string }
-> = {
+const titles: Record<CandidateMode, { title: string; description: string }> = {
   analysis: {
-    eyebrow: 'TRANSFORMATION DES DONNÉES',
     title: 'Traitement des annonces',
     description:
       'Comparez les informations extraites aux publications d’origine et aux suggestions du modèle.',
   },
   matches: {
-    eyebrow: 'CATALOGUE EXISTANT',
     title: 'Correspondances',
     description:
       'Vérifiez les liens proposés avec les boutiques, produits et offres déjà présents.',
   },
   media: {
-    eyebrow: 'PREUVES VISUELLES',
     title: 'Médias collectés',
     description:
       'Inspectez les images conservées en espace privé et leur analyse avant toute publication.',
   },
   review: {
-    eyebrow: 'DÉCISION HUMAINE',
     title: 'File de validation',
     description:
       'Approuvez ou rejetez les candidats. Une approbation ne publie pas encore dans le catalogue.',
@@ -51,11 +45,12 @@ const titles: Record<
 
 @Component({
   selector: 'tp-scraping-candidates-sheet',
-  imports: [DatePipe, ScrapingReviewDialog],
+  imports: [DatePipe, ScrapingReviewDialog, ScrapingPagination],
   templateUrl: './scraping-candidates-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingCandidatesSheet {
+  protected readonly pageSize = PAGE_SIZE;
   readonly #api = inject(ScrapingReviewApi);
   readonly mode = input.required<CandidateMode>();
   protected readonly titles = titles;

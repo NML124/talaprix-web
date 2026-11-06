@@ -1,7 +1,6 @@
 <section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
   <div class="workbook-sheet-heading">
     <div>
-      <span class="workbook-eyebrow">PILOTE</span>
       <h2>Préparer un essai de collecte</h2>
       <p>
         Le prévol vérifie les canaux du classeur sans contacter Apify ni OpenAI.
@@ -145,13 +144,14 @@
         aria-label="Identifiant de campagne"
       />
       <button
-        class="btn btn-secondary"
+        class="btn btn-secondary workbook-refresh"
         type="button"
         [disabled]="busy()"
+        [attr.aria-busy]="refreshing()"
+        aria-label="Actualiser l’état de la campagne"
+        title="Actualiser l’état"
         (click)="refresh()"
-      >
-        Actualiser l’état
-      </button>
+      ></button>
       @if (activeId()) {
       <button
         class="btn btn-secondary"

@@ -23,6 +23,14 @@ export interface StagedMedia {
   staged_at: string;
 }
 
+export interface PreparedOfferItem {
+  entry_key: string;
+  product?: { name?: string };
+  reference?: { name?: string };
+  offer?: { name?: string; price?: string | number; currency_code?: string };
+  blocking_reasons?: string[];
+}
+
 export interface CandidateDetail extends CandidateSummary {
   source_run_id: string;
   source_item_index: number;
@@ -58,7 +66,7 @@ export interface CandidateDetail extends CandidateSummary {
     candidate_version: number;
     input_sha256: string;
     shop_data: Record<string, unknown>;
-    items: Array<Record<string, unknown>>;
+    items: PreparedOfferItem[];
     publication_enabled: false;
   } | null;
   staged_media: StagedMedia[];
@@ -156,4 +164,52 @@ export interface WorkbookReviewEvent {
   actor_uid: string;
   reason: string | null;
   decided_at: string;
+}
+
+export interface CatalogMatches {
+  shops: Array<{
+    shop_id: string;
+    name: string;
+    basis: string;
+    banned: boolean | null;
+  }>;
+  products: Array<{ product_id: string; name: string; basis: string }>;
+  offers: Array<{
+    offer_id: string;
+    offer_reference_id: string | null;
+    name: string;
+    price: string | null;
+    product_condition: 'new' | 'used' | 'refurbished' | null;
+  }>;
+}
+
+export interface CreateOfferPlanInput {
+  candidate_id: string;
+  preparation_id: string;
+  entry_key: string;
+  shop_id: string;
+  product_id: string;
+  reference_id: string | null;
+  offer_id: string | null;
+  product_condition: 'new' | 'used' | 'refurbished' | null;
+}
+
+export interface OfferPlanRow {
+  plan_id: string;
+  candidate_id: string;
+  plan_sha256: string;
+  shop_id: string;
+  product_id: string;
+  reference_id: string | null;
+  offer_id: string | null;
+  price: string;
+  currency_code: 'USD' | 'CDF';
+  seller_name: string | null;
+  product_name: string | null;
+  offer_name: string | null;
+  source_url: string;
+  source_published_at: string;
+  state: 'draft' | 'approved' | 'published';
+  action: 'created' | 'price_updated' | 'unchanged' | null;
+  created_at: string;
 }

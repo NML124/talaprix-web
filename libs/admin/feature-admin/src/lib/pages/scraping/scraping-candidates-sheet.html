@@ -1,18 +1,21 @@
-<section class="workbook-panel" [attr.aria-busy]="loading()">
-  <header class="workbook-panel-head">
+<section
+  class="tp-card tp-grid-card workbook-panel"
+  [attr.aria-busy]="loading()"
+>
+  <header class="workbook-panel-head tp-grid-toolbar">
     <div>
-      <p class="workbook-eyebrow">{{ titles[mode()].eyebrow }}</p>
       <h2>{{ titles[mode()].title }}</h2>
       <p class="muted small">{{ titles[mode()].description }}</p>
     </div>
     <button
       type="button"
-      class="btn btn-secondary"
+      class="btn btn-secondary workbook-refresh"
       (click)="load()"
       [disabled]="loading()"
-    >
-      Actualiser
-    </button>
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser le traitement des annonces"
+      title="Actualiser"
+    ></button>
   </header>
 
   <div class="workbook-filter-bar" aria-label="Filtrer par décision">
@@ -48,8 +51,8 @@
   </div>
   }
 
-  <div class="workbook-table-wrap">
-    <table class="workbook-table">
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
       <thead>
         <tr>
           <th>Candidat</th>
@@ -115,30 +118,14 @@
       </tbody>
     </table>
   </div>
-  <footer class="workbook-pagination">
-    <span
-      >{{ loading() ? 'Chargement…' : (offset() + rows().length) + ' candidats
-      parcourus' }}</span
-    >
-    <div>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="previous()"
-        [disabled]="loading() || offset() === 0"
-      >
-        Précédent
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="next()"
-        [disabled]="loading() || !hasNext()"
-      >
-        Suivant
-      </button>
-    </div>
-  </footer>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="pageSize"
+    [count]="rows().length"
+    [hasNext]="hasNext()"
+    [loading]="loading()"
+    (pageSelected)="load($event)"
+  />
 </section>
 
 @if (detailLoading()) {

@@ -6,17 +6,19 @@ import {
   signal,
 } from '@angular/core';
 import { ScrapingReviewApi } from './scraping-review-api';
+import { ScrapingPagination } from './scraping-pagination';
 import type { WorkbookMedia } from './scraping-review.models';
 
 const PAGE_SIZE = 12;
 
 @Component({
   selector: 'tp-scraping-media-sheet',
-  imports: [DatePipe],
+  imports: [DatePipe, ScrapingPagination],
   templateUrl: './scraping-media-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrapingMediaSheet {
+  protected readonly pageSize = PAGE_SIZE;
   readonly #api = inject(ScrapingReviewApi);
   protected readonly rows = signal<WorkbookMedia[]>([]);
   protected readonly previews = signal<Record<string, string>>({});
