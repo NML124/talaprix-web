@@ -52,7 +52,7 @@ export class MerchantSignupAddress {
       .reverseGeocode(position)
       .catch(() => null);
     const input = this.addressInput()?.nativeElement;
-    if (input && !input.value.trim()) {
+    if (input) {
       input.value =
         address ??
         `Position GPS ${position.lat.toFixed(5)}, ${position.lon.toFixed(5)}`;

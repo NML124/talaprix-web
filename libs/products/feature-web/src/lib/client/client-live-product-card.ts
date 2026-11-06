@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { CatalogReference } from '@talaprix/products/data-access';
+import { productImageSrcset, productImageUrl } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'tpx-client-live-product-card',
@@ -15,6 +16,9 @@ import type { CatalogReference } from '@talaprix/products/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveProductCard {
+  readonly imageUrl = productImageUrl;
+  readonly imageSrcset = (source: string | null) =>
+    productImageSrcset(source, [320, 640]);
   readonly item = input.required<CatalogReference>();
   readonly price = input.required<string>();
   readonly favorite = input(false);

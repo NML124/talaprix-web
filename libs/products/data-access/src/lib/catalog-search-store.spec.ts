@@ -3,6 +3,7 @@ import {
   CatalogSearchApi,
   groupSuggestions,
   mapSuggestion,
+  normalizeCatalogQuery,
   type CatalogSuggestion,
 } from './catalog-search-api';
 import { CatalogSearchStore, SEARCH_DEBOUNCE_MS } from './catalog-search-store';
@@ -18,6 +19,12 @@ const row = (id: string, price: number, extra: object = {}) => ({
 });
 
 describe('catalog search mapping', () => {
+  it('corrects Redmi spelling without changing precise model terms', () => {
+    expect(normalizeCatalogQuery('xiaomi readmi note 14 Pro 256 Go')).toBe(
+      'xiaomi redmi note 14 Pro 256 Go',
+    );
+    expect(normalizeCatalogQuery('xiaomi readmi note')).toBe('xiaomi redmi no');
+  });
   it('maps a search row and ignores incomplete rows', () => {
     expect(mapSuggestion(row('a', 10))).toMatchObject({
       id: 'a',

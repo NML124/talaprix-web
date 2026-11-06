@@ -48,8 +48,17 @@ export class ClientLiveDetailStore {
   readonly offers = computed<readonly CatalogOffer[]>(() => {
     const offers = this.detail()?.offers ?? [];
     const best = this.bestOffer();
-    if (this.detail()?.sort === 'nearest' || !best) return offers;
-    return [best, ...offers.filter((offer) => offer.id !== best.id)];
+    const ordered =
+      this.detail()?.sort === 'nearest' || !best
+        ? offers
+        : [best, ...offers.filter((offer) => offer.id !== best.id)];
+    const seen = new Set<string>();
+    return ordered.filter((offer) => {
+      const key = offerGroupKey(offer);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   });
   readonly shopsCount = computed(
     () => new Set(this.offers().map((offer) => offer.shopId)).size,
@@ -123,6 +132,13 @@ export class ClientLiveDetailStore {
     return this.insights()?.offers[offerId] ?? null;
   }
 
+  alternatives(offer: CatalogOffer): readonly CatalogOffer[] {
+    const key = offerGroupKey(offer);
+    return (this.detail()?.offers ?? []).filter(
+      (item) => item.id !== offer.id && offerGroupKey(item) === key,
+    );
+  }
+
   async #fetch(
     query: { sort: CatalogOfferSort; lat?: number; lon?: number },
     full = false,
@@ -187,6 +203,17 @@ function cheapest(offers: readonly CatalogOffer[]): CatalogOffer | null {
         : best,
     null,
   );
+}
+
+export function offerGroupKey(offer: CatalogOffer): string {
+  return [
+    offer.referenceId,
+    offer.shopId,
+    offer.price,
+    offer.currency,
+    offer.condition ?? '',
+    offer.variantLabel?.trim().toLowerCase() ?? '',
+  ].join('|');
 }
 
 function locate(): Promise<{ lat: number; lon: number } | null> {

@@ -55,11 +55,6 @@
   </div>
   <div class="flex min-w-0 flex-col gap-1.5 @md:col-span-2">
     <div class="flex flex-wrap items-center justify-between gap-2">
-      <label
-        [for]="state.id('address')"
-        class="text-sm font-medium text-[var(--client-text)]"
-        >Adresse de la boutique</label
-      >
       <button
         type="button"
         class="inline-flex h-8 items-center gap-1.5 rounded-full bg-[var(--client-mint)] px-3 text-[13px] font-semibold text-[var(--client-action)] transition hover:bg-[var(--client-action)] hover:text-white disabled:opacity-60"
@@ -103,10 +98,12 @@
       #addressInput
       [id]="state.id('address')"
       name="address"
+      aria-label="Adresse de la boutique"
       type="text"
+      [readOnly]="locating() !== 'denied'"
       autocomplete="street-address"
       placeholder="Avenue, numéro, commune, ville"
-      class="h-11 w-full rounded-[14px] border bg-white px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
+      class="h-11 w-full rounded-[14px] border bg-[var(--client-tile)] px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
       [class]="state.fieldClass('address')"
       [attr.aria-invalid]="state.errors().address ? 'true' : null"
       [attr.aria-describedby]="state.errors().address ? state.id('address-err') : state.id('address-hint')"
@@ -124,7 +121,8 @@
       [id]="state.id('address-hint')"
       class="m-0 text-xs text-[var(--client-muted)]"
     >
-      Indiquez l'adresse où les clients peuvent réellement vous trouver.
+      Utilisez votre position pour remplir ce champ automatiquement. Si la
+      localisation échoue, vous pourrez saisir l’adresse manuellement.
     </p>
     }
   </div>

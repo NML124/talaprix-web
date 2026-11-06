@@ -25,6 +25,7 @@ import {
   type ProductDemandSource,
 } from '@talaprix/products/data-access';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
+import { productImageUrl } from '@talaprix/shared/utils';
 import { SearchDemand } from './search-demand';
 import { SearchDiscovery } from './search-discovery';
 
@@ -52,6 +53,7 @@ import { SearchDiscovery } from './search-discovery';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchPanel {
+  readonly imageUrl = productImageUrl;
   readonly #router = inject(Router);
   readonly #history = inject(SearchHistory);
   readonly #ui = inject(PreviewPreferences);
@@ -159,6 +161,11 @@ export class SearchPanel {
     if (selected === item.currency) return format(item.price, selected);
     if (selected === 'CDF' && item.normalizedPriceCdf !== null)
       return format(item.normalizedPriceCdf, 'CDF');
+    if (selected === 'USD' && item.normalizedPriceCdf !== null) {
+      const rate = this.#ui.liveRate();
+      if (rate && rate > 0)
+        return format(item.normalizedPriceCdf / rate, 'USD');
+    }
     return format(item.price, item.currency);
   }
 }

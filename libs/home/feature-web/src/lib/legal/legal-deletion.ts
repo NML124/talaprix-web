@@ -17,7 +17,7 @@ export const DELETION: LegalDocument = {
         "Afin de vérifier la demande, utilisez de préférence l'adresse e-mail ou le numéro de téléphone associé à votre compte TalaPrix.",
       ],
       bullets: [
-        'E-mail : elielkahindirwa@gmail.com',
+        'E-mail : support@talaprix.com',
         'Téléphone : +243 976 885 689',
         'Objet conseillé : Suppression de mes données TalaPrix',
       ],
@@ -36,7 +36,7 @@ export const DELETION: LegalDocument = {
     {
       title: 'Données concernées',
       paragraphs: [
-        'Lorsque la demande est validée, TalaPrix supprime ou anonymise les données personnelles associées au compte, dans la mesure permise par les obligations applicables.',
+        'Si vous demandez la suppression, TalaPrix supprime les données personnelles associées au compte après vérification de votre demande, sous réserve des seules obligations légales de conservation. Si vous choisissez plutôt de conserver vos contributions sans lien avec votre identité, vous pouvez demander leur anonymisation.',
       ],
       bullets: [
         "informations de compte et d'authentification ;",
@@ -49,7 +49,7 @@ export const DELETION: LegalDocument = {
       title: 'Données pouvant être conservées',
       paragraphs: [
         "Certaines informations peuvent être conservées lorsqu'elles sont nécessaires au respect d'obligations légales, à la prévention des abus, à la sécurité du service ou à la résolution d'un litige.",
-        "Les données déjà anonymisées ou agrégées peuvent être conservées, car elles ne permettent pas d'identifier directement un utilisateur.",
+        'Les statistiques déjà agrégées et impossibles à rattacher à une personne peuvent être conservées. L’anonymisation des contributions identifiables n’est proposée qu’avec votre accord explicite.',
       ],
     },
     {

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   signal,
@@ -10,6 +11,7 @@ import type {
   CatalogOffer,
   OfferInsight,
 } from '@talaprix/products/data-access';
+import { PreviewPreferences } from '@talaprix/shared/data-access';
 import {
   conditionLabel,
   directionsUrl,
@@ -28,7 +30,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveDetailOffer {
+  readonly #preferences = inject(PreviewPreferences);
   readonly offer = input.required<CatalogOffer>();
+  readonly alternatives = input<readonly CatalogOffer[]>([]);
   readonly price = input.required<string>();
   readonly productName = input.required<string>();
   readonly best = input(false);
@@ -36,6 +40,7 @@ export class ClientLiveDetailOffer {
   readonly quantity = input(0);
   readonly insight = input<OfferInsight | null>(null);
   readonly choose = output<void>();
+  readonly chooseVariant = output<CatalogOffer>();
   readonly quantityChange = output<number>();
   readonly showOnMap = output<void>();
   readonly expanded = signal(false);
@@ -94,9 +99,15 @@ export class ClientLiveDetailOffer {
       high > low
         ? Math.min(1, Math.max(0, (offer.price - low) / (high - low)))
         : 0.5;
+    const conversion =
+      offer.price > 0 ? offer.normalizedPriceCdf / offer.price : null;
+    const display = (value: number) =>
+      conversion && Number.isFinite(conversion)
+        ? this.#preferences.liveMoney(value, offer.currency, value * conversion)
+        : formatMoney(value, offer.currency);
     return {
-      low: formatMoney(low, offer.currency),
-      high: formatMoney(high, offer.currency),
+      low: display(low),
+      high: display(high),
       position: Math.round(position * 100),
       path: sparkline(values),
     };

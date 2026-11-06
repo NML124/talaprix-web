@@ -1,32 +1,88 @@
-import { afterNextRender, Service, signal } from '@angular/core';
+import {
+  afterNextRender,
+  inject,
+  InjectionToken,
+  Service,
+  signal,
+} from '@angular/core';
 
-const NOTICE_KEY = 'talaprix.web.storage-notice.v1';
+const COOKIE_NAME = 'talaprix_consent_v2';
+const COOKIE_AGE_SECONDS = 180 * 24 * 60 * 60;
 
-/** Remembers that the visitor read the essential-storage notice. */
+export const AUDIENCE_ANALYTICS_TOKEN = new InjectionToken<string>(
+  'TalaPrix Web Analytics token',
+  { providedIn: 'root', factory: () => '' },
+);
+
+/** Essential browser storage remains available when audience measurement is refused. */
 @Service()
 export class CookieNoticeStore {
+  readonly #token = inject(AUDIENCE_ANALYTICS_TOKEN);
+  readonly analyticsAvailable =
+    /^[a-f0-9]{32}$/i.test(this.#token) &&
+    (typeof location === 'undefined' ||
+      ['talaprix.com', 'www.talaprix.com', 'localhost', '127.0.0.1'].includes(
+        location.hostname,
+      ));
   readonly visible = signal(false);
+  readonly analytics = signal(false);
+  readonly draftAnalytics = signal(false);
+  readonly settingsOpen = signal(false);
 
   constructor() {
     afterNextRender(() => {
-      try {
-        this.visible.set(localStorage.getItem(NOTICE_KEY) !== 'seen');
-      } catch {
-        this.visible.set(true);
-      }
+      const choice = readChoice();
+      this.analytics.set(choice === 'analytics' && this.analyticsAvailable);
+      this.draftAnalytics.set(choice === 'analytics');
+      this.visible.set(choice === null);
     });
   }
 
   open(): void {
+    this.draftAnalytics.set(readChoice() === 'analytics');
     this.visible.set(true);
+    this.settingsOpen.set(true);
   }
 
-  dismiss(): void {
+  toggleSettings(): void {
+    if (!this.settingsOpen())
+      this.draftAnalytics.set(readChoice() === 'analytics');
+    this.settingsOpen.update((open) => !open);
+  }
+
+  rejectOptional(): void {
+    this.save(false);
+  }
+
+  acceptAnalytics(): void {
+    this.save(true);
+  }
+
+  save(analytics: boolean): void {
+    const shouldStopTracking = this.analytics() && !analytics;
+    this.analytics.set(analytics && this.analyticsAvailable);
+    this.draftAnalytics.set(analytics);
     this.visible.set(false);
+    this.settingsOpen.set(false);
     try {
-      localStorage.setItem(NOTICE_KEY, 'seen');
+      const secure = location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = `${COOKIE_NAME}=${analytics ? 'analytics' : 'essential'}; Path=/; Max-Age=${COOKIE_AGE_SECONDS}; SameSite=Lax${secure}`;
     } catch {
-      // The notice may reappear when browser storage is disabled.
+      // With cookies disabled, the choice applies only until the page reloads.
     }
+    // A loaded analytics script cannot be unloaded reliably; reload on withdrawal.
+    if (shouldStopTracking) location.reload();
+  }
+}
+
+function readChoice(): 'analytics' | 'essential' | null {
+  try {
+    const entry = document.cookie
+      .split('; ')
+      .find((item) => item.startsWith(`${COOKIE_NAME}=`));
+    const value = entry?.slice(COOKIE_NAME.length + 1);
+    return value === 'analytics' || value === 'essential' ? value : null;
+  } catch {
+    return null;
   }
 }

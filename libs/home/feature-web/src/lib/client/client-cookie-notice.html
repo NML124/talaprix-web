@@ -1,35 +1,116 @@
 @if (notice.visible()) {
 <aside
-  class="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-[760px] rounded-2xl border border-[var(--client-line)] bg-white p-4 shadow-xl sm:bottom-5 sm:p-5"
-  aria-label="Information sur le stockage local"
+  class="fixed inset-x-0 bottom-0 z-[90] max-h-[85dvh] overflow-y-auto border-t border-[var(--client-line)] bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.12)]"
+  role="dialog"
+  aria-label="Choix de confidentialité"
 >
   <div
-    class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    class="mx-auto max-w-[1320px] px-5 py-5 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-8 lg:py-6"
   >
-    <div>
-      <strong class="text-sm text-[var(--client-text)]"
-        >Connexion et panier</strong
-      >
+    <div class="min-w-0">
+      <h2 class="m-0 text-base font-semibold text-[var(--client-text)]">
+        Vos choix de confidentialité
+      </h2>
       <p
         class="m-0 mt-1 text-[13px] leading-relaxed text-[var(--client-muted)]"
       >
-        Talaprix conserve sur cet appareil les données nécessaires à votre
-        connexion et à votre panier. Aucun traceur de mesure d’audience n’est
-        activé actuellement.
+        Nous utilisons le stockage nécessaire à la session et au panier. Avec
+        votre accord, nous mesurons les visites et les pages consultées pour
+        améliorer Talaprix. Vous pouvez changer votre choix depuis le pied de
+        page.
         <a
           routerLink="/confidentialite"
           class="font-medium text-[var(--client-action)] underline"
-          >En savoir plus</a
+          >Politique de confidentialité</a
         >
       </p>
     </div>
-    <button
-      type="button"
-      class="h-10 shrink-0 rounded-xl bg-[var(--client-action)] px-5 text-sm font-semibold text-white"
-      (click)="notice.dismiss()"
+    <div class="mt-4 grid grid-cols-2 gap-2 lg:mt-0 lg:flex lg:shrink-0">
+      <button
+        type="button"
+        class="min-h-11 rounded-xl border border-[var(--client-line)] bg-white px-4 text-sm font-semibold text-[var(--client-text)]"
+        (click)="notice.rejectOptional()"
+      >
+        Tout refuser
+      </button>
+      <button
+        type="button"
+        class="min-h-11 rounded-xl bg-[var(--client-action)] px-4 text-sm font-semibold text-white"
+        (click)="notice.acceptAnalytics()"
+      >
+        Tout accepter
+      </button>
+      <button
+        type="button"
+        class="col-span-2 min-h-11 rounded-xl px-4 text-sm font-semibold text-[var(--client-action)] lg:order-first"
+        [attr.aria-expanded]="notice.settingsOpen()"
+        (click)="notice.toggleSettings()"
+      >
+        Personnaliser
+      </button>
+    </div>
+    @if (notice.settingsOpen()) {
+    <div
+      class="mt-5 grid gap-3 border-t border-[var(--client-line)] pt-5 lg:col-span-2"
     >
-      Compris
-    </button>
+      <div class="rounded-xl border border-[var(--client-line)] p-3">
+        <div class="flex items-center justify-between gap-3">
+          <strong class="text-sm">Fonctionnement du site</strong>
+          <span class="text-xs font-semibold text-[var(--client-action)]"
+            >Toujours actif</span
+          >
+        </div>
+        <p class="m-0 mt-1 text-xs leading-relaxed text-[var(--client-muted)]">
+          Session et panier dans le stockage local ; choix de confidentialité
+          dans un cookie. Aucune publicité ne dépend de ce réglage.
+        </p>
+      </div>
+      <div class="rounded-xl border border-[var(--client-line)] p-3">
+        <div class="flex items-center justify-between gap-3">
+          <strong class="text-sm">Statistiques d’audience</strong>
+          <span class="text-xs text-[var(--client-muted)]">
+            {{ notice.analyticsAvailable ? (notice.analytics() ? 'Autorisées' :
+            'Désactivées') : 'Non actives ici' }}
+          </span>
+        </div>
+        <p class="m-0 mt-1 text-xs leading-relaxed text-[var(--client-muted)]">
+          Mesure des visites et des pages vues sans identifiant publicitaire.
+          @if (!notice.analyticsAvailable) { Les statistiques ne sont pas encore
+          configurées sur cette adresse. Votre choix sera conservé. }
+        </p>
+        <button
+          type="button"
+          role="switch"
+          [attr.aria-checked]="notice.draftAnalytics()"
+          class="mt-3 inline-flex min-h-10 items-center gap-3 text-left text-sm font-medium text-[var(--client-text)]"
+          (click)="notice.draftAnalytics.set(!notice.draftAnalytics())"
+        >
+          <span
+            aria-hidden="true"
+            class="flex h-6 w-11 items-center rounded-full p-0.5 transition-colors"
+            [class]="notice.draftAnalytics() ? 'bg-[var(--client-action)]' : 'bg-[var(--client-line)]'"
+          >
+            <span
+              class="size-5 rounded-full bg-white shadow-sm transition-transform"
+              [class.translate-x-5]="notice.draftAnalytics()"
+            ></span>
+          </span>
+          Autoriser les statistiques d’audience
+        </button>
+      </div>
+      <p class="m-0 text-xs leading-relaxed text-[var(--client-muted)]">
+        Publicité ciblée : désactivée. Aucun cookie publicitaire tiers n’est
+        installé par Talaprix.
+      </p>
+      <button
+        type="button"
+        class="min-h-11 justify-self-start rounded-xl bg-[var(--client-action)] px-5 text-sm font-semibold text-white"
+        (click)="notice.save(notice.draftAnalytics())"
+      >
+        Enregistrer mes choix
+      </button>
+    </div>
+    }
   </div>
 </aside>
 }
