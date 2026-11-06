@@ -1,0 +1,155 @@
+name: Admin staging and promotion
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      promote_to_production:
+        description: 'Promote the staging-verified admin image to c-pannel.talaprix.com'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: admin-deploy
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      ref: ${{ steps.ref.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check public admin configuration
+        env:
+          ADMIN_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          ADMIN_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: test -n "$ADMIN_SUPABASE_URL" && test -n "$ADMIN_SUPABASE_ANON_KEY"
+      - id: name
+        run: echo "value=ghcr.io/${GITHUB_REPOSITORY,,}/admin" >> "$GITHUB_OUTPUT"
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.admin
+          push: true
+          tags: ${{ steps.name.outputs.value }}:${{ github.sha }}
+          build-args: |
+            ADMIN_SUPABASE_URL=${{ vars.SUPABASE_URL }}
+            ADMIN_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+      - id: ref
+        env:
+          IMAGE: ${{ steps.name.outputs.value }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: echo "value=$IMAGE@$DIGEST" >> "$GITHUB_OUTPUT"
+
+  staging:
+    needs: image
+    runs-on: ubuntu-latest
+    environment: staging
+    timeout-minutes: 15
+    steps:
+      - name: Configure pinned SSH host key
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOST: ${{ secrets.VPS_SSH_KNOWN_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOST" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - name: Authenticate VPS to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          GHCR_USER: ${{ vars.GHCR_READ_USER }}
+        run: printf '%s' "$GHCR_TOKEN" | ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" "docker login ghcr.io -u '$GHCR_USER' --password-stdin"
+      - name: Deploy admin to staging
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          IMAGE: ${{ needs.image.outputs.ref }}
+        run: |
+          set -euo pipefail
+          ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" bash -s -- "$IMAGE" <<'REMOTE'
+          set -euo pipefail
+          image="$1"
+          service=talaprix-admin-staging
+          if docker service inspect "$service" >/dev/null 2>&1; then
+            docker service update --image "$image" --with-registry-auth \
+              --update-order start-first --update-failure-action rollback \
+              --detach=false "$service"
+          else
+            docker service create --name "$service" --network web-proxy \
+              --replicas 1 --with-registry-auth \
+              --label traefik.enable=true \
+              --label traefik.swarm.network=web-proxy \
+              --label 'traefik.http.routers.talaprix-admin-staging.rule=Host(`admin-staging.talaprix.com`)' \
+              --label traefik.http.routers.talaprix-admin-staging.entrypoints=websecure \
+              --label traefik.http.routers.talaprix-admin-staging.tls.certresolver=letsencrypt \
+              --label traefik.http.services.talaprix-admin-staging.loadbalancer.server.port=8080 \
+              "$image"
+          fi
+          test "$(docker service inspect "$service" --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}')" = "$image"
+          REMOTE
+          curl --fail --show-error --silent --retry 8 --retry-delay 5 \
+            https://admin-staging.talaprix.com/healthz > /dev/null
+
+  production:
+    if: github.event_name == 'workflow_dispatch' && inputs.promote_to_production
+    needs: [image, staging]
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 15
+    steps:
+      - name: Configure pinned SSH host key
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOST: ${{ secrets.VPS_SSH_KNOWN_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOST" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - name: Promote verified admin image
+        env:
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          IMAGE: ${{ needs.image.outputs.ref }}
+        run: |
+          set -euo pipefail
+          ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" bash -s -- "$IMAGE" <<'REMOTE'
+          set -euo pipefail
+          image="$1"
+          service=talaprix-admin
+          mount_args=()
+          for target in /etc/nginx/conf.d/default.conf /usr/share/nginx/html; do
+            if docker service inspect "$service" --format '{{range .Spec.TaskTemplate.ContainerSpec.Mounts}}{{println .Target}}{{end}}' | grep -Fxq "$target"; then
+              mount_args+=(--mount-rm "$target")
+            fi
+          done
+          docker service update --image "$image" --with-registry-auth \
+            "${mount_args[@]}" \
+            --update-order start-first --update-failure-action rollback \
+            --detach=false "$service"
+          test "$(docker service inspect "$service" --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}')" = "$image"
+          REMOTE
+          if ! curl --fail --show-error --silent --retry 8 --retry-delay 5 \
+            https://c-pannel.talaprix.com/healthz > /dev/null; then
+            ssh -o BatchMode=yes "talaprix-devops@$VPS_HOST" \
+              'docker service rollback talaprix-admin'
+            exit 1
+          fi
