@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
   computed,
+  DestroyRef,
   effect,
   inject,
   makeEnvironmentProviders,
@@ -15,32 +16,35 @@ import {
   OfferCart,
   PreviewPreferences,
   SupabaseFunctions,
+  type CartDraft,
   type CartOffer,
   type CartSelection,
 } from '@talaprix/shared/data-access';
+import { CartSync } from './cart-sync';
+import { hasStoredCart, restoreCart } from './restore-cart';
 
-/** One cart line per product reference, holding the offer the user chose. */
-export interface LiveCartItem extends CartSelection {
+export interface LiveCartItem extends CartDraft {
   readonly quantity: number;
+  readonly offer: CartOffer | null;
 }
-
 const STORAGE_PREFIX = 'talaprix.web.cart.v2.';
-const MAX_QUANTITY = 99;
 
-/** Cart kept on the device per account, like the mobile app; saved on demand. */
+/** Local changes are immediate; only identifiers and quantities are synchronized. */
 @Service()
 export class LiveCartStore extends OfferCart {
   readonly #browser = isPlatformBrowser(inject(PLATFORM_ID));
   readonly #ui = inject(PreviewPreferences);
   readonly #gate = inject(AuthGate);
   readonly #functions = inject(SupabaseFunctions);
+  readonly sync = inject(CartSync);
   readonly items = signal<readonly LiveCartItem[]>([]);
   readonly count = computed(() =>
     this.items().reduce((sum, item) => sum + item.quantity, 0),
   );
   readonly totalCdf = computed(() =>
     this.items().reduce(
-      (sum, item) => sum + item.offer.normalizedPriceCdf * item.quantity,
+      (sum, item) =>
+        sum + (item.offer?.normalizedPriceCdf ?? 0) * item.quantity,
       0,
     ),
   );
@@ -54,11 +58,38 @@ export class LiveCartStore extends OfferCart {
       const owner = this.#gate.userId();
       if (!this.#gate.ready()) return;
       untracked(() => {
-        this.items.set(this.restore(owner));
+        this.sync.reset();
+        this.items.set(
+          this.#browser ? restoreCart(STORAGE_PREFIX + (owner ?? 'guest')) : [],
+        );
         this.saveStatus.set('idle');
         this.publish();
+        // Do not send an empty cart from a device with no local cart.
+        if (this.#browser && owner && hasStoredCart(STORAGE_PREFIX + owner))
+          this.synchronize();
       });
     });
+    if (this.#browser) {
+      const retry = () => this.sync.retry();
+      window.addEventListener('online', retry);
+      inject(DestroyRef).onDestroy(() =>
+        window.removeEventListener('online', retry),
+      );
+    }
+  }
+
+  stage(draft: CartDraft): void {
+    this.#gate.require(
+      'Connectez-vous pour ajouter ce produit au panier.',
+      () =>
+        this.update((items) =>
+          items.some((item) => item.referenceId === draft.referenceId)
+            ? items
+            : items.length < 100
+              ? [...items, { ...draft, quantity: 1, offer: null }]
+              : items,
+        ),
+    );
   }
 
   choose(selection: CartSelection): void {
@@ -66,12 +97,17 @@ export class LiveCartStore extends OfferCart {
       'Connectez-vous pour ajouter ce produit au panier.',
       () =>
         this.update((items) => {
-          const existing = items.find(
+          const exists = items.some(
             (item) => item.referenceId === selection.referenceId,
           );
-          if (!existing) return [...items, { ...selection, quantity: 1 }];
+          if (!exists)
+            return items.length < 100
+              ? [...items, { ...selection, quantity: 1 }]
+              : items;
           return items.map((item) =>
-            item === existing ? { ...item, offer: selection.offer } : item,
+            item.referenceId === selection.referenceId
+              ? { ...selection, quantity: item.quantity }
+              : item,
           );
         }),
     );
@@ -80,17 +116,15 @@ export class LiveCartStore extends OfferCart {
   offerFor(referenceId: string): string | null {
     return (
       this.items().find((item) => item.referenceId === referenceId)?.offer
-        .offerId ?? null
+        ?.offerId ?? null
     );
   }
-
   quantityFor(referenceId: string): number {
     return (
       this.items().find((item) => item.referenceId === referenceId)?.quantity ??
       0
     );
   }
-
   switchOffer(referenceId: string, offer: CartOffer): void {
     this.update((items) =>
       items.map((item) =>
@@ -98,53 +132,60 @@ export class LiveCartStore extends OfferCart {
       ),
     );
   }
-
   changeQuantity(referenceId: string, delta: number): void {
+    if (!Number.isInteger(delta)) return;
     this.update((items) =>
       items.flatMap((item) => {
         if (item.referenceId !== referenceId) return [item];
-        const quantity = Math.min(MAX_QUANTITY, item.quantity + delta);
+        const quantity = Math.min(99, item.quantity + delta);
         return quantity > 0 ? [{ ...item, quantity }] : [];
       }),
     );
   }
-
   remove(referenceId: string): void {
     this.update((items) =>
       items.filter((item) => item.referenceId !== referenceId),
     );
   }
-
   clear(): void {
     this.update(() => []);
   }
 
-  /** Sends the selection to the account (`post-selection`), as on mobile. */
+  /** Explicit history action only; never called by background synchronization. */
   async save(): Promise<void> {
     const userId = this.#gate.userId();
     if (!userId || this.saving() || !this.items().length) return;
-    this.saving.set(true);
-    this.saveError.set('');
-    try {
-      const response = await this.#functions.post<unknown>('post-selection', {
-        user_id: userId,
-        total_price: Math.round(this.totalCdf()),
-        items: this.items().map((item) => ({
-          product_id: item.productId,
-          offer_reference_id: item.referenceId,
-          quantity: item.quantity,
-        })),
-      });
-      if (isRecord(response) && response['success'] === false)
-        throw new Error('La sélection n’a pas été enregistrée.');
-      this.saveStatus.set('saved');
-    } catch (error) {
-      this.saveError.set(
-        error instanceof Error
-          ? error.message
-          : 'Impossible d’enregistrer la sélection.',
-      );
+    if (this.items().some((item) => !item.offer || !item.productId)) {
       this.saveStatus.set('error');
+      this.saveError.set(
+        'Choisissez une offre pour chaque article avant d’enregistrer la sélection.',
+      );
+      return;
+    }
+    this.saving.set(true);
+    try {
+      const response = await this.#functions.post<{ success?: boolean }>(
+        'post-selection',
+        {
+          user_id: userId,
+          total_price: Math.round(this.totalCdf()),
+          items: this.items().map((item) => ({
+            product_id: item.productId,
+            offer_reference_id: item.referenceId,
+            quantity: item.quantity,
+          })),
+        },
+      );
+      if (response?.success === false)
+        throw new Error('La sélection n’a pas été enregistrée.');
+      if (this.#gate.userId() === userId) this.saveStatus.set('saved');
+    } catch (error) {
+      if (this.#gate.userId() === userId) {
+        this.saveStatus.set('error');
+        this.saveError.set(
+          error instanceof Error ? error.message : 'Enregistrement impossible.',
+        );
+      }
     } finally {
       this.saving.set(false);
     }
@@ -163,10 +204,19 @@ export class LiveCartStore extends OfferCart {
         JSON.stringify(this.items()),
       );
     } catch {
-      /* Storage unavailable. */
+      /* In-memory cart remains usable when storage is unavailable. */
     }
+    this.synchronize();
   }
-
+  private synchronize(): void {
+    this.sync.enqueue(
+      this.items().map((item) => ({
+        reference_id: item.referenceId,
+        offer_id: item.offer?.offerId ?? null,
+        quantity: item.quantity,
+      })),
+    );
+  }
   private publish(): void {
     this.#ui.cartNames.set(
       this.items().flatMap((item) =>
@@ -174,44 +224,10 @@ export class LiveCartStore extends OfferCart {
       ),
     );
   }
-
-  private restore(owner: string | null): readonly LiveCartItem[] {
-    if (!this.#browser) return [];
-    try {
-      const value: unknown = JSON.parse(
-        localStorage.getItem(STORAGE_PREFIX + (owner ?? 'guest')) ?? '[]',
-      );
-      return Array.isArray(value) ? value.filter(isItem).slice(0, 100) : [];
-    } catch {
-      return [];
-    }
-  }
 }
 
 export function provideOfferCart(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: OfferCart, useExisting: LiveCartStore },
   ]);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-
-function isItem(value: unknown): value is LiveCartItem {
-  if (!isRecord(value) || !isRecord(value['offer'])) return false;
-  const offer = value['offer'];
-  return (
-    ['referenceId', 'productId', 'productName'].every(
-      (key) => typeof value[key] === 'string' && Boolean(value[key]),
-    ) &&
-    Number.isInteger(value['quantity']) &&
-    Number(value['quantity']) > 0 &&
-    ['offerId', 'shopId', 'shopName'].every(
-      (key) => typeof offer[key] === 'string' && Boolean(offer[key]),
-    ) &&
-    typeof offer['price'] === 'number' &&
-    typeof offer['normalizedPriceCdf'] === 'number' &&
-    (offer['currency'] === 'USD' || offer['currency'] === 'CDF')
-  );
 }

@@ -34,7 +34,7 @@
         [favorite]="favorite(item)"
         [pending]="favorites.isPending(item.productId)"
         [cartQuantity]="cart.quantityFor(item.id)"
-        [cartPending]="cartActions.pending() !== null"
+        [cartPending]="cartActions.isPending(item.id)"
         (toggleFavorite)="favorites.toggle(item.productId, item.isFavorite)"
         (addToCart)="cartActions.add(item)"
         (quantityChange)="cartActions.change(item.id, $event)"

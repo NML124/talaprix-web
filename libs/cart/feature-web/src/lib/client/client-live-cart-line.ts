@@ -26,17 +26,21 @@ export class ClientLiveCartLine {
   readonly remove = output<void>();
   readonly unitPrice = computed(() => {
     const offer = this.item().offer;
+    if (!offer) return 'Prix à confirmer';
     return this.#preferences.liveMoney(
       offer.price,
       offer.currency,
       offer.normalizedPriceCdf,
     );
   });
-  readonly linePrice = computed(() =>
-    this.#preferences.liveMoney(
-      this.item().offer.price * this.item().quantity,
-      this.item().offer.currency,
-      this.item().offer.normalizedPriceCdf * this.item().quantity,
-    ),
-  );
+  readonly linePrice = computed(() => {
+    const { offer, quantity } = this.item();
+    return offer
+      ? this.#preferences.liveMoney(
+          offer.price * quantity,
+          offer.currency,
+          offer.normalizedPriceCdf * quantity,
+        )
+      : 'Prix à confirmer';
+  });
 }

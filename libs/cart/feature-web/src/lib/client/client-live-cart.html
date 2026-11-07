@@ -44,7 +44,25 @@
     } }
   </header>
 
-  @if (!gate.ready()) {
+  @if (cart.sync.status() === 'error') {
+  <div
+    role="status"
+    class="mb-4 rounded-2xl bg-[var(--client-surface)] p-4 text-sm"
+  >
+    Panier conservé sur cet appareil. {{ cart.sync.error() }}
+    <button
+      type="button"
+      class="ml-2 font-semibold underline"
+      (click)="cart.sync.retry()"
+    >
+      Réessayer
+    </button>
+  </div>
+  } @else if (cart.sync.status() === 'syncing') {
+  <p role="status" class="mb-4 text-sm text-[var(--client-muted)]">
+    Synchronisation du panier…
+  </p>
+  } @if (!gate.ready()) {
   <div
     class="h-48 animate-pulse rounded-3xl bg-[var(--client-line)]"
     role="status"
@@ -74,8 +92,8 @@
     <h2 class="m-0 text-xl font-semibold">Votre panier est vide</h2>
     <p class="m-0 max-w-md text-sm text-[var(--client-muted)]">
       @if (gate.signedIn()) { Comparez les offres d’un produit et choisissez
-      celle qui vous convient. } @else { Connectez-vous pour retrouver votre
-      panier sur le site et l’application. }
+      celle qui vous convient. } @else { Connectez-vous pour ajouter des
+      produits à votre panier. }
     </p>
     <a
       class="mt-2 inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
@@ -161,8 +179,9 @@
         </div>
       </dl>
       <p class="m-0 text-xs leading-relaxed text-[var(--client-muted)]">
-        Les prix sont ceux affichés par les boutiques. Vérifiez la disponibilité
-        avant de vous déplacer.
+        Les articles dont l’offre reste à confirmer ne sont pas inclus dans le
+        total. Les prix sont ceux affichés par les boutiques. Vérifiez la
+        disponibilité avant de vous déplacer.
       </p>
     </aside>
   </div>
