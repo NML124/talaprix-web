@@ -223,6 +223,10 @@ export const proposals: Proposal[] = [
   },
 ];
 export const imagePath = (filename: string): string =>
-  filename.startsWith('data:image/') ? filename : `/admin-assets/${filename}`;
+  filename.startsWith('data:image/') ||
+  /^https:\/\//i.test(filename) ||
+  filename.startsWith('/')
+    ? filename
+    : `/admin-assets/${filename}`;
 export const fc = (amount: number): string =>
   `${new Intl.NumberFormat('fr-FR').format(amount)} FC`;

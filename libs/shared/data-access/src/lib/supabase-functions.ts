@@ -28,10 +28,22 @@ export class SupabaseFunctions {
     return this.request<T>(name, { method: 'POST', body, signal });
   }
 
+  async put<T>(name: string, body: unknown, signal?: AbortSignal): Promise<T> {
+    return this.request<T>(name, { method: 'PUT', body, signal });
+  }
+
+  async delete<T>(
+    name: string,
+    body: unknown,
+    signal?: AbortSignal,
+  ): Promise<T> {
+    return this.request<T>(name, { method: 'DELETE', body, signal });
+  }
+
   private async request<T>(
     name: string,
     options: {
-      readonly method: 'GET' | 'POST';
+      readonly method: 'GET' | 'POST' | 'PUT' | 'DELETE';
       readonly params?: Record<string, string>;
       readonly body?: unknown;
       readonly signal?: AbortSignal;

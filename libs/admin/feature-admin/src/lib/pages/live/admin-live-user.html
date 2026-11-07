@@ -1,0 +1,118 @@
+<tp-admin-dialog [title]="'Profil de ' + row().title" (closed)="closed.emit()">
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (loading()) {
+  <div
+    class="skeleton"
+    style="height: 180px"
+    role="status"
+    aria-label="Chargement du profil"
+  ></div>
+  } @else {
+  <form class="form-stack" (submit)="$event.preventDefault(); save()">
+    <label class="field"
+      >Nom
+      <input
+        type="text"
+        name="name"
+        maxlength="150"
+        required
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+      />
+    </label>
+    <label class="field"
+      >Email
+      <input type="email" [value]="email()" readonly />
+    </label>
+    <label class="field"
+      >Téléphone
+      <input
+        type="tel"
+        name="phone"
+        [ngModel]="phone()"
+        (ngModelChange)="phone.set($event)"
+      />
+    </label>
+    <p class="muted small">
+      Rôle : {{ role() || 'Non précisé' }} · État : {{ row().state }}
+    </p>
+    @if (hasShop()) {
+    <label class="field"
+      >Nom de la boutique
+      <input
+        type="text"
+        name="shopName"
+        [ngModel]="shopName()"
+        (ngModelChange)="shopName.set($event)"
+      />
+    </label>
+    <p class="muted small">{{ shopAddress() }}</p>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="field"
+        >Latitude<input
+          type="number"
+          step="any"
+          name="shopLat"
+          [ngModel]="shopLat()"
+          (ngModelChange)="shopLat.set($event)"
+      /></label>
+      <label class="field"
+        >Longitude<input
+          type="number"
+          step="any"
+          name="shopLon"
+          [ngModel]="shopLon()"
+          (ngModelChange)="shopLon.set($event)"
+      /></label>
+    </div>
+    } @if (role() === 'user' && row().state !== 'Suspendu') {
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="roleAction.set('promote_to_interviewer')"
+    >
+      Nommer enquêteur
+    </button>
+    } @else if (role() === 'interviewer' || role() === 'shop') {
+    <button
+      class="btn btn-secondary"
+      type="button"
+      (click)="roleAction.set('demote_to_user')"
+    >
+      Retirer le rôle professionnel
+    </button>
+    } @if (roleAction(); as action) {
+    <div class="tp-alert" role="alert">
+      <p>
+        {{ action === 'demote_to_user' ? 'Le rôle professionnel sera retiré. Une
+        boutique liée sera suspendue.' : 'Ce compte deviendra enquêteur.' }}
+      </p>
+      <button
+        class="btn btn-secondary"
+        type="button"
+        (click)="roleAction.set(null)"
+      >
+        Annuler
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="saving()"
+        (click)="changeRole()"
+      >
+        Confirmer
+      </button>
+    </div>
+    }
+    <div class="toolbar dialog-actions">
+      <button class="btn btn-secondary" type="button" (click)="closed.emit()">
+        Annuler
+      </button>
+      <button class="btn btn-primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+    </div>
+  </form>
+  }
+</tp-admin-dialog>

@@ -2,11 +2,19 @@
   [title]="titles[resource()]"
   subtitle="Données du catalogue TalaPrix"
 >
-  <span class="text-sm text-[var(--text-2)]">{{ total() }} entrées</span>
+  <span class="text-sm text-[var(--text-2)]">
+    {{ status() === 'error' ? 'Données indisponibles' : total() + ' entrées' }}
+  </span>
+  @if ((hasActions() && resource() !== 'users') || resource() === 'shops' ||
+  resource() === 'offers') {
+  <button class="btn btn-primary" type="button" (click)="creating.set(true)">
+    <svg lucidePlus size="15" aria-hidden="true"></svg> Ajouter
+  </button>
+  }
 </tp-admin-page-header>
-<section class="card">
+<div class="toolbar">
   <form
-    class="flex flex-wrap items-center gap-3"
+    class="flex min-w-0 flex-wrap items-center gap-3"
     (submit)="$event.preventDefault(); search()"
   >
     <label class="sr-only" for="admin-live-search">Rechercher</label>
@@ -20,105 +28,262 @@
     />
     <button class="btn btn-primary" type="submit">Rechercher</button>
   </form>
-  @if (status() === 'loading') {
-  <p class="muted mt-5" role="status">Chargement des données…</p>
-  } @else if (status() === 'error') {
-  <div class="mt-5" role="alert">
-    <p>{{ error() }}</p>
-    <button class="btn btn-secondary mt-3" type="button" (click)="load()">
-      Réessayer
-    </button>
-  </div>
-  } @else if (rows().length === 0) {
-  <p class="muted mt-5">Aucune entrée trouvée.</p>
-  } @else {
-  <div class="mt-5 overflow-x-auto">
-    <table class="w-full min-w-[640px] text-left text-sm">
-      <thead class="border-b border-[var(--line)] text-[var(--text-2)]">
-        <tr>
-          <th class="py-3 pr-4">
-            {{ resource() === 'products' ? 'Produit' : 'Nom' }}
-          </th>
-          <th class="py-3 pr-4">Contexte</th>
-          <th class="py-3 pr-4">Détail</th>
-          <th class="py-3">Statut</th>
-          @if (resource() === 'products') {
-          <th class="py-3">Actions</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of rows(); track row.id) {
-        <tr class="border-b border-[var(--line)] last:border-0">
-          <td class="py-3 pr-4 font-medium">
+</div>
+@if (status() === 'error') {
+<div class="toast error" role="alert">
+  {{ error() }}
+  <button class="link" type="button" (click)="load()">Réessayer</button>
+</div>
+} @if (notice()) {
+<div class="toast" role="status">{{ notice() }}</div>
+}
+<div class="admin-stack">
+  <section class="card">
+    <div class="card-head">
+      <h2>{{ titles[resource()] }}</h2>
+      <span class="muted small">Tri : ajout le plus récent</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="py-3 pr-4">
+              {{ resource() === 'products' ? 'Produit' : 'Nom' }}
+            </th>
+            <th class="py-3 pr-4">Contexte</th>
+            <th class="py-3 pr-4">Détail</th>
+            <th class="py-3">Statut</th>
+            @if (hasActions()) {
+            <th class="py-3">Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @if (status() === 'loading') {
+          <tr>
+            <td [attr.colspan]="hasActions() ? 5 : 4" role="status">
+              <div class="admin-stack" aria-label="Chargement des données">
+                @for (item of [1, 2, 3]; track item) {
+                <div class="skeleton" style="height: 54px"></div>
+                }
+              </div>
+            </td>
+          </tr>
+          } @else if (status() === 'error') {
+          <tr>
+            <td [attr.colspan]="hasActions() ? 5 : 4">
+              <div class="admin-live-empty">
+                La liste ne peut pas être affichée pour le moment. Réessayez
+                lorsque la connexion revient.
+              </div>
+            </td>
+          </tr>
+          } @else if (rows().length === 0) {
+          <tr>
+            <td [attr.colspan]="hasActions() ? 5 : 4">
+              <div class="admin-live-empty">Aucune entrée trouvée.</div>
+            </td>
+          </tr>
+          } @else { @for (row of rows(); track row.id) {
+          <tr class="border-b border-[var(--line)] last:border-0">
+            <td class="py-3 pr-4 font-medium">
+              @if (row.image) {
+              <div class="product-cell">
+                <img class="thumb" [src]="row.image" alt="" loading="lazy" />
+                <strong>{{ row.title || row.id }}</strong>
+              </div>
+              } @else { {{ row.title || row.id }} }
+            </td>
+            <td class="py-3 pr-4">{{ row.subtitle || '—' }}</td>
+            <td class="py-3 pr-4">{{ row.detail || '—' }}</td>
+            <td class="py-3">{{ row.state }}</td>
             @if (resource() === 'products') {
-            <div class="product-cell">
-              <img class="thumb" [src]="row.image" alt="" loading="lazy" />
-              <strong>{{ row.title || row.id }}</strong>
-            </div>
-            } @else { {{ row.title || row.id }} }
-          </td>
-          <td class="py-3 pr-4">{{ row.subtitle || '—' }}</td>
-          <td class="py-3 pr-4">{{ row.detail || '—' }}</td>
-          <td class="py-3">{{ row.state }}</td>
-          @if (resource() === 'products') {
-          <td class="py-3">
-            <div class="table-actions" aria-label="Actions produit à connecter">
+            <td class="py-3">
+              <div class="table-actions" aria-label="Actions produit">
+                <button
+                  class="table-action"
+                  type="button"
+                  [attr.aria-label]="'Modifier ' + row.title"
+                  (click)="editing.set(row)"
+                >
+                  <svg lucidePencil size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  class="table-action danger"
+                  type="button"
+                  [attr.aria-label]="'Supprimer ' + row.title"
+                  (click)="confirm(row, 'delete')"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+            </td>
+            } @if (resource() === 'categories') {
+            <td class="py-3">
               <button
                 class="table-action"
                 type="button"
-                disabled
-                title="Modification non disponible"
                 [attr.aria-label]="'Modifier ' + row.title"
+                (click)="editing.set(row)"
               >
                 <svg lucidePencil size="16" aria-hidden="true"></svg>
               </button>
               <button
                 class="table-action"
                 type="button"
-                disabled
-                title="Suspension non disponible"
-                [attr.aria-label]="'Suspendre ' + row.title"
+                [attr.aria-label]="(row.state === 'Visible' ? 'Masquer ' : 'Afficher ') + row.title"
+                (click)="confirm(row, 'visibility')"
               >
-                <svg lucidePause size="16" aria-hidden="true"></svg>
+                @if (row.state === 'Visible') {
+                <svg lucideEyeOff size="16" aria-hidden="true"></svg>
+                } @else {
+                <svg lucideEye size="16" aria-hidden="true"></svg>
+                }
               </button>
+            </td>
+            } @if (resource() === 'shops') {
+            <td class="py-3">
+              @if (row.ownerUid) {
               <button
-                class="table-action danger"
+                class="table-action"
                 type="button"
-                disabled
-                title="Suppression non disponible"
-                [attr.aria-label]="'Supprimer ' + row.title"
+                [attr.aria-label]="(row.state === 'Suspendue' ? 'Réactiver ' : 'Suspendre ') + row.title"
+                (click)="confirm(row, row.state === 'Suspendue' ? 'unban-shop' : 'ban-shop')"
               >
-                <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                @if (row.state === 'Suspendue') {
+                <svg lucideEye size="16" aria-hidden="true"></svg> } @else {
+                <svg lucideEyeOff size="16" aria-hidden="true"></svg> }
               </button>
-            </div>
-          </td>
-          }
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  <div class="mt-5 flex items-center justify-between gap-3">
-    <button
-      class="btn btn-secondary"
-      type="button"
-      [disabled]="page() <= 1"
-      (click)="goToPage(page() - 1)"
-    >
-      Précédent
-    </button>
-    <span class="text-sm text-[var(--text-2)]"
-      >Page {{ page() }} sur {{ totalPages() }}</span
-    >
-    <button
-      class="btn btn-secondary"
-      type="button"
-      [disabled]="page() >= totalPages()"
-      (click)="goToPage(page() + 1)"
-    >
-      Suivant
-    </button>
-  </div>
+              } @else { <span class="muted small">Propriétaire non lié</span> }
+            </td>
+            } @if (resource() === 'users') {
+            <td class="py-3">
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="'Voir et modifier ' + row.title"
+                (click)="userEditing.set(row)"
+              >
+                <svg lucidePencil size="16" aria-hidden="true"></svg>
+              </button>
+              @if (row.detail.toLowerCase() === 'admin') {
+              <span class="muted small">Compte administrateur</span>
+              } @else if (row.state === 'Suspendu') {
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="'Réactiver ' + row.title"
+                (click)="confirm(row, 'unban-user')"
+              >
+                <svg lucideEye size="16" aria-hidden="true"></svg>
+              </button>
+              } @else {
+              <button
+                class="table-action"
+                type="button"
+                [attr.aria-label]="'Suspendre ' + row.title"
+                (click)="confirm(row, 'ban-user')"
+              >
+                <svg lucideEyeOff size="16" aria-hidden="true"></svg>
+              </button>
+              }
+            </td>
+            } @if (resource() === 'advertisements') {
+            <td class="py-3">
+              <div class="table-actions" aria-label="Actions publicité">
+                <button
+                  class="table-action"
+                  type="button"
+                  [attr.aria-label]="'Modifier ' + row.title"
+                  (click)="editing.set(row)"
+                >
+                  <svg lucidePencil size="16" aria-hidden="true"></svg>
+                </button>
+                <button
+                  class="table-action danger"
+                  type="button"
+                  [attr.aria-label]="'Désactiver ' + row.title"
+                  (click)="confirm(row, 'delete-ad')"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+            </td>
+            }
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  @if (status() === 'ready') {
+  <tp-admin-live-pagination
+    [page]="page()"
+    [totalPages]="totalPages()"
+    (changed)="goToPage($event)"
+  />
   }
-</section>
+</div>
+@if (pending(); as selection) {
+<tp-admin-dialog
+  [title]="selection.action === 'delete' ? 'Supprimer le produit' : selection.action === 'delete-ad' ? 'Désactiver la publicité' : selection.action === 'ban-user' ? 'Suspendre le compte' : selection.action === 'unban-user' ? 'Réactiver le compte' : selection.action === 'ban-shop' ? 'Suspendre la boutique' : selection.action === 'unban-shop' ? 'Réactiver la boutique' : 'Visibilité de la catégorie'"
+  (closed)="pending.set(null)"
+>
+  <p>
+    @if (selection.action === 'delete') { Supprimer définitivement
+    <strong>{{ selection.row.title }}</strong> ? } @else if (selection.action
+    === 'delete-ad') { Désactiver la publicité
+    <strong>{{ selection.row.title }}</strong> ? } @else if (selection.action
+    === 'ban-user' || selection.action === 'unban-user') { {{ selection.action
+    === 'ban-user' ? 'Suspendre' : 'Réactiver' }} le compte de
+    <strong>{{ selection.row.title }}</strong> ? } @else if (selection.action
+    === 'ban-shop' || selection.action === 'unban-shop') { {{ selection.action
+    === 'ban-shop' ? 'Suspendre' : 'Réactiver' }} la boutique
+    <strong>{{ selection.row.title }}</strong> ? } @else { {{
+    selection.row.state === 'Visible' ? 'Masquer' : 'Afficher' }}
+    <strong>{{ selection.row.title }}</strong> dans le catalogue client ? }
+  </p>
+  @if (actionError()) {
+  <p class="dialog-error" role="alert">{{ actionError() }}</p>
+  }
+  <div class="toolbar dialog-actions">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="busy()"
+      (click)="pending.set(null)"
+    >
+      Annuler
+    </button>
+    <button
+      class="btn"
+      [class.btn-danger]="selection.action === 'delete' || selection.action === 'delete-ad' || selection.action === 'ban-user' || selection.action === 'ban-shop'"
+      [class.btn-primary]="selection.action === 'visibility' || selection.action === 'unban-user' || selection.action === 'unban-shop'"
+      type="button"
+      [disabled]="busy()"
+      (click)="applyAction()"
+    >
+      {{ busy() ? 'En cours…' : 'Confirmer' }}
+    </button>
+  </div>
+</tp-admin-dialog>
+} @if (creating()) {
+<tp-admin-live-create
+  [resource]="resource()"
+  (closed)="creating.set(false)"
+  (created)="created()"
+/>
+} @if (editing(); as row) {
+<tp-admin-live-create
+  [resource]="resource()"
+  [row]="row"
+  (closed)="editing.set(null)"
+  (created)="created()"
+/>
+} @if (userEditing(); as row) {
+<tp-admin-live-user
+  [row]="row"
+  (closed)="userEditing.set(null)"
+  (saved)="userSaved()"
+/>
+}

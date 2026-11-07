@@ -1,0 +1,238 @@
+<tp-admin-dialog [title]="title()" (closed)="closed.emit()">
+  <form class="form-stack" (submit)="$event.preventDefault(); save()">
+    @if (error()) {
+    <p class="dialog-error" role="alert">{{ error() }}</p>
+    } @if (resource() !== 'offers') {
+    <label class="field"
+      >Nom
+      <input
+        type="text"
+        maxlength="150"
+        autocomplete="off"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+        name="name"
+        required
+      />
+    </label>
+    } @if (resource() === 'categories') {
+    <label class="field"
+      >Catégorie parente
+      <tp-admin-select
+        [options]="categoryIds()"
+        [displayLabels]="categoryLabels()"
+        [selected]="parentId()"
+        placeholder="Aucune — catégorie principale"
+        ariaLabel="Catégorie parente"
+        (changed)="parentId.set($event)"
+      />
+    </label>
+    <label class="field"
+      >Image de la catégorie
+      <tp-admin-single-image-picker
+        [image]="image()"
+        [allowClear]="!row() || image().startsWith('data:')"
+        (changed)="image.set($event)"
+      />
+    </label>
+    } @if (resource() === 'products') {
+    <label class="field"
+      >Catégorie
+      <tp-admin-select
+        [options]="categoryIds()"
+        [displayLabels]="categoryLabels()"
+        [selected]="categoryId()"
+        ariaLabel="Catégorie du produit"
+        (changed)="categoryId.set($event)"
+      />
+    </label>
+    <label class="field"
+      >Image du produit
+      <tp-admin-single-image-picker
+        [image]="image()"
+        [allowClear]="!row() || image().startsWith('data:')"
+        (changed)="image.set($event)"
+      />
+    </label>
+    } @if (resource() === 'shops') {
+    <label class="field"
+      >Email du propriétaire
+      <input
+        type="email"
+        autocomplete="email"
+        [ngModel]="ownerEmail()"
+        (ngModelChange)="ownerEmail.set($event)"
+        name="ownerEmail"
+        required
+      />
+    </label>
+    <label class="field"
+      >Adresse de la boutique
+      <input
+        type="text"
+        autocomplete="street-address"
+        [ngModel]="address()"
+        (ngModelChange)="address.set($event)"
+        name="address"
+        required
+      />
+    </label>
+    <label class="field"
+      >Téléphone
+      <input
+        type="tel"
+        autocomplete="tel"
+        [ngModel]="phone()"
+        (ngModelChange)="phone.set($event)"
+        name="phone"
+      />
+    </label>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="field"
+        >Latitude
+        <input
+          type="number"
+          step="any"
+          min="-90"
+          max="90"
+          [ngModel]="lat()"
+          (ngModelChange)="lat.set($event)"
+          name="lat"
+          required
+        />
+      </label>
+      <label class="field"
+        >Longitude
+        <input
+          type="number"
+          step="any"
+          min="-180"
+          max="180"
+          [ngModel]="lon()"
+          (ngModelChange)="lon.set($event)"
+          name="lon"
+          required
+        />
+      </label>
+    </div>
+    <p class="muted small">
+      Le propriétaire doit déjà avoir un compte TalaPrix. Vérifiez la position
+      avant d’enregistrer.
+    </p>
+    } @if (resource() === 'offers') {
+    <label class="field"
+      >Boutique
+      <tp-admin-select
+        [options]="shopIds()"
+        [displayLabels]="shopLabels()"
+        [selected]="shopId()"
+        ariaLabel="Boutique de l’offre"
+        (changed)="shopId.set($event)"
+      />
+    </label>
+    <div class="field">
+      <label for="offer-product-query">Rechercher un produit existant</label>
+      <div class="flex flex-wrap gap-2">
+        <input
+          id="offer-product-query"
+          class="min-w-0 flex-1"
+          type="search"
+          [ngModel]="productQuery()"
+          (ngModelChange)="productQuery.set($event)"
+          name="productQuery"
+        />
+        <button
+          class="btn btn-secondary"
+          type="button"
+          [disabled]="loading()"
+          (click)="searchProducts()"
+        >
+          Rechercher
+        </button>
+      </div>
+      <tp-admin-select
+        [options]="productIds()"
+        [displayLabels]="productLabels()"
+        [selected]="productId()"
+        ariaLabel="Produit de l’offre"
+        placeholder="Sélectionner un résultat"
+        (changed)="productId.set($event)"
+      />
+    </div>
+    <label class="field"
+      >Prix
+      <input
+        type="number"
+        min="0.01"
+        step="0.01"
+        [ngModel]="price()"
+        (ngModelChange)="price.set($event)"
+        name="price"
+        required
+      />
+    </label>
+    <p class="muted small">La devise du produit est reprise automatiquement.</p>
+    } @if (resource() === 'advertisements') {
+    <label class="field"
+      >Boutique
+      <tp-admin-select
+        [options]="shopIds()"
+        [displayLabels]="shopLabels()"
+        [selected]="shopId()"
+        ariaLabel="Boutique de la publicité"
+        (changed)="shopId.set($event)"
+      />
+    </label>
+    <label class="field"
+      >Visuel de la publicité
+      <tp-admin-single-image-picker
+        [image]="image()"
+        [allowClear]="!row() || image().startsWith('data:')"
+        (changed)="image.set($event)"
+      />
+    </label>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="field"
+        >Priorité
+        <input
+          type="number"
+          min="1"
+          step="1"
+          [ngModel]="priority()"
+          (ngModelChange)="priority.set($event)"
+          name="priority"
+          required
+        />
+      </label>
+      <label class="field"
+        >Date de fin
+        <input
+          type="datetime-local"
+          [ngModel]="endDate()"
+          (ngModelChange)="endDate.set($event)"
+          name="endDate"
+          required
+        />
+      </label>
+    </div>
+    }
+
+    <div class="toolbar dialog-actions">
+      <button
+        class="btn btn-secondary"
+        type="button"
+        [disabled]="saving()"
+        (click)="closed.emit()"
+      >
+        Annuler
+      </button>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="loading() || saving()"
+      >
+        {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+      </button>
+    </div>
+  </form>
+</tp-admin-dialog>
