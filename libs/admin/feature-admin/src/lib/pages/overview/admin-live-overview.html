@@ -286,5 +286,15 @@
         </div>
       </section>
     </div>
+
+    <tp-admin-recent-sections
+      [status]="status()"
+      [userRoles]="userRoles()"
+      [categoryCount]="stats()?.categories ?? null"
+      [advertisementCount]="stats()?.advertisements ?? null"
+      [recentOffers]="recentOffers()"
+      [recentCategories]="recentCategories()"
+      [recentShops]="recentShops()"
+    />
   </div>
 </div>

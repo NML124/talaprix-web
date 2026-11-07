@@ -14,6 +14,7 @@ import { imagePath } from '../mocks/catalogue';
 })
 export class SingleImagePicker {
   readonly image = input.required<string>();
+  readonly allowClear = input(true);
   readonly changed = output<string>();
   protected readonly error = signal('');
   protected readonly imagePath = imagePath;

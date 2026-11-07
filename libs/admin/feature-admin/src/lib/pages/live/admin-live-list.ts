@@ -8,22 +8,43 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { combineLatest } from 'rxjs';
-import { LucidePause, LucidePencil, LucideTrash2 } from '@lucide/angular';
+import {
+  LucideEye,
+  LucideEyeOff,
+  LucidePencil,
+  LucidePlus,
+  LucideTrash2,
+} from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
+import { AdminDialog } from '../../ui/admin-dialog';
+import { AdminLiveCreate } from './admin-live-create';
+import { AdminLiveUser } from './admin-live-user';
+import { AdminLivePagination } from './admin-live-pagination';
 
-type Resource = 'products' | 'offers' | 'shops' | 'categories' | 'users';
-interface Row {
-  readonly id: string;
-  readonly title: string;
-  readonly subtitle: string;
-  readonly detail: string;
-  readonly state: string;
-  readonly image?: string;
-}
-
+import {
+  isNotNull,
+  isRecord,
+  isResource,
+  mapRow,
+  number,
+  stringField,
+  type Resource,
+  type Row,
+} from './admin-live-row';
 @Component({
   selector: 'tp-admin-live-list',
-  imports: [PageHeader, LucidePause, LucidePencil, LucideTrash2],
+  imports: [
+    PageHeader,
+    AdminDialog,
+    AdminLiveCreate,
+    AdminLiveUser,
+    AdminLivePagination,
+    LucideEye,
+    LucideEyeOff,
+    LucidePencil,
+    LucidePlus,
+    LucideTrash2,
+  ],
   templateUrl: './admin-live-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,13 +59,37 @@ export class AdminLiveList {
   readonly error = signal('');
   readonly resource = signal<Resource>('products');
   readonly q = signal('');
+  readonly pending = signal<{
+    row: Row;
+    action:
+      | 'delete'
+      | 'visibility'
+      | 'delete-ad'
+      | 'ban-user'
+      | 'unban-user'
+      | 'ban-shop'
+      | 'unban-shop';
+  } | null>(null);
+  readonly busy = signal(false);
+  readonly actionError = signal('');
+  readonly notice = signal('');
+  readonly creating = signal(false);
+  readonly editing = signal<Row | null>(null);
+  readonly userEditing = signal<Row | null>(null);
   readonly totalPages = () => Math.max(1, Math.ceil(this.total() / 30));
+  readonly hasActions = () =>
+    this.resource() === 'products' ||
+    this.resource() === 'categories' ||
+    this.resource() === 'advertisements' ||
+    this.resource() === 'users' ||
+    this.resource() === 'shops';
   readonly titles: Record<Resource, string> = {
     products: 'Catalogue',
     offers: 'Offres',
     shops: 'Boutiques',
     categories: 'Catégories',
     users: 'Utilisateurs',
+    advertisements: 'Publicités',
   };
   searchValue = '';
   #request = 0;
@@ -135,104 +180,91 @@ export class AdminLiveList {
       queryParamsHandling: 'merge',
     });
   }
-}
 
-function mapRow(value: unknown, resource: Resource): Row | null {
-  if (!isRecord(value)) return null;
-  if (resource === 'products')
-    return {
-      id: stringField(value, 'product_id'),
-      title: stringField(value, 'name'),
-      subtitle: relationName(value['categories']),
-      detail: relationName(value['brands']),
-      state: number(value['state_id']) === 0 ? 'Actif' : 'Inactif',
-      image: productImage(value['product_picture']),
-    };
-  if (resource === 'offers')
-    return {
-      id: stringField(value, 'offer_id'),
-      title: stringField(value, 'name') || relationName(value['products']),
-      subtitle: relationName(value['shops']),
-      detail: `${number(value['price']) ?? 0} ${relationField(value['devises'], 'devise_symbol')}`,
-      state:
-        value['is_pending'] === true
-          ? 'En attente'
-          : number(value['state_id']) === 0
-            ? 'Active'
-            : 'Inactive',
-    };
-  if (resource === 'shops')
-    return {
-      id: stringField(value, 'shop_id'),
-      title: stringField(value, 'name'),
-      subtitle: stringField(value, 'address'),
-      detail: stringField(value, 'phone_number'),
-      state:
-        value['banned'] === true
-          ? 'Suspendue'
-          : number(value['state_id']) === 0
-            ? 'Active'
-            : 'En attente',
-    };
-  if (resource === 'categories')
-    return {
-      id: stringField(value, 'category_id'),
-      title: stringField(value, 'name'),
-      subtitle: stringField(value, 'parent_name'),
-      detail: '',
-      state: value['is_client_visible'] === false ? 'Masquée' : 'Visible',
-    };
-  return {
-    id: stringField(value, 'uid'),
-    title: stringField(value, 'name') || 'Utilisateur',
-    subtitle: stringField(value, 'email'),
-    detail: relationName(value['role']),
-    state: value['banned'] === true ? 'Suspendu' : 'Actif',
-  };
-}
+  confirm(
+    row: Row,
+    action:
+      | 'delete'
+      | 'visibility'
+      | 'delete-ad'
+      | 'ban-user'
+      | 'unban-user'
+      | 'ban-shop'
+      | 'unban-shop',
+  ): void {
+    this.actionError.set('');
+    this.pending.set({ row, action });
+  }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-function isResource(value: unknown): value is Resource {
-  return (
-    value === 'products' ||
-    value === 'offers' ||
-    value === 'shops' ||
-    value === 'categories' ||
-    value === 'users'
-  );
-}
-function stringField(value: unknown, key: string): string {
-  return isRecord(value) && typeof value[key] === 'string'
-    ? (value[key] as string)
-    : '';
-}
-function relationField(value: unknown, key: string): string {
-  return stringField(Array.isArray(value) ? value[0] : value, key);
-}
-function relationName(value: unknown): string {
-  return relationField(value, 'name') || relationField(value, 'title');
-}
-function number(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null;
-}
-function isNotNull<T>(value: T | null): value is T {
-  return value !== null;
-}
-
-function productImage(value: unknown): string {
-  if (Array.isArray(value)) return productImage(value[0]);
-  if (typeof value !== 'string') return '/admin-assets/logo-talaprix.png';
-  const trimmed = value.trim();
-  if (trimmed.startsWith('[')) {
+  async applyAction(): Promise<void> {
+    const pending = this.pending();
+    if (!pending || this.busy()) return;
+    this.busy.set(true);
+    this.actionError.set('');
     try {
-      return productImage(JSON.parse(trimmed));
-    } catch {
-      return '/admin-assets/logo-talaprix.png';
+      if (pending.action === 'delete') {
+        await this.#functions.post('post-delete-product', {
+          product_id: pending.row.id,
+        });
+        this.notice.set('Produit supprimé.');
+      } else if (pending.action === 'delete-ad') {
+        await this.#functions.post('delete-pub', { pub_id: pending.row.id });
+        this.notice.set('Publicité désactivée.');
+      } else if (pending.action === 'ban-user') {
+        await this.#functions.delete('admin-users', {
+          user_id: pending.row.id,
+        });
+        this.notice.set('Utilisateur suspendu.');
+      } else if (pending.action === 'unban-user') {
+        await this.#functions.put('admin-users', {
+          user_id: pending.row.id,
+          unban_user: true,
+        });
+        this.notice.set('Utilisateur réactivé.');
+      } else if (
+        pending.action === 'ban-shop' ||
+        pending.action === 'unban-shop'
+      ) {
+        if (!pending.row.ownerUid)
+          throw new Error('Propriétaire de la boutique introuvable.');
+        await this.#functions.put('admin-users', {
+          user_id: pending.row.ownerUid,
+          [pending.action === 'ban-shop' ? 'ban_shop' : 'unban_shop']: true,
+        });
+        this.notice.set(
+          pending.action === 'ban-shop'
+            ? 'Boutique suspendue.'
+            : 'Boutique réactivée.',
+        );
+      } else {
+        const visible = pending.row.state !== 'Visible';
+        await this.#functions.post('toggle-category-status', {
+          category_id: pending.row.id,
+          is_client_visible: visible,
+        });
+        this.notice.set(visible ? 'Catégorie affichée.' : 'Catégorie masquée.');
+      }
+      this.pending.set(null);
+      await this.load();
+    } catch (error) {
+      this.actionError.set(
+        error instanceof Error ? error.message : 'Action impossible.',
+      );
+    } finally {
+      this.busy.set(false);
     }
   }
-  return /^https:\/\//i.test(trimmed)
-    ? trimmed
-    : '/admin-assets/logo-talaprix.png';
+
+  created(): void {
+    this.creating.set(false);
+    this.editing.set(null);
+    this.notice.set('Élément enregistré.');
+    void this.load();
+  }
+
+  userSaved(): void {
+    this.userEditing.set(null);
+    this.notice.set('Profil mis à jour.');
+    void this.load();
+  }
 }

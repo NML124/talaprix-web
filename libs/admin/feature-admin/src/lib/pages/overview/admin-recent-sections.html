@@ -1,0 +1,168 @@
+<div class="tp-row">
+  <a class="tp-card tp-col-1" routerLink="/admin/categories">
+    <div class="tp-card-head">
+      <h2 class="tp-card-title">Catégories</h2>
+      <svg
+        lucideChevronRight
+        class="tp-icon-sm tp-chevron"
+        aria-hidden="true"
+      />
+    </div>
+    <div class="tp-card-body">
+      <strong class="tp-figure-l">{{ categoryCount() ?? '—' }}</strong>
+      <p class="tp-card-sub">
+        {{ categoryCount() == null ? 'Donnée indisponible' : 'Dans le catalogue'
+        }}
+      </p>
+    </div>
+  </a>
+  <a class="tp-card tp-col-2" routerLink="/admin/publicites">
+    <div class="tp-card-head">
+      <h2 class="tp-card-title">Publicités actives</h2>
+      <svg
+        lucideChevronRight
+        class="tp-icon-sm tp-chevron"
+        aria-hidden="true"
+      />
+    </div>
+    <div class="tp-card-body">
+      <strong class="tp-figure-l">{{ advertisementCount() ?? '—' }}</strong>
+      <p class="tp-card-sub">
+        {{ advertisementCount() == null ? 'Donnée indisponible' : 'Diffusées
+        actuellement' }}
+      </p>
+    </div>
+  </a>
+</div>
+
+<div class="tp-row">
+  <section class="tp-card tp-col-1" aria-labelledby="roles-title">
+    <div class="tp-card-head">
+      <div>
+        <h2 class="tp-card-title" id="roles-title">Utilisateurs par rôle</h2>
+        <p class="tp-card-sub">Répartition des comptes</p>
+      </div>
+    </div>
+    <div class="tp-card-body">
+      @if (userRoles(); as roles) {
+      <div class="tp-overview-metric-pair">
+        <div class="tp-subpanel">
+          <span class="tp-label">Clients</span
+          ><strong class="tp-figure-l">{{ roles.users }}</strong>
+        </div>
+        <div class="tp-subpanel">
+          <span class="tp-label">Commerçants</span
+          ><strong class="tp-figure-l">{{ roles.shops }}</strong>
+        </div>
+        <div class="tp-subpanel">
+          <span class="tp-label">Administrateurs</span
+          ><strong class="tp-figure-l">{{ roles.admins }}</strong>
+        </div>
+      </div>
+      } @else {
+      <div class="tp-empty">Répartition indisponible pour le moment.</div>
+      }
+    </div>
+  </section>
+  <section class="tp-card tp-col-2" aria-labelledby="recent-offers-title">
+    <div class="tp-card-head">
+      <div>
+        <h2 class="tp-card-title" id="recent-offers-title">Offres récentes</h2>
+        <p class="tp-card-sub">Derniers prix enregistrés</p>
+      </div>
+      <a class="tp-btn tp-btn--secondary tp-btn--sm" routerLink="/admin/offres"
+        >Voir les offres</a
+      >
+    </div>
+    <div class="tp-table-wrap">
+      <table class="tp-table">
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Boutique et prix</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (offer of recentOffers(); track offer.id) {
+          <tr>
+            <td><strong>{{ offer.name }}</strong></td>
+            <td>{{ offer.detail }}</td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="2">
+              {{ status() === 'loading' ? 'Chargement des offres…' : 'Aucune
+              offre disponible.' }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="tp-row">
+  <section class="tp-card tp-col-1" aria-labelledby="recent-categories-title">
+    <div class="tp-card-head">
+      <div>
+        <h2 class="tp-card-title" id="recent-categories-title">
+          Catégories récentes
+        </h2>
+      </div>
+      <a
+        class="tp-btn tp-btn--secondary tp-btn--sm"
+        routerLink="/admin/categories"
+        >Voir tout</a
+      >
+    </div>
+    <div class="tp-overview-list">
+      @for (category of recentCategories(); track category.id) {
+      <a class="tp-list-row" routerLink="/admin/categories"
+        ><span class="tp-list-row-text"
+          ><strong>{{ category.name }}</strong></span
+        >
+        <svg
+          lucideChevronRight
+          class="tp-icon-sm tp-chevron"
+          aria-hidden="true"
+      /></a>
+      } @empty {
+      <div class="tp-empty">
+        {{ status() === 'loading' ? 'Chargement…' : 'Aucune catégorie
+        disponible.' }}
+      </div>
+      }
+    </div>
+  </section>
+  <section class="tp-card tp-col-1" aria-labelledby="recent-shops-title">
+    <div class="tp-card-head">
+      <div>
+        <h2 class="tp-card-title" id="recent-shops-title">
+          Boutiques récentes
+        </h2>
+      </div>
+      <a
+        class="tp-btn tp-btn--secondary tp-btn--sm"
+        routerLink="/admin/boutiques"
+        >Voir tout</a
+      >
+    </div>
+    <div class="tp-overview-list">
+      @for (shop of recentShops(); track shop.id) {
+      <a class="tp-list-row" routerLink="/admin/boutiques"
+        ><span class="tp-list-row-text"><strong>{{ shop.name }}</strong></span>
+        <svg
+          lucideChevronRight
+          class="tp-icon-sm tp-chevron"
+          aria-hidden="true"
+      /></a>
+      } @empty {
+      <div class="tp-empty">
+        {{ status() === 'loading' ? 'Chargement…' : 'Aucune boutique
+        disponible.' }}
+      </div>
+      }
+    </div>
+  </section>
+</div>

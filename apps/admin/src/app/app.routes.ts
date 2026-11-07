@@ -148,10 +148,11 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'publicites',
+        data: { resource: 'advertisements' },
         loadComponent: () =>
           import('@talaprix/admin').then(
-            ({ AdvertisementsPage, AdminUnavailable }) =>
-              live ? AdminUnavailable : AdvertisementsPage,
+            ({ AdvertisementsPage, AdminLiveList }) =>
+              live ? AdminLiveList : AdvertisementsPage,
           ),
       },
       {
