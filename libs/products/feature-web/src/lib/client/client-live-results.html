@@ -195,7 +195,7 @@
           [pending]="favorites.isPending(item.productId)"
           (toggleFavorite)="toggleFavorite(item)"
           [cartQuantity]="cart.quantityFor(item.id)"
-          [cartPending]="cartActions.pending() !== null"
+          [cartPending]="cartActions.isPending(item.id)"
           (addToCart)="cartActions.add(item)"
           (quantityChange)="cartActions.change(item.id, $event)"
         />

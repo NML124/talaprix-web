@@ -12,7 +12,20 @@ export class CatalogCartActions {
   readonly #api = inject(CatalogApi);
   readonly #gate = inject(AuthGate);
   readonly cart = inject(OfferCart);
-  readonly pending = signal<string | null>(null);
+  readonly pending = signal<ReadonlySet<string>>(new Set());
+
+  isPending(referenceId: string | null): boolean {
+    return referenceId !== null && this.pending().has(referenceId);
+  }
+
+  private setPending(referenceId: string, value: boolean): void {
+    this.pending.update((current) => {
+      const next = new Set(current);
+      if (value) next.add(referenceId);
+      else next.delete(referenceId);
+      return next;
+    });
+  }
   readonly error = signal('');
 
   add(item: CatalogReference): void {
@@ -34,12 +47,21 @@ export class CatalogCartActions {
   }
 
   async #chooseById(referenceId: string): Promise<void> {
-    if (this.pending() || this.cart.quantityFor(referenceId)) return;
-    this.pending.set(referenceId);
+    if (this.isPending(referenceId) || this.cart.offerFor(referenceId)) return;
+    this.cart.stage({
+      referenceId,
+      productId: null,
+      productName: 'Produit à confirmer',
+      image: null,
+    });
+    const owner = this.#gate.userId();
+    this.setPending(referenceId, true);
     this.error.set('');
     try {
       const detail = await this.#api.detail(referenceId);
-      this.pending.set(null);
+      this.setPending(referenceId, false);
+      if (this.#gate.userId() !== owner || !this.cart.quantityFor(referenceId))
+        return;
       await this.#choose(detail.reference, detail);
     } catch (error) {
       this.error.set(
@@ -47,7 +69,7 @@ export class CatalogCartActions {
           ? error.message
           : 'Impossible d’ajouter au panier.',
       );
-      this.pending.set(null);
+      this.setPending(referenceId, false);
     }
   }
 
@@ -59,8 +81,15 @@ export class CatalogCartActions {
     item: CatalogReference,
     loaded?: CatalogReferenceDetail,
   ): Promise<void> {
-    if (this.pending() || this.cart.quantityFor(item.id)) return;
-    this.pending.set(item.id);
+    if (this.isPending(item.id) || this.cart.offerFor(item.id)) return;
+    this.cart.stage({
+      referenceId: item.id,
+      productId: item.productId,
+      productName: item.name,
+      image: item.image,
+    });
+    const owner = this.#gate.userId();
+    this.setPending(item.id, true);
     this.error.set('');
     try {
       const detail = loaded ?? (await this.#api.detail(item.id));
@@ -74,6 +103,9 @@ export class CatalogCartActions {
           null,
         );
       if (!offer) throw new Error('Aucune offre disponible pour ce produit.');
+      if (this.#gate.userId() !== owner || !this.cart.quantityFor(item.id))
+        return;
+      if (this.cart.offerFor(item.id)) return;
       this.cart.choose({
         referenceId: item.id,
         productId: item.productId,
@@ -98,7 +130,7 @@ export class CatalogCartActions {
           : 'Impossible d’ajouter au panier.',
       );
     } finally {
-      this.pending.set(null);
+      this.setPending(item.id, false);
     }
   }
 }

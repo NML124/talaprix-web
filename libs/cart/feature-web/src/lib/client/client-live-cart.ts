@@ -34,17 +34,20 @@ export class ClientLiveCart {
     const groups = new Map<string, ShopGroup>();
     for (const item of this.cart.items()) {
       const offer = item.offer;
-      const group = groups.get(offer.shopId) ?? {
-        shopId: offer.shopId,
-        shopName: offer.shopName,
-        shopAddress: offer.shopAddress,
+      const group = groups.get(offer?.shopId ?? 'unresolved') ?? {
+        shopId: offer?.shopId ?? 'unresolved',
+        shopName: offer?.shopName ?? 'Offres à confirmer',
+        shopAddress: offer?.shopAddress ?? null,
         mapUrl:
-          offer.shopLat !== null && offer.shopLon !== null
+          offer && offer.shopLat !== null && offer.shopLon !== null
             ? `https://www.google.com/maps/dir/?api=1&destination=${offer.shopLat},${offer.shopLon}`
             : null,
         items: [],
       };
-      groups.set(offer.shopId, { ...group, items: [...group.items, item] });
+      groups.set(offer?.shopId ?? 'unresolved', {
+        ...group,
+        items: [...group.items, item],
+      });
     }
     return [...groups.values()];
   });
@@ -63,7 +66,8 @@ export class ClientLiveCart {
     }
     const sums = { USD: 0, CDF: 0 };
     for (const item of this.cart.items())
-      sums[item.offer.currency] += item.offer.price * item.quantity;
+      if (item.offer)
+        sums[item.offer.currency] += item.offer.price * item.quantity;
     return (['USD', 'CDF'] as const)
       .filter((currency) => sums[currency] > 0)
       .map((currency) => format(sums[currency], currency));

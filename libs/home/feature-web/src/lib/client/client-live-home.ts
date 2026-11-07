@@ -32,7 +32,6 @@ export class ClientLiveHome {
   readonly cartActions = inject(CatalogCartActions);
   readonly cart = this.cartActions.cart;
   readonly favorites = inject(LiveFavoritesStore);
-  readonly cartPending = this.cartActions.pending;
   readonly cartError = this.cartActions.error;
   readonly products = this.#store.products;
   readonly shops = this.#store.shops;

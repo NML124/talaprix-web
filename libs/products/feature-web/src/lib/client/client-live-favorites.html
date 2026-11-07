@@ -158,7 +158,7 @@
           <button
             type="button"
             class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[var(--client-action)] px-2 text-xs font-semibold text-white disabled:opacity-50"
-            [disabled]="!item.referenceId || cartActions.pending() !== null"
+            [disabled]="!item.referenceId || cartActions.isPending(item.referenceId)"
             [attr.aria-label]="'Ajouter ' + item.name + ' au panier'"
             (click)="item.referenceId && cartActions.addByReferenceId(item.referenceId)"
           >

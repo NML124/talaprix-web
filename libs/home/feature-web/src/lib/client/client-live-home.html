@@ -137,7 +137,7 @@
           <button
             type="button"
             class="grid size-9 shrink-0 place-items-center rounded-xl border border-[var(--client-line)] bg-white text-[var(--client-action)] transition hover:bg-[var(--client-mint)] disabled:opacity-50"
-            [disabled]="cartPending() !== null || item.shopsCount < 1"
+            [disabled]="cartActions.isPending(item.id) || item.shopsCount < 1"
             [attr.aria-label]="'Ajouter ' + item.name + ' au panier'"
             (click)="addToCart(item)"
           >

@@ -14,6 +14,13 @@ export interface CartOffer {
 }
 
 /** What a product page knows when it puts an offer in the cart. */
+export interface CartDraft {
+  readonly referenceId: string;
+  readonly productId: string | null;
+  readonly productName: string;
+  readonly image: string | null;
+}
+
 export interface CartSelection {
   readonly referenceId: string;
   readonly productId: string;
@@ -28,6 +35,7 @@ export interface CartSelection {
  */
 export abstract class OfferCart {
   abstract readonly count: Signal<number>;
+  abstract stage(draft: CartDraft): void;
   /** Adds (or switches to) the given offer; guests are asked to log in first. */
   abstract choose(selection: CartSelection): void;
   abstract offerFor(referenceId: string): string | null;
