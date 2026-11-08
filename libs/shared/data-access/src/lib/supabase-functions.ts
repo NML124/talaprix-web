@@ -1,4 +1,12 @@
-import { inject, Service } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import {
+  inject,
+  makeStateKey,
+  PendingTasks,
+  PLATFORM_ID,
+  Service,
+  TransferState,
+} from '@angular/core';
 import { SupabaseClientService } from './supabase-client';
 import { SupabaseConfig } from './supabase-config';
 
@@ -14,6 +22,9 @@ export class SupabaseFunctionError extends Error {
 @Service()
 export class SupabaseFunctions {
   readonly #config = inject(SupabaseConfig);
+  readonly #pending = inject(PendingTasks);
+  readonly #transfer = inject(TransferState);
+  readonly #server = isPlatformServer(inject(PLATFORM_ID));
   readonly #supabase = inject(SupabaseClientService);
 
   async get<T>(
@@ -56,14 +67,28 @@ export class SupabaseFunctions {
     Object.entries(options.params ?? {}).forEach(([key, value]) =>
       url.searchParams.set(key, value),
     );
+    url.searchParams.sort();
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
     const signal = options.signal
       ? AbortSignal.any([options.signal, controller.signal])
       : controller.signal;
+    const complete = this.#pending.add();
     try {
       const session = (await this.#supabase.client?.auth.getSession())?.data
         .session;
+      const publicGet =
+        options.method === 'GET' &&
+        !session?.access_token &&
+        PUBLIC_TRANSFER.has(name);
+      const stateKey = makeStateKey<unknown>(
+        `tpx-public-get:${url.pathname}${url.search}`,
+      );
+      if (publicGet && this.#transfer.hasKey(stateKey)) {
+        const cached = this.#transfer.get(stateKey, null);
+        if (!this.#server) this.#transfer.remove(stateKey);
+        return cached as T;
+      }
       const response = await fetch(url, {
         method: options.method,
         signal,
@@ -82,6 +107,7 @@ export class SupabaseFunctions {
           this.errorMessage(payload) ?? 'La requête a échoué.',
           response.status,
         );
+      if (publicGet && this.#server) this.#transfer.set(stateKey, payload);
       return payload as T;
     } catch (error) {
       // Our own timeout: a readable message instead of the browser's
@@ -99,6 +125,7 @@ export class SupabaseFunctions {
       throw error;
     } finally {
       clearTimeout(timeout);
+      complete();
     }
   }
 
@@ -114,3 +141,15 @@ export class SupabaseFunctions {
           : undefined;
   }
 }
+
+// Never serialize personalized account data or authenticated responses into HTML.
+const PUBLIC_TRANSFER = new Set([
+  'get-categories',
+  'get-devises',
+  'get-offer-references',
+  'get-offer-reference-offers',
+  'get-product-filter-options',
+  'get-shop-products',
+  'get-shops-list',
+  'get-detail-product',
+]);

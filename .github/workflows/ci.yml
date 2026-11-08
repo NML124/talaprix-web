@@ -36,4 +36,8 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm test -- --output-style=stream
-      - run: npm run build
+      - run: npm run build -- --skip-nx-cache
+        env:
+          SUPABASE_URL: https://seo-fixture.invalid
+          SUPABASE_ANON_KEY: seo-fixture-public-key
+      - run: node tools/scripts/check-seo-ssr.mjs

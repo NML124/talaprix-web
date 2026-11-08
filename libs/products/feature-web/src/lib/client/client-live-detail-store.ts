@@ -1,4 +1,10 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import {
+  computed,
+  inject,
+  RESPONSE_INIT,
+  Service,
+  signal,
+} from '@angular/core';
 import {
   CatalogApi,
   ProductInsightsApi,
@@ -9,7 +15,10 @@ import {
   type OfferInsight,
   type ProductInsights,
 } from '@talaprix/products/data-access';
-import { PreviewPreferences } from '@talaprix/shared/data-access';
+import {
+  PreviewPreferences,
+  SupabaseFunctionError,
+} from '@talaprix/shared/data-access';
 import { displayPrice } from './client-live-detail-format';
 
 /**
@@ -19,6 +28,7 @@ import { displayPrice } from './client-live-detail-format';
 @Service({ autoProvided: false })
 export class ClientLiveDetailStore {
   readonly #api = inject(CatalogApi);
+  readonly #response = inject(RESPONSE_INIT, { optional: true });
   readonly #insightsApi = inject(ProductInsightsApi);
   readonly #ui = inject(PreviewPreferences);
 
@@ -164,6 +174,16 @@ export class ClientLiveDetailStore {
         this.sort.set(this.detail()?.sort ?? 'best_price');
         this.geoMessage.set('Le tri n’a pas pu être appliqué. Réessayez.');
       } else {
+        if (this.#response) {
+          this.#response.status =
+            error instanceof SupabaseFunctionError && error.status === 404
+              ? 404
+              : 503;
+          const headers = new Headers(this.#response.headers);
+          headers.set('Cache-Control', 'no-store');
+          if (this.#response.status === 503) headers.set('Retry-After', '60');
+          this.#response.headers = headers;
+        }
         this.error.set(
           error instanceof Error ? error.message : 'Produit indisponible.',
         );

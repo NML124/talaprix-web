@@ -1,24 +1,53 @@
-import { DOCUMENT } from '@angular/common';
-import { DestroyRef, inject, Service } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  DestroyRef,
+  inject,
+  PLATFORM_ID,
+  REQUEST,
+  Service,
+} from '@angular/core';
 import type {
   CatalogOffer,
   CatalogReference,
 } from '@talaprix/products/data-access';
+import { PageSeo } from '@talaprix/shared/data-access';
+import { SEO_ORIGIN, seoPolicy } from '@talaprix/shared/utils';
+import { productBreadcrumbs, productStructuredData } from './product-seo-data';
 
-const SCRIPT_ID = 'tpx-product-jsonld';
-
-/** Title, social tags, canonical link and Product JSON-LD for a produit page. */
 @Service({ autoProvided: false })
 export class ClientLiveDetailSeo {
-  readonly #title = inject(Title);
-  readonly #meta = inject(Meta);
+  readonly #seo = inject(PageSeo);
   readonly #document = inject(DOCUMENT);
+  readonly #request = inject(REQUEST, { optional: true });
+  readonly #browser = isPlatformBrowser(inject(PLATFORM_ID));
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
-      this.#document.getElementById(SCRIPT_ID)?.remove();
-      this.#document.querySelector('link[rel="canonical"]')?.remove();
+      this.#seo.clearJsonLd('tpx-product-jsonld');
+      this.#seo.clearJsonLd('tpx-breadcrumb-jsonld');
+    });
+  }
+
+  loading(id: string): void {
+    this.#seo.clearJsonLd('tpx-product-jsonld');
+    this.#seo.clearJsonLd('tpx-breadcrumb-jsonld');
+    this.#seo.update({
+      title: 'Comparer les offres du produit | TalaPrix',
+      description:
+        'Comparez les offres des boutiques de Kinshasa sur TalaPrix.',
+      canonical: `${SEO_ORIGIN}/produit/${encodeURIComponent(id)}`,
+      index: false,
+    });
+  }
+
+  unavailable(id: string): void {
+    this.loading(id);
+    this.#seo.update({
+      title: 'Produit indisponible | TalaPrix',
+      description:
+        'Cette référence ne peut pas être consultée pour le moment. Retrouvez les produits depuis le catalogue TalaPrix.',
+      canonical: `${SEO_ORIGIN}/produit/${encodeURIComponent(id)}`,
+      index: false,
     });
   }
 
@@ -27,92 +56,33 @@ export class ClientLiveDetailSeo {
     offers: readonly CatalogOffer[],
     priceText: string | null,
   ): void {
-    const url = `${this.#origin()}/produit/${encodeURIComponent(reference.id)}`;
+    const url = `${SEO_ORIGIN}/produit/${encodeURIComponent(reference.id)}`;
     const shops = new Set(offers.map((offer) => offer.shopId)).size;
-    const title = `${reference.name} : comparer les prix à Kinshasa | TalaPrix`;
-    const description = offers.length
-      ? `${reference.name} ${priceText ? `à partir de ${priceText}` : ''} : ${offers.length} offre${offers.length > 1 ? 's' : ''} dans ${shops} boutique${shops > 1 ? 's' : ''} à Kinshasa. Comparez les prix avant de vous déplacer.`
-      : `${reference.name} sur TalaPrix : suivez les prix des boutiques de Kinshasa.`;
-    this.#title.setTitle(title);
-    for (const [name, content] of [
-      ['description', description],
-      ['twitter:card', 'summary_large_image'],
-      ['twitter:title', title],
-      ['twitter:description', description],
-    ])
-      this.#meta.updateTag({ name, content });
-    for (const [property, content] of [
-      ['og:type', 'product'],
-      ['og:title', title],
-      ['og:description', description],
-      ['og:url', url],
-      ['og:image', reference.image ?? ''],
-    ])
-      this.#meta.updateTag({ property, content });
-    this.#canonical(url);
-    this.#jsonLd(reference, offers, url);
-  }
-
-  #origin(): string {
-    const origin = this.#document.location?.origin;
-    return origin && origin !== 'null' ? origin : 'https://talaprix.com';
-  }
-
-  #canonical(url: string): void {
-    let link = this.#document.querySelector<HTMLLinkElement>(
-      'link[rel="canonical"]',
+    const raw =
+      this.#request?.url ??
+      (this.#browser ? this.#document.location.href : url);
+    const host = new URL(raw).hostname;
+    const production =
+      (!this.#request && !this.#browser) ||
+      host === 'talaprix.com' ||
+      host === 'www.talaprix.com';
+    this.#seo.update({
+      title: `${reference.name} : comparer les prix à Kinshasa | TalaPrix`,
+      description: offers.length
+        ? `${reference.name}${priceText ? ` à partir de ${priceText}` : ''} : ${offers.length} offre${offers.length > 1 ? 's' : ''} dans ${shops} boutique${shops > 1 ? 's' : ''} à Kinshasa. Comparez les prix avant de vous déplacer.`
+        : `${reference.name} sur TalaPrix : consultez les offres des boutiques de Kinshasa.`,
+      canonical: url,
+      index: production && seoPolicy(raw).index,
+      image: reference.image,
+      type: 'product',
+    });
+    this.#seo.jsonLd(
+      'tpx-product-jsonld',
+      productStructuredData(reference, offers, url),
     );
-    if (!link) {
-      link = this.#document.createElement('link');
-      link.rel = 'canonical';
-      this.#document.head.appendChild(link);
-    }
-    link.href = url;
-  }
-
-  #jsonLd(
-    reference: CatalogReference,
-    offers: readonly CatalogOffer[],
-    url: string,
-  ): void {
-    const currency = offers[0]?.currency ?? reference.currency;
-    const same = offers.filter((offer) => offer.currency === currency);
-    const prices = same.map((offer) => offer.price);
-    const data = {
-      '@context': 'https://schema.org',
-      '@type': 'Product',
-      name: reference.name,
-      image: reference.image ? [reference.image] : undefined,
-      brand: reference.brand
-        ? { '@type': 'Brand', name: reference.brand }
-        : undefined,
-      category: reference.categoryName ?? undefined,
-      url,
-      offers: prices.length
-        ? {
-            '@type': 'AggregateOffer',
-            priceCurrency: currency,
-            lowPrice: Math.min(...prices),
-            highPrice: Math.max(...prices),
-            offerCount: offers.length,
-            offers: same.slice(0, 20).map((offer) => ({
-              '@type': 'Offer',
-              price: offer.price,
-              priceCurrency: offer.currency,
-              availability: 'https://schema.org/InStock',
-              seller: { '@type': 'Organization', name: offer.shopName },
-            })),
-          }
-        : undefined,
-    };
-    let script = this.#document.getElementById(SCRIPT_ID);
-    if (!script) {
-      script = this.#document.createElement('script');
-      script.id = SCRIPT_ID;
-      script.setAttribute('type', 'application/ld+json');
-      this.#document.head.appendChild(script);
-    }
-    // JSON.stringify output is data, and "<" is escaped to keep the script inert.
-    script.textContent = JSON.stringify(data).replace(/</g, '\\u003c');
+    this.#seo.jsonLd(
+      'tpx-breadcrumb-jsonld',
+      productBreadcrumbs(reference, url),
+    );
   }
 }

@@ -41,6 +41,7 @@ import { cartSelection } from './client-live-detail-cart';
 export class ClientLiveDetail {
   readonly store = inject(ClientLiveDetailStore);
   readonly #cart = inject(OfferCart);
+  readonly #route = inject(ActivatedRoute);
   readonly #seo = inject(ClientLiveDetailSeo);
   readonly alertOpen = signal(false);
   readonly mapOffer = signal<CatalogOffer | null>(null);
@@ -66,7 +67,10 @@ export class ClientLiveDetail {
         const id = params.get('slug');
         this.alertOpen.set(false);
         this.mapOffer.set(null);
-        if (id) this.store.load(id);
+        if (id) {
+          this.#seo.loading(id);
+          this.store.load(id);
+        }
       });
     effect(() => {
       const reference = this.store.reference();
@@ -76,6 +80,8 @@ export class ClientLiveDetail {
           this.store.offers(),
           this.store.priceRange()?.low ?? null,
         );
+      else if (this.store.status() === 'error')
+        this.#seo.unavailable(this.#route.snapshot.paramMap.get('slug') ?? '');
     });
   }
 

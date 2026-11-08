@@ -2,6 +2,7 @@ import { inject, Service } from '@angular/core';
 import {
   PreviewPreferences,
   SupabaseFunctions,
+  SupabaseFunctionError,
 } from '@talaprix/shared/data-access';
 import {
   currency,
@@ -12,6 +13,7 @@ import {
   string,
   strings,
 } from './api-payload';
+import { SEO_UUID } from '@talaprix/shared/utils';
 import { normalizeCatalogQuery } from './catalog-search-api';
 
 export interface CatalogReference {
@@ -160,6 +162,8 @@ export class CatalogApi {
     query: CatalogDetailQuery = {},
     signal?: AbortSignal,
   ): Promise<CatalogReferenceDetail> {
+    if (!SEO_UUID.test(id))
+      throw new SupabaseFunctionError('Produit introuvable.', 404);
     const cacheable =
       (query.sort ?? 'best_price') === 'best_price' && query.lat === undefined;
     const cached = cacheable ? this.#detailCache.get(id) : null;

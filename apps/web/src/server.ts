@@ -7,12 +7,17 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { registerSeoMiddleware } from './server/seo-server';
+import { registerSitemaps } from './server/sitemaps';
+import { runtimeConfig } from './environments/runtime-config.generated';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+registerSeoMiddleware(app);
+registerSitemaps(app, runtimeConfig);
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -31,7 +36,19 @@ const angularApp = new AngularNodeAppEngine();
  */
 app.use(
   express.static(browserDistFolder, {
-    maxAge: '1y',
+    maxAge: '1h',
+    setHeaders: (res, path) => {
+      if (/\.html$/i.test(path)) {
+        res.setHeader('Cache-Control', 'no-store');
+        res.setHeader('X-Robots-Tag', 'noindex, follow');
+      } else
+        res.setHeader(
+          'Cache-Control',
+          /-[a-z0-9_-]{8,}\.(js|css)$/i.test(path)
+            ? 'public, max-age=31536000, immutable'
+            : 'public, max-age=3600',
+        );
+    },
     index: false,
     redirect: false,
   }),

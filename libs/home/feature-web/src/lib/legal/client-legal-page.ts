@@ -7,7 +7,8 @@ import {
   inject,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Meta, Title } from '@angular/platform-browser';
+import { PageSeo } from '@talaprix/shared/data-access';
+import { SEO_ORIGIN } from '@talaprix/shared/utils';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { LEGAL_DOCUMENTS, legalDocument } from './legal-documents';
@@ -24,8 +25,7 @@ import { LEGAL_DOCUMENTS, legalDocument } from './legal-documents';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLegalPage {
-  readonly #title = inject(Title);
-  readonly #meta = inject(Meta);
+  readonly #seo = inject(PageSeo);
   readonly #document = inject(DOCUMENT);
   readonly slug = toSignal(
     inject(ActivatedRoute).data.pipe(
@@ -47,14 +47,13 @@ export class ClientLegalPage {
   constructor() {
     effect(() => {
       const doc = this.doc();
-      this.#title.setTitle(`${doc.title} | TalaPrix`);
-      this.#meta.updateTag({ name: 'description', content: doc.description });
-      this.#meta.updateTag({ property: 'og:title', content: doc.title });
-      this.#meta.updateTag({
-        property: 'og:description',
-        content: doc.description,
+      this.#seo.update({
+        title: `${doc.title} | TalaPrix`,
+        description: doc.description,
+        canonical: `${SEO_ORIGIN}/${doc.slug}`,
+        index: true,
+        type: 'article',
       });
-      this.#meta.updateTag({ property: 'og:type', content: 'article' });
     });
   }
 

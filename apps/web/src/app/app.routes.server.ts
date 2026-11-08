@@ -1,21 +1,23 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
-  { path: 'produit/:slug', renderMode: RenderMode.Server },
-  {
-    path: 'products/:productId',
-    renderMode: RenderMode.Server,
-  },
-  {
-    path: 'cart',
-    renderMode: RenderMode.Prerender,
-  },
-  {
-    path: 'shops',
-    renderMode: RenderMode.Prerender,
-  },
-  {
-    path: '**',
-    renderMode: RenderMode.Prerender,
-  },
+  ...[
+    '',
+    'resultats',
+    'categories',
+    'boutiques',
+    'produit/:slug',
+    'products/:id',
+  ].map((path): ServerRoute => ({ path, renderMode: RenderMode.Server })),
+  ...[
+    'commercants',
+    'contact',
+    'aide',
+    'conditions-utilisation',
+    'conditions-consommateur',
+    'politique-utilisation',
+    'confidentialite',
+    'suppression-donnees',
+  ].map((path): ServerRoute => ({ path, renderMode: RenderMode.Prerender })),
+  { path: '**', renderMode: RenderMode.Server },
 ];

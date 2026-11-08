@@ -8,3 +8,4 @@ export * from './lib/legal/client-legal-page';
 export * from './lib/legal/legal-document';
 export * from './lib/legal/legal-documents';
 export * from './lib/contact/client-contact-page';
+export * from './lib/client/client-not-found';
