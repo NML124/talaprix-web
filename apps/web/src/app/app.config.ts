@@ -29,6 +29,7 @@ import {
   provideProductDataAccess,
 } from '@talaprix/products/data-access';
 import { appRoutes } from './app.routes';
+import { AppSeo } from './app-seo';
 import {
   provideClientHydration,
   withEventReplay,
@@ -43,6 +44,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
+    provideAppInitializer(() => {
+      inject(AppSeo);
+    }),
     provideRouter(
       appRoutes,
       withInMemoryScrolling({

@@ -110,7 +110,11 @@ export const appRoutes: Route[] = [
       { path: 'cart', redirectTo: 'panier', pathMatch: 'full' },
       { path: 'shops', redirectTo: 'boutiques', pathMatch: 'full' },
       { path: 'auth', redirectTo: '', pathMatch: 'full' },
-      { path: '**', redirectTo: '' },
+      {
+        path: '**',
+        loadComponent: () =>
+          import('@talaprix/home/feature-web').then((m) => m.ClientNotFound),
+      },
     ],
   },
 ];

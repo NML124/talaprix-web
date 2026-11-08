@@ -1,9 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /favoris
-Disallow: /panier
-Disallow: /optimisation
-Disallow: /compte
-Disallow: /auth
 
 Sitemap: https://talaprix.com/sitemap.xml

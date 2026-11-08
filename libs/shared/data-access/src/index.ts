@@ -7,3 +7,4 @@ export * from './lib/auth-gate';
 export * from './lib/offer-cart';
 export * from './lib/mapbox';
 export * from './lib/header-search';
+export * from './lib/page-seo';

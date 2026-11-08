@@ -21,7 +21,7 @@ import {
   type CatalogSuggestion,
 } from '@talaprix/products/data-access';
 import { PreviewPreferences } from '@talaprix/shared/data-access';
-import { isPhoneCategoryName } from '@talaprix/products/domain';
+import { catalogPrice, phoneCategoryIds } from './client-results-query';
 import { productImageUrl } from '@talaprix/shared/utils';
 import { Pagination, SelectCard } from '@talaprix/shared/ui-kit';
 import { ClientLiveFilters, type PriceRange } from './client-live-filters';
@@ -30,9 +30,13 @@ import {
   type ActiveFilter,
 } from './client-active-filters';
 import { ClientLiveProductCard } from './client-live-product-card';
+import { displayPrice } from './client-live-detail-format';
+import { ClientResultsSeo } from './client-results-seo';
+import { paginationUrl } from '@talaprix/shared/utils';
 
 @Component({
   selector: 'tpx-client-live-results',
+  providers: [ClientResultsSeo],
   imports: [
     RouterLink,
     SelectCard,
@@ -49,6 +53,8 @@ import { ClientLiveProductCard } from './client-live-product-card';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientLiveResults {
+  readonly #seo = inject(ClientResultsSeo);
+  readonly pageHref = (page: number) => paginationUrl(this.#router.url, page);
   readonly imageUrl = productImageUrl;
   readonly #api = inject(CatalogApi);
   readonly #searchApi = inject(CatalogSearchApi);
@@ -147,12 +153,12 @@ export class ClientLiveResults {
       page: this.page(),
       limit: 24,
       categoryId: this.categoryId() || undefined,
-      categoryIds: this.phoneCategoryIds(),
+      categoryIds: phoneCategoryIds(this.categories(), this.categoryId()),
       shopIds: this.shopIds(),
       sort: this.sort(),
       currency: this.ui.currency(),
-      minPrice: this.validPrice(this.minPrice()),
-      maxPrice: this.validPrice(this.maxPrice()),
+      minPrice: catalogPrice(this.minPrice()),
+      maxPrice: catalogPrice(this.maxPrice()),
     };
     const key = this.#cache.key(query);
     const cached = this.#cache.get(key);
@@ -178,6 +184,7 @@ export class ClientLiveResults {
         error instanceof Error ? error.message : 'Catalogue indisponible.',
       );
       this.status.set('error');
+      this.#seo.unavailable(this.#router.url);
     }
   }
 
@@ -206,22 +213,13 @@ export class ClientLiveResults {
     }
   }
 
-  private phoneCategoryIds(): readonly string[] | undefined {
-    const selected = this.categories().find(
-      (category) => category.id === this.categoryId(),
-    );
-    if (!selected || !isPhoneCategoryName(selected.name)) return undefined;
-    return this.categories()
-      .filter((category) => isPhoneCategoryName(category.name))
-      .map((category) => category.id);
-  }
-
   #show(result: CatalogPage): void {
     this.items.set(result.items);
     this.total.set(result.total);
     this.totalPages.set(Math.max(1, result.totalPages));
     this.rate.set(result.usdToCdf);
     this.status.set('ready');
+    this.#seo.update(result, this.#router.url, this.categories());
   }
 
   selectCategory(value: string): void {
@@ -232,8 +230,8 @@ export class ClientLiveResults {
   }
   applyPrice(range: PriceRange): void {
     void this.navigate({
-      min_price: this.validPrice(range.min)?.toString() ?? null,
-      max_price: this.validPrice(range.max)?.toString() ?? null,
+      min_price: catalogPrice(range.min)?.toString() ?? null,
+      max_price: catalogPrice(range.max)?.toString() ?? null,
       page: null,
     });
   }
@@ -278,22 +276,7 @@ export class ClientLiveResults {
     this.favorites.toggle(item.productId, item.isFavorite);
   }
   price(item: CatalogReference): string {
-    const selected = this.ui.currency();
-    const rate = this.rate();
-    let value: number;
-    if (selected === item.currency) value = item.price;
-    else if (selected === 'CDF') value = item.normalizedPriceCdf;
-    else if (rate && rate > 0) value = item.normalizedPriceCdf / rate;
-    else return this.format(item.price, item.currency);
-    return this.format(value, selected);
-  }
-  private format(value: number, currency: 'CDF' | 'USD'): string {
-    return `${new Intl.NumberFormat('fr-FR', { maximumFractionDigits: currency === 'CDF' ? 0 : 2 }).format(value)} ${currency === 'CDF' ? 'FC' : 'USD'}`;
-  }
-  private validPrice(value: string): number | undefined {
-    if (!value.trim()) return undefined;
-    const parsed = Number(value);
-    return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
+    return displayPrice(item, this.ui.currency(), this.rate());
   }
   private async navigate(params: Record<string, string | null>): Promise<void> {
     await this.#router.navigate([], {
