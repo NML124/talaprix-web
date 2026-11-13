@@ -21,10 +21,10 @@
     >
   </header>
 
-  <div class="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+  <div class="grid gap-6 lg:grid-cols-[auto_minmax(0,1fr)]">
     <aside
       aria-label="Filtres"
-      class="sticky top-[156px] hidden max-h-[calc(100vh-172px)] self-start overflow-y-auto rounded-3xl bg-[var(--client-surface)] p-5 lg:block"
+      class="sticky top-[156px] hidden max-h-[calc(100vh-172px)] self-start rounded-3xl bg-[var(--client-surface)] p-5 lg:block lg:w-[320px] lg:min-w-[280px] lg:max-w-[min(40vw,500px)] lg:resize-x lg:overflow-auto"
     >
       <tpx-client-live-filters
         [categories]="displayCategories()"

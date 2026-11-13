@@ -54,7 +54,11 @@
         [style.color]="best() ? 'var(--client-action)' : null"
         >{{ price() }}</strong
       >
-      @if (inCart()) {
+      @if (observedOn(); as date) {
+      <span class="text-xs text-[var(--client-muted)]"
+        >Prix relevé le {{ date }}</span
+      >
+      } @if (inCart()) {
       <div
         class="flex h-10 items-center rounded-[15px] bg-[var(--client-mint)] text-[var(--client-action)]"
         [attr.aria-label]="'Quantité : ' + quantity()"

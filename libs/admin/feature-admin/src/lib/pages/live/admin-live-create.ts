@@ -51,6 +51,7 @@ export class AdminLiveCreate implements OnInit {
   readonly productId = signal('');
   readonly productQuery = signal('');
   readonly price = signal('');
+  readonly offerSource = signal('TalaPrix');
   readonly priority = signal('1');
   readonly endDate = signal('');
   readonly categories = signal<readonly Option[]>([]);
@@ -192,6 +193,7 @@ export class AdminLiveCreate implements OnInit {
       };
     } else if (resource === 'offers') {
       const price = Number(this.price());
+      const source = this.offerSource().trim();
       const product = this.products().find(
         (row) => row.id === this.productId(),
       );
@@ -201,12 +203,17 @@ export class AdminLiveCreate implements OnInit {
         );
         return;
       }
+      if (source !== 'TalaPrix' && !/^https?:\/\/[^\s]+$/i.test(source)) {
+        this.error.set('Indiquez TalaPrix ou l’URL de la publication du vendeur.');
+        return;
+      }
       endpoint = 'admin-create-offer';
       body = {
         shop_id: this.shopId(),
         product_id: product.id,
         name: product.name,
         price,
+        source,
       };
     } else if (resource === 'advertisements') {
       const endDate = new Date(this.endDate());
