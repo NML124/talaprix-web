@@ -47,6 +47,16 @@ export class ClientLiveDetailOffer {
 
   readonly initial = computed(() => initial(this.offer().shopName));
   readonly condition = computed(() => conditionLabel(this.offer().condition));
+  readonly observedOn = computed(() => {
+    const value = this.offer().observedOn;
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const date = new Date(`${value}T00:00:00Z`);
+    if (Number.isNaN(date.valueOf())) return null;
+    return new Intl.DateTimeFormat('fr-CD', {
+      dateStyle: 'long',
+      timeZone: 'UTC',
+    }).format(date);
+  });
   readonly directions = computed(() =>
     directionsUrl(
       this.offer().shopLat,

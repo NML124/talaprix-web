@@ -72,7 +72,9 @@ export class CartSync {
       if (epoch !== this.#epoch) return;
       this.status.set('error');
       this.error.set(
-        error instanceof Error ? error.message : 'Synchronisation impossible.',
+        error instanceof Error
+          ? error.message.replace(/^Panier conservé sur cet appareil\.\s*/i, '')
+          : 'Synchronisation impossible.',
       );
     } finally {
       if (epoch === this.#epoch) this.#running = false;

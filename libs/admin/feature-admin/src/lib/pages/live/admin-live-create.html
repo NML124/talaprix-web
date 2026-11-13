@@ -172,6 +172,21 @@
       />
     </label>
     <p class="muted small">La devise du produit est reprise automatiquement.</p>
+    <label class="field"
+      >Source de l’offre
+      <input
+        type="text"
+        [ngModel]="offerSource()"
+        (ngModelChange)="offerSource.set($event)"
+        name="offerSource"
+        placeholder="TalaPrix ou https://…"
+        required
+      />
+    </label>
+    <p class="muted small">
+      Utilisez « TalaPrix » uniquement si cette offre est saisie directement
+      par l’équipe. Sinon, indiquez l’URL de la publication du vendeur.
+    </p>
     } @if (resource() === 'advertisements') {
     <label class="field"
       >Boutique

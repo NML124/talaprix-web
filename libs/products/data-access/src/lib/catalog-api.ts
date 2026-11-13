@@ -50,6 +50,7 @@ export interface CatalogOffer {
   readonly currency: 'CDF' | 'USD';
   readonly normalizedPriceCdf: number;
   readonly condition: string | null;
+  readonly observedOn?: string | null;
   readonly deviseId: string | null;
   readonly description: string | null;
   readonly images: readonly string[];
@@ -285,6 +286,7 @@ export function mapOffer(value: unknown): CatalogOffer | null {
     variantLabel: string(value['variant_label']),
     image: string(value['product_picture']) ?? firstString(value['images']),
     price: number(value['price']) ?? 0,
+    observedOn: string(value['observed_on']),
     currency: currency(value['devise_name']),
     normalizedPriceCdf: number(value['normalized_price']) ?? 0,
     condition: string(value['product_condition']),
