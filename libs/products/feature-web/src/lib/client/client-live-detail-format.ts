@@ -124,6 +124,25 @@ export function splitSources(text: string | null): {
   return { text: clean ? `${clean}.`.replace(/\.\.$/, '.') : '', links };
 }
 
+/** A source must be a public web URL before it becomes a clickable link. */
+export function sourceLink(value: string | null): SourceLink | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value.trim());
+    if (
+      !['http:', 'https:'].includes(url.protocol) ||
+      !url.hostname ||
+      url.username ||
+      url.password
+    ) {
+      return null;
+    }
+    return { url: url.toString(), label: sourceLabel(url.toString()) };
+  } catch {
+    return null;
+  }
+}
+
 function sourceLabel(url: string): string {
   try {
     const host = new URL(url).hostname.replace(/^(www|m)\./, '');

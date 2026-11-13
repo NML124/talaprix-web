@@ -53,6 +53,7 @@ export interface CatalogOffer {
   readonly observedOn?: string | null;
   readonly deviseId: string | null;
   readonly description: string | null;
+  readonly sourceUrl: string | null;
   readonly images: readonly string[];
   readonly distanceKm: number | null;
 }
@@ -292,6 +293,7 @@ export function mapOffer(value: unknown): CatalogOffer | null {
     condition: string(value['product_condition']),
     deviseId: string(value['devise_id']),
     description: string(value['description']),
+    sourceUrl: string(value['source_url']),
     images: strings(value['images']),
     distanceKm: number(value['distance_km']),
   };
