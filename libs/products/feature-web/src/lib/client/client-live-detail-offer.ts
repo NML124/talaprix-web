@@ -19,6 +19,7 @@ import {
   initial,
   productLink,
   splitSources,
+  sourceLink,
   whatsappPhone,
   whatsappUrl,
 } from './client-live-detail-format';
@@ -84,9 +85,14 @@ export class ClientLiveDetailOffer {
   readonly comment = computed(() =>
     splitSources(this.insight()?.priceComment ?? null),
   );
-  /** Source links from the note and the description, without duplicates. */
+  /** Prefer the offer's recorded source; retain legacy links in its notes. */
   readonly sources = computed(() => {
-    const all = [...this.comment().links, ...this.description().links];
+    const recorded = sourceLink(this.offer().sourceUrl);
+    const all = [
+      ...(recorded ? [recorded] : []),
+      ...this.comment().links,
+      ...this.description().links,
+    ];
     return all.filter(
       (link, index) =>
         all.findIndex((other) => other.url === link.url) === index,

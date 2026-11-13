@@ -1,4 +1,22 @@
-import { splitSources, whatsappPhone } from './client-live-detail-format';
+import {
+  sourceLink,
+  splitSources,
+  whatsappPhone,
+} from './client-live-detail-format';
+
+describe('sourceLink', () => {
+  it('shows a recorded offer URL with its platform', () => {
+    expect(sourceLink('https://www.facebook.com/shop/posts/123')).toEqual({
+      url: 'https://www.facebook.com/shop/posts/123',
+      label: 'Facebook',
+    });
+  });
+
+  it('does not turn the internal TalaPrix provenance into an external link', () => {
+    expect(sourceLink('TalaPrix')).toBeNull();
+    expect(sourceLink('javascript:alert(1)')).toBeNull();
+  });
+});
 
 describe('splitSources', () => {
   it('turns a trailing "Source: url" into a named link', () => {
