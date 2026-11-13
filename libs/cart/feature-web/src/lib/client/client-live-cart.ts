@@ -38,10 +38,9 @@ export class ClientLiveCart {
         shopId: offer?.shopId ?? 'unresolved',
         shopName: offer?.shopName ?? 'Offres à confirmer',
         shopAddress: offer?.shopAddress ?? null,
-        mapUrl:
-          offer && offer.shopLat !== null && offer.shopLon !== null
-            ? `https://www.google.com/maps/dir/?api=1&destination=${offer.shopLat},${offer.shopLon}`
-            : null,
+        mapUrl: offer
+          ? directionsUrl(offer.shopLat, offer.shopLon, offer.shopAddress)
+          : null,
         items: [],
       };
       groups.set(offer?.shopId ?? 'unresolved', {
@@ -77,6 +76,24 @@ export class ClientLiveCart {
     this.cart.clear();
     this.confirmClear.set(false);
   }
+}
+
+function directionsUrl(
+  lat: number | null,
+  lon: number | null,
+  address: string | null,
+): string | null {
+  const destination =
+    lat !== null &&
+    lon !== null &&
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    (lat !== 0 || lon !== 0)
+      ? `${lat},${lon}`
+      : address?.trim();
+  return destination
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`
+    : null;
 }
 
 function format(value: number, currency: 'USD' | 'CDF'): string {

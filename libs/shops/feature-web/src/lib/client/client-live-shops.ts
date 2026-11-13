@@ -31,10 +31,7 @@ export class ClientLiveShops {
   readonly shops = computed<readonly Shop[]>(() =>
     this.#store.shops().map((shop) => ({
       ...shop,
-      mapUrl:
-        shop.lat !== null && shop.lon !== null
-          ? `https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lon}`
-          : null,
+      mapUrl: directionsUrl(shop.lat, shop.lon, shop.address),
     })),
   );
   readonly status = computed(() =>
@@ -78,6 +75,24 @@ export class ClientLiveShops {
     if (typeof window !== 'undefined')
       window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+}
+
+function directionsUrl(
+  lat: number | null,
+  lon: number | null,
+  address: string | null,
+): string | null {
+  const destination =
+    lat !== null &&
+    lon !== null &&
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    (lat !== 0 || lon !== 0)
+      ? `${lat},${lon}`
+      : address?.trim();
+  return destination
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`
+    : null;
 }
 
 function normalize(value: string): string {
