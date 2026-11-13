@@ -204,7 +204,9 @@ export class AdminLiveCreate implements OnInit {
         return;
       }
       if (source !== 'TalaPrix' && !/^https?:\/\/[^\s]+$/i.test(source)) {
-        this.error.set('Indiquez TalaPrix ou l’URL de la publication du vendeur.');
+        this.error.set(
+          'Indiquez TalaPrix ou l’URL de la publication du vendeur.',
+        );
         return;
       }
       endpoint = 'admin-create-offer';
