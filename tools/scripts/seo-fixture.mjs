@@ -39,6 +39,16 @@ globalThis.fetch = async (input, options) => {
     ]);
   if (name === 'get-devises')
     return Response.json([{ devise_name: 'USD', taux: 2800 }]);
+  if (name === 'get-product-offers') {
+    const selected = url.searchParams.get('product_id');
+    return Response.json({
+      product:
+        selected === '55555555-5555-4555-8555-555555555555'
+          ? { name: 'Produit test SEO' }
+          : null,
+      offers: [],
+    });
+  }
   if (name === 'get-offer-references') {
     const page = Number(url.searchParams.get('page') ?? '1');
     const limit = Number(url.searchParams.get('limit') ?? '20');
@@ -49,7 +59,16 @@ globalThis.fetch = async (input, options) => {
     const total = 201;
     const pages = Math.ceil(total / limit);
     return Response.json({
-      data: page <= pages ? [reference] : [],
+      data:
+        page <= pages
+          ? [
+              {
+                ...reference,
+                product_id: '55555555-5555-4555-8555-555555555555',
+                offer_reference_id: id,
+              },
+            ]
+          : [],
       page,
       pagination: { total, totalPages: pages },
       exchange_rates: { usd_cdf: 2800 },

@@ -9,6 +9,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registerSeoMiddleware } from './server/seo-server';
 import { registerSitemaps } from './server/sitemaps';
+import { registerLegacyProductLinks } from './server/legacy-product-links';
 import { runtimeConfig } from './environments/runtime-config.generated';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -18,6 +19,7 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 registerSeoMiddleware(app);
 registerSitemaps(app, runtimeConfig);
+registerLegacyProductLinks(app, runtimeConfig);
 
 /**
  * Example Express Rest API endpoints can be defined here.

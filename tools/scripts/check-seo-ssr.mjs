@@ -84,6 +84,13 @@ try {
     await delay(200);
   }
   assert.ok(ready, `SSR child not ready: ${log}`);
+  const legacy = await get(
+    '/detail-product/55555555-5555-4555-8555-555555555555',
+  );
+  assert.equal(legacy.status, 302);
+  assert.equal(legacy.headers.location, `/produit/${id}`);
+  assert.equal((await get('/detail-product/invalide')).status, 404);
+  assert.equal((await get(`/detail-product/${missing}`)).status, 404);
   const health = await get('/healthz');
   assert.equal(health.status, 200);
   assert.equal(health.body, 'ok');
