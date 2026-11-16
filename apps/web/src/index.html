@@ -30,6 +30,15 @@
     <link rel="icon" type="image/png" href="/assets/images/logo_app.png" />
   </head>
   <body>
+    <script>
+      (() => {
+        if (location.pathname !== '/') return;
+        const match = /^#\/detail-product\/([0-9a-f-]{36})(?:\?.*)?$/i.exec(
+          location.hash,
+        );
+        if (match) location.replace('/detail-product/' + match[1]);
+      })();
+    </script>
     <app-root></app-root>
   </body>
 </html>
