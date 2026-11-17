@@ -16,12 +16,15 @@ import { AdminDialog } from '../../ui/admin-dialog';
 import { AdminSelect } from '../../ui/admin-select';
 import { SingleImagePicker } from '../../ui/single-image-picker';
 import { AdminLocationLookup } from '../../ui/admin-location-lookup';
+import { AdminLiveOfferFields } from './admin-live-offer-fields';
 import type { PlaceSuggestion } from '@talaprix/shared/data-access';
 import type { Resource, Row } from './admin-live-row';
 import {
   data,
+  createTitle,
   labels,
   message,
+  offerPayload,
   options,
   type Option,
 } from './admin-live-create-helpers';
@@ -34,6 +37,7 @@ import {
     AdminSelect,
     SingleImagePicker,
     AdminLocationLookup,
+    AdminLiveOfferFields,
   ],
   templateUrl: './admin-live-create.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,17 +87,7 @@ export class AdminLiveCreate implements OnInit {
   readonly categoryLabels = () => labels(this.categories());
   readonly shopLabels = () => labels(this.shops());
   readonly productLabels = () => labels(this.products());
-  readonly title = () =>
-    `${this.row() ? 'Modifier' : 'Ajouter'} ${{
-      products: 'Ajouter un produit',
-      categories: 'Ajouter une catégorie',
-      shops: 'Ajouter une boutique',
-      offers: 'Ajouter une offre',
-      advertisements: 'Ajouter une publicité',
-      users: 'Ajouter un utilisateur',
-    }[this.resource()]
-      .replace(/^(Ajouter|une?)/, '')
-      .trim()}`;
+  readonly title = () => createTitle(this.resource(), Boolean(this.row()));
 
   async ngOnInit(): Promise<void> {
     const row = this.row();
@@ -106,6 +100,13 @@ export class AdminLiveCreate implements OnInit {
       this.categoryId.set(row.categoryId ?? '');
       this.parentId.set(row.parentId ?? '');
       this.shopId.set(row.shopId ?? '');
+      this.productId.set(row.productId ?? '');
+      this.price.set(row.price === undefined ? '' : String(row.price));
+      this.offerSource.set(row.source ?? '');
+      this.address.set(row.address ?? '');
+      this.phone.set(row.phone ?? '');
+      this.lat.set(row.lat === undefined ? '' : String(row.lat));
+      this.lon.set(row.lon === undefined ? '' : String(row.lon));
       this.priority.set(String(row.priority ?? 1));
       this.pubState.set(row.pubState ?? 1);
       this.endDate.set(row.endDate ? row.endDate.slice(0, 16) : '');
@@ -198,7 +199,7 @@ export class AdminLiveCreate implements OnInit {
       if (
         name.length < 2 ||
         this.address().trim().length < 4 ||
-        !this.ownerEmail().trim() ||
+        (!existing && !this.ownerEmail().trim()) ||
         !this.lat().trim() ||
         !this.lon().trim() ||
         !Number.isFinite(lat) ||
@@ -209,41 +210,32 @@ export class AdminLiveCreate implements OnInit {
         this.error.set('Renseignez le propriétaire, l’adresse et la position.');
         return;
       }
-      endpoint = 'admin-create-shop';
+      endpoint = existing ? 'admin-catalogue-manage' : 'admin-create-shop';
       body = {
+        ...(existing
+          ? { resource: 'shops', id: existing.id, action: 'update' }
+          : {}),
         name,
         address: this.address().trim(),
-        owner_email: this.ownerEmail().trim(),
+        ...(!existing ? { owner_email: this.ownerEmail().trim() } : {}),
         phone_number: this.phone().trim() || null,
         lat,
         lon,
       };
     } else if (resource === 'offers') {
-      const price = Number(this.price());
-      const source = this.offerSource().trim();
-      const product = this.products().find(
-        (row) => row.id === this.productId(),
+      const result = offerPayload(
+        existing?.id,
+        this.shopId(),
+        this.products().find((row) => row.id === this.productId()),
+        Number(this.price()),
+        this.offerSource().trim(),
       );
-      if (!this.shopId() || !product || !Number.isFinite(price) || price <= 0) {
-        this.error.set(
-          'Choisissez une boutique, un produit et un prix valide.',
-        );
+      if (result.error || !result.body) {
+        this.error.set(result.error ?? 'Offre invalide.');
         return;
       }
-      if (source !== 'TalaPrix' && !/^https?:\/\/[^\s]+$/i.test(source)) {
-        this.error.set(
-          'Indiquez TalaPrix ou l’URL de la publication du vendeur.',
-        );
-        return;
-      }
-      endpoint = 'admin-create-offer';
-      body = {
-        shop_id: this.shopId(),
-        product_id: product.id,
-        name: product.name,
-        price,
-        source,
-      };
+      endpoint = existing ? 'admin-catalogue-manage' : 'admin-create-offer';
+      body = result.body;
     } else if (resource === 'advertisements') {
       const endDate = new Date(this.endDate());
       const priority = Number(this.priority());

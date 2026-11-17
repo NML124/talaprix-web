@@ -1,0 +1,44 @@
+<div class="table-actions" aria-label="Actions sur la ligne">
+  <button
+    class="table-action"
+    type="button"
+    [disabled]="busy()"
+    [attr.aria-label]="'Modifier ' + row().title"
+    [title]="'Modifier ' + row().title"
+    (click)="edit.emit()"
+  >
+    <svg lucidePencil size="16" aria-hidden="true"></svg>
+  </button>
+  <button
+    class="table-action"
+    type="button"
+    [disabled]="busy() || blocked() || row().archived"
+    [attr.aria-label]="(row().paused ? 'Réactiver ' : 'Arrêter ') + row().title"
+    [title]="blocked() ? 'Action indisponible pour un administrateur' :
+      row().archived ? 'Restaurez cette ligne avant de la réactiver' :
+      (row().paused ? 'Réactiver ' : 'Arrêter ') + row().title"
+    (click)="action.emit(stopAction())"
+  >
+    @if (row().paused && !row().archived) {
+    <svg lucidePlay size="16" aria-hidden="true"></svg>
+    } @else {
+    <svg lucidePause size="16" aria-hidden="true"></svg>
+    }
+  </button>
+  <button
+    class="table-action"
+    [class.danger]="!row().archived"
+    type="button"
+    [disabled]="busy() || blocked()"
+    [attr.aria-label]="(row().archived ? 'Restaurer ' : 'Archiver ') + row().title"
+    [title]="blocked() ? 'Action indisponible pour un administrateur' :
+      (row().archived ? 'Restaurer ' : 'Archiver ') + row().title"
+    (click)="action.emit(archiveAction())"
+  >
+    @if (row().archived) {
+    <svg lucideRotateCcw size="16" aria-hidden="true"></svg>
+    } @else {
+    <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+    }
+  </button>
+</div>

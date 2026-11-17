@@ -1,0 +1,74 @@
+@if (row(); as offer) {
+<p class="muted small">
+  Produit : <strong>{{ offer.title }}</strong> · Boutique :
+  <strong>{{ offer.subtitle }}</strong>
+</p>
+} @else {
+<label class="field"
+  >Boutique
+  <tp-admin-select
+    [options]="shopIds()"
+    [displayLabels]="shopLabels()"
+    [selected]="shopId()"
+    ariaLabel="Boutique de l’offre"
+    (changed)="shopId.set($event)"
+  />
+</label>
+<div class="field">
+  <label for="offer-product-query">Rechercher un produit existant</label>
+  <div class="flex flex-wrap gap-2">
+    <input
+      id="offer-product-query"
+      class="min-w-0 flex-1"
+      type="search"
+      [ngModel]="productQuery()"
+      (ngModelChange)="productQuery.set($event)"
+      name="productQuery"
+    />
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="loading()"
+      (click)="search.emit()"
+    >
+      Rechercher
+    </button>
+  </div>
+  <tp-admin-select
+    [options]="productIds()"
+    [displayLabels]="productLabels()"
+    [selected]="productId()"
+    ariaLabel="Produit de l’offre"
+    placeholder="Sélectionner un résultat"
+    (changed)="productId.set($event)"
+  />
+</div>
+}
+<label class="field"
+  >Prix
+  <input
+    type="number"
+    min="0.01"
+    step="0.01"
+    [ngModel]="price()"
+    (ngModelChange)="price.set($event)"
+    name="price"
+    required
+  />
+</label>
+<p class="muted small">La devise du produit est reprise automatiquement.</p>
+<label class="field"
+  >Source de l’offre
+  <input
+    type="text"
+    [ngModel]="offerSource()"
+    (ngModelChange)="offerSource.set($event)"
+    name="offerSource"
+    placeholder="TalaPrix ou https://…"
+    required
+  />
+</label>
+<p class="muted small">
+  Utilisez « TalaPrix » uniquement si cette offre est saisie directement par
+  l’équipe. Sinon, indiquez l’URL de la publication du vendeur.
+</p>

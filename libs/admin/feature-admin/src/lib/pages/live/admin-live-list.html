@@ -5,8 +5,7 @@
   <span class="text-sm text-[var(--text-2)]">
     {{ status() === 'error' ? 'Données indisponibles' : total() + ' entrées' }}
   </span>
-  @if ((hasActions() && resource() !== 'users') || resource() === 'shops' ||
-  resource() === 'offers') {
+  @if (resource() !== 'users') {
   <button class="btn btn-primary" type="button" (click)="creating.set(true)">
     <svg lucidePlus size="15" aria-hidden="true"></svg> Ajouter
   </button>
@@ -74,9 +73,8 @@
             <th class="py-3">Ajouté le</th>
             @if (resource() === 'offers') {
             <th class="py-3">Source</th>
-            } @if (hasActions()) {
-            <th class="py-3">Actions</th>
             }
+            <th class="py-3">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -135,119 +133,16 @@
               >
               } @else { {{ row.source || 'Source manquante' }} }
             </td>
-            } @if (resource() === 'products') {
-            <td class="py-3">
-              <div class="table-actions" aria-label="Actions produit">
-                <button
-                  class="table-action"
-                  type="button"
-                  [attr.aria-label]="'Modifier ' + row.title"
-                  (click)="editing.set(row)"
-                >
-                  <svg lucidePencil size="16" aria-hidden="true"></svg>
-                </button>
-                <button
-                  class="table-action danger"
-                  type="button"
-                  [attr.aria-label]="'Supprimer ' + row.title"
-                  (click)="confirm(row, 'delete')"
-                >
-                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
-                </button>
-              </div>
-            </td>
-            } @if (resource() === 'categories') {
-            <td class="py-3">
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="'Modifier ' + row.title"
-                (click)="editing.set(row)"
-              >
-                <svg lucidePencil size="16" aria-hidden="true"></svg>
-              </button>
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="(row.state === 'Visible' ? 'Masquer ' : 'Afficher ') + row.title"
-                (click)="confirm(row, 'visibility')"
-              >
-                @if (row.state === 'Visible') {
-                <svg lucideEyeOff size="16" aria-hidden="true"></svg>
-                } @else {
-                <svg lucideEye size="16" aria-hidden="true"></svg>
-                }
-              </button>
-            </td>
-            } @if (resource() === 'shops') {
-            <td class="py-3">
-              @if (row.ownerUid) {
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="(row.state === 'Suspendue' ? 'Réactiver ' : 'Suspendre ') + row.title"
-                (click)="confirm(row, row.state === 'Suspendue' ? 'unban-shop' : 'ban-shop')"
-              >
-                @if (row.state === 'Suspendue') {
-                <svg lucideEye size="16" aria-hidden="true"></svg> } @else {
-                <svg lucideEyeOff size="16" aria-hidden="true"></svg> }
-              </button>
-              } @else { <span class="muted small">Propriétaire non lié</span> }
-            </td>
-            } @if (resource() === 'users') {
-            <td class="py-3">
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="'Voir et modifier ' + row.title"
-                (click)="userEditing.set(row)"
-              >
-                <svg lucidePencil size="16" aria-hidden="true"></svg>
-              </button>
-              @if (row.detail.toLowerCase() === 'admin') {
-              <span class="muted small">Compte administrateur</span>
-              } @else if (row.state === 'Suspendu') {
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="'Réactiver ' + row.title"
-                (click)="confirm(row, 'unban-user')"
-              >
-                <svg lucideEye size="16" aria-hidden="true"></svg>
-              </button>
-              } @else {
-              <button
-                class="table-action"
-                type="button"
-                [attr.aria-label]="'Suspendre ' + row.title"
-                (click)="confirm(row, 'ban-user')"
-              >
-                <svg lucideEyeOff size="16" aria-hidden="true"></svg>
-              </button>
-              }
-            </td>
-            } @if (resource() === 'advertisements') {
-            <td class="py-3">
-              <div class="table-actions" aria-label="Actions publicité">
-                <button
-                  class="table-action"
-                  type="button"
-                  [attr.aria-label]="'Modifier ' + row.title"
-                  (click)="editing.set(row)"
-                >
-                  <svg lucidePencil size="16" aria-hidden="true"></svg>
-                </button>
-                <button
-                  class="table-action danger"
-                  type="button"
-                  [attr.aria-label]="'Désactiver ' + row.title"
-                  (click)="confirm(row, 'delete-ad')"
-                >
-                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
-                </button>
-              </div>
-            </td>
             }
+            <td class="py-3">
+              <tp-admin-live-actions
+                [row]="row"
+                [busy]="busy()"
+                [blocked]="row.adminAccount === true"
+                (edit)="editRow(row)"
+                (action)="confirm(row, $event)"
+              />
+            </td>
           </tr>
           } }
         </tbody>
