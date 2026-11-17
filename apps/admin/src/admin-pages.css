@@ -10,11 +10,16 @@
     tp-roles-page,
     tp-reports-page,
     tp-profile-page,
-    tp-scraping-page
+    tp-scraping-page,
+    tp-admin-live-list,
+    tp-admin-live-notifications,
+    tp-admin-live-profile,
+    tp-admin-live-reports,
+    tp-admin-live-roles
   ) {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 22px;
+  gap: var(--space-6);
   min-width: 0;
 }
 .admin-app .campaign-performance {

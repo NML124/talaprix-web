@@ -17,15 +17,17 @@
     class="flex min-w-0 flex-wrap items-center gap-3"
     (submit)="$event.preventDefault(); search()"
   >
-    <label class="sr-only" for="admin-live-search">Rechercher</label>
-    <input
-      id="admin-live-search"
-      class="input min-w-56 flex-1"
-      name="q"
-      [value]="searchValue"
-      (input)="searchValue = $any($event.target).value"
-      placeholder="Rechercher par nom"
-    />
+    <label class="search w-full" for="admin-live-search">
+      <span class="sr-only">Rechercher</span>
+      <input
+        id="admin-live-search"
+        type="search"
+        name="q"
+        [value]="searchValue"
+        (input)="searchValue = $any($event.target).value"
+        placeholder="Rechercher par nom"
+      />
+    </label>
     <button class="btn btn-primary" type="submit">Rechercher</button>
   </form>
 </div>

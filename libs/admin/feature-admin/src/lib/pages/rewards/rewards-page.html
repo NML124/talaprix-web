@@ -31,16 +31,17 @@
       </p>
     </div>
   </div>
-  <label class="search w-full max-w-xl">
-    <svg lucideSearch size="17" aria-hidden="true"></svg>
-    <span class="sr-only">Rechercher un cadeau ou un nombre de points</span>
-    <input
-      type="search"
-      placeholder="Rechercher un cadeau ou un nombre de points"
-      [ngModel]="query()"
-      (ngModelChange)="query.set($event)"
-    />
-  </label>
+  <div class="px-5 py-4">
+    <label class="search w-full max-w-xl">
+      <span class="sr-only">Rechercher un cadeau ou un nombre de points</span>
+      <input
+        type="search"
+        placeholder="Rechercher un cadeau ou un nombre de points"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+      />
+    </label>
+  </div>
   @if (loading()) {
   <div class="workbook-inline-status" role="status">
     Chargement des cadeaux…

@@ -10,7 +10,6 @@ import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import {
   LucideGift,
   LucidePencil,
-  LucideSearch,
   LucidePlus,
   LucideTrash2,
 } from '@lucide/angular';
@@ -29,7 +28,6 @@ import { RewardDialog } from './reward-dialog';
     RewardDialog,
     LucideGift,
     LucidePencil,
-    LucideSearch,
     LucidePlus,
     LucideTrash2,
   ],

@@ -20,7 +20,6 @@ import type { PlaceSuggestion } from '@talaprix/shared/data-access';
 import type { Resource, Row } from './admin-live-row';
 import {
   data,
-  isRecord,
   labels,
   message,
   options,

@@ -65,13 +65,17 @@
   align-items: center;
   gap: 8px;
   min-height: 42px;
-  width: 340px;
+  width: min(100%, 440px);
   max-width: 100%;
   padding: 0 12px;
   border: 1px solid #e8e8e8;
-  border-radius: 10px;
+  border-radius: 999px;
   background: #fff;
   color: var(--text-2);
+}
+.admin-app .search:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(0, 151, 136, 0.16);
 }
 .admin-app .topbar-search {
   width: clamp(320px, 38vw, 480px);
@@ -84,6 +88,9 @@
   width: 100%;
   font-size: 13.5px;
   color: var(--text);
+}
+.admin-app input[type='search'] {
+  border-radius: 999px;
 }
 .admin-app .search:not(.topbar-search)::before {
   content: '';
