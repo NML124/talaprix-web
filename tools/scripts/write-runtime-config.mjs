@@ -62,7 +62,7 @@ const adminConfig = {
 await Promise.all(
   [
     [webOutput, config, mapboxConfig],
-    [adminOutput, adminConfig, null],
+    [adminOutput, adminConfig, mapboxConfig],
   ].map(async ([outputPath, value, mapbox]) => {
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, configSource(value, mapbox), 'utf8');

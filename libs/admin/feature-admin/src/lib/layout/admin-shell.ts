@@ -34,7 +34,7 @@ import { AuthSessionStore } from '@talaprix/users/data-access';
 import { AdminSelect } from '../ui/admin-select';
 import { AdminGlobalSearch } from '../ui/admin-global-search';
 import { AdminDialog } from '../ui/admin-dialog';
-import { AdminNotificationPreview } from '../services/admin-notification-preview';
+import { AdminNotificationStore } from '../services/admin-notification-store';
 import { AdminCurrencyStore } from '../services/admin-currency-store';
 
 interface NavPage {
@@ -80,7 +80,7 @@ interface NavSection {
 export class AdminShell {
   private readonly router = inject(Router);
   protected readonly session = inject(AuthSessionStore);
-  protected readonly notifications = inject(AdminNotificationPreview);
+  protected readonly notifications = inject(AdminNotificationStore);
   protected readonly currency = inject(AdminCurrencyStore);
   protected readonly currentPath = signal(this.router.url.split('?')[0]);
   protected readonly scrolled = signal(false);
@@ -131,6 +131,7 @@ export class AdminShell {
       icon: 'megaphone',
       pages: [
         { label: 'Publicités', path: '/admin/publicites' },
+        { label: 'Récompenses', path: '/admin/recompenses' },
         { label: 'Notifications', path: '/admin/notifications' },
       ],
     },
@@ -144,7 +145,7 @@ export class AdminShell {
       icon: 'shield',
       pages: [
         { label: 'Administrateurs', path: '/admin/equipe' },
-        { label: 'Rôles & permissions', path: '/admin/roles' },
+        { label: 'Rôles', path: '/admin/roles' },
         { label: 'Mon compte', path: '/admin/profil' },
       ],
     },
@@ -152,6 +153,7 @@ export class AdminShell {
 
   constructor() {
     afterNextRender(() => {
+      void this.notifications.load(1);
       const saved = localStorage.getItem('talaprix-admin-theme');
       const savedCurrency = localStorage.getItem('talaprix-admin-currency');
       if (savedCurrency === 'CDF' || savedCurrency === 'USD') {

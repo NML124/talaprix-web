@@ -12,6 +12,18 @@ import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { AdminDialog } from '../../ui/admin-dialog';
 import type { Row } from './admin-live-row';
 
+interface InterviewerPerformance {
+  readonly shops: number;
+  readonly offers: number;
+  readonly worked_days: number;
+  readonly weekly: readonly {
+    week_start: string;
+    shops: number;
+    offers: number;
+    worked_days: number;
+  }[];
+}
+
 @Component({
   selector: 'tp-admin-live-user',
   imports: [FormsModule, AdminDialog],
@@ -31,8 +43,13 @@ export class AdminLiveUser implements OnInit {
   readonly email = signal('');
   readonly role = signal('');
   readonly roleAction = signal<
-    'promote_to_interviewer' | 'demote_to_user' | null
+    'promote_to_interviewer' | 'promote_to_shop' | 'demote_to_user' | null
   >(null);
+  readonly performance = signal<InterviewerPerformance | null>(null);
+  readonly performanceLoading = signal(false);
+  readonly performanceError = signal('');
+  readonly performanceFrom = signal(daysAgo(29));
+  readonly performanceTo = signal(daysAgo(0));
   readonly shopName = signal('');
   readonly hasShop = signal(false);
   readonly shopAddress = signal('');
@@ -65,6 +82,7 @@ export class AdminLiveUser implements OnInit {
         lat: this.shopLat(),
         lon: this.shopLon(),
       };
+      if (this.role() === 'interviewer') void this.loadPerformance();
     } catch (error) {
       this.error.set(
         error instanceof Error ? error.message : 'Profil indisponible.',
@@ -135,11 +153,30 @@ export class AdminLiveUser implements OnInit {
     const action = this.roleAction();
     if (!action || this.saving()) return;
     this.error.set('');
+    const shopName = this.shopName().trim();
+    const lat = Number(this.shopLat());
+    const lon = Number(this.shopLon());
+    if (
+      action === 'promote_to_shop' &&
+      (!shopName ||
+        !this.shopLat().trim() ||
+        !this.shopLon().trim() ||
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lon) ||
+        Math.abs(lat) > 90 ||
+        Math.abs(lon) > 180)
+    ) {
+      this.error.set('Renseignez le nom et les coordonnées de la boutique.');
+      return;
+    }
     this.saving.set(true);
     try {
       await this.#functions.put('admin-users', {
         user_id: this.row().id,
         [action]: true,
+        ...(action === 'promote_to_shop'
+          ? { shop_name: shopName, shop_lat: lat, shop_lon: lon }
+          : {}),
       });
       this.saved.emit();
     } catch (error) {
@@ -153,6 +190,35 @@ export class AdminLiveUser implements OnInit {
       this.roleAction.set(null);
     }
   }
+
+  async loadPerformance(): Promise<void> {
+    this.performanceLoading.set(true);
+    this.performanceError.set('');
+    try {
+      const result = await this.#functions.get<InterviewerPerformance>(
+        'interviewer',
+        {
+          mode: 'performance',
+          interviewer_id: this.row().id,
+          from: this.performanceFrom(),
+          to: this.performanceTo(),
+        },
+      );
+      this.performance.set(result);
+    } catch (error) {
+      this.performanceError.set(
+        error instanceof Error ? error.message : 'Rendus indisponibles.',
+      );
+    } finally {
+      this.performanceLoading.set(false);
+    }
+  }
+}
+
+function daysAgo(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
 function record(value: unknown): value is Record<string, unknown> {

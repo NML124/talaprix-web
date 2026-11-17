@@ -1,0 +1,39 @@
+<tp-admin-dialog [title]="title()" (closed)="closed.emit()">
+  <p>
+    @switch (selection().action) { @case ('delete') { Supprimer définitivement
+    <strong>{{ selection().row.title }}</strong> ? } @case ('delete-ad') {
+    Désactiver la publicité <strong>{{ selection().row.title }}</strong> ? }
+    @case ('ban-user') { Suspendre le compte de
+    <strong>{{ selection().row.title }}</strong> ? } @case ('unban-user') {
+    Réactiver le compte de <strong>{{ selection().row.title }}</strong> ? }
+    @case ('ban-shop') { Suspendre la boutique
+    <strong>{{ selection().row.title }}</strong> ? } @case ('unban-shop') {
+    Réactiver la boutique <strong>{{ selection().row.title }}</strong> ? }
+    @default { {{ selection().row.state === 'Visible' ? 'Masquer' : 'Afficher'
+    }} <strong>{{ selection().row.title }}</strong> dans le catalogue client ? }
+    }
+  </p>
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
+  <div class="toolbar dialog-actions">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="busy()"
+      (click)="closed.emit()"
+    >
+      Annuler
+    </button>
+    <button
+      class="btn"
+      [class.btn-danger]="dangerous()"
+      [class.btn-primary]="!dangerous()"
+      type="button"
+      [disabled]="busy()"
+      (click)="confirmed.emit()"
+    >
+      {{ busy() ? 'En cours…' : 'Confirmer' }}
+    </button>
+  </div>
+</tp-admin-dialog>

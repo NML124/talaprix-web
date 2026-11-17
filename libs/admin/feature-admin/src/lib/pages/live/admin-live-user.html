@@ -70,6 +70,13 @@
     <button
       class="btn btn-secondary"
       type="button"
+      (click)="roleAction.set('promote_to_shop')"
+    >
+      Promouvoir en boutique
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
       (click)="roleAction.set('promote_to_interviewer')"
     >
       Nommer enquêteur
@@ -86,8 +93,43 @@
     <div class="tp-alert" role="alert">
       <p>
         {{ action === 'demote_to_user' ? 'Le rôle professionnel sera retiré. Une
-        boutique liée sera suspendue.' : 'Ce compte deviendra enquêteur.' }}
+        boutique liée sera suspendue.' : action === 'promote_to_shop' ? 'Une
+        boutique sera créée pour ce compte.' : 'Ce compte deviendra enquêteur.'
+        }}
       </p>
+      @if (action === 'promote_to_shop') {
+      <label class="field"
+        >Nom de la boutique
+        <input
+          type="text"
+          [ngModel]="shopName()"
+          (ngModelChange)="shopName.set($event)"
+          name="newShopName"
+        />
+      </label>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="field"
+          >Latitude
+          <input
+            type="number"
+            step="any"
+            [ngModel]="shopLat()"
+            (ngModelChange)="shopLat.set($event)"
+            name="newShopLat"
+          />
+        </label>
+        <label class="field"
+          >Longitude
+          <input
+            type="number"
+            step="any"
+            [ngModel]="shopLon()"
+            (ngModelChange)="shopLon.set($event)"
+            name="newShopLon"
+          />
+        </label>
+      </div>
+      }
       <button
         class="btn btn-secondary"
         type="button"
@@ -104,6 +146,74 @@
         Confirmer
       </button>
     </div>
+    } @if (role() === 'interviewer') {
+    <section class="tp-card" aria-label="Rendus de l’enquêteur">
+      <h3>Rendus de l’enquêteur</h3>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="field"
+          >Du
+          <input
+            type="date"
+            [ngModel]="performanceFrom()"
+            (ngModelChange)="performanceFrom.set($event)"
+            name="performanceFrom"
+          />
+        </label>
+        <label class="field"
+          >Au
+          <input
+            type="date"
+            [ngModel]="performanceTo()"
+            (ngModelChange)="performanceTo.set($event)"
+            name="performanceTo"
+          />
+        </label>
+      </div>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="performanceLoading()"
+        (click)="loadPerformance()"
+      >
+        Afficher les rendus
+      </button>
+      @if (performanceLoading()) {
+      <p role="status">Chargement…</p>
+      } @if (performanceError()) {
+      <p role="alert">{{ performanceError() }}</p>
+      } @if (performance(); as result) {
+      <p>
+        {{ result.shops }} boutiques · {{ result.offers }} offres · {{
+        result.worked_days }} jours travaillés
+      </p>
+      <div class="workbook-table-wrap tp-grid-scroll">
+        <table class="workbook-table tp-grid">
+          <thead>
+            <tr>
+              <th>Semaine du</th>
+              <th>Boutiques</th>
+              <th>Offres</th>
+              <th>Jours</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (week of result.weekly; track week.week_start) {
+            <tr>
+              <td>{{ week.week_start }}</td>
+              <td>{{ week.shops }}</td>
+              <td>{{ week.offers }}</td>
+              <td>{{ week.worked_days }}</td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="4">Aucun rendu sur cette période.</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </section>
     }
     <div class="toolbar dialog-actions">
       <button class="btn btn-secondary" type="button" (click)="closed.emit()">

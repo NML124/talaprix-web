@@ -159,7 +159,7 @@
           <a
             class="btn btn-secondary btn-icon"
             routerLink="/admin/notifications"
-            [attr.aria-label]="'Notifications, ' + notifications.unreadCount() + ' non lues'"
+            [attr.aria-label]="notifications.unreadCount() === null ? 'Notifications' : 'Notifications, ' + notifications.unreadCount() + ' non lues'"
             style="position: relative"
             ><svg lucideBell size="17" aria-hidden="true"></svg
             >@if(notifications.unreadCount()){<span

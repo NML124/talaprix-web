@@ -19,6 +19,8 @@ import type { RewardItem } from './reward-models';
 })
 export class RewardDialog implements OnInit {
   readonly reward = input.required<RewardItem>();
+  readonly serverError = input('');
+  readonly busy = input(false);
   readonly closed = output<void>();
   readonly saved = output<RewardItem>();
   protected readonly value = signal<RewardItem | null>(null);
@@ -35,6 +37,7 @@ export class RewardDialog implements OnInit {
   }
 
   protected submit(): void {
+    if (this.busy()) return;
     const reward = this.value();
     if (!reward?.name.trim()) {
       this.error.set('Saisissez le nom du cadeau.');
