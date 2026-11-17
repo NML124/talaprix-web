@@ -25,6 +25,15 @@ export interface Row {
   readonly ean?: string;
   readonly brand?: string;
   readonly series?: string;
+  readonly archived?: boolean;
+  readonly paused?: boolean;
+  readonly price?: number;
+  readonly productId?: string;
+  readonly address?: string;
+  readonly phone?: string;
+  readonly lat?: number;
+  readonly lon?: number;
+  readonly adminAccount?: boolean;
 }
 
 export function mapRow(value: unknown, resource: Resource): Row | null {
@@ -35,7 +44,14 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       title: stringField(value, 'name'),
       subtitle: relationName(value['categories']),
       detail: relationName(value['brands']),
-      state: number(value['state_id']) === 0 ? 'Actif' : 'Inactif',
+      state:
+        number(value['state_id']) === 1
+          ? 'Archivé'
+          : number(value['state_id']) === 2
+            ? 'Arrêté'
+            : 'Actif',
+      archived: number(value['state_id']) === 1,
+      paused: number(value['state_id']) === 2,
       image: productImage(value['product_picture']),
       categoryId: stringField(value, 'category_id'),
       createdAt: stringField(value, 'created_at'),
@@ -50,11 +66,18 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       subtitle: relationName(value['shops']),
       detail: `${number(value['price']) ?? 0} ${relationField(value['devises'], 'devise_symbol')}`,
       state:
-        value['is_pending'] === true
-          ? 'En attente'
-          : number(value['state_id']) === 0
-            ? 'Active'
-            : 'Inactive',
+        number(value['state_id']) === 1
+          ? 'Archivée'
+          : number(value['state_id']) === 2
+            ? 'Arrêtée'
+            : value['is_pending'] === true
+              ? 'En attente'
+              : 'Active',
+      archived: number(value['state_id']) === 1,
+      paused: number(value['state_id']) === 2,
+      price: number(value['price']) ?? undefined,
+      productId: stringField(value, 'product_id'),
+      shopId: stringField(value, 'shop_id'),
       createdAt: stringField(value, 'created_at'),
       source: stringField(value, 'source'),
     };
@@ -64,12 +87,19 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       title: stringField(value, 'name'),
       subtitle: stringField(value, 'address'),
       detail: stringField(value, 'phone_number'),
-      state:
-        value['banned'] === true
+      state: value['archived_at']
+        ? 'Archivée'
+        : value['banned'] === true
           ? 'Suspendue'
           : number(value['state_id']) === 0
             ? 'Active'
             : 'En attente',
+      archived: Boolean(value['archived_at']),
+      paused: value['banned'] === true,
+      address: stringField(value, 'address'),
+      phone: stringField(value, 'phone_number'),
+      lat: number(value['lat']) ?? undefined,
+      lon: number(value['lon']) ?? undefined,
       image: '/admin-assets/logo-talaprix.png',
       ownerUid: stringField(value, 'uid'),
       createdAt: stringField(value, 'created_at'),
@@ -80,7 +110,13 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       title: stringField(value, 'name'),
       subtitle: stringField(value, 'parent_name'),
       detail: '',
-      state: value['is_client_visible'] === false ? 'Masquée' : 'Visible',
+      state: value['archived_at']
+        ? 'Archivée'
+        : value['is_client_visible'] === false
+          ? 'Arrêtée'
+          : 'Visible',
+      archived: Boolean(value['archived_at']),
+      paused: value['is_client_visible'] === false,
       image: productImage(value['category_picture']),
       parentId: stringField(value, 'parent_category_id'),
       createdAt: stringField(value, 'created_at'),
@@ -91,7 +127,13 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       title: stringField(value, 'name'),
       subtitle: relationName(value['shops']),
       detail: stringField(value, 'end_date'),
-      state: value['is_active'] === false ? 'Inactive' : 'Active',
+      state: value['archived_at']
+        ? 'Archivée'
+        : value['is_active'] === false
+          ? 'Arrêtée'
+          : 'Active',
+      archived: Boolean(value['archived_at']),
+      paused: value['is_active'] === false,
       image: productImage(value['pub_image']),
       shopId: stringField(value, 'shop_id'),
       priority: number(value['priority']) ?? 0,
@@ -105,7 +147,16 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
     title: stringField(value, 'name') || 'Utilisateur',
     subtitle: stringField(value, 'email'),
     detail: relationName(value['role']),
-    state: value['banned'] === true ? 'Suspendu' : 'Actif',
+    state: value['archived_at']
+      ? 'Archivé'
+      : value['banned'] === true
+        ? 'Suspendu'
+        : 'Actif',
+    archived: Boolean(value['archived_at']),
+    paused: value['banned'] === true,
+    adminAccount:
+      relationField(value['role'], 'role_id') ===
+      'e87dbf0f-94e4-4500-bcb7-ef8f8b70c3e1',
     createdAt: stringField(value, 'created_at'),
   };
 }

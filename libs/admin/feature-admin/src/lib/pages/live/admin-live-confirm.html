@@ -1,17 +1,14 @@
 <tp-admin-dialog [title]="title()" (closed)="closed.emit()">
   <p>
-    @switch (selection().action) { @case ('delete') { Supprimer définitivement
-    <strong>{{ selection().row.title }}</strong> ? } @case ('delete-ad') {
-    Désactiver la publicité <strong>{{ selection().row.title }}</strong> ? }
-    @case ('ban-user') { Suspendre le compte de
-    <strong>{{ selection().row.title }}</strong> ? } @case ('unban-user') {
-    Réactiver le compte de <strong>{{ selection().row.title }}</strong> ? }
-    @case ('ban-shop') { Suspendre la boutique
-    <strong>{{ selection().row.title }}</strong> ? } @case ('unban-shop') {
-    Réactiver la boutique <strong>{{ selection().row.title }}</strong> ? }
-    @default { {{ selection().row.state === 'Visible' ? 'Masquer' : 'Afficher'
-    }} <strong>{{ selection().row.title }}</strong> dans le catalogue client ? }
-    }
+    @switch (selection().action) { @case ('pause') { Arrêter temporairement
+    <strong>{{ selection().row.title }}</strong> ? Cette ligne pourra être
+    réactivée. } @case ('resume') { Réactiver
+    <strong>{{ selection().row.title }}</strong> ? } @case ('archive') {
+    Archiver <strong>{{ selection().row.title }}</strong> ? La ligne sera
+    retirée des espaces clients, mais ses données et son historique seront
+    conservés. } @case ('restore') { Restaurer
+    <strong>{{ selection().row.title }}</strong> ? La ligne restera arrêtée
+    jusqu’à sa réactivation. } }
   </p>
   @if (error()) {
   <p class="dialog-error" role="alert">{{ error() }}</p>

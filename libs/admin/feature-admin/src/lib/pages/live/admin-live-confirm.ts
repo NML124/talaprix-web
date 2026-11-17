@@ -7,14 +7,7 @@ import {
 import { AdminDialog } from '../../ui/admin-dialog';
 import type { Row } from './admin-live-row';
 
-export type AdminAction =
-  | 'delete'
-  | 'visibility'
-  | 'delete-ad'
-  | 'ban-user'
-  | 'unban-user'
-  | 'ban-shop'
-  | 'unban-shop';
+export type AdminAction = 'pause' | 'resume' | 'archive' | 'restore';
 
 export interface PendingAdminAction {
   readonly row: Row;
@@ -36,16 +29,10 @@ export class AdminLiveConfirm {
 
   readonly title = () =>
     ({
-      delete: 'Supprimer le produit',
-      visibility: 'Visibilité de la catégorie',
-      'delete-ad': 'Désactiver la publicité',
-      'ban-user': 'Suspendre le compte',
-      'unban-user': 'Réactiver le compte',
-      'ban-shop': 'Suspendre la boutique',
-      'unban-shop': 'Réactiver la boutique',
+      pause: 'Arrêter temporairement',
+      resume: 'Réactiver',
+      archive: 'Archiver',
+      restore: 'Restaurer',
     })[this.selection().action];
-  readonly dangerous = () =>
-    ['delete', 'delete-ad', 'ban-user', 'ban-shop'].includes(
-      this.selection().action,
-    );
+  readonly dangerous = () => this.selection().action === 'archive';
 }

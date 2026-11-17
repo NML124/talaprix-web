@@ -9,13 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { combineLatest } from 'rxjs';
-import {
-  LucideEye,
-  LucideEyeOff,
-  LucidePencil,
-  LucidePlus,
-  LucideTrash2,
-} from '@lucide/angular';
+import { LucidePlus } from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
 import {
   AdminLiveConfirm,
@@ -25,6 +19,7 @@ import {
 import { AdminLiveCreate } from './admin-live-create';
 import { AdminLiveUser } from './admin-live-user';
 import { AdminLivePagination } from './admin-live-pagination';
+import { AdminLiveActions } from './admin-live-actions';
 
 import {
   isNotNull,
@@ -44,12 +39,9 @@ import {
     AdminLiveCreate,
     AdminLiveUser,
     AdminLivePagination,
+    AdminLiveActions,
     DatePipe,
-    LucideEye,
-    LucideEyeOff,
-    LucidePencil,
     LucidePlus,
-    LucideTrash2,
   ],
   templateUrl: './admin-live-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,14 +67,7 @@ export class AdminLiveList {
   readonly editing = signal<Row | null>(null);
   readonly userEditing = signal<Row | null>(null);
   readonly totalPages = () => Math.max(1, Math.ceil(this.total() / 30));
-  readonly hasActions = () =>
-    this.resource() === 'products' ||
-    this.resource() === 'categories' ||
-    this.resource() === 'advertisements' ||
-    this.resource() === 'users' ||
-    this.resource() === 'shops';
-  readonly columnCount = () =>
-    5 + Number(this.hasActions()) + Number(this.resource() === 'offers');
+  readonly columnCount = () => 6 + Number(this.resource() === 'offers');
   readonly titles: Record<Resource, string> = {
     products: 'Catalogue',
     offers: 'Offres',
@@ -206,54 +191,30 @@ export class AdminLiveList {
     this.pending.set({ row, action });
   }
 
+  editRow(row: Row): void {
+    if (this.resource() === 'users') this.userEditing.set(row);
+    else this.editing.set(row);
+  }
+
   async applyAction(): Promise<void> {
     const pending = this.pending();
     if (!pending || this.busy()) return;
     this.busy.set(true);
     this.actionError.set('');
     try {
-      if (pending.action === 'delete') {
-        await this.#functions.post('post-delete-product', {
-          product_id: pending.row.id,
-        });
-        this.notice.set('Produit supprimé.');
-      } else if (pending.action === 'delete-ad') {
-        await this.#functions.post('delete-pub', { pub_id: pending.row.id });
-        this.notice.set('Publicité désactivée.');
-      } else if (pending.action === 'ban-user') {
-        await this.#functions.delete('admin-users', {
-          user_id: pending.row.id,
-        });
-        this.notice.set('Utilisateur suspendu.');
-      } else if (pending.action === 'unban-user') {
-        await this.#functions.put('admin-users', {
-          user_id: pending.row.id,
-          unban_user: true,
-        });
-        this.notice.set('Utilisateur réactivé.');
-      } else if (
-        pending.action === 'ban-shop' ||
-        pending.action === 'unban-shop'
-      ) {
-        if (!pending.row.ownerUid)
-          throw new Error('Propriétaire de la boutique introuvable.');
-        await this.#functions.put('admin-users', {
-          user_id: pending.row.ownerUid,
-          [pending.action === 'ban-shop' ? 'ban_shop' : 'unban_shop']: true,
-        });
-        this.notice.set(
-          pending.action === 'ban-shop'
-            ? 'Boutique suspendue.'
-            : 'Boutique réactivée.',
-        );
-      } else {
-        const visible = pending.row.state !== 'Visible';
-        await this.#functions.post('toggle-category-status', {
-          category_id: pending.row.id,
-          is_client_visible: visible,
-        });
-        this.notice.set(visible ? 'Catégorie affichée.' : 'Catégorie masquée.');
-      }
+      await this.#functions.post('admin-catalogue-manage', {
+        resource: this.resource(),
+        id: pending.row.id,
+        action: pending.action,
+      });
+      this.notice.set(
+        {
+          pause: 'Élément arrêté.',
+          resume: 'Élément réactivé.',
+          archive: 'Élément archivé.',
+          restore: 'Élément restauré. Réactivez-le pour le rendre visible.',
+        }[pending.action],
+      );
       this.pending.set(null);
       await this.load();
     } catch (error) {
