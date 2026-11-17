@@ -26,4 +26,8 @@ export { ShopSettingsPage } from './lib/shop/pages/shop-settings-page';
 export { AdminSelect } from './lib/ui/admin-select';
 export { AdminLiveOverview } from './lib/pages/overview/admin-live-overview';
 export { AdminLiveList } from './lib/pages/live/admin-live-list';
+export { AdminLiveNotifications } from './lib/pages/live/admin-live-notifications';
+export { AdminLiveReports } from './lib/pages/live/admin-live-reports';
+export { AdminLiveRoles } from './lib/pages/live/admin-live-roles';
+export { AdminLiveProfile } from './lib/pages/live/admin-live-profile';
 export { AdminUnavailable } from './lib/pages/live/admin-unavailable';

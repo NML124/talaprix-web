@@ -2,15 +2,27 @@
   title="Récompenses"
   subtitle="Configurez les cadeaux et les points nécessaires pour les obtenir."
 >
-  <button class="btn btn-primary" type="button" (click)="create()">
+  <button
+    class="btn btn-primary"
+    type="button"
+    (click)="create()"
+    [disabled]="busy()"
+  >
     <svg lucidePlus size="15" aria-hidden="true"></svg>Ajouter un cadeau
   </button>
 </tp-admin-page-header>
 @if (toast()) {
 <div class="toast" role="status">{{ toast() }}</div>
+} @if (error()) {
+<div class="workbook-alert" role="alert">
+  {{ error() }}
+  <button type="button" class="btn btn-secondary" (click)="load()">
+    Réessayer
+  </button>
+</div>
 }
-<section class="card">
-  <div class="card-head">
+<section class="tp-card tp-grid-card workbook-panel">
+  <div class="workbook-panel-head tp-grid-toolbar">
     <div>
       <h2>Cadeaux disponibles</h2>
       <p class="muted small">
@@ -19,17 +31,22 @@
       </p>
     </div>
   </div>
-  <label class="search w-full max-w-xl">
-    <svg lucideSearch size="17" aria-hidden="true"></svg>
-    <span class="sr-only">Rechercher un cadeau ou un nombre de points</span>
-    <input
-      type="search"
-      placeholder="Rechercher un cadeau ou un nombre de points"
-      [ngModel]="query()"
-      (ngModelChange)="query.set($event)"
-    />
-  </label>
-  @if (!rewards().length) {
+  <div class="px-5 py-4">
+    <label class="search w-full max-w-xl">
+      <span class="sr-only">Rechercher un cadeau ou un nombre de points</span>
+      <input
+        type="search"
+        placeholder="Rechercher un cadeau ou un nombre de points"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+      />
+    </label>
+  </div>
+  @if (loading()) {
+  <div class="workbook-inline-status" role="status">
+    Chargement des cadeaux…
+  </div>
+  } @else if (!rewards().length) {
   <div class="empty-state">
     <svg lucideGift size="28" aria-hidden="true"></svg>
     <p>Aucun cadeau configuré</p>
@@ -42,8 +59,8 @@
     <p>Aucun cadeau ne correspond à cette recherche.</p>
   </div>
   } @else {
-  <div class="table-wrap">
-    <table>
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
       <thead>
         <tr>
           <th>Cadeau</th>
@@ -62,17 +79,20 @@
                 ><svg lucideGift size="17"></svg
               ></span>
               }
-              <strong>{{ reward.name }}</strong>
+              <strong class="workbook-cell-title">{{ reward.name }}</strong>
             </div>
           </td>
-          <td><span class="badge success">{{ reward.points }} pts</span></td>
+          <td class="workbook-number">
+            <span class="badge success">{{ reward.points }} pts</span>
+          </td>
           <td>
-            <div class="toolbar">
+            <div class="table-actions">
               <button
                 class="table-action"
                 type="button"
                 [attr.aria-label]="'Modifier ' + reward.name"
                 (click)="edit(reward)"
+                [disabled]="busy()"
               >
                 <svg lucidePencil size="16" aria-hidden="true"></svg>
               </button>
@@ -81,6 +101,7 @@
                 type="button"
                 [attr.aria-label]="'Supprimer ' + reward.name"
                 (click)="removing.set(reward)"
+                [disabled]="busy()"
               >
                 <svg lucideTrash2 size="16" aria-hidden="true"></svg>
               </button>
@@ -96,11 +117,16 @@
 @if (editing(); as reward) {
 <tp-reward-dialog
   [reward]="reward"
+  [serverError]="error()"
+  [busy]="busy()"
   (closed)="editing.set(undefined)"
   (saved)="save($event)"
 />
 } @if (removing(); as reward) {
 <tp-admin-dialog title="Supprimer le cadeau" (closed)="removing.set(null)">
+  @if (error()) {
+  <p class="dialog-error" role="alert">{{ error() }}</p>
+  }
   <p>
     Supprimer <strong>{{ reward.name }}</strong> du catalogue de récompenses ?
   </p>
@@ -112,7 +138,12 @@
     >
       Annuler
     </button>
-    <button class="btn btn-danger" type="button" (click)="remove()">
+    <button
+      class="btn btn-danger"
+      type="button"
+      (click)="remove()"
+      [disabled]="busy()"
+    >
       Confirmer la suppression
     </button>
   </div>

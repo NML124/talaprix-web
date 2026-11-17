@@ -4,6 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
@@ -16,7 +17,11 @@ import {
   LucideTrash2,
 } from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
-import { AdminDialog } from '../../ui/admin-dialog';
+import {
+  AdminLiveConfirm,
+  type AdminAction,
+  type PendingAdminAction,
+} from './admin-live-confirm';
 import { AdminLiveCreate } from './admin-live-create';
 import { AdminLiveUser } from './admin-live-user';
 import { AdminLivePagination } from './admin-live-pagination';
@@ -35,10 +40,11 @@ import {
   selector: 'tp-admin-live-list',
   imports: [
     PageHeader,
-    AdminDialog,
+    AdminLiveConfirm,
     AdminLiveCreate,
     AdminLiveUser,
     AdminLivePagination,
+    DatePipe,
     LucideEye,
     LucideEyeOff,
     LucidePencil,
@@ -58,18 +64,10 @@ export class AdminLiveList {
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly error = signal('');
   readonly resource = signal<Resource>('products');
+  readonly roleFilter = signal('');
+  readonly teamOnly = signal(false);
   readonly q = signal('');
-  readonly pending = signal<{
-    row: Row;
-    action:
-      | 'delete'
-      | 'visibility'
-      | 'delete-ad'
-      | 'ban-user'
-      | 'unban-user'
-      | 'ban-shop'
-      | 'unban-shop';
-  } | null>(null);
+  readonly pending = signal<PendingAdminAction | null>(null);
   readonly busy = signal(false);
   readonly actionError = signal('');
   readonly notice = signal('');
@@ -83,6 +81,8 @@ export class AdminLiveList {
     this.resource() === 'advertisements' ||
     this.resource() === 'users' ||
     this.resource() === 'shops';
+  readonly columnCount = () =>
+    5 + Number(this.hasActions()) + Number(this.resource() === 'offers');
   readonly titles: Record<Resource, string> = {
     products: 'Catalogue',
     offers: 'Offres',
@@ -101,6 +101,16 @@ export class AdminLiveList {
         const resource = data['resource'];
         if (!isResource(resource)) return;
         this.resource.set(resource);
+        this.teamOnly.set(data['roleFilter'] === 'admin');
+        const role = this.teamOnly() ? 'admin' : params.get('role');
+        this.roleFilter.set(
+          role === 'admin' ||
+            role === 'shop' ||
+            role === 'interviewer' ||
+            role === 'user'
+            ? role
+            : '',
+        );
         this.q.set(params.get('q') ?? '');
         this.searchValue = this.q();
         const page = Number(params.get('page') ?? '1');
@@ -140,6 +150,8 @@ export class AdminLiveList {
           limit: '30',
         };
         if (resource !== 'users') params['resource'] = resource;
+        if (resource === 'users' && this.roleFilter())
+          params['role'] = this.roleFilter();
         if (this.q().trim())
           params[resource === 'users' ? 'search' : 'q'] = this.q().trim();
         const response = await this.#functions.get<unknown>(name, params);
@@ -172,6 +184,14 @@ export class AdminLiveList {
       queryParamsHandling: 'merge',
     });
   }
+  filterRole(role: string): void {
+    if (this.resource() !== 'users') return;
+    void this.#router.navigate([], {
+      relativeTo: this.#route,
+      queryParams: { role: role || null, page: null },
+      queryParamsHandling: 'merge',
+    });
+  }
   goToPage(next: number): void {
     if (next < 1 || next > this.totalPages()) return;
     void this.#router.navigate([], {
@@ -181,17 +201,7 @@ export class AdminLiveList {
     });
   }
 
-  confirm(
-    row: Row,
-    action:
-      | 'delete'
-      | 'visibility'
-      | 'delete-ad'
-      | 'ban-user'
-      | 'unban-user'
-      | 'ban-shop'
-      | 'unban-shop',
-  ): void {
+  confirm(row: Row, action: AdminAction): void {
     this.actionError.set('');
     this.pending.set({ row, action });
   }

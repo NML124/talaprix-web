@@ -17,6 +17,10 @@ export interface LatLon {
   readonly lon: number;
 }
 
+export interface PlaceSuggestion extends LatLon {
+  readonly name: string;
+}
+
 export interface MapRoute {
   readonly distanceKm: number;
   readonly durationMin: number;
@@ -47,6 +51,40 @@ export class MapboxApi {
 
   get enabled(): boolean {
     return this.config !== null;
+  }
+
+  async searchPlaces(query: string): Promise<readonly PlaceSuggestion[]> {
+    const config = this.config;
+    if (!config || query.trim().length < 3) return [];
+    const url = new URL(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query.trim())}.json`,
+    );
+    url.searchParams.set('access_token', config.token);
+    url.searchParams.set('language', 'fr');
+    url.searchParams.set('country', 'cd');
+    url.searchParams.set('limit', '5');
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!response.ok) throw new Error('Recherche d’adresse indisponible.');
+    const body: unknown = await response.json();
+    const features =
+      isRecord(body) && Array.isArray(body['features']) ? body['features'] : [];
+    return features.flatMap((feature): PlaceSuggestion[] => {
+      if (
+        !isRecord(feature) ||
+        !Array.isArray(feature['center']) ||
+        typeof feature['center'][0] !== 'number' ||
+        typeof feature['center'][1] !== 'number' ||
+        typeof feature['place_name'] !== 'string'
+      )
+        return [];
+      return [
+        {
+          name: feature['place_name'],
+          lon: feature['center'][0],
+          lat: feature['center'][1],
+        },
+      ];
+    });
   }
 
   /** Street-level address for a position, in French, or null. */

@@ -1,0 +1,59 @@
+<tp-admin-page-header
+  title="Mon compte"
+  subtitle="Informations de votre compte administrateur"
+>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="loading() || saving()"
+    (click)="load()"
+  >
+    Actualiser
+  </button>
+</tp-admin-page-header>
+@if (error()) {
+<div class="workbook-alert" role="alert">{{ error() }}</div>
+} @if (notice()) {
+<div class="toast" role="status">{{ notice() }}</div>
+}
+<section class="tp-card tp-grid-card workbook-panel max-w-2xl">
+  <div class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Profil</h2>
+      <p class="muted small">Rôle : {{ role() || '—' }}</p>
+    </div>
+  </div>
+  @if (loading()) {
+  <div class="workbook-inline-status" role="status">Chargement du profil…</div>
+  } @else {
+  <form class="form-stack p-5" (submit)="$event.preventDefault(); save()">
+    <label class="field"
+      >Nom
+      <input
+        type="text"
+        name="name"
+        maxlength="150"
+        required
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+      />
+    </label>
+    <label class="field"
+      >Email
+      <input type="email" [value]="email()" readonly />
+    </label>
+    <label class="field"
+      >Téléphone
+      <input
+        type="tel"
+        name="phone"
+        [ngModel]="phone()"
+        (ngModelChange)="phone.set($event)"
+      />
+    </label>
+    <button type="submit" class="btn btn-primary" [disabled]="saving()">
+      {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+    </button>
+  </form>
+  }
+</section>

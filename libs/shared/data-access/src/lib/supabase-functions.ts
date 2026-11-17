@@ -39,16 +39,22 @@ export class SupabaseFunctions {
     return this.request<T>(name, { method: 'POST', body, signal });
   }
 
-  async put<T>(name: string, body: unknown, signal?: AbortSignal): Promise<T> {
-    return this.request<T>(name, { method: 'PUT', body, signal });
+  async put<T>(
+    name: string,
+    body: unknown,
+    signal?: AbortSignal,
+    params?: Record<string, string>,
+  ): Promise<T> {
+    return this.request<T>(name, { method: 'PUT', body, signal, params });
   }
 
   async delete<T>(
     name: string,
     body: unknown,
     signal?: AbortSignal,
+    params?: Record<string, string>,
   ): Promise<T> {
-    return this.request<T>(name, { method: 'DELETE', body, signal });
+    return this.request<T>(name, { method: 'DELETE', body, signal, params });
   }
 
   private async request<T>(

@@ -5,8 +5,21 @@ export interface RewardItem {
   image: string;
 }
 
-export const rewardFixtures: RewardItem[] = [
-  { id: 'reward-1', name: 'Bon d’achat TalaPrix', points: 500, image: '' },
-  { id: 'reward-2', name: 'Sac réutilisable', points: 900, image: '' },
-  { id: 'reward-3', name: 'Petit électroménager', points: 2400, image: '' },
-];
+export function toRewardItem(value: unknown): RewardItem | null {
+  if (value === null || typeof value !== 'object' || Array.isArray(value))
+    return null;
+  const row = value as Record<string, unknown>;
+  if (
+    typeof row['reward_id'] !== 'string' ||
+    typeof row['description'] !== 'string'
+  )
+    return null;
+  const points = Number(row['points']);
+  if (!Number.isFinite(points)) return null;
+  return {
+    id: row['reward_id'],
+    name: row['description'],
+    points,
+    image: typeof row['photo'] === 'string' ? row['photo'] : '',
+  };
+}

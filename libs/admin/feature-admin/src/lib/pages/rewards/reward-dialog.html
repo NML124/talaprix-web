@@ -5,6 +5,8 @@
 >
   @if (error()) {
   <p class="dialog-error" role="alert">{{ error() }}</p>
+  } @if (serverError()) {
+  <p class="dialog-error" role="alert">{{ serverError() }}</p>
   }
   <div class="form-stack">
     <label class="field"
@@ -31,8 +33,13 @@
     <button class="btn btn-secondary" type="button" (click)="closed.emit()">
       Annuler
     </button>
-    <button class="btn btn-primary" type="button" (click)="submit()">
-      Enregistrer
+    <button
+      class="btn btn-primary"
+      type="button"
+      [disabled]="busy()"
+      (click)="submit()"
+    >
+      {{ busy() ? 'Enregistrement…' : 'Enregistrer' }}
     </button>
   </div>
 </tp-admin-dialog>

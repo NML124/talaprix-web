@@ -1,0 +1,57 @@
+<tp-admin-page-header
+  title="Rôles"
+  subtitle="Répartition réelle des comptes TalaPrix"
+>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="loading()"
+    (click)="load()"
+  >
+    Actualiser
+  </button>
+</tp-admin-page-header>
+@if (error()) {
+<div class="workbook-alert" role="alert">{{ error() }}</div>
+}
+<section class="tp-card tp-grid-card workbook-panel">
+  <div class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Comptes par rôle</h2>
+      <p class="muted small">
+        L’attribution des rôles se fait dans la fiche utilisateur.
+      </p>
+    </div>
+  </div>
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
+      <thead>
+        <tr>
+          <th>Rôle</th>
+          <th>Comptes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+        <tr>
+          <td colspan="3" role="status">Chargement des rôles…</td>
+        </tr>
+        } @else { @for (role of rows(); track role.id) {
+        <tr>
+          <td><strong class="workbook-cell-title">{{ role.label }}</strong></td>
+          <td class="workbook-number">{{ role.count }}</td>
+          <td>
+            <a
+              class="workbook-row-link"
+              routerLink="/admin/utilisateurs"
+              [queryParams]="{role: role.id}"
+              >Voir les comptes ›</a
+            >
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+</section>

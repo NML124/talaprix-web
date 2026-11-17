@@ -20,6 +20,11 @@ export interface Row {
   readonly active?: boolean;
   readonly pubState?: number;
   readonly ownerUid?: string;
+  readonly createdAt?: string;
+  readonly source?: string;
+  readonly ean?: string;
+  readonly brand?: string;
+  readonly series?: string;
 }
 
 export function mapRow(value: unknown, resource: Resource): Row | null {
@@ -33,6 +38,10 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       state: number(value['state_id']) === 0 ? 'Actif' : 'Inactif',
       image: productImage(value['product_picture']),
       categoryId: stringField(value, 'category_id'),
+      createdAt: stringField(value, 'created_at'),
+      ean: stringField(value, 'ean'),
+      brand: relationName(value['brands']),
+      series: stringField(value, 'series'),
     };
   if (resource === 'offers')
     return {
@@ -46,6 +55,8 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
           : number(value['state_id']) === 0
             ? 'Active'
             : 'Inactive',
+      createdAt: stringField(value, 'created_at'),
+      source: stringField(value, 'source'),
     };
   if (resource === 'shops')
     return {
@@ -61,6 +72,7 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
             : 'En attente',
       image: '/admin-assets/logo-talaprix.png',
       ownerUid: stringField(value, 'uid'),
+      createdAt: stringField(value, 'created_at'),
     };
   if (resource === 'categories')
     return {
@@ -71,6 +83,7 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       state: value['is_client_visible'] === false ? 'Masquée' : 'Visible',
       image: productImage(value['category_picture']),
       parentId: stringField(value, 'parent_category_id'),
+      createdAt: stringField(value, 'created_at'),
     };
   if (resource === 'advertisements')
     return {
@@ -85,6 +98,7 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       endDate: stringField(value, 'end_date'),
       active: value['is_active'] !== false,
       pubState: number(value['state']) ?? 1,
+      createdAt: stringField(value, 'created_at'),
     };
   return {
     id: stringField(value, 'uid'),
@@ -92,6 +106,7 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
     subtitle: stringField(value, 'email'),
     detail: relationName(value['role']),
     state: value['banned'] === true ? 'Suspendu' : 'Actif',
+    createdAt: stringField(value, 'created_at'),
   };
 }
 

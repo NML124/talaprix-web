@@ -37,6 +37,36 @@
     </label>
     } @if (resource() === 'products') {
     <label class="field"
+      >Code EAN
+      <input
+        type="text"
+        maxlength="100"
+        [ngModel]="ean()"
+        (ngModelChange)="ean.set($event)"
+        name="ean"
+      />
+    </label>
+    <label class="field"
+      >Marque
+      <input
+        type="text"
+        maxlength="100"
+        [ngModel]="brand()"
+        (ngModelChange)="brand.set($event)"
+        name="brand"
+      />
+    </label>
+    <label class="field"
+      >Gamme / série
+      <input
+        type="text"
+        maxlength="100"
+        [ngModel]="series()"
+        (ngModelChange)="series.set($event)"
+        name="series"
+      />
+    </label>
+    <label class="field"
       >Catégorie
       <tp-admin-select
         [options]="categoryIds()"
@@ -77,6 +107,10 @@
         required
       />
     </label>
+    <tp-admin-location-lookup
+      [query]="address()"
+      (selected)="selectLocation($event)"
+    />
     <label class="field"
       >Téléphone
       <input
@@ -188,6 +222,18 @@
       l’équipe. Sinon, indiquez l’URL de la publication du vendeur.
     </p>
     } @if (resource() === 'advertisements') {
+    <label class="field"
+      >État de la publicité
+      <select
+        [ngModel]="pubState()"
+        (ngModelChange)="pubState.set(+$event)"
+        name="pubState"
+      >
+        <option [ngValue]="0">Inactive</option>
+        <option [ngValue]="1">Active</option>
+        <option [ngValue]="2">En attente</option>
+      </select>
+    </label>
     <label class="field"
       >Boutique
       <tp-admin-select

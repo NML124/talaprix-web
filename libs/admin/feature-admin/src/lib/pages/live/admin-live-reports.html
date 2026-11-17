@@ -1,0 +1,84 @@
+<tp-admin-page-header
+  title="Rapports"
+  subtitle="Instantané des données du catalogue et des comptes"
+>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="loading()"
+    (click)="load()"
+  >
+    Actualiser
+  </button>
+</tp-admin-page-header>
+@if (error()) {
+<div class="workbook-alert" role="alert">{{ error() }}</div>
+}
+<div class="grid gap-5 lg:grid-cols-2">
+  <section class="tp-card tp-grid-card workbook-panel">
+    <div class="workbook-panel-head tp-grid-toolbar">
+      <div>
+        <h2>Catalogue et activité</h2>
+        <p class="muted small">Valeurs actuelles</p>
+      </div>
+    </div>
+    <div class="workbook-table-wrap tp-grid-scroll">
+      <table class="workbook-table tp-grid">
+        <thead>
+          <tr>
+            <th>Indicateur</th>
+            <th>Nombre</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+          <tr>
+            <td colspan="3" role="status">Chargement…</td>
+          </tr>
+          } @else { @for (item of metrics(); track item.label) {
+          <tr>
+            <td>
+              <strong class="workbook-cell-title">{{ item.label }}</strong>
+            </td>
+            <td class="workbook-number">{{ item.count ?? '—' }}</td>
+            <td>
+              <a class="workbook-row-link" [routerLink]="item.path">Voir ›</a>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="tp-card tp-grid-card workbook-panel">
+    <div class="workbook-panel-head tp-grid-toolbar">
+      <div>
+        <h2>Comptes par rôle</h2>
+        <p class="muted small">Comptage de tous les comptes par rôle</p>
+      </div>
+    </div>
+    <div class="workbook-table-wrap tp-grid-scroll">
+      <table class="workbook-table tp-grid">
+        <thead>
+          <tr>
+            <th>Rôle</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+          <tr>
+            <td colspan="2" role="status">Chargement…</td>
+          </tr>
+          } @else { @for (item of roles(); track item.label) {
+          <tr>
+            <td>{{ item.label }}</td>
+            <td class="workbook-number">{{ item.count ?? '—' }}</td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

@@ -15,16 +15,26 @@ import {
 import { AdminDialog } from '../../ui/admin-dialog';
 import { AdminSelect } from '../../ui/admin-select';
 import { SingleImagePicker } from '../../ui/single-image-picker';
+import { AdminLocationLookup } from '../../ui/admin-location-lookup';
+import type { PlaceSuggestion } from '@talaprix/shared/data-access';
 import type { Resource, Row } from './admin-live-row';
-
-interface Option {
-  readonly id: string;
-  readonly name: string;
-}
+import {
+  data,
+  labels,
+  message,
+  options,
+  type Option,
+} from './admin-live-create-helpers';
 
 @Component({
   selector: 'tp-admin-live-create',
-  imports: [FormsModule, AdminDialog, AdminSelect, SingleImagePicker],
+  imports: [
+    FormsModule,
+    AdminDialog,
+    AdminSelect,
+    SingleImagePicker,
+    AdminLocationLookup,
+  ],
   templateUrl: './admin-live-create.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,6 +49,9 @@ export class AdminLiveCreate implements OnInit {
   readonly saving = signal(false);
   readonly error = signal('');
   readonly name = signal('');
+  readonly ean = signal('');
+  readonly brand = signal('');
+  readonly series = signal('');
   readonly image = signal('');
   readonly categoryId = signal('');
   readonly parentId = signal('');
@@ -51,9 +64,16 @@ export class AdminLiveCreate implements OnInit {
   readonly productId = signal('');
   readonly productQuery = signal('');
   readonly price = signal('');
-  readonly offerSource = signal('TalaPrix');
+  readonly offerSource = signal('');
   readonly priority = signal('1');
+  readonly pubState = signal(1);
   readonly endDate = signal('');
+
+  selectLocation(place: PlaceSuggestion): void {
+    this.address.set(place.name);
+    this.lat.set(place.lat.toFixed(6));
+    this.lon.set(place.lon.toFixed(6));
+  }
   readonly categories = signal<readonly Option[]>([]);
   readonly shops = signal<readonly Option[]>([]);
   readonly products = signal<readonly Option[]>([]);
@@ -79,11 +99,15 @@ export class AdminLiveCreate implements OnInit {
     const row = this.row();
     if (row) {
       this.name.set(row.title);
+      this.ean.set(row.ean ?? '');
+      this.brand.set(row.brand ?? '');
+      this.series.set(row.series ?? '');
       this.image.set(row.image ?? '');
       this.categoryId.set(row.categoryId ?? '');
       this.parentId.set(row.parentId ?? '');
       this.shopId.set(row.shopId ?? '');
       this.priority.set(String(row.priority ?? 1));
+      this.pubState.set(row.pubState ?? 1);
       this.endDate.set(row.endDate ? row.endDate.slice(0, 16) : '');
     }
     this.loading.set(true);
@@ -161,6 +185,9 @@ export class AdminLiveCreate implements OnInit {
         ...(existing ? { id: existing.id } : {}),
         name,
         category_id: this.categoryId(),
+        ean: this.ean().trim() || null,
+        brand: this.brand().trim() || null,
+        series: this.series().trim() || null,
         ...(!existing || image.startsWith('data:')
           ? { image_base64: image }
           : {}),
@@ -245,7 +272,7 @@ export class AdminLiveCreate implements OnInit {
         name,
         shop_id: this.shopId(),
         created_by: identity.data.user.id,
-        state: existing?.pubState ?? 1,
+        state: this.pubState(),
         priority,
         end_date: endDate.toISOString(),
         ...(!existing || image.startsWith('data:')
@@ -266,28 +293,4 @@ export class AdminLiveCreate implements OnInit {
       this.saving.set(false);
     }
   }
-}
-
-function data(value: unknown): unknown {
-  return isRecord(value) ? value['data'] : null;
-}
-function options(value: unknown, idKey: string): Option[] {
-  return Array.isArray(value)
-    ? value
-        .filter(isRecord)
-        .map((row) => ({
-          id: String(row[idKey] ?? ''),
-          name: String(row['name'] ?? ''),
-        }))
-        .filter((row) => row.id && row.name)
-    : [];
-}
-function labels(rows: readonly Option[]): Record<string, string> {
-  return Object.fromEntries(rows.map((row) => [row.id, row.name]));
-}
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-function message(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
 }

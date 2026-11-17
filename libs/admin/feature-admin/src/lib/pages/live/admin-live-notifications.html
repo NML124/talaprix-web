@@ -1,0 +1,91 @@
+<tp-admin-page-header
+  title="Notifications"
+  subtitle="Messages reçus par votre compte administrateur"
+>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="inbox.loading()"
+    (click)="inbox.load()"
+  >
+    Actualiser
+  </button>
+</tp-admin-page-header>
+@if (inbox.error() || actionError()) {
+<div class="workbook-alert" role="alert">
+  {{ inbox.error() || actionError() }}
+</div>
+}
+<section class="tp-card tp-grid-card workbook-panel">
+  <div class="workbook-panel-head tp-grid-toolbar">
+    <div>
+      <h2>Boîte de réception</h2>
+      <p class="muted small">
+        Page {{ inbox.page() }} sur {{ inbox.totalPages() }}
+      </p>
+    </div>
+  </div>
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid workbook-action-table">
+      <thead>
+        <tr>
+          <th>Message</th>
+          <th>Reçu le</th>
+          <th>État</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (inbox.loading()) {
+        <tr>
+          <td colspan="4" role="status">Chargement des notifications…</td>
+        </tr>
+        } @else { @for (notice of inbox.rows(); track notice.notification_id) {
+        <tr>
+          <td>
+            <strong class="workbook-cell-title">{{ notice.title }}</strong
+            ><small>{{ notice.content }}</small>
+          </td>
+          <td>{{ notice.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ notice.is_read ? 'Lue' : 'Non lue' }}</td>
+          <td>
+            @if (!notice.is_read && inbox.supportsReadActions()) {
+            <button
+              type="button"
+              class="workbook-row-link"
+              (click)="markRead(notice.notification_id)"
+            >
+              Marquer comme lue
+            </button>
+            }
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="4">
+            <div class="workbook-empty">Aucune notification reçue.</div>
+          </td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="toolbar">
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="inbox.loading() || inbox.page() <= 1"
+    (click)="inbox.load(inbox.page() - 1)"
+  >
+    Précédent
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    [disabled]="inbox.loading() || inbox.page() >= inbox.totalPages()"
+    (click)="inbox.load(inbox.page() + 1)"
+  >
+    Suivant
+  </button>
+</div>
