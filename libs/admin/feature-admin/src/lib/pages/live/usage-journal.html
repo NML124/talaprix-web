@@ -1,0 +1,60 @@
+<div class="tp-page-inner tp-page-inner--wide">
+  <a routerLink="/admin/rapports">Retour aux rapports</a>
+  <tp-admin-page-header
+    title="Journal des actions"
+    [subtitle]="days+' jours · Heure de Kinshasa (UTC+1)'"
+  />
+  @if(error()){
+  <div class="report-unavailable" role="alert">
+    {{error()}}
+    <button class="btn btn-secondary" (click)="load(page())">Réessayer</button>
+  </div>
+  }
+  <div class="workbook-table-wrap">
+    <table class="workbook-table tp-grid">
+      <thead>
+        <tr>
+          <th>Date et heure</th>
+          <th>Utilisateur</th>
+          <th>Action</th>
+          <th>Écran</th>
+          <th>Plateforme</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(row of rows();track row.id){
+        <tr>
+          <td>{{format(row.at)}}</td>
+          <td>{{row.user}}</td>
+          <td>{{row.action}}</td>
+          <td>{{row.screen||'—'}}</td>
+          <td>{{row.platform||'—'}}</td>
+        </tr>
+        }@empty{
+        <tr>
+          <td colspan="5">
+            {{loading()?'Chargement…':error()?'Données indisponibles':'Aucune
+            action sur cette période.'}}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <nav class="toolbar">
+    <button
+      class="btn btn-secondary"
+      [disabled]="loading()||page()===1"
+      (click)="load(page()-1)"
+    >
+      Précédent</button
+    ><span>Page {{page()}} · {{total()}} actions</span
+    ><button
+      class="btn btn-secondary"
+      [disabled]="loading()||page()*25>=total()"
+      (click)="load(page()+1)"
+    >
+      Suivant
+    </button>
+  </nav>
+</div>

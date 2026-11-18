@@ -1,0 +1,136 @@
+<div class="toolbar flex-wrap">
+  <a
+    class="btn btn-primary"
+    routerLink="/admin/rapports/activite"
+    [queryParams]="{days:report().period_days,until:report().until}"
+    >Journal des actions</a
+  >
+  <button
+    class="btn btn-secondary"
+    [disabled]="busy()"
+    (click)="download('pdf')"
+  >
+    Exporter en PDF
+  </button>
+  <button
+    class="btn btn-secondary"
+    [disabled]="busy()"
+    (click)="download('xlsx')"
+  >
+    Exporter en Excel
+  </button>
+  @if(error()){<span role="alert">{{error()}}</span>}
+</div>
+<section class="tp-card tp-report-chart-card my-4">
+  <div class="tp-report-chart-head">
+    <h3>Événements par jour</h3>
+    <strong>{{report().captured_events}} événements analysés</strong>
+  </div>
+  @if(active();as d){
+  <svg
+    #chart
+    class="tp-report-sparkline"
+    viewBox="0 0 640 150"
+    preserveAspectRatio="none"
+    role="img"
+    aria-label="Volume quotidien en UTC"
+    (pointermove)="pick($event,chart)"
+    (pointerdown)="pick($event,chart)"
+  >
+    <path class="tp-report-chart-gridline" d="M8 132H632M8 76H632M8 20H632" />
+    <polyline [attr.points]="line()" />
+    <line
+      [attr.x1]="d.x"
+      [attr.x2]="d.x"
+      y1="12"
+      y2="132"
+      stroke="currentColor"
+      stroke-dasharray="3 4"
+    />
+    <circle [attr.cx]="d.x" [attr.cy]="d.y" r="4" fill="currentColor" />
+  </svg>
+  <div class="tp-report-chart-foot">
+    <span>{{points()[0].date}}</span
+    ><span>{{points()[points().length-1].date}}</span>
+  </div>
+  <label
+    >Journée du {{d.date}} (UTC)
+    <input
+      class="w-full"
+      type="range"
+      min="0"
+      [max]="points().length-1"
+      [value]="points().indexOf(d)"
+      [attr.aria-valuetext]="d.date"
+      (input)="selected.set(points()[+$any($event.target).value].date)"
+  /></label>
+  <p>
+    {{d.events}} événements · {{d.sessions}} sessions · {{d.users}} comptes
+    connectés
+  </p>
+  } @else {
+  <p>Aucun événement sur cette période.</p>
+  }
+</section>
+<div class="tp-report-chart-grid">
+  @for(g of groups();track g.title;let i=$index){
+  <section class="tp-card tp-report-chart-card">
+    <div class="tp-report-chart-head">
+      <h3>{{g.title}}</h3>
+      @if(g.rows.length>5){<button
+        class="btn btn-secondary"
+        (click)="page.set(0);group.set(i)"
+      >
+        Voir plus ({{g.rows.length}})</button
+      >}
+    </div>
+    <div class="tp-report-bars">
+      @for(item of g.rows.slice(0,5);track $index){
+      <div class="tp-report-bar-row">
+        <span>{{item.label}}</span
+        ><span class="tp-report-bar"
+          ><i [style.width.%]="100*item.count/g.rows[0].count"></i></span
+        ><strong>{{item.count}}</strong>
+      </div>
+      }@empty {
+      <p>Aucune donnée sur cette période.</p>
+      }
+    </div>
+  </section>
+  }
+</div>
+@if(group()!==null){@let g=groups()[group()!];
+<tp-admin-dialog [title]="g.title" (closed)="group.set(null)"
+  ><table class="workbook-table">
+    <thead>
+      <tr>
+        <th>Libellé</th>
+        <th>Événements</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(item of g.rows.slice(page()*10,page()*10+10);track $index){
+      <tr>
+        <td>{{item.label}}</td>
+        <td>{{item.count}}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <nav class="toolbar" aria-label="Pagination">
+    <button
+      class="btn btn-secondary"
+      [disabled]="page()===0"
+      (click)="page.set(page()-1)"
+    >
+      Précédent</button
+    ><span>Page {{page()+1}}</span
+    ><button
+      class="btn btn-secondary"
+      [disabled]="(page()+1)*10>=g.rows.length"
+      (click)="page.set(page()+1)"
+    >
+      Suivant
+    </button>
+  </nav></tp-admin-dialog
+>}

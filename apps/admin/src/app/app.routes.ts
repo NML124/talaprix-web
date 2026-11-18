@@ -95,6 +95,11 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'rapports/activite',
+        loadComponent: () =>
+          import('@talaprix/admin').then((m) => m.UsageJournal),
+      },
+      {
         path: 'rapports',
         loadComponent: () =>
           import('@talaprix/admin').then(({ ReportsPage, AdminLiveReports }) =>
