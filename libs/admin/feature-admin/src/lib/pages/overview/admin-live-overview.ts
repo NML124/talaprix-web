@@ -45,6 +45,14 @@ interface UserRoles {
   readonly admins: number;
 }
 
+interface UsageSnapshot {
+  readonly total_events: number;
+  readonly active_sessions: number;
+  readonly zones_available: boolean;
+  readonly zones: readonly { label: string; count: number }[];
+  readonly daily: readonly { date: string; events: number }[];
+}
+
 @Component({
   selector: 'tp-admin-live-overview',
   imports: [
@@ -73,6 +81,8 @@ export class AdminLiveOverview {
   readonly userRoles = signal<UserRoles | null>(null);
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly error = signal('');
+  readonly usage = signal<UsageSnapshot | null>(null);
+  readonly usageError = signal('');
 
   constructor() {
     void this.load();
@@ -82,6 +92,7 @@ export class AdminLiveOverview {
     this.status.set('loading');
     this.error.set('');
     void this.loadReviewCount();
+    void this.loadUsage();
     try {
       const response = await this.#functions.get<unknown>('get-dashboard-data');
       if (!isRecord(response) || !isRecord(response['stats'])) {
@@ -144,6 +155,32 @@ export class AdminLiveOverview {
           : 'Tableau de bord indisponible.',
       );
       this.status.set('error');
+    }
+  }
+  protected usagePoints(): string {
+    const rows = (this.usage()?.daily ?? []).slice(-14);
+    if (rows.length < 2) return '';
+    const max = Math.max(1, ...rows.map((row) => row.events));
+    return rows
+      .map((row, index) => {
+        const x = 8 + (index * 344) / (rows.length - 1);
+        const y = 100 - (row.events / max) * 82;
+        return `${x},${y}`;
+      })
+      .join(' ');
+  }
+
+  private async loadUsage(): Promise<void> {
+    try {
+      const result = await this.#functions.get<UsageSnapshot>(
+        'admin-usage-report',
+        { days: '30' },
+      );
+      this.usage.set(result);
+      this.usageError.set('');
+    } catch {
+      this.usage.set(null);
+      this.usageError.set('Rapport d’activité indisponible.');
     }
   }
   private async loadReviewCount(): Promise<void> {

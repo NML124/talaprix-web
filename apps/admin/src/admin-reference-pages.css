@@ -224,8 +224,8 @@
 }
 .admin-app .tp-admin .workbook-table th {
   top: 0;
-  padding: 0 14px;
-  height: 41px;
+  padding: 0 12px;
+  height: 36px;
   border-bottom: 1px solid var(--tp-hairline-strong);
   border-right: 1px solid var(--tp-hairline);
   background: var(--tp-surface-2);
@@ -235,8 +235,8 @@
   letter-spacing: 0;
 }
 .admin-app .tp-admin .workbook-table td {
-  height: 47px;
-  padding: 8px 14px;
+  height: 38px;
+  padding: 5px 12px;
   border-bottom: 1px solid var(--tp-hairline);
   border-right: 1px solid var(--tp-hairline);
   background: var(--tp-surface);
@@ -247,7 +247,7 @@
   background: var(--tp-surface-2);
 }
 .admin-app .tp-admin .workbook-table :is(th, td):first-child {
-  padding-left: 22px;
+  padding-left: 16px;
 }
 .admin-app .tp-admin .workbook-action-table :is(th, td):last-child {
   min-width: 120px;
@@ -472,4 +472,822 @@
   .admin-app .tp-admin .workbook-pagination {
     align-items: flex-start;
   }
+}
+
+/* Keep live catalogue lists on the same palette without a surrounding card. */
+.admin-app .tp-admin-list .admin-list-table,
+.admin-app .tp-admin-list .admin-list-table-wrap {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: transparent;
+}
+.admin-app .admin-currency-select {
+  width: 82px;
+  flex: 0 0 82px;
+}
+.admin-app .admin-currency-select > div > button {
+  min-height: 38px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  background: var(--surface);
+}
+.admin-app .tp-admin-list .admin-list-grid,
+.admin-app .tp-overview .workbook-table {
+  table-layout: fixed;
+}
+.admin-app .tp-admin-list .admin-list-grid {
+  min-width: 980px;
+}
+.admin-app .tp-admin-list .admin-list-grid th:first-child {
+  width: 28%;
+}
+.admin-app .tp-admin-list .admin-list-grid th:nth-child(4) {
+  width: 110px;
+}
+.admin-app .tp-admin-list .admin-list-grid th:nth-child(5) {
+  width: 150px;
+}
+.admin-app .tp-admin-list .admin-list-grid th:last-child {
+  width: 128px;
+}
+.admin-app .tp-admin-list .admin-list-grid :is(th, td),
+.admin-app .tp-overview .workbook-table :is(th, td) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .tp-admin-list .admin-list-grid td,
+.admin-app .tp-admin-list .workbook-action-table td:last-child {
+  background: transparent;
+}
+.admin-app .tp-admin-list .admin-list-grid th {
+  background: var(--tp-surface-2);
+}
+.admin-app .tp-admin-list .admin-list-grid th:first-child,
+.admin-app .tp-overview .workbook-table th:first-child {
+  border-top-left-radius: 7px;
+}
+.admin-app .tp-admin-list .admin-list-grid th:last-child,
+.admin-app .tp-overview .workbook-table th:last-child {
+  border-top-right-radius: 7px;
+}
+.admin-app .tp-admin-list .product-cell {
+  min-width: 0;
+  overflow: hidden;
+  gap: 8px;
+}
+.admin-app .tp-admin-list .product-cell strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .tp-admin-list .thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+}
+.admin-app .tp-overview .tp-list-row-text strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .tp-overview tp-admin-recent-sections {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.admin-app .tp-overview-usage {
+  min-width: 0;
+}
+.admin-app .tp-overview-usage__body {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+.admin-app .tp-overview-usage__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-app .tp-overview-usage__metrics span {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.admin-app .tp-overview-usage__metrics small {
+  color: var(--text-2);
+  font-size: 11px;
+}
+.admin-app .tp-overview-usage__metrics strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .tp-overview-usage__chart {
+  width: 100%;
+  overflow: visible;
+}
+.admin-app .tp-overview-usage__chart path {
+  fill: none;
+  stroke: var(--line-soft);
+  stroke-width: 1;
+}
+.admin-app .tp-overview-usage__chart polyline {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.admin-app .tp-overview-usage .tp-report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.admin-app .tp-admin-reports .tp-report-section {
+  display: grid;
+  gap: 14px;
+}
+.admin-app .tp-admin-reports .tp-report-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.admin-app .tp-admin-reports .tp-report-section-head h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 650;
+}
+.admin-app .tp-admin-reports .tp-report-section-head p {
+  margin: 4px 0 0;
+  color: var(--text-2);
+}
+.admin-app .tp-admin-reports .tp-report-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.admin-app .tp-admin-reports .tp-report-link:hover {
+  text-decoration: underline;
+}
+.admin-app .tp-admin-reports .tp-report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-app .tp-admin-reports .tp-report-card {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+.admin-app .tp-admin-reports .tp-report-card:hover {
+  border-color: var(--brand);
+}
+.admin-app .tp-admin-reports .tp-report-card > span {
+  color: var(--text-2);
+  font-size: 13px;
+}
+.admin-app .tp-admin-reports .tp-report-card strong {
+  font-size: 27px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.admin-app .tp-admin-reports .tp-report-card small {
+  color: var(--text-3);
+  font-size: 12px;
+}
+.admin-app .tp-admin-reports .tp-report-card--attention strong {
+  color: var(--warning);
+}
+.admin-app .tp-admin-reports .tp-report-runs {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: none;
+}
+.admin-app .tp-admin-reports .tp-report-runs .workbook-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-app .tp-admin-reports .tp-report-period {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.admin-app .tp-admin-reports .tp-report-period button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.admin-app .tp-admin-reports .tp-report-period button.is-active {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+.admin-app .tp-admin-reports .tp-report-grid--usage {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.admin-app .tp-admin-reports .tp-report-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.admin-app .tp-admin-reports .tp-report-chart-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: none;
+}
+.admin-app .tp-admin-reports .tp-report-chart-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-app .tp-admin-reports .tp-report-chart-head h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.admin-app .tp-admin-reports .tp-report-chart-head p,
+.admin-app .tp-admin-reports .tp-report-empty,
+.admin-app .tp-admin-reports .tp-report-note {
+  margin: 4px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.admin-app .tp-admin-reports .tp-report-sparkline {
+  width: 100%;
+  overflow: visible;
+}
+.admin-app .tp-admin-reports .tp-report-sparkline polyline {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.admin-app .tp-admin-reports .tp-report-chart-gridline {
+  fill: none;
+  stroke: var(--line-soft);
+  stroke-width: 1;
+}
+.admin-app .tp-admin-reports .tp-report-chart-foot {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-3);
+  font-size: 11px;
+}
+.admin-app .tp-admin-reports .tp-report-bars {
+  display: grid;
+  gap: 11px;
+}
+.admin-app .tp-admin-reports .tp-report-bar-row {
+  display: grid;
+  grid-template-columns: minmax(80px, 0.8fr) minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 12px;
+}
+.admin-app .tp-admin-reports .tp-report-bar-row > span:first-child {
+  overflow: hidden;
+  color: var(--text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .tp-admin-reports .tp-report-bar-row strong {
+  min-width: 30px;
+  color: var(--text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.admin-app .tp-admin-reports .tp-report-bar {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-muted);
+}
+.admin-app .tp-admin-reports .tp-report-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand);
+}
+.admin-app .tp-admin-reports .tp-report-note {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.admin-app .tp-notifications-panel {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: none;
+}
+.admin-app .tp-notification-filters {
+  display: flex;
+  gap: 8px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-app .tp-notification-filters button {
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.admin-app .tp-notification-filters button.is-active {
+  border-color: var(--brand-tint);
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-weight: 650;
+}
+.admin-app .notification-message-cell small {
+  max-width: 560px;
+  overflow: hidden;
+  color: var(--text-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-app .notification-open {
+  display: grid;
+  max-width: 100%;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.admin-app .notification-open:hover strong {
+  color: var(--brand);
+}
+.admin-app .admin-shop-request-detail {
+  display: grid;
+  gap: 16px;
+}
+.admin-app .admin-shop-request-detail > img {
+  display: block;
+  width: min(100%, 240px);
+  max-height: 180px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.admin-app .admin-shop-request-detail dl {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.admin-app .admin-shop-request-detail dl > div {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.7fr) minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-app .admin-shop-request-detail dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-2);
+}
+.admin-app .admin-shop-request-detail dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+.admin-app .notification-unread td:first-child {
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+.admin-app .notification-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.admin-app .notification-delete:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Light surfaces use the same clear page/table separation as dark mode. */
+.admin-app[data-theme='light'] .tp-admin .workbook-panel {
+  border: 1px solid #e2e7e5;
+  background: #fff;
+  box-shadow: none;
+}
+.admin-app[data-theme='light'] .tp-admin .workbook-table-wrap {
+  border: 1px solid #e2e7e5;
+  border-radius: 10px;
+  background: #fff;
+}
+.admin-app[data-theme='light'] .tp-admin .workbook-table th {
+  border-color: #e2e7e5;
+  background: #f0f4f2;
+}
+.admin-app[data-theme='light'] .tp-admin .workbook-table td {
+  border-color: #edf0ef;
+  background: #fff;
+}
+.admin-app[data-theme='light'] .tp-admin .workbook-table tbody tr:hover td {
+  background: #f7faf9;
+}
+
+.admin-app .admin-date-card {
+  display: grid;
+  gap: 14px;
+  min-width: 260px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.admin-app .admin-date-card__head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.admin-app .admin-date-card__icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--brand);
+}
+.admin-app .admin-date-card__icon svg {
+  width: 18px;
+  height: 18px;
+}
+.admin-app .admin-date-card__heading {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.admin-app .admin-date-card__heading strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+.admin-app .admin-date-card__heading small {
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.admin-app .admin-date-calendar {
+  display: grid;
+  gap: 10px;
+}
+.admin-app .admin-date-calendar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-transform: capitalize;
+}
+.admin-app .admin-date-calendar__nav strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+.admin-app .admin-date-calendar__nav button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.admin-app .admin-date-calendar__nav button:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+.admin-app .admin-date-calendar__nav svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.admin-app .admin-date-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  text-align: center;
+}
+.admin-app .admin-date-calendar__weekday {
+  padding: 4px 0;
+  color: var(--text-2);
+  font-size: 10px;
+  font-weight: 650;
+}
+.admin-app .admin-date-calendar__day {
+  display: grid;
+  aspect-ratio: 1;
+  min-width: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+}
+.admin-app .admin-date-calendar__day:hover {
+  border-color: var(--line);
+  background: var(--surface-muted);
+}
+.admin-app .admin-date-calendar__day.is-outside {
+  color: var(--text-3);
+  opacity: 0.48;
+}
+.admin-app .admin-date-calendar__day.is-selected,
+.admin-app .admin-date-calendar__day.is-selected:hover {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+.admin-app .admin-date-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--text-2);
+  font-size: 12px;
+}
+.admin-app .admin-date-time > span:first-child {
+  margin-right: auto;
+}
+.admin-app .admin-date-time label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.admin-app .admin-date-time input {
+  width: 42px;
+  height: 32px;
+  padding: 0 5px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: center;
+}
+.admin-app[data-theme='light'] .admin-date-card {
+  border-color: #e4e9e7;
+  background: #fff;
+}
+.admin-app[data-theme='light'] .admin-date-calendar__day:hover,
+.admin-app[data-theme='light'] .admin-date-calendar__nav button:hover {
+  background: #f4f7f6;
+}
+.admin-app .admin-notice-detail-facts {
+  display: grid;
+  max-height: 44vh;
+  gap: 0;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+}
+.admin-app .admin-notice-detail-facts > div {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.35fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-app .admin-notice-detail-facts dt {
+  color: var(--text-2);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-notice-detail-facts dd {
+  margin: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.admin-app .notification-detail-content {
+  white-space: pre-wrap;
+}
+.admin-app .inline-icon {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: middle;
+}
+
+@media (max-width: 900px) {
+  .admin-app .tp-admin-reports .tp-report-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-app .tp-admin-reports .tp-report-chart-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .admin-app .tp-admin-reports .tp-report-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-app .tp-admin-reports .tp-report-period {
+    width: 100%;
+  }
+  .admin-app .tp-admin-reports .tp-report-period button {
+    flex: 1 1 auto;
+  }
+}
+
+/* Keep compact cards at their natural height and actions on one line. */
+.admin-app .tp-admin-reports .tp-report-grid {
+  align-items: start;
+}
+.admin-app .tp-admin .tp-grid-card {
+  align-self: start;
+  height: auto;
+  min-height: 0;
+}
+.admin-app .tp-admin table td,
+.admin-app .tp-admin table td strong,
+.admin-app .tp-admin table td b,
+.admin-app .tp-admin table td .workbook-cell-title {
+  font-weight: 400;
+}
+.admin-app .tp-admin td a:has(svg),
+.admin-app .tp-admin button.workbook-row-link,
+.admin-app .tp-admin .workbook-row-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.admin-app .tp-admin td a > svg,
+.admin-app .tp-admin .workbook-row-link > svg {
+  flex: 0 0 16px;
+}
+.admin-app .tp-admin .tp-record-link-column {
+  width: 84px;
+}
+.admin-app .tp-admin .tp-report-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.admin-app .tp-admin .tp-report-period {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.admin-app .tp-admin .tp-report-period button {
+  padding: 7px 12px;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: var(--tp-bg);
+  cursor: pointer;
+}
+.admin-app .tp-admin .tp-report-period button.is-active {
+  border-color: currentColor;
+  font-weight: 600;
+}
+
+.admin-app .admin-edit-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+.admin-app .admin-edit-field > [inert] {
+  opacity: 0.75;
+}
+.admin-app .admin-edit-field-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--tp-border);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.admin-app .notice-row {
+  cursor: pointer;
+}
+.admin-app .notice-row:hover td {
+  background-color: var(--surface-muted);
+}
+.admin-app .admin-edit-field .field:has(> input) {
+  position: relative;
+  display: block;
+  margin-top: 6px;
+}
+.admin-app .admin-edit-field .field > .input-caption {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 10px;
+  transform: translateY(-50%);
+  padding: 0 4px;
+  font-size: 0.7rem;
+  line-height: 1;
+  background: var(--surface, Canvas);
+}
+.admin-app .admin-edit-field .field > input {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+}
+.admin-app .admin-edit-field .field > input:focus {
+  outline: 2px solid currentColor;
+  outline-offset: -1px;
+}
+.admin-app .admin-edit-field .field > input:user-invalid {
+  border-color: var(--danger, #b42318);
+}
+.admin-app .report-unavailable {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }

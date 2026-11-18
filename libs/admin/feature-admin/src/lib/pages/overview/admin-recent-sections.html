@@ -40,7 +40,6 @@
     <div class="tp-card-head">
       <div>
         <h2 class="tp-card-title" id="roles-title">Utilisateurs par rôle</h2>
-        <p class="tp-card-sub">Répartition des comptes</p>
       </div>
     </div>
     <div class="tp-card-body">
@@ -68,7 +67,6 @@
     <div class="tp-card-head">
       <div>
         <h2 class="tp-card-title" id="recent-offers-title">Offres récentes</h2>
-        <p class="tp-card-sub">Derniers prix enregistrés</p>
       </div>
       <a class="tp-btn tp-btn--secondary tp-btn--sm" routerLink="/admin/offres"
         >Voir les offres</a
@@ -118,7 +116,10 @@
     </div>
     <div class="tp-overview-list">
       @for (category of recentCategories(); track category.id) {
-      <a class="tp-list-row" routerLink="/admin/categories"
+      <a
+        class="tp-list-row"
+        routerLink="/admin/categories"
+        [title]="category.name"
         ><span class="tp-list-row-text"
           ><strong>{{ category.name }}</strong></span
         >
@@ -150,7 +151,7 @@
     </div>
     <div class="tp-overview-list">
       @for (shop of recentShops(); track shop.id) {
-      <a class="tp-list-row" routerLink="/admin/boutiques"
+      <a class="tp-list-row" routerLink="/admin/boutiques" [title]="shop.name"
         ><span class="tp-list-row-text"><strong>{{ shop.name }}</strong></span>
         <svg
           lucideChevronRight

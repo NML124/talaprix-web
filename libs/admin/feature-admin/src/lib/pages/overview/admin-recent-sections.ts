@@ -16,6 +16,7 @@ interface UserRoles {
 
 @Component({
   selector: 'tp-admin-recent-sections',
+  host: { class: 'grid min-w-0 gap-5' },
   imports: [RouterLink, LucideChevronRight],
   templateUrl: './admin-recent-sections.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

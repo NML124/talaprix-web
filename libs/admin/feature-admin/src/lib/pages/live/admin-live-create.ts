@@ -16,6 +16,8 @@ import { AdminDialog } from '../../ui/admin-dialog';
 import { AdminSelect } from '../../ui/admin-select';
 import { SingleImagePicker } from '../../ui/single-image-picker';
 import { AdminLocationLookup } from '../../ui/admin-location-lookup';
+import { AdminEditField } from '../../ui/admin-edit-field';
+import { AdminDateCard } from '../../ui/admin-date-card';
 import { AdminLiveOfferFields } from './admin-live-offer-fields';
 import type { PlaceSuggestion } from '@talaprix/shared/data-access';
 import type { Resource, Row } from './admin-live-row';
@@ -37,6 +39,8 @@ import {
     AdminSelect,
     SingleImagePicker,
     AdminLocationLookup,
+    AdminDateCard,
+    AdminEditField,
     AdminLiveOfferFields,
   ],
   templateUrl: './admin-live-create.html',
@@ -74,9 +78,12 @@ export class AdminLiveCreate implements OnInit {
   readonly endDate = signal('');
 
   selectLocation(place: PlaceSuggestion): void {
-    this.address.set(place.name);
+    if (!this.address().trim()) this.address.set(place.name);
     this.lat.set(place.lat.toFixed(6));
     this.lon.set(place.lon.toFixed(6));
+  }
+  protected pubStateValue(): string {
+    return String(this.pubState());
   }
   readonly categories = signal<readonly Option[]>([]);
   readonly shops = signal<readonly Option[]>([]);

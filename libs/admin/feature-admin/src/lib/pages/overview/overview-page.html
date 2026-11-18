@@ -111,7 +111,10 @@
       <p class="muted small overview-stale-detail">
         {{data.stats.stalePriority}}
       </p>
-      <a routerLink="/admin/offres" class="link">Examiner les offres →</a>
+      <a routerLink="/admin/offres" class="link"
+        >Examiner les offres
+        <svg lucideChevronRight size="15" aria-hidden="true"></svg
+      ></a>
     </div>
   </section>
 </div>
@@ -183,7 +186,7 @@
       />
     </div>
     <p class="muted small hidden max-[560px]:block">
-      Favoris et prix → faites glisser le tableau
+      Favoris et prix : faites glisser le tableau
     </p>
     <div
       class="table-wrap overflow-x-auto"
@@ -260,8 +263,9 @@
       routerLink="/admin/equipe"
       [queryParams]="{tab:'audit'}"
       class="link mt-4 inline-block"
-      >Journal d'audit →</a
-    >
+      >Journal d'audit
+      <svg lucideChevronRight size="15" aria-hidden="true"></svg
+    ></a>
   </section>
 </div>
 } @else {

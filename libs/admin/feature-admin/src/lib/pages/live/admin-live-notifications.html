@@ -1,91 +1,328 @@
-<tp-admin-page-header
-  title="Notifications"
-  subtitle="Messages reçus par votre compte administrateur"
->
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="inbox.loading()"
-    (click)="inbox.load()"
+<div class="tp-page-inner tp-page-inner--wide">
+  <tp-admin-page-header
+    title="Notifications"
+    subtitle="Messages reçus par votre compte administrateur"
   >
-    Actualiser
-  </button>
-</tp-admin-page-header>
-@if (inbox.error() || actionError()) {
-<div class="workbook-alert" role="alert">
-  {{ inbox.error() || actionError() }}
-</div>
-}
-<section class="tp-card tp-grid-card workbook-panel">
-  <div class="workbook-panel-head tp-grid-toolbar">
-    <div>
-      <h2>Boîte de réception</h2>
-      <p class="muted small">
-        Page {{ inbox.page() }} sur {{ inbox.totalPages() }}
-      </p>
+    <button
+      type="button"
+      class="btn btn-secondary btn-icon workbook-refresh"
+      aria-label="Actualiser les notifications"
+      title="Actualiser"
+      [disabled]="inbox.loading()"
+      (click)="inbox.load()"
+    ></button>
+  </tp-admin-page-header>
+
+  @if (inbox.error() || inbox.actionError()) {
+  <div class="workbook-alert" role="alert">
+    {{ inbox.error() || inbox.actionError() }}
+  </div>
+  }
+
+  <section class="admin-list-table tp-notifications-panel">
+    <div class="workbook-panel-head tp-grid-toolbar">
+      <div>
+        <h2>Boîte de réception</h2>
+        <p class="muted small">
+          {{ inbox.totalItems() }} notification(s) · {{ inbox.totalPages() }}
+          page(s)
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="workbook-table-wrap tp-grid-scroll">
-    <table class="workbook-table tp-grid workbook-action-table">
-      <thead>
-        <tr>
-          <th>Message</th>
-          <th>Reçu le</th>
-          <th>État</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (inbox.loading()) {
-        <tr>
-          <td colspan="4" role="status">Chargement des notifications…</td>
-        </tr>
-        } @else { @for (notice of inbox.rows(); track notice.notification_id) {
-        <tr>
-          <td>
-            <strong class="workbook-cell-title">{{ notice.title }}</strong
-            ><small>{{ notice.content }}</small>
-          </td>
-          <td>{{ notice.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ notice.is_read ? 'Lue' : 'Non lue' }}</td>
-          <td>
-            @if (!notice.is_read && inbox.supportsReadActions()) {
-            <button
-              type="button"
-              class="workbook-row-link"
-              (click)="markRead(notice.notification_id)"
-            >
-              Marquer comme lue
-            </button>
-            }
-          </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="4">
-            <div class="workbook-empty">Aucune notification reçue.</div>
-          </td>
-        </tr>
-        } }
-      </tbody>
-    </table>
-  </div>
-</section>
-<div class="toolbar">
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="inbox.loading() || inbox.page() <= 1"
-    (click)="inbox.load(inbox.page() - 1)"
-  >
-    Précédent
-  </button>
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="inbox.loading() || inbox.page() >= inbox.totalPages()"
-    (click)="inbox.load(inbox.page() + 1)"
-  >
-    Suivant
-  </button>
+    <nav
+      class="workbook-filter-bar tp-notification-filters"
+      aria-label="Filtrer les notifications"
+    >
+      <button
+        type="button"
+        [disabled]="!inbox.supportsReadActions()"
+        [class.is-active]="inbox.filter() === 'all'"
+        [attr.aria-pressed]="inbox.filter() === 'all'"
+        (click)="setFilter('all')"
+      >
+        Toutes
+      </button>
+      <button
+        type="button"
+        [disabled]="!inbox.supportsReadActions()"
+        [class.is-active]="inbox.filter() === 'unread'"
+        [attr.aria-pressed]="inbox.filter() === 'unread'"
+        (click)="setFilter('unread')"
+      >
+        Non lues
+      </button>
+      <button
+        type="button"
+        [disabled]="!inbox.supportsReadActions()"
+        [class.is-active]="inbox.filter() === 'read'"
+        [attr.aria-pressed]="inbox.filter() === 'read'"
+        (click)="setFilter('read')"
+      >
+        Lues
+      </button>
+    </nav>
+    <div class="workbook-table-wrap tp-grid-scroll">
+      <table
+        class="workbook-table tp-grid workbook-action-table admin-list-grid"
+      >
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Reçu le</th>
+            <th>État</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (inbox.loading()) {
+          <tr>
+            <td colspan="4" role="status">Chargement des notifications…</td>
+          </tr>
+          } @else { @for (notice of inbox.rows(); track notice.notification_id)
+          {
+          <tr
+            class="notice-row"
+            (click)="openNotice(notice)"
+            [class.notification-unread]="!notice.is_read"
+          >
+            <td class="notification-message-cell">
+              <button
+                type="button"
+                class="notification-open"
+                (click)="$event.stopPropagation(); openNotice(notice)"
+              >
+                <strong class="workbook-cell-title">{{ notice.title }}</strong>
+                <small>{{ notice.content }}</small>
+              </button>
+            </td>
+            <td>{{ notice.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <span class="workbook-pill" [class.is-approved]="notice.is_read"
+                >{{ notice.is_read ? 'Lue' : 'Non lue' }}</span
+              >
+            </td>
+            <td>
+              @if (inbox.supportsReadActions()) {
+              <div class="notification-actions">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-icon"
+                  [disabled]="inbox.actionBusy()"
+                  [attr.aria-label]="notice.is_read ? 'Marquer comme non lue' : 'Marquer comme lue'"
+                  [title]="notice.is_read ? 'Marquer comme non lue' : 'Marquer comme lue'"
+                  (click)="$event.stopPropagation(); toggleRead(notice)"
+                >
+                  @if (notice.is_read) {
+                  <svg lucideMail size="16" aria-hidden="true"></svg> } @else {
+                  <svg lucideCheck size="16" aria-hidden="true"></svg> }
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-icon notification-delete"
+                  [disabled]="inbox.actionBusy()"
+                  aria-label="Supprimer la notification"
+                  title="Supprimer"
+                  (click)="$event.stopPropagation(); pendingDelete.set(notice)"
+                >
+                  <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+                </button>
+              </div>
+              }
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="4">
+              <div class="workbook-empty">
+                Aucune notification dans ce filtre.
+              </div>
+            </td>
+          </tr>
+          } }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <tp-admin-live-pagination
+    [page]="inbox.page()"
+    [totalPages]="inbox.totalPages()"
+    [total]="inbox.totalItems()"
+    [loading]="inbox.loading()"
+    (changed)="inbox.load($event)"
+  />
 </div>
+
+@if (pendingDelete(); as notice) {
+<tp-admin-dialog
+  title="Supprimer cette notification ?"
+  size="compact"
+  (closed)="pendingDelete.set(null)"
+>
+  <p>Elle disparaîtra de votre liste sans affecter les autres utilisateurs.</p>
+  @if (inbox.actionError()) {
+  <p class="workbook-alert" role="alert">{{ inbox.actionError() }}</p>
+  }
+  <div class="toolbar dialog-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="pendingDelete.set(null)"
+    >
+      Annuler
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      [disabled]="inbox.actionBusy()"
+      (click)="deleteNotice()"
+    >
+      Supprimer
+    </button>
+  </div>
+</tp-admin-dialog>
+} @if (requestNotice()) {
+<div class="toast" role="status">{{ requestNotice() }}</div>
+} @if (shopRequest(); as notice) {
+<tp-admin-dialog title="Demande de boutique" (closed)="shopRequest.set(null)">
+  <p class="muted small">
+    {{ notice.title }} · {{ notice.created_at | date:'dd/MM/yyyy HH:mm' }}
+  </p>
+  <p>{{ notice.content }}</p>
+  <div class="admin-shop-request-detail">
+    @if (shopImage()) {
+    <img [src]="shopImage()" alt="Visuel de la boutique proposée" /> }
+    <dl>
+      <div>
+        <dt>Boutique proposée</dt>
+        <dd>{{ shopValue('shop_name') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Demandeur</dt>
+        <dd>{{ shopValue('requester_name') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd>{{ shopValue('requester_email') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Identifiant du demandeur</dt>
+        <dd>{{ shopValue('user_id') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Téléphone</dt>
+        <dd>{{ shopValue('phone_number') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Adresse</dt>
+        <dd>{{ shopValue('address') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Activités</dt>
+        <dd>{{ shopCategories().join(', ') || 'Non précisées' }}</dd>
+      </div>
+      <div>
+        <dt>
+          <svg lucideMapPin size="14" aria-hidden="true"></svg> Coordonnées
+        </dt>
+        <dd>{{ coordinate('lat') ?? '—' }}, {{ coordinate('lon') ?? '—' }}</dd>
+      </div>
+      @if (locationUrl(); as url) {
+      <div>
+        <dt>Carte</dt>
+        <dd>
+          <a [href]="url" target="_blank" rel="noopener noreferrer"
+            >Ouvrir la position</a
+          >
+        </dd>
+      </div>
+      }
+    </dl>
+  </div>
+  @if (requestError()) {
+  <div class="workbook-alert" role="alert">{{ requestError() }}</div>
+  } @if (rejectingRequest()) {
+  <label class="field"
+    >Motif du refus (facultatif)
+    <textarea
+      rows="3"
+      [value]="rejectionReason()"
+      (input)="rejectionReason.set($any($event.target).value)"
+      placeholder="Adresse non vérifiable, informations incomplètes…"
+    ></textarea>
+  </label>
+  }
+  <div class="toolbar dialog-actions">
+    @if (rejectingRequest()) {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      [disabled]="requestBusy()"
+      (click)="rejectingRequest.set(false)"
+    >
+      Retour
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      [disabled]="requestBusy()"
+      (click)="rejectShopRequest()"
+    >
+      {{ requestBusy() ? 'Envoi…' : 'Confirmer le refus' }}
+    </button>
+    } @else {
+    <button
+      type="button"
+      class="btn btn-danger"
+      [disabled]="requestBusy()"
+      (click)="rejectingRequest.set(true)"
+    >
+      Rejeter
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="requestBusy()"
+      (click)="acceptShopRequest()"
+    >
+      {{ requestBusy() ? 'Validation…' : 'Valider' }}
+    </button>
+    }
+  </div>
+</tp-admin-dialog>
+} @if (noticeDetail(); as notice) {
+<tp-admin-dialog [title]="notice.title" (closed)="noticeDetail.set(null)">
+  <p class="muted small">
+    Reçue le {{ notice.created_at | date:'dd/MM/yyyy HH:mm' }}
+  </p>
+  <p class="notification-detail-content">{{ notice.content }}</p>
+  @if (detailRows(notice).length) {
+  <dl class="admin-notice-detail-facts">
+    @for (item of detailRows(notice); track item.key) {
+    <div>
+      <dt>{{ item.key }}</dt>
+      <dd>{{ item.value }}</dd>
+    </div>
+    }
+  </dl>
+  }
+  <div class="toolbar dialog-actions">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="noticeDetail.set(null)"
+    >
+      Fermer
+    </button>
+    @if (inbox.supportsReadActions()) {
+    <button
+      type="button"
+      class="btn btn-secondary"
+      [disabled]="inbox.actionBusy()"
+      (click)="toggleRead(notice); noticeDetail.set(null)"
+    >
+      {{ notice.is_read ? 'Marquer comme non lue' : 'Marquer comme lue' }}
+    </button>
+    }
+  </div>
+</tp-admin-dialog>
+}

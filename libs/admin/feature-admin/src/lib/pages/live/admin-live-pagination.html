@@ -1,21 +1,63 @@
-<div class="mt-5 flex items-center justify-between gap-3">
-  <button
-    class="btn btn-secondary"
-    type="button"
-    [disabled]="page() <= 1"
-    (click)="changed.emit(page() - 1)"
-  >
-    Précédent
-  </button>
-  <span class="text-sm text-[var(--text-2)]"
-    >Page {{ page() }} sur {{ totalPages() }}</span
-  >
-  <button
-    class="btn btn-secondary"
-    type="button"
-    [disabled]="page() >= totalPages()"
-    (click)="changed.emit(page() + 1)"
-  >
-    Suivant
-  </button>
-</div>
+<footer
+  class="workbook-pagination tp-grid-foot"
+  aria-label="Pagination du tableau"
+>
+  <span>
+    @if (total()) { Lignes {{ (page() - 1) * pageSize() + 1 }}–{{
+    Math.min(page() * pageSize(), total()) }} · Page {{ page() }} sur {{
+    totalPages() }} } @else { Aucune ligne · Page {{ page() }} }
+  </span>
+  <nav aria-label="Pages du tableau">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="changed.emit(page() - 1)"
+      [disabled]="loading() || page() <= 1"
+    >
+      Précédent
+    </button>
+    @if (pages()[0] > 1) {
+    <button
+      type="button"
+      class="btn btn-secondary workbook-page-index"
+      (click)="changed.emit(1)"
+      aria-label="Page 1"
+    >
+      1
+    </button>
+    @if (pages()[0] > 2) {
+    <span class="workbook-page-ellipsis" aria-hidden="true">…</span> } } @for
+    (pageNumber of pages(); track pageNumber) {
+    <button
+      type="button"
+      class="btn btn-secondary workbook-page-index"
+      [class.workbook-page-active]="pageNumber === page()"
+      [attr.aria-label]="'Page ' + pageNumber"
+      [attr.aria-current]="pageNumber === page() ? 'page' : null"
+      (click)="changed.emit(pageNumber)"
+      [disabled]="loading() || pageNumber === page()"
+    >
+      {{ pageNumber }}
+    </button>
+    } @if (pages()[pages().length - 1] < totalPages()) { @if
+    (pages()[pages().length - 1] < totalPages() - 1) {
+    <span class="workbook-page-ellipsis" aria-hidden="true">…</span> }
+    <button
+      type="button"
+      class="btn btn-secondary workbook-page-index"
+      (click)="changed.emit(totalPages())"
+      [attr.aria-label]="'Page ' + totalPages()"
+    >
+      {{ totalPages() }}
+    </button>
+    }
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="changed.emit(page() + 1)"
+      [disabled]="loading() || page() >= totalPages()"
+    >
+      Suivant
+    </button>
+  </nav>
+</footer>

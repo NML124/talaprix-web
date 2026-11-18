@@ -33,16 +33,13 @@
     </label>
     <label
       >Plafond par collecte (USD)
-      <select
-        class="input"
-        [(ngModel)]="cap"
-        (ngModelChange)="invalidatePreview()"
-      >
-        <option value="0.08">0,08</option>
-        <option value="0.10">0,10</option>
-        <option value="0.20">0,20</option>
-        <option value="0.50">0,50</option>
-      </select>
+      <tp-admin-select
+        [options]="['0.08', '0.10', '0.20', '0.50']"
+        [displayLabels]="{ '0.08': '0,08 USD', '0.10': '0,10 USD', '0.20': '0,20 USD', '0.50': '0,50 USD' }"
+        [selected]="cap"
+        ariaLabel="Plafond par collecte"
+        (changed)="setCap($event)"
+      />
     </label>
   </div>
   <button

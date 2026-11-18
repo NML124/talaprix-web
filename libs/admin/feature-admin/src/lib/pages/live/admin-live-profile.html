@@ -4,12 +4,13 @@
 >
   <button
     type="button"
-    class="btn btn-secondary"
+    class="btn btn-secondary btn-icon workbook-refresh"
     [disabled]="loading() || saving()"
+    [attr.aria-busy]="loading()"
+    aria-label="Actualiser le profil"
+    title="Actualiser"
     (click)="load()"
-  >
-    Actualiser
-  </button>
+  ></button>
 </tp-admin-page-header>
 @if (error()) {
 <div class="workbook-alert" role="alert">{{ error() }}</div>

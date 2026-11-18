@@ -131,7 +131,6 @@ export class AdminShell {
       icon: 'megaphone',
       pages: [
         { label: 'Publicités', path: '/admin/publicites' },
-        { label: 'Récompenses', path: '/admin/recompenses' },
         { label: 'Notifications', path: '/admin/notifications' },
       ],
     },
@@ -146,7 +145,6 @@ export class AdminShell {
       pages: [
         { label: 'Administrateurs', path: '/admin/equipe' },
         { label: 'Rôles', path: '/admin/roles' },
-        { label: 'Mon compte', path: '/admin/profil' },
       ],
     },
   ];
@@ -189,6 +187,9 @@ export class AdminShell {
 
   protected isOpen(label: string): boolean {
     return this.open().includes(label);
+  }
+  protected setCurrency(value: string): void {
+    if (value === 'CDF' || value === 'USD') this.currency.setCurrency(value);
   }
   protected isActive(page: NavPage): boolean {
     return (

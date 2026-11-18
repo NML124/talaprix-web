@@ -34,6 +34,7 @@
       >Quartier</label
     >
     <input
+      #districtInput
       [id]="state.id('district')"
       name="district"
       type="text"
@@ -94,13 +95,43 @@
       {{ locateMessage() }}
     </p>
     }
+    <button
+      type="button"
+      class="inline-flex h-9 w-fit items-center gap-2 rounded-xl border border-[var(--client-border)] bg-[var(--client-tile)] px-3 text-[13px] font-semibold text-[var(--client-text)] transition hover:border-[var(--client-action)]"
+      [disabled]="searchingAddress()"
+      (click)="searchAddress()"
+    >
+      {{ searchingAddress() ? 'Recherche de l’adresse…' : 'Trouver la position à
+      partir de cette adresse' }}
+    </button>
+    @if (addressSearchError()) {
+    <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+      {{ addressSearchError() }}
+    </p>
+    } @if (addressMatches().length) {
+    <div
+      class="grid gap-2 rounded-xl border border-[var(--client-border)] bg-[var(--client-tile)] p-3"
+    >
+      <p class="m-0 text-xs font-semibold text-[var(--client-text-secondary)]">
+        Choisissez le résultat qui correspond à la boutique
+      </p>
+      @for (place of addressMatches(); track place.lat + ':' + place.lon) {
+      <button
+        type="button"
+        class="rounded-lg border border-[var(--client-border)] bg-white px-3 py-2 text-left text-sm text-[var(--client-text)] hover:border-[var(--client-action)]"
+        (click)="chooseAddress(place)"
+      >
+        {{ place.name }}
+      </button>
+      }
+    </div>
+    }
     <input
       #addressInput
       [id]="state.id('address')"
       name="address"
       aria-label="Adresse de la boutique"
       type="text"
-      [readOnly]="locating() !== 'denied'"
       autocomplete="street-address"
       placeholder="Avenue, numéro, commune, ville"
       class="h-11 w-full rounded-[14px] border bg-[var(--client-tile)] px-4 text-[15px] text-[var(--client-text)] outline-none transition placeholder:text-[var(--client-subtle)] focus:ring-4"
@@ -133,6 +164,7 @@
       >Avenue ou rue</label
     >
     <input
+      #streetInput
       [id]="state.id('street')"
       name="street"
       type="text"
@@ -161,6 +193,7 @@
       <span class="font-normal text-[var(--client-muted)]">(facultatif)</span>
     </label>
     <input
+      #numberInput
       [id]="state.id('number')"
       name="number"
       type="text"

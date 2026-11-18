@@ -6,7 +6,11 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { currentPosition, MapboxApi } from '@talaprix/shared/data-access';
+import {
+  currentPosition,
+  MapboxApi,
+  type PlaceSuggestion,
+} from '@talaprix/shared/data-access';
 import { SelectCard } from '@talaprix/shared/ui-kit';
 import {
   KINSHASA_COMMUNES,
@@ -32,8 +36,15 @@ export class MerchantSignupAddress {
   readonly #mapbox = inject(MapboxApi);
   readonly addressInput =
     viewChild<ElementRef<HTMLInputElement>>('addressInput');
+  readonly streetInput = viewChild<ElementRef<HTMLInputElement>>('streetInput');
+  readonly districtInput =
+    viewChild<ElementRef<HTMLInputElement>>('districtInput');
+  readonly numberInput = viewChild<ElementRef<HTMLInputElement>>('numberInput');
   readonly locating = signal<'idle' | 'locating' | 'done' | 'denied'>('idle');
   readonly locateMessage = signal('');
+  readonly addressMatches = signal<readonly PlaceSuggestion[]>([]);
+  readonly searchingAddress = signal(false);
+  readonly addressSearchError = signal('');
 
   /** Saves the GPS position and, with Mapbox, pre-fills the address. */
   async locate(): Promise<void> {
@@ -63,6 +74,50 @@ export class MerchantSignupAddress {
       address
         ? 'Position enregistrée et adresse proposée. Vérifiez-la avant d’envoyer.'
         : 'Position GPS enregistrée et ajoutée à l’adresse. Complétez-la si besoin.',
+    );
+  }
+
+  async searchAddress(): Promise<void> {
+    const parts = [
+      this.numberInput()?.nativeElement.value,
+      this.streetInput()?.nativeElement.value,
+      this.districtInput()?.nativeElement.value,
+      this.shops.merchantCommune(),
+      'Kinshasa',
+      'RDC',
+    ].filter((part): part is string => Boolean(part?.trim()));
+    if (parts.length < 4) {
+      this.addressSearchError.set(
+        'Renseignez la commune, le quartier et la rue pour trouver la position.',
+      );
+      return;
+    }
+    this.searchingAddress.set(true);
+    this.addressSearchError.set('');
+    try {
+      const matches = await this.#mapbox.searchPlaces(parts.join(', '));
+      this.addressMatches.set(matches);
+      if (!matches.length)
+        this.addressSearchError.set(
+          'Aucun résultat précis. Essayez le nom de l’avenue ou utilisez le GPS.',
+        );
+    } catch (error) {
+      this.addressSearchError.set(
+        error instanceof Error
+          ? error.message
+          : 'Recherche d’adresse indisponible.',
+      );
+    } finally {
+      this.searchingAddress.set(false);
+    }
+  }
+
+  chooseAddress(place: PlaceSuggestion): void {
+    this.shops.merchantPosition.set({ lat: place.lat, lon: place.lon });
+    this.addressMatches.set([]);
+    this.locating.set('done');
+    this.locateMessage.set(
+      `Position sélectionnée : ${place.name}. Vérifiez les détails saisis avant l’envoi.`,
     );
   }
 

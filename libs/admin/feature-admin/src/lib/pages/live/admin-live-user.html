@@ -150,24 +150,16 @@
     <section class="tp-card" aria-label="Rendus de l’enquêteur">
       <h3>Rendus de l’enquêteur</h3>
       <div class="grid gap-3 sm:grid-cols-2">
-        <label class="field"
-          >Du
-          <input
-            type="date"
-            [ngModel]="performanceFrom()"
-            (ngModelChange)="performanceFrom.set($event)"
-            name="performanceFrom"
-          />
-        </label>
-        <label class="field"
-          >Au
-          <input
-            type="date"
-            [ngModel]="performanceTo()"
-            (ngModelChange)="performanceTo.set($event)"
-            name="performanceTo"
-          />
-        </label>
+        <tp-admin-date-card
+          label="Du"
+          [value]="performanceFrom()"
+          (valueChange)="performanceFrom.set($event)"
+        />
+        <tp-admin-date-card
+          label="Au"
+          [value]="performanceTo()"
+          (valueChange)="performanceTo.set($event)"
+        />
       </div>
       <button
         type="button"

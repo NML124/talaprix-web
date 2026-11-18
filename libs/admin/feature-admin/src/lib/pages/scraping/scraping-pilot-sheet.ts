@@ -6,10 +6,11 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ScrapingReviewApi, type CampaignLimits } from './scraping-review-api';
+import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-scraping-pilot-sheet',
-  imports: [FormsModule],
+  imports: [FormsModule, AdminSelect],
   templateUrl: './scraping-pilot-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +33,18 @@ export class ScrapingPilotSheet {
   protected invalidatePreview(): void {
     this.preview.set(null);
     this.budgetConfirmed = false;
+  }
+
+  protected setCap(value: string): void {
+    if (
+      value === '0.08' ||
+      value === '0.10' ||
+      value === '0.20' ||
+      value === '0.50'
+    ) {
+      this.cap = value;
+      this.invalidatePreview();
+    }
   }
 
   protected canStart(): boolean {

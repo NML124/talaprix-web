@@ -67,10 +67,10 @@ export class ClientLiveDetailSeo {
       host === 'talaprix.com' ||
       host === 'www.talaprix.com';
     this.#seo.update({
-      title: `${reference.name} : comparer les prix à Kinshasa | TalaPrix`,
+      title: `${reference.name} : prix à Kinshasa | TalaPrix`,
       description: offers.length
-        ? `${reference.name}${priceText ? ` à partir de ${priceText}` : ''} : ${offers.length} offre${offers.length > 1 ? 's' : ''} dans ${shops} boutique${shops > 1 ? 's' : ''} à Kinshasa. Comparez les prix avant de vous déplacer.`
-        : `${reference.name} sur TalaPrix : consultez les offres des boutiques de Kinshasa.`,
+        ? `Vous cherchez ${reference.name} en RDC ? Comparez ${offers.length} offre${offers.length > 1 ? 's' : ''} dans ${shops} boutique${shops > 1 ? 's' : ''} à Kinshasa${priceText ? `, dès ${priceText}` : ''}. Contactez le vendeur sur TalaPrix.`
+        : `Où trouver ${reference.name} à Kinshasa, en RDC (Congo) ? Consultez les prix et les boutiques référencés sur TalaPrix.`,
       canonical: url,
       index: production && seoPolicy(raw).index,
       image: reference.image,

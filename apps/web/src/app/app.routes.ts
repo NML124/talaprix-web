@@ -12,13 +12,13 @@ export const appRoutes: Route[] = [
       {
         path: '',
         pathMatch: 'full',
-        title: 'TalaPrix : comparez les prix des boutiques de Kinshasa',
+        title: 'Comparateur de prix en RDC et à Kinshasa | TalaPrix',
         loadComponent: () =>
           import('@talaprix/home/feature-web').then((m) => m.ClientHome),
       },
       {
         path: 'resultats',
-        title: 'Tous les produits et leurs prix | TalaPrix',
+        title: 'Produits et prix des boutiques en RDC | TalaPrix',
         loadComponent: () =>
           import('@talaprix/products/feature-web').then((m) => m.ClientResults),
       },
@@ -54,7 +54,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'boutiques',
-        title: 'Boutiques à Kinshasa | TalaPrix',
+        title: 'Boutiques et vendeurs à Kinshasa, RDC | TalaPrix',
         loadComponent: () =>
           import('@talaprix/shops/feature-web').then((m) =>
             live ? m.ClientLiveShops : m.ClientShopPage,
@@ -67,7 +67,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'commercants',
-        title: 'Inscrire ma boutique sur TalaPrix',
+        title: 'Référencer sa boutique à Kinshasa | TalaPrix',
         loadComponent: () =>
           import('@talaprix/shops/feature-web').then((m) => m.ClientMerchants),
       },

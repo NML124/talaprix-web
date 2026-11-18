@@ -6,12 +6,13 @@ import {
   output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AdminEditField } from '../../ui/admin-edit-field';
 import { AdminSelect } from '../../ui/admin-select';
 import type { Row } from './admin-live-row';
 
 @Component({
   selector: 'tp-admin-live-offer-fields',
-  imports: [FormsModule, AdminSelect],
+  imports: [FormsModule, AdminSelect, AdminEditField],
   templateUrl: './admin-live-offer-fields.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

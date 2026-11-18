@@ -856,7 +856,7 @@
   color: var(--text);
 }
 .admin-app .table-action.danger:hover {
-  background: #fdecec;
+  background: var(--surface-muted);
   color: var(--danger);
 }
 .admin-app .table-action:disabled {
@@ -866,6 +866,20 @@
 .admin-app .table-action:disabled:hover {
   background: transparent;
   color: var(--text-2);
+}
+.admin-app .table-action.is-editing {
+  background: var(--surface-muted);
+  color: var(--text-2);
+  opacity: 0.55;
+  cursor: wait;
+}
+.admin-app .table-action.is-updated {
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+  color: var(--success);
+}
+.admin-app .table-action.is-updated:hover {
+  background: color-mix(in srgb, var(--success) 18%, transparent);
+  color: var(--success);
 }
 .admin-app .dialog-section {
   margin-top: 22px;

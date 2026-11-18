@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { LucideSearch, LucideX } from '@lucide/angular';
+import { LucideSearch } from '@lucide/angular';
 import { products, shops } from '../mocks/catalogue';
 import { CategoryPreviewStore } from '../services/category-preview-store';
 import { AdminNotificationPreview } from '../services/admin-notification-preview';
@@ -69,7 +69,7 @@ const normalize = (text: string) =>
   host: {
     class: 'block min-w-0 flex-[0_1_480px] max-[820px]:flex-[1_1_220px]',
   },
-  imports: [LucideSearch, LucideX],
+  imports: [LucideSearch],
   templateUrl: './admin-global-search.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -4,14 +4,14 @@ export const SEO_PAGES: Readonly<
   Record<string, { title: string; description: string }>
 > = {
   '/': {
-    title: 'TalaPrix : comparez les prix des boutiques de Kinshasa',
+    title: 'Comparateur de prix en RDC et à Kinshasa | TalaPrix',
     description:
-      'Comparez les prix des produits dans les boutiques de Kinshasa, trouvez une offre près de chez vous et contactez le vendeur avant de vous déplacer.',
+      'TalaPrix compare les prix des produits dans les boutiques de Kinshasa, en République démocratique du Congo. Trouvez où acheter et contactez le vendeur.',
   },
   '/resultats': {
-    title: 'Produits et prix des boutiques de Kinshasa | TalaPrix',
+    title: 'Produits et prix des boutiques en RDC | TalaPrix',
     description:
-      'Parcourez les produits proposés par les boutiques de Kinshasa. Comparez les prix, les variantes et les vendeurs sur TalaPrix.',
+      'Parcourez les produits proposés par les boutiques de Kinshasa et de la RDC. Comparez les prix, les variantes et les vendeurs sur TalaPrix.',
   },
   '/categories': {
     title: 'Catégories de produits à Kinshasa | TalaPrix',
@@ -19,7 +19,7 @@ export const SEO_PAGES: Readonly<
       'Explorez les catégories TalaPrix et comparez les produits disponibles auprès des boutiques de Kinshasa.',
   },
   '/boutiques': {
-    title: 'Boutiques et vendeurs à Kinshasa | TalaPrix',
+    title: 'Boutiques et vendeurs à Kinshasa, RDC | TalaPrix',
     description:
       'Découvrez les boutiques présentes sur TalaPrix, consultez leurs produits et comparez les offres avant de vous déplacer à Kinshasa.',
   },

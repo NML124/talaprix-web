@@ -1,20 +1,25 @@
 <tp-admin-dialog [title]="title()" (closed)="closed.emit()">
-  <form class="form-stack" (submit)="$event.preventDefault(); save()">
+  <form
+    [attr.inert]="saving() ? '' : null"
+    class="form-stack"
+    (submit)="$event.preventDefault(); save()"
+  >
     @if (error()) {
     <p class="dialog-error" role="alert">{{ error() }}</p>
     } @if (resource() !== 'offers') {
-    <label class="field"
-      >Nom
-      <input
-        type="text"
-        maxlength="150"
-        autocomplete="off"
-        [ngModel]="name()"
-        (ngModelChange)="name.set($event)"
-        name="name"
-        required
-      />
-    </label>
+    <tp-admin-edit-field [locked]="!!row() && resource() !== 'categories'"
+      ><label class="field"
+        ><span class="input-caption">Nom</span>
+        <input
+          type="text"
+          maxlength="150"
+          autocomplete="off"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+          name="name"
+          required
+        /> </label
+    ></tp-admin-edit-field>
     } @if (resource() === 'categories') {
     <label class="field"
       >Catégorie parente
@@ -36,36 +41,39 @@
       />
     </label>
     } @if (resource() === 'products') {
-    <label class="field"
-      >Code EAN
-      <input
-        type="text"
-        maxlength="100"
-        [ngModel]="ean()"
-        (ngModelChange)="ean.set($event)"
-        name="ean"
-      />
-    </label>
-    <label class="field"
-      >Marque
-      <input
-        type="text"
-        maxlength="100"
-        [ngModel]="brand()"
-        (ngModelChange)="brand.set($event)"
-        name="brand"
-      />
-    </label>
-    <label class="field"
-      >Gamme / série
-      <input
-        type="text"
-        maxlength="100"
-        [ngModel]="series()"
-        (ngModelChange)="series.set($event)"
-        name="series"
-      />
-    </label>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Code EAN</span>
+        <input
+          type="text"
+          maxlength="100"
+          [ngModel]="ean()"
+          (ngModelChange)="ean.set($event)"
+          name="ean"
+        /> </label
+    ></tp-admin-edit-field>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Marque</span>
+        <input
+          type="text"
+          maxlength="100"
+          [ngModel]="brand()"
+          (ngModelChange)="brand.set($event)"
+          name="brand"
+        /> </label
+    ></tp-admin-edit-field>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Gamme / série</span>
+        <input
+          type="text"
+          maxlength="100"
+          [ngModel]="series()"
+          (ngModelChange)="series.set($event)"
+          name="series"
+        /> </label
+    ></tp-admin-edit-field>
     <label class="field"
       >Catégorie
       <tp-admin-select
@@ -85,70 +93,80 @@
       />
     </label>
     } @if (resource() === 'shops') { @if (!row()) {
-    <label class="field"
-      >Email du propriétaire
-      <input
-        type="email"
-        autocomplete="email"
-        [ngModel]="ownerEmail()"
-        (ngModelChange)="ownerEmail.set($event)"
-        name="ownerEmail"
-        required
-      />
-    </label>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Email du propriétaire</span>
+        <input
+          type="email"
+          autocomplete="email"
+          [ngModel]="ownerEmail()"
+          (ngModelChange)="ownerEmail.set($event)"
+          name="ownerEmail"
+          required
+        /> </label
+    ></tp-admin-edit-field>
     }
-    <label class="field"
-      >Adresse de la boutique
-      <input
-        type="text"
-        autocomplete="street-address"
-        [ngModel]="address()"
-        (ngModelChange)="address.set($event)"
-        name="address"
-        required
-      />
-    </label>
-    <tp-admin-location-lookup
-      [query]="address()"
-      (selected)="selectLocation($event)"
-    />
-    <label class="field"
-      >Téléphone
-      <input
-        type="tel"
-        autocomplete="tel"
-        [ngModel]="phone()"
-        (ngModelChange)="phone.set($event)"
-        name="phone"
-      />
-    </label>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Adresse de la boutique</span>
+        <input
+          type="text"
+          autocomplete="street-address"
+          [ngModel]="address()"
+          (ngModelChange)="address.set($event)"
+          name="address"
+          required
+        /> </label
+    ></tp-admin-edit-field>
+    <tp-admin-edit-field [locked]="!!row()">
+      <tp-admin-location-lookup
+        [query]="address()"
+        (selected)="selectLocation($event)"
+    /></tp-admin-edit-field>
+    <p class="muted small">
+      Vérifiez l’adresse détaillée ci-dessus. Le lieu sélectionné sert à remplir
+      les coordonnées GPS sans remplacer cette adresse.
+    </p>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        ><span class="input-caption">Téléphone</span>
+        <input
+          type="tel"
+          autocomplete="tel"
+          [ngModel]="phone()"
+          (ngModelChange)="phone.set($event)"
+          name="phone"
+        /> </label
+    ></tp-admin-edit-field>
     <div class="grid gap-3 sm:grid-cols-2">
-      <label class="field"
-        >Latitude
-        <input
-          type="number"
-          step="any"
-          min="-90"
-          max="90"
-          [ngModel]="lat()"
-          (ngModelChange)="lat.set($event)"
-          name="lat"
-          required
-        />
-      </label>
-      <label class="field"
-        >Longitude
-        <input
-          type="number"
-          step="any"
-          min="-180"
-          max="180"
-          [ngModel]="lon()"
-          (ngModelChange)="lon.set($event)"
-          name="lon"
-          required
-        />
-      </label>
+      <tp-admin-edit-field [locked]="!!row()"
+        ><label class="field"
+          ><span class="input-caption">Latitude</span>
+          <input
+            type="number"
+            step="any"
+            min="-90"
+            max="90"
+            [ngModel]="lat()"
+            (ngModelChange)="lat.set($event)"
+            name="lat"
+            required
+          /> </label
+      ></tp-admin-edit-field>
+      <tp-admin-edit-field [locked]="!!row()"
+        ><label class="field"
+          ><span class="input-caption">Longitude</span>
+          <input
+            type="number"
+            step="any"
+            min="-180"
+            max="180"
+            [ngModel]="lon()"
+            (ngModelChange)="lon.set($event)"
+            name="lon"
+            required
+          /> </label
+      ></tp-admin-edit-field>
     </div>
     <p class="muted small">
       Le propriétaire doit déjà avoir un compte TalaPrix. Vérifiez la position
@@ -170,28 +188,28 @@
       (search)="searchProducts()"
     />
     } @if (resource() === 'advertisements') {
-    <label class="field"
-      >État de la publicité
-      <select
-        [ngModel]="pubState()"
-        (ngModelChange)="pubState.set(+$event)"
-        name="pubState"
-      >
-        <option [ngValue]="0">Inactive</option>
-        <option [ngValue]="1">Active</option>
-        <option [ngValue]="2">En attente</option>
-      </select>
-    </label>
-    <label class="field"
-      >Boutique
-      <tp-admin-select
-        [options]="shopIds()"
-        [displayLabels]="shopLabels()"
-        [selected]="shopId()"
-        ariaLabel="Boutique de la publicité"
-        (changed)="shopId.set($event)"
-      />
-    </label>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        >État de la publicité
+        <tp-admin-select
+          [options]="['0', '1', '2']"
+          [displayLabels]="{ '0': 'Inactive', '1': 'Active', '2': 'En attente' }"
+          [selected]="pubStateValue()"
+          ariaLabel="État de la publicité"
+          (changed)="pubState.set(+$event)"
+        /> </label
+    ></tp-admin-edit-field>
+    <tp-admin-edit-field [locked]="!!row()"
+      ><label class="field"
+        >Boutique
+        <tp-admin-select
+          [options]="shopIds()"
+          [displayLabels]="shopLabels()"
+          [selected]="shopId()"
+          ariaLabel="Boutique de la publicité"
+          (changed)="shopId.set($event)"
+        /> </label
+    ></tp-admin-edit-field>
     <label class="field"
       >Visuel de la publicité
       <tp-admin-single-image-picker
@@ -201,28 +219,26 @@
       />
     </label>
     <div class="grid gap-3 sm:grid-cols-2">
-      <label class="field"
-        >Priorité
-        <input
-          type="number"
-          min="1"
-          step="1"
-          [ngModel]="priority()"
-          (ngModelChange)="priority.set($event)"
-          name="priority"
-          required
-        />
-      </label>
-      <label class="field"
-        >Date de fin
-        <input
-          type="datetime-local"
-          [ngModel]="endDate()"
-          (ngModelChange)="endDate.set($event)"
-          name="endDate"
-          required
-        />
-      </label>
+      <tp-admin-edit-field [locked]="!!row()"
+        ><label class="field"
+          ><span class="input-caption">Priorité</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            [ngModel]="priority()"
+            (ngModelChange)="priority.set($event)"
+            name="priority"
+            required
+          /> </label
+      ></tp-admin-edit-field>
+      <tp-admin-edit-field [locked]="!!row()">
+        <tp-admin-date-card
+          label="Date de fin"
+          mode="datetime"
+          [value]="endDate()"
+          (valueChange)="endDate.set($event)"
+      /></tp-admin-edit-field>
     </div>
     }
 

@@ -1,0 +1,18 @@
+<div class="admin-edit-field">
+  <div [attr.inert]="locked() && !editing() ? '' : null"><ng-content /></div>
+  @if (locked()) {
+  <button
+    type="button"
+    class="table-action admin-edit-field-toggle"
+    [attr.aria-label]="editing() ? 'Valider le champ' : 'Modifier le champ'"
+    [attr.title]="editing() ? 'Valider le champ' : 'Modifier le champ'"
+    (click)="toggle()"
+  >
+    @if (editing()) {
+    <svg lucideCheck size="16" aria-hidden="true"></svg>
+    } @else {
+    <svg lucidePencil size="16" aria-hidden="true"></svg>
+    }
+  </button>
+  }
+</div>

@@ -1,0 +1,90 @@
+<section class="admin-date-card" [attr.aria-label]="label()">
+  <header class="admin-date-card__head">
+    <span class="admin-date-card__icon" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="5" width="18" height="16" rx="3" />
+        <path d="M16 3v4M8 3v4M3 10h18" />
+      </svg>
+    </span>
+    <span class="admin-date-card__heading">
+      <strong>{{ label() }}</strong>
+      <small>{{ selectedLabel() }}</small>
+    </span>
+  </header>
+  <div class="admin-date-calendar">
+    <div class="admin-date-calendar__nav">
+      <button type="button" aria-label="Mois précédent" (click)="moveMonth(-1)">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+      </button>
+      <strong>{{ monthTitle() }}</strong>
+      <button type="button" aria-label="Mois suivant" (click)="moveMonth(1)">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="admin-date-calendar__grid"
+      role="grid"
+      [attr.aria-label]="monthTitle()"
+    >
+      @for (weekday of weekDays; track weekday) {
+      <span class="admin-date-calendar__weekday" role="columnheader"
+        >{{ weekday }}</span
+      >
+      } @for (day of days(); track day.key) {
+      <button
+        type="button"
+        role="gridcell"
+        class="admin-date-calendar__day"
+        [class.is-outside]="!day.inMonth"
+        [class.is-selected]="day.selected"
+        [attr.aria-pressed]="day.selected"
+        [attr.aria-label]="day.key"
+        (click)="choose(day)"
+      >
+        {{ day.label }}
+      </button>
+      }
+    </div>
+  </div>
+  @if (mode() === 'datetime') {
+  <div class="admin-date-time">
+    <span>Heure de fin</span>
+    <label
+      >H
+      <input
+        type="number"
+        min="0"
+        max="23"
+        inputmode="numeric"
+        [value]="timePart('hour')"
+        (change)="changeTime('hour', $any($event.target).value)"
+        aria-label="Heure"
+      />
+    </label>
+    <span aria-hidden="true">:</span>
+    <label
+      >Min
+      <input
+        type="number"
+        min="0"
+        max="59"
+        inputmode="numeric"
+        [value]="timePart('minute')"
+        (change)="changeTime('minute', $any($event.target).value)"
+        aria-label="Minute"
+      />
+    </label>
+  </div>
+  }
+</section>
