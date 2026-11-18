@@ -31,3 +31,5 @@ export { AdminLiveReports } from './lib/pages/live/admin-live-reports';
 export { AdminLiveRoles } from './lib/pages/live/admin-live-roles';
 export { AdminLiveProfile } from './lib/pages/live/admin-live-profile';
 export { AdminUnavailable } from './lib/pages/live/admin-unavailable';
+
+export { UsageJournal } from './lib/pages/live/usage-journal';

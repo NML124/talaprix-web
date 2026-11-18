@@ -22,34 +22,21 @@ interface ReportMetric {
   readonly path: string;
 }
 
-interface UsageReport {
-  readonly period_days: number;
-  readonly total_events: number;
-  readonly captured_events: number;
-  readonly truncated: boolean;
-  readonly active_sessions: number;
-  readonly signed_in_users: number;
-  readonly event_types: readonly { label: string; count: number }[];
-  readonly screens: readonly { label: string; count: number }[];
-  readonly platforms: readonly { label: string; count: number }[];
-  readonly zones: readonly { label: string; count: number }[];
-  readonly zones_available: boolean;
-  readonly top_searches: readonly { label: string; count: number }[];
-  readonly top_products: readonly { id: string; name: string; count: number }[];
-  readonly daily: readonly {
-    date: string;
-    events: number;
-    sessions: number;
-    users: number;
-  }[];
-}
+import type { UsageReport } from './usage-report.model';
+import { UsageAnalysis } from './usage-analysis';
 
 @Component({
   selector: 'tp-admin-live-reports',
   host: {
     class: 'tp-admin tp-page tp-admin-reports grid min-w-0 content-start gap-5',
   },
-  imports: [DatePipe, PageHeader, RouterLink, LucideChevronRight],
+  imports: [
+    UsageAnalysis,
+    DatePipe,
+    PageHeader,
+    RouterLink,
+    LucideChevronRight,
+  ],
   templateUrl: './admin-live-reports.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -126,29 +113,6 @@ export class AdminLiveReports {
     }
   }
 
-  protected dailyPoints(): string {
-    const rows = (this.usage()?.daily ?? []).slice(-30);
-    if (rows.length < 2) return '';
-    const max = Math.max(1, ...rows.map((row) => row.events));
-    return rows
-      .map((row, index) => {
-        const x = 12 + (index * 616) / (rows.length - 1);
-        const y = 132 - (row.events / max) * 112;
-        return `${x},${y}`;
-      })
-      .join(' ');
-  }
-
-  protected barWidth(
-    value: number,
-    rows: readonly { count: number }[],
-  ): number {
-    return Math.max(
-      3,
-      Math.round((value / Math.max(1, ...rows.map((row) => row.count))) * 100),
-    );
-  }
-
   private async loadCatalogReport(): Promise<void> {
     const response = await this.#functions.get<unknown>('get-dashboard-data');
     if (!record(response) || !record(response['stats']))
@@ -203,12 +167,20 @@ export class AdminLiveReports {
     this.recentObservations.set(observations.items);
   }
 
+  private usageRequest = 0;
   private async loadUsageReport(): Promise<void> {
-    this.usage.set(
-      await this.#functions.get<UsageReport>('admin-usage-report', {
-        days: String(this.usagePeriod()),
-      }),
-    );
+    const days = this.usagePeriod();
+    const request = ++this.usageRequest;
+    this.usage.set(null);
+    try {
+      const report = await this.#functions.get<UsageReport>(
+        'admin-usage-report',
+        { days: String(days) },
+      );
+      if (request === this.usageRequest) this.usage.set(report);
+    } catch (error) {
+      if (request === this.usageRequest) throw error;
+    }
   }
 
   protected sourceLabel(value: string | null): string {
