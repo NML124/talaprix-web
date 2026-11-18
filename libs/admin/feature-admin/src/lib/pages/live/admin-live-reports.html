@@ -1,84 +1,545 @@
-<tp-admin-page-header
-  title="Rapports"
-  subtitle="Instantané des données du catalogue et des comptes"
->
-  <button
-    type="button"
-    class="btn btn-secondary"
-    [disabled]="loading()"
-    (click)="load()"
+<div class="tp-page-inner tp-page-inner--wide">
+  <tp-admin-page-header
+    title="Rapports"
+    subtitle="Vue vérifiable des données du catalogue et des collectes"
   >
-    Actualiser
-  </button>
-</tp-admin-page-header>
-@if (error()) {
-<div class="workbook-alert" role="alert">{{ error() }}</div>
-}
-<div class="grid gap-5 lg:grid-cols-2">
-  <section class="tp-card tp-grid-card workbook-panel">
-    <div class="workbook-panel-head tp-grid-toolbar">
+    <button
+      type="button"
+      class="btn btn-secondary btn-icon workbook-refresh"
+      [disabled]="loading()"
+      [attr.aria-busy]="loading()"
+      aria-label="Actualiser les rapports"
+      title="Actualiser"
+      (click)="load()"
+    ></button>
+  </tp-admin-page-header>
+
+  @if (error()) {
+  <div class="workbook-alert" role="alert">{{ error() }}</div>
+  }
+
+  <section class="tp-report-section" aria-labelledby="scraping-report-title">
+    <header class="tp-report-section-head">
       <div>
-        <h2>Catalogue et activité</h2>
-        <p class="muted small">Valeurs actuelles</p>
+        <h2 id="scraping-report-title">Collectes et données extraites</h2>
       </div>
+      <a
+        class="tp-report-link"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'runs' }"
+        >Ouvrir le scraping
+        <svg lucideChevronRight size="15" aria-hidden="true"></svg
+      ></a>
+    </header>
+    @if (scrapingError()) {
+    <div class="workbook-alert" role="alert">{{ scrapingError() }}</div>
+    } @else {
+    <div class="tp-report-grid" aria-live="polite">
+      <a
+        class="tp-report-card"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'runs' }"
+      >
+        <span>Exécutions importées</span
+        ><strong>{{ scrapingOverview()?.runs ?? '—' }}</strong
+        ><small>Collectes enregistrées</small>
+      </a>
+      <a
+        class="tp-report-card"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'raw' }"
+      >
+        <span>Captures brutes</span
+        ><strong>{{ scrapingOverview()?.observations ?? '—' }}</strong
+        ><small>Publications reçues des sources</small>
+      </a>
+      <a
+        class="tp-report-card"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'analysis' }"
+      >
+        <span>Candidats détectés</span
+        ><strong>{{ scrapingOverview()?.candidates ?? '—' }}</strong
+        ><small>Produits et offres analysés</small>
+      </a>
+      <a
+        class="tp-report-card tp-report-card--attention"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'review' }"
+      >
+        <span>À examiner</span
+        ><strong>{{ scrapingOverview()?.needs_review ?? '—' }}</strong
+        ><small>En attente d’une décision</small>
+      </a>
+      <a
+        class="tp-report-card"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'journal' }"
+      >
+        <span>Tâches en cours</span
+        ><strong>{{ scrapingOverview()?.running_jobs ?? '—' }}</strong
+        ><small>Traitements privés actifs</small>
+      </a>
+      <a
+        class="tp-report-card"
+        routerLink="/admin/scraping"
+        [queryParams]="{ tab: 'pilot' }"
+      >
+        <span>Sources actives</span
+        ><strong>{{ scrapingOverview()?.enabled_sources ?? '—' }}</strong
+        ><small>Sources configurées</small>
+      </a>
     </div>
-    <div class="workbook-table-wrap tp-grid-scroll">
-      <table class="workbook-table tp-grid">
-        <thead>
-          <tr>
-            <th>Indicateur</th>
-            <th>Nombre</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (loading()) {
-          <tr>
-            <td colspan="3" role="status">Chargement…</td>
-          </tr>
-          } @else { @for (item of metrics(); track item.label) {
-          <tr>
-            <td>
-              <strong class="workbook-cell-title">{{ item.label }}</strong>
-            </td>
-            <td class="workbook-number">{{ item.count ?? '—' }}</td>
-            <td>
-              <a class="workbook-row-link" [routerLink]="item.path">Voir ›</a>
-            </td>
-          </tr>
-          } }
-        </tbody>
-      </table>
-    </div>
+
+    <section class="tp-card tp-grid-card workbook-panel tp-report-runs">
+      <div class="workbook-panel-head tp-grid-toolbar">
+        <div>
+          <h2>Dernières exécutions</h2>
+          <p class="muted small">Source, date et volume de chaque import.</p>
+        </div>
+        <a
+          class="tp-report-link"
+          routerLink="/admin/scraping"
+          [queryParams]="{ tab: 'runs' }"
+          >Toutes les exécutions
+          <svg lucideChevronRight size="15" aria-hidden="true"></svg
+        ></a>
+      </div>
+      <div class="workbook-table-wrap tp-grid-scroll">
+        <table class="workbook-table tp-grid">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Importée le</th>
+              <th>Captures brutes</th>
+              <th>Candidats</th>
+              <th>Coût déclaré</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loading()) {
+            <tr>
+              <td colspan="5" role="status">Chargement des exécutions…</td>
+            </tr>
+            } @else { @for (run of recentRuns(); track run.run_id) {
+            <tr>
+              <td>
+                <strong class="workbook-cell-title"
+                  >{{ run.actor_slug }}</strong
+                >
+              </td>
+              <td>{{ run.imported_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="workbook-number">{{ run.observation_count }}</td>
+              <td class="workbook-number">{{ run.candidate_count }}</td>
+              <td>{{ formatCost(run.cost_usd) }}</td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="5">
+                <div class="workbook-empty">Aucune exécution importée.</div>
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tp-card tp-grid-card workbook-panel tp-report-runs">
+      <div class="workbook-panel-head tp-grid-toolbar">
+        <div>
+          <h2>Captures extraites récemment</h2>
+          <p class="muted small">
+            Aperçu des 8 dernières publications reçues, avec leur source et leur
+            analyse.
+          </p>
+        </div>
+        <a
+          class="tp-report-link"
+          routerLink="/admin/scraping"
+          [queryParams]="{ tab: 'raw' }"
+          >Toutes les captures
+          <svg lucideChevronRight size="15" aria-hidden="true"></svg
+        ></a>
+      </div>
+      <div class="workbook-table-wrap tp-grid-scroll">
+        <table class="workbook-table tp-grid">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Publication détectée</th>
+              <th>Importée le</th>
+              <th>Candidats</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loading()) {
+            <tr>
+              <td colspan="4" role="status">Chargement des captures…</td>
+            </tr>
+            } @else { @for (observation of recentObservations(); track
+            observation.run_id + ':' + observation.item_index) {
+            <tr>
+              <td>
+                <span
+                  class="workbook-cell-title"
+                  [title]="observation.source_url || ''"
+                  >{{ sourceLabel(observation.source_url) }}</span
+                >
+              </td>
+              <td>
+                <span
+                  class="workbook-cell-title"
+                  [title]="observation.text_preview"
+                  >{{ observation.text_preview || 'Aucun aperçu textuel'
+                  }}</span
+                >
+              </td>
+              <td>{{ observation.imported_at | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="workbook-number">{{ observation.candidate_count }}</td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="4">
+                <div class="workbook-empty">Aucune capture extraite.</div>
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    }
   </section>
-  <section class="tp-card tp-grid-card workbook-panel">
-    <div class="workbook-panel-head tp-grid-toolbar">
-      <div>
-        <h2>Comptes par rôle</h2>
-        <p class="muted small">Comptage de tous les comptes par rôle</p>
+
+  <div class="grid gap-5 lg:grid-cols-2">
+    <section class="tp-card tp-grid-card workbook-panel">
+      <div class="workbook-panel-head tp-grid-toolbar">
+        <div>
+          <h2>Catalogue et activité</h2>
+          <p class="muted small">Valeurs actuelles de la base publique.</p>
+        </div>
       </div>
+      <div class="workbook-table-wrap tp-grid-scroll">
+        <table class="workbook-table tp-grid">
+          <thead>
+            <tr>
+              <th>Indicateur</th>
+              <th>Nombre</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loading()) {
+            <tr>
+              <td colspan="3" role="status">Chargement…</td>
+            </tr>
+            } @else { @for (item of metrics(); track item.label) {
+            <tr>
+              <td>
+                <strong class="workbook-cell-title">{{ item.label }}</strong>
+              </td>
+              <td class="workbook-number">{{ item.count ?? '—' }}</td>
+              <td>
+                <a class="workbook-row-link" [routerLink]="item.path"
+                  >Voir
+                  <svg lucideChevronRight size="14" aria-hidden="true"></svg
+                ></a>
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="tp-card tp-grid-card workbook-panel">
+      <div class="workbook-panel-head tp-grid-toolbar">
+        <div>
+          <h2>Comptes par rôle</h2>
+          <p class="muted small">Comptage actuel de tous les comptes.</p>
+        </div>
+      </div>
+      <div class="workbook-table-wrap tp-grid-scroll">
+        <table class="workbook-table tp-grid">
+          <thead>
+            <tr>
+              <th>Rôle</th>
+              <th>Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loading()) {
+            <tr>
+              <td colspan="2" role="status">Chargement…</td>
+            </tr>
+            } @else { @for (item of roles(); track item.label) {
+            <tr>
+              <td>{{ item.label }}</td>
+              <td class="workbook-number">{{ item.count ?? '—' }}</td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="tp-report-section" aria-labelledby="usage-report-title">
+    <header class="tp-report-section-head">
+      <div>
+        <h2 id="usage-report-title">Utilisation de TalaPrix</h2>
+        <p>
+          Activité agrégée des événements enregistrés, sans identifiants de
+          compte ni de session affichés.
+        </p>
+      </div>
+      <div
+        class="tp-report-period"
+        role="group"
+        aria-label="Période du rapport d’utilisation"
+      >
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 7"
+          [attr.aria-pressed]="usagePeriod() === 7"
+          (click)="setUsagePeriod(7)"
+        >
+          7 jours
+        </button>
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 30"
+          [attr.aria-pressed]="usagePeriod() === 30"
+          (click)="setUsagePeriod(30)"
+        >
+          30 jours
+        </button>
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 90"
+          [attr.aria-pressed]="usagePeriod() === 90"
+          (click)="setUsagePeriod(90)"
+        >
+          90 jours
+        </button>
+      </div>
+    </header>
+    @if (usageError()) {
+    <div class="report-unavailable" role="status">
+      <span
+        >Les statistiques d’utilisation sont momentanément indisponibles.</span
+      ><button
+        type="button"
+        class="btn btn-secondary"
+        (click)="setUsagePeriod(usagePeriod())"
+      >
+        Réessayer
+      </button>
     </div>
-    <div class="workbook-table-wrap tp-grid-scroll">
-      <table class="workbook-table tp-grid">
-        <thead>
-          <tr>
-            <th>Rôle</th>
-            <th>Nombre</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (loading()) {
-          <tr>
-            <td colspan="2" role="status">Chargement…</td>
-          </tr>
-          } @else { @for (item of roles(); track item.label) {
-          <tr>
-            <td>{{ item.label }}</td>
-            <td class="workbook-number">{{ item.count ?? '—' }}</td>
-          </tr>
-          } }
-        </tbody>
-      </table>
+    } @else if (usage(); as report) {
+    <div class="tp-report-grid tp-report-grid--usage">
+      <article class="tp-report-card">
+        <span>Événements enregistrés</span
+        ><strong>{{ report.total_events }}</strong
+        ><small
+          >{{ report.captured_events }} analysés sur {{ report.period_days }}
+          jours</small
+        >
+      </article>
+      <article class="tp-report-card">
+        <span>Sessions distinctes</span
+        ><strong>{{ report.active_sessions }}</strong
+        ><small>Identifiants utilisés uniquement pour le comptage</small>
+      </article>
+      <article class="tp-report-card">
+        <span>Comptes connectés actifs</span
+        ><strong>{{ report.signed_in_users }}</strong
+        ><small>Comptage agrégé, aucun compte affiché</small>
+      </article>
     </div>
+    @if (report.truncated) {
+    <p class="tp-report-note">
+      Le volume dépasse la limite de calcul du rapport ; les graphiques
+      utilisent les événements les plus récents.
+    </p>
+    }
+    <div class="tp-report-chart-grid">
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-daily-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-daily-title">Événements par jour</h3>
+            <p>Volumes transmis par l’application.</p>
+          </div>
+          <strong>{{ report.total_events }}</strong>
+        </div>
+        @if (report.daily.length > 1) {
+        <svg
+          class="tp-report-sparkline"
+          viewBox="0 0 640 150"
+          role="img"
+          aria-label="Courbe des événements quotidiens"
+        >
+          <path
+            class="tp-report-chart-gridline"
+            d="M8 132H632M8 76H632M8 20H632"
+          />
+          <polyline [attr.points]="dailyPoints()" />
+        </svg>
+        <div class="tp-report-chart-foot">
+          <span>{{ report.daily[0].date | date:'dd/MM' }}</span
+          ><span
+            >{{ report.daily[report.daily.length - 1].date | date:'dd/MM'
+            }}</span
+          >
+        </div>
+        } @else {
+        <p class="tp-report-empty">
+          Pas encore assez d’événements quotidiens pour tracer une courbe.
+        </p>
+        }
+      </section>
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-zones-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-zones-title">Zones d’utilisation</h3>
+            <p>
+              Uniquement les zones explicitement présentes dans les événements.
+            </p>
+          </div>
+        </div>
+        @if (report.zones_available) {
+        <div class="tp-report-bars">
+          @for (item of report.zones; track item.label) {
+          <div class="tp-report-bar-row">
+            <span>{{ item.label }}</span
+            ><span class="tp-report-bar"
+              ><i
+                [style.width.%]="barWidth(item.count, report.zones)"
+              ></i></span
+            ><strong>{{ item.count }}</strong>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="tp-report-empty">
+          Aucune commune ou zone n’est envoyée avec le suivi actuel. TalaPrix
+          n’enregistre donc pas encore de données permettant de classer les
+          zones ; aucun emplacement n’est déduit.
+        </p>
+        }
+      </section>
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-screens-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-screens-title">Écrans consultés</h3>
+            <p>Nombre d’événements par écran.</p>
+          </div>
+        </div>
+        <div class="tp-report-bars">
+          @for (item of report.screens; track item.label) {
+          <div class="tp-report-bar-row">
+            <span>{{ item.label }}</span
+            ><span class="tp-report-bar"
+              ><i
+                [style.width.%]="barWidth(item.count, report.screens)"
+              ></i></span
+            ><strong>{{ item.count }}</strong>
+          </div>
+          } @empty {
+          <p class="tp-report-empty">Aucune activité enregistrée.</p>
+          }
+        </div>
+      </section>
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-events-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-events-title">Actions les plus fréquentes</h3>
+            <p>Événements disponibles dans le suivi.</p>
+          </div>
+        </div>
+        <div class="tp-report-bars">
+          @for (item of report.event_types; track item.label) {
+          <div class="tp-report-bar-row">
+            <span>{{ item.label }}</span
+            ><span class="tp-report-bar"
+              ><i
+                [style.width.%]="barWidth(item.count, report.event_types)"
+              ></i></span
+            ><strong>{{ item.count }}</strong>
+          </div>
+          } @empty {
+          <p class="tp-report-empty">Aucune activité enregistrée.</p>
+          }
+        </div>
+      </section>
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-search-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-search-title">Recherches fréquentes</h3>
+            <p>Termes agrégés ; les emails et numéros sont exclus.</p>
+          </div>
+        </div>
+        <div class="tp-report-bars">
+          @for (item of report.top_searches; track item.label) {
+          <div class="tp-report-bar-row">
+            <span>{{ item.label }}</span
+            ><span class="tp-report-bar"
+              ><i
+                [style.width.%]="barWidth(item.count, report.top_searches)"
+              ></i></span
+            ><strong>{{ item.count }}</strong>
+          </div>
+          } @empty {
+          <p class="tp-report-empty">
+            Aucune recherche n’est présente dans les événements de cette
+            période.
+          </p>
+          }
+        </div>
+      </section>
+      <section
+        class="tp-card tp-report-chart-card"
+        aria-labelledby="usage-products-title"
+      >
+        <div class="tp-report-chart-head">
+          <div>
+            <h3 id="usage-products-title">Produits les plus consultés</h3>
+            <p>À partir des événements contenant un identifiant de produit.</p>
+          </div>
+        </div>
+        <div class="tp-report-bars">
+          @for (item of report.top_products; track item.id) {
+          <div class="tp-report-bar-row">
+            <span>{{ item.name }}</span
+            ><span class="tp-report-bar"
+              ><i
+                [style.width.%]="barWidth(item.count, report.top_products)"
+              ></i></span
+            ><strong>{{ item.count }}</strong>
+          </div>
+          } @empty {
+          <p class="tp-report-empty">
+            Aucun événement produit pour cette période.
+          </p>
+          }
+        </div>
+      </section>
+    </div>
+    }
   </section>
 </div>

@@ -8,7 +8,7 @@ import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject, debounceTime } from 'rxjs';
 import { LucidePlus } from '@lucide/angular';
 import { PageHeader } from '../../ui/page-header';
 import {
@@ -20,6 +20,7 @@ import { AdminLiveCreate } from './admin-live-create';
 import { AdminLiveUser } from './admin-live-user';
 import { AdminLivePagination } from './admin-live-pagination';
 import { AdminLiveActions } from './admin-live-actions';
+import { AdminSelect } from '../../ui/admin-select';
 
 import {
   isNotNull,
@@ -33,6 +34,7 @@ import {
 } from './admin-live-row';
 @Component({
   selector: 'tp-admin-live-list',
+  host: { class: 'tp-admin tp-page tp-admin-list' },
   imports: [
     PageHeader,
     AdminLiveConfirm,
@@ -40,6 +42,7 @@ import {
     AdminLiveUser,
     AdminLivePagination,
     AdminLiveActions,
+    AdminSelect,
     DatePipe,
     LucidePlus,
   ],
@@ -63,10 +66,20 @@ export class AdminLiveList {
   readonly busy = signal(false);
   readonly actionError = signal('');
   readonly notice = signal('');
+  readonly editingId = signal<string | null>(null);
+  readonly updatedId = signal<string | null>(null);
   readonly creating = signal(false);
   readonly editing = signal<Row | null>(null);
   readonly userEditing = signal<Row | null>(null);
   readonly totalPages = () => Math.max(1, Math.ceil(this.total() / 30));
+  readonly roleOptions = ['', 'user', 'shop', 'interviewer', 'admin'];
+  readonly roleLabels = {
+    '': 'Tous les rôles',
+    user: 'Clients',
+    shop: 'Boutiques',
+    interviewer: 'Enquêteurs',
+    admin: 'Administrateurs',
+  };
   readonly columnCount = () => 6 + Number(this.resource() === 'offers');
   readonly titles: Record<Resource, string> = {
     products: 'Catalogue',
@@ -78,8 +91,12 @@ export class AdminLiveList {
   };
   searchValue = '';
   #request = 0;
+  readonly #searchChanged = new Subject<void>();
 
   constructor() {
+    this.#searchChanged
+      .pipe(debounceTime(350), takeUntilDestroyed())
+      .subscribe(() => this.search());
     combineLatest([this.#route.data, this.#route.queryParamMap])
       .pipe(takeUntilDestroyed())
       .subscribe(([data, params]) => {
@@ -169,6 +186,10 @@ export class AdminLiveList {
       queryParamsHandling: 'merge',
     });
   }
+  searchInput(value: string): void {
+    this.searchValue = value;
+    this.#searchChanged.next();
+  }
   filterRole(role: string): void {
     if (this.resource() !== 'users') return;
     void this.#router.navigate([], {
@@ -192,8 +213,16 @@ export class AdminLiveList {
   }
 
   editRow(row: Row): void {
+    this.editingId.set(row.id);
+    this.updatedId.set(null);
     if (this.resource() === 'users') this.userEditing.set(row);
     else this.editing.set(row);
+  }
+
+  cancelEdit(): void {
+    this.editing.set(null);
+    this.userEditing.set(null);
+    this.editingId.set(null);
   }
 
   async applyAction(): Promise<void> {
@@ -227,14 +256,20 @@ export class AdminLiveList {
   }
 
   created(): void {
+    const editedId = this.editingId();
+    if (editedId) this.updatedId.set(editedId);
     this.creating.set(false);
     this.editing.set(null);
+    this.editingId.set(null);
     this.notice.set('Élément enregistré.');
     void this.load();
   }
 
   userSaved(): void {
+    const editedId = this.editingId();
+    if (editedId) this.updatedId.set(editedId);
     this.userEditing.set(null);
+    this.editingId.set(null);
     this.notice.set('Profil mis à jour.');
     void this.load();
   }

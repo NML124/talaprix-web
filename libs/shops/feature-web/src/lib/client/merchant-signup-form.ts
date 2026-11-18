@@ -5,9 +5,11 @@ import {
   effect,
   inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core';
 import { ShopPreviewStore } from '@talaprix/shops/data-access';
+import { AuthGate, PreviewPreferences } from '@talaprix/shared/data-access';
 import { MerchantSignupAddress } from './merchant-signup-address';
 import { MerchantSignupContact } from './merchant-signup-contact';
 import { MerchantSignupProgress } from './merchant-signup-progress';
@@ -46,6 +48,10 @@ export class MerchantSignupForm {
   readonly idPrefix = input.required<string>();
   readonly shops = inject(ShopPreviewStore);
   readonly state = inject(MerchantSignupState);
+  readonly #session = inject(AuthGate);
+  readonly #ui = inject(PreviewPreferences);
+  readonly submitting = signal(false);
+  readonly submitError = signal('');
   readonly categories = [
     'Téléphones',
     'Ordinateurs',
@@ -70,7 +76,7 @@ export class MerchantSignupForm {
     this.focusStep();
   }
 
-  submit(event: Event): void {
+  async submit(event: Event): Promise<void> {
     event.preventDefault();
     // Enter inside a select-card search box must not advance the wizard.
     const active = this.form().nativeElement.ownerDocument.activeElement;
@@ -85,14 +91,39 @@ export class MerchantSignupForm {
       this.focusStep();
       return;
     }
-    this.shops.completeMerchant({
-      name: this.value('name'),
-      phone: this.value('phone'),
-      address: this.value('address'),
-      street: this.value('street'),
-      district: this.value('district'),
-      number: this.value('number'),
-    });
+    if (!this.#session.signedIn()) {
+      this.submitError.set(
+        'Connectez-vous à votre compte pour envoyer la demande à l’administration.',
+      );
+      this.#ui.authOpen.set(true);
+      return;
+    }
+    if (!this.shops.merchantPosition()) {
+      this.submitError.set(
+        'Localisez la boutique avec le GPS ou choisissez une adresse sur la carte avant l’envoi.',
+      );
+      return;
+    }
+    this.submitting.set(true);
+    this.submitError.set('');
+    try {
+      await this.shops.completeMerchant({
+        name: this.value('name'),
+        phone: this.value('phone'),
+        address: this.value('address'),
+        street: this.value('street'),
+        district: this.value('district'),
+        number: this.value('number'),
+      });
+    } catch (error) {
+      this.submitError.set(
+        error instanceof Error
+          ? error.message
+          : 'La demande n’a pas pu être envoyée. Réessayez.',
+      );
+    } finally {
+      this.submitting.set(false);
+    }
   }
 
   /** Validates the given step and returns its first invalid field. */

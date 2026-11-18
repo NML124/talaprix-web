@@ -1,161 +1,165 @@
-<tp-admin-page-header
-  [title]="teamOnly() ? 'Administrateurs' : titles[resource()]"
-  subtitle="Données du catalogue TalaPrix"
->
-  <span class="text-sm text-[var(--text-2)]">
-    {{ status() === 'error' ? 'Données indisponibles' : total() + ' entrées' }}
-  </span>
-  @if (resource() !== 'users') {
-  <button class="btn btn-primary" type="button" (click)="creating.set(true)">
-    <svg lucidePlus size="15" aria-hidden="true"></svg> Ajouter
-  </button>
-  }
-</tp-admin-page-header>
-<div class="toolbar">
-  <form
-    class="flex min-w-0 flex-wrap items-center gap-3"
-    (submit)="$event.preventDefault(); search()"
+<div class="tp-page-inner tp-page-inner--wide">
+  <tp-admin-page-header
+    [title]="teamOnly() ? 'Administrateurs' : titles[resource()]"
+    subtitle="Données du catalogue TalaPrix"
   >
-    <label class="search w-full" for="admin-live-search">
-      <span class="sr-only">Rechercher</span>
-      <input
-        id="admin-live-search"
-        type="search"
-        name="q"
-        [value]="searchValue"
-        (input)="searchValue = $any($event.target).value"
-        placeholder="Rechercher par nom"
+    <span class="text-sm text-[var(--text-2)]">
+      {{ status() === 'error' ? 'Données indisponibles' : total() + ' entrées'
+      }}
+    </span>
+    @if (resource() !== 'users') {
+    <button class="btn btn-primary" type="button" (click)="creating.set(true)">
+      <svg lucidePlus size="15" aria-hidden="true"></svg> Ajouter
+    </button>
+    }
+  </tp-admin-page-header>
+  <div class="toolbar">
+    <form class="w-full max-w-xl" (submit)="$event.preventDefault(); search()">
+      <label class="search w-full" for="admin-live-search">
+        <span class="sr-only">Rechercher</span>
+        <input
+          id="admin-live-search"
+          type="search"
+          name="q"
+          [value]="searchValue"
+          (input)="searchInput($any($event.target).value)"
+          placeholder="Rechercher par nom"
+        />
+      </label>
+    </form>
+  </div>
+  @if (resource() === 'users' && !teamOnly()) {
+  <div class="toolbar">
+    <label class="field">
+      <tp-admin-select
+        [options]="roleOptions"
+        [displayLabels]="roleLabels"
+        [selected]="roleFilter()"
+        ariaLabel="Filtrer les comptes par rôle"
+        (changed)="filterRole($event)"
       />
     </label>
-    <button class="btn btn-primary" type="submit">Rechercher</button>
-  </form>
-</div>
-@if (resource() === 'users' && !teamOnly()) {
-<div class="toolbar">
-  <label class="field"
-    >Filtrer par rôle
-    <select
-      [value]="roleFilter()"
-      (change)="filterRole($any($event.target).value)"
-    >
-      <option value="">Tous les rôles</option>
-      <option value="user">Clients</option>
-      <option value="shop">Boutiques</option>
-      <option value="interviewer">Enquêteurs</option>
-      <option value="admin">Administrateurs</option>
-    </select>
-  </label>
-</div>
-} @if (status() === 'error') {
-<div class="toast error" role="alert">
-  {{ error() }}
-  <button class="link" type="button" (click)="load()">Réessayer</button>
-</div>
-} @if (notice()) {
-<div class="toast" role="status">{{ notice() }}</div>
-}
-<div class="admin-stack">
-  <section class="tp-card tp-grid-card workbook-panel">
-    <div class="workbook-panel-head tp-grid-toolbar">
-      <h2>{{ teamOnly() ? 'Administrateurs' : titles[resource()] }}</h2>
-      <span class="muted small">Tri : ajout le plus récent</span>
-    </div>
-    <div class="workbook-table-wrap tp-grid-scroll">
-      <table class="workbook-table tp-grid workbook-action-table">
-        <thead>
-          <tr>
-            <th class="py-3 pr-4">
-              {{ resource() === 'products' ? 'Produit' : 'Nom' }}
-            </th>
-            <th class="py-3 pr-4">Contexte</th>
-            <th class="py-3 pr-4">Détail</th>
-            <th class="py-3">Statut</th>
-            <th class="py-3">Ajouté le</th>
-            @if (resource() === 'offers') {
-            <th class="py-3">Source</th>
-            }
-            <th class="py-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (status() === 'loading') {
-          <tr>
-            <td [attr.colspan]="columnCount()" role="status">
-              <div class="admin-stack" aria-label="Chargement des données">
-                @for (item of [1, 2, 3]; track item) {
-                <div class="skeleton" style="height: 54px"></div>
-                }
-              </div>
-            </td>
-          </tr>
-          } @else if (status() === 'error') {
-          <tr>
-            <td [attr.colspan]="columnCount()">
-              <div class="admin-live-empty">
-                La liste ne peut pas être affichée pour le moment. Réessayez
-                lorsque la connexion revient.
-              </div>
-            </td>
-          </tr>
-          } @else if (rows().length === 0) {
-          <tr>
-            <td [attr.colspan]="columnCount()">
-              <div class="admin-live-empty">Aucune entrée trouvée.</div>
-            </td>
-          </tr>
-          } @else { @for (row of rows(); track row.id) {
-          <tr class="border-b border-[var(--line)] last:border-0">
-            <td class="py-3 pr-4 font-medium">
-              @if (row.image) {
-              <div class="product-cell">
-                <img class="thumb" [src]="row.image" alt="" loading="lazy" />
-                <strong>{{ row.title || row.id }}</strong>
-              </div>
-              } @else { {{ row.title || row.id }} }
-            </td>
-            <td class="py-3 pr-4">{{ row.subtitle || '—' }}</td>
-            <td class="py-3 pr-4">{{ row.detail || '—' }}</td>
-            <td class="py-3">{{ row.state }}</td>
-            <td class="py-3">
-              {{ row.createdAt ? (row.createdAt | date:'dd/MM/yyyy HH:mm') : '—'
-              }}
-            </td>
-            @if (resource() === 'offers') {
-            <td class="py-3">
-              @if (row.source?.startsWith('https://') ||
-              row.source?.startsWith('http://')) {
-              <a
-                class="workbook-row-link"
-                [href]="row.source"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Voir la publication ↗</a
-              >
-              } @else { {{ row.source || 'Source manquante' }} }
-            </td>
-            }
-            <td class="py-3">
-              <tp-admin-live-actions
-                [row]="row"
-                [busy]="busy()"
-                [blocked]="row.adminAccount === true"
-                (edit)="editRow(row)"
-                (action)="confirm(row, $event)"
-              />
-            </td>
-          </tr>
-          } }
-        </tbody>
-      </table>
-    </div>
-  </section>
-  @if (status() === 'ready') {
-  <tp-admin-live-pagination
-    [page]="page()"
-    [totalPages]="totalPages()"
-    (changed)="goToPage($event)"
-  />
+  </div>
+  } @if (status() === 'error') {
+  <div class="toast error" role="alert">
+    {{ error() }}
+    <button class="link" type="button" (click)="load()">Réessayer</button>
+  </div>
+  } @if (notice()) {
+  <div class="toast" role="status">{{ notice() }}</div>
   }
+  <div class="admin-stack">
+    <section
+      class="admin-list-table"
+      [attr.aria-label]="titles[resource()] + ' — tableau'"
+    >
+      <div class="workbook-table-wrap tp-grid-scroll admin-list-table-wrap">
+        <table
+          class="workbook-table tp-grid workbook-action-table admin-list-grid"
+        >
+          <thead>
+            <tr>
+              <th class="py-3 pr-4">
+                {{ resource() === 'products' ? 'Produit' : 'Nom' }}
+              </th>
+              <th class="py-3 pr-4">Contexte</th>
+              <th class="py-3 pr-4">Détail</th>
+              <th class="py-3">Statut</th>
+              <th class="py-3">Ajouté le</th>
+              @if (resource() === 'offers') {
+              <th class="py-3">Source</th>
+              }
+              <th class="py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (status() === 'loading') {
+            <tr>
+              <td [attr.colspan]="columnCount()" role="status">
+                <div class="admin-stack" aria-label="Chargement des données">
+                  @for (item of [1, 2, 3]; track item) {
+                  <div class="skeleton" style="height: 54px"></div>
+                  }
+                </div>
+              </td>
+            </tr>
+            } @else if (status() === 'error') {
+            <tr>
+              <td [attr.colspan]="columnCount()">
+                <div class="admin-live-empty">
+                  La liste ne peut pas être affichée pour le moment. Réessayez
+                  lorsque la connexion revient.
+                </div>
+              </td>
+            </tr>
+            } @else if (rows().length === 0) {
+            <tr>
+              <td [attr.colspan]="columnCount()">
+                <div class="admin-live-empty">Aucune entrée trouvée.</div>
+              </td>
+            </tr>
+            } @else { @for (row of rows(); track row.id) {
+            <tr class="border-b border-[var(--line)] last:border-0">
+              <td class="py-3 pr-4 font-medium" [title]="row.title || row.id">
+                @if (row.image) {
+                <div class="product-cell">
+                  <img class="thumb" [src]="row.image" alt="" loading="lazy" />
+                  <strong>{{ row.title || row.id }}</strong>
+                </div>
+                } @else { {{ row.title || row.id }} }
+              </td>
+              <td class="py-3 pr-4" [title]="row.subtitle">
+                {{ row.subtitle || '—' }}
+              </td>
+              <td class="py-3 pr-4" [title]="row.detail">
+                {{ row.detail || '—' }}
+              </td>
+              <td class="py-3">{{ row.state }}</td>
+              <td class="py-3">
+                {{ row.createdAt ? (row.createdAt | date:'dd/MM/yyyy HH:mm') :
+                '—' }}
+              </td>
+              @if (resource() === 'offers') {
+              <td class="py-3">
+                @if (row.source?.startsWith('https://') ||
+                row.source?.startsWith('http://')) {
+                <a
+                  class="workbook-row-link"
+                  [href]="row.source"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Voir la publication ↗</a
+                >
+                } @else { {{ row.source || 'Source manquante' }} }
+              </td>
+              }
+              <td class="py-3">
+                <tp-admin-live-actions
+                  [row]="row"
+                  [busy]="busy()"
+                  [editing]="editingId() === row.id"
+                  [updated]="updatedId() === row.id"
+                  [blocked]="row.adminAccount === true"
+                  (edit)="editRow(row)"
+                  (action)="confirm(row, $event)"
+                />
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    @if (status() === 'ready') {
+    <tp-admin-live-pagination
+      [page]="page()"
+      [totalPages]="totalPages()"
+      [total]="total()"
+      [loading]="status() === 'loading'"
+      (changed)="goToPage($event)"
+    />
+    }
+  </div>
 </div>
 @if (pending(); as selection) {
 <tp-admin-live-confirm
@@ -175,13 +179,9 @@
 <tp-admin-live-create
   [resource]="resource()"
   [row]="row"
-  (closed)="editing.set(null)"
+  (closed)="cancelEdit()"
   (created)="created()"
 />
 } @if (userEditing(); as row) {
-<tp-admin-live-user
-  [row]="row"
-  (closed)="userEditing.set(null)"
-  (saved)="userSaved()"
-/>
+<tp-admin-live-user [row]="row" (closed)="cancelEdit()" (saved)="userSaved()" />
 }

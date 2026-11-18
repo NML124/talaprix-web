@@ -76,8 +76,13 @@
           [id]="state.id('photo-hint')"
           class="m-0 text-xs text-[var(--client-muted)]"
         >
-          La photo sera à joindre vous-même dans WhatsApp.
+          La photo sera transmise avec votre demande (5 Mo maximum).
         </p>
+        @if (shops.merchantPhotoError()) {
+        <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+          {{ shops.merchantPhotoError() }}
+        </p>
+        }
       </div>
     </div>
     <div class="flex flex-col gap-2.5">
@@ -137,7 +142,11 @@
   <div
     class="flex flex-col-reverse gap-3 border-t border-[var(--client-line)] pt-5 @md:flex-row @md:items-center"
   >
-    @if (state.step() > 1) {
+    @if (state.step() === 3 && submitError()) {
+    <p role="alert" class="m-0 text-[13px] text-[var(--client-error)]">
+      {{ submitError() }}
+    </p>
+    } @if (state.step() > 1) {
     <button
       type="button"
       class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[15px] border border-[var(--client-line)] bg-[var(--client-surface)] px-5 text-[14.5px] font-semibold text-[var(--client-text)] transition duration-150 hover:bg-[var(--client-tile)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] disabled:pointer-events-none disabled:opacity-50 @md:w-auto"
@@ -148,9 +157,11 @@
     }
     <button
       type="submit"
+      [disabled]="submitting()"
       class="inline-flex h-10 w-full items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--client-action)] disabled:pointer-events-none disabled:opacity-50 @md:ml-auto @md:w-auto"
     >
-      {{ state.step() < 3 ? 'Continuer' : 'Envoyer ma demande' }}
+      {{ state.step() < 3 ? 'Continuer' : submitting() ? 'Envoi en cours…' :
+      'Envoyer ma demande' }}
     </button>
   </div>
 </form>
@@ -192,16 +203,9 @@
   <p
     class="m-0 max-w-md text-sm leading-relaxed text-[var(--client-text-tertiary)] [text-wrap:balance]"
   >
-    Votre boutique est en attente de validation. Notre équipe vérifie vos
-    informations et vous contacte sur WhatsApp pour finaliser votre inscription.
+    Votre demande a été enregistrée et transmise à l’administration TalaPrix.
+    L’équipe examinera les informations et pourra vous contacter sur WhatsApp.
   </p>
-  <a
-    [href]="shops.merchantWhatsAppUrl()"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="mt-1 inline-flex h-10 items-center justify-center gap-2 rounded-[15px] bg-[var(--client-action)] px-5 text-[14.5px] font-semibold text-white no-underline transition duration-150 hover:bg-[var(--client-action-hover)] active:scale-[0.98]"
-    >Envoyer ma demande sur WhatsApp</a
-  >
   <details class="w-full max-w-md text-left">
     <summary
       class="cursor-pointer text-center text-[13px] font-semibold text-[var(--client-muted)] hover:text-[var(--client-text)]"

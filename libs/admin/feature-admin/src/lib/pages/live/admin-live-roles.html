@@ -4,12 +4,13 @@
 >
   <button
     type="button"
-    class="btn btn-secondary"
+    class="btn btn-secondary btn-icon workbook-refresh"
     [disabled]="loading()"
+    [attr.aria-busy]="loading()"
+    aria-label="Actualiser les rôles"
+    title="Actualiser"
     (click)="load()"
-  >
-    Actualiser
-  </button>
+  ></button>
 </tp-admin-page-header>
 @if (error()) {
 <div class="workbook-alert" role="alert">{{ error() }}</div>
@@ -46,8 +47,22 @@
               class="workbook-row-link"
               routerLink="/admin/utilisateurs"
               [queryParams]="{role: role.id}"
-              >Voir les comptes ›</a
-            >
+              >Voir les comptes
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <path
+                  d="m6 3 5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                /></svg
+            ></a>
           </td>
         </tr>
         } }

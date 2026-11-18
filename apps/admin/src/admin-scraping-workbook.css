@@ -457,7 +457,8 @@
   text-align: left;
 }
 .admin-app .workbook-table th {
-  padding: 15px 17px;
+  z-index: 2;
+  padding: 10px 12px;
   border-bottom: 1px solid #e9eeec;
   background: var(--surface-quiet);
   color: var(--text-2);
@@ -468,11 +469,14 @@
 }
 .admin-app .workbook-table td {
   max-width: 300px;
-  padding: 17px;
+  padding: 7px 12px;
   border-bottom: 1px solid #f0f2f1;
   color: var(--text);
   font-size: 14px;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .admin-app .workbook-action-table :is(th, td):last-child {
   position: sticky;
@@ -483,6 +487,7 @@
   box-shadow: -1px 0 0 var(--line);
 }
 .admin-app .workbook-action-table th:last-child {
+  z-index: 3;
   background: var(--surface-quiet);
 }
 .admin-app .workbook-table tr:last-child td {

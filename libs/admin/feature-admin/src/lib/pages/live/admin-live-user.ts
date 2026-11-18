@@ -10,6 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { AdminDialog } from '../../ui/admin-dialog';
+import { AdminDateCard } from '../../ui/admin-date-card';
 import type { Row } from './admin-live-row';
 
 interface InterviewerPerformance {
@@ -26,7 +27,7 @@ interface InterviewerPerformance {
 
 @Component({
   selector: 'tp-admin-live-user',
-  imports: [FormsModule, AdminDialog],
+  imports: [FormsModule, AdminDialog, AdminDateCard],
   templateUrl: './admin-live-user.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

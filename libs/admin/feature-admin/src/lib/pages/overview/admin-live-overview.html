@@ -1,18 +1,19 @@
 <div class="tp-admin tp-page tp-overview">
   <div class="tp-page-inner">
     <tp-admin-page-header
-      eyebrow="Administration › Pilotage"
+      eyebrow="Administration · Pilotage"
       title="Vue d’ensemble"
-      subtitle="Indicateurs actuels du catalogue"
+      subtitle=""
     >
       <button
-        class="tp-btn tp-btn--secondary"
+        class="tp-btn tp-btn--secondary workbook-refresh"
         type="button"
         (click)="load()"
         [disabled]="status() === 'loading'"
-      >
-        <svg lucideRefreshCw class="tp-icon-sm" aria-hidden="true" /> Actualiser
-      </button>
+        [attr.aria-busy]="status() === 'loading'"
+        aria-label="Actualiser la vue d’ensemble"
+        title="Actualiser"
+      ></button>
     </tp-admin-page-header>
 
     @if (status() === 'error') {
@@ -155,7 +156,6 @@
         <div class="tp-card-head">
           <div>
             <h2 class="tp-card-title" id="recent-title">Produits récents</h2>
-            <p class="tp-card-sub">Derniers produits du catalogue</p>
           </div>
           <a
             class="tp-btn tp-btn--secondary tp-btn--sm"
@@ -169,7 +169,7 @@
               <tr>
                 <th>Produit</th>
                 <th>Catégorie</th>
-                <th>Fiche</th>
+                <th class="tp-record-link-column">Fiche</th>
               </tr>
             </thead>
             <tbody>
@@ -183,8 +183,22 @@
                 </td>
                 <td>
                   <a routerLink="/admin/catalogue"
-                    >Voir <span aria-hidden="true">›</span></a
-                  >
+                    >Voir
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      width="16"
+                      height="16"
+                      fill="none"
+                    >
+                      <path
+                        d="m6 3 5 5-5 5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg
+                  ></a>
                 </td>
               </tr>
               } @empty {
@@ -198,6 +212,67 @@
             </tbody>
           </table>
         </div>
+      </section>
+    </div>
+
+    <div class="tp-row">
+      <section
+        class="tp-card tp-col-2 tp-overview-usage"
+        aria-labelledby="overview-usage-title"
+      >
+        <div class="tp-card-head">
+          <div>
+            <h2 class="tp-card-title" id="overview-usage-title">
+              Usage de TalaPrix
+            </h2>
+            <p class="tp-card-sub">
+              Événements agrégés sur les 30 derniers jours
+            </p>
+          </div>
+          <a class="tp-report-link" routerLink="/admin/rapports"
+            >Détails <svg lucideChevronRight size="15" aria-hidden="true"></svg
+          ></a>
+        </div>
+        @if (usage()) {
+        <div class="tp-overview-usage__body">
+          <div class="tp-overview-usage__metrics">
+            <span
+              ><small>Événements</small
+              ><strong>{{ usage()?.total_events }}</strong></span
+            >
+            <span
+              ><small>Sessions distinctes</small
+              ><strong>{{ usage()?.active_sessions }}</strong></span
+            >
+            @if (usage()?.zones_available) {
+            <span
+              ><small>Zone la plus active</small
+              ><strong>{{ usage()?.zones?.[0]?.label || '—' }}</strong></span
+            >
+            } @else {
+            <span
+              ><small>Usage par zone</small><strong>Non mesuré</strong></span
+            >
+            }
+          </div>
+          @if ((usage()?.daily?.length ?? 0) > 1) {
+          <svg
+            class="tp-overview-usage__chart"
+            viewBox="0 0 360 112"
+            role="img"
+            aria-label="Événements quotidiens des 30 derniers jours"
+          >
+            <path d="M4 100H356M4 59H356M4 18H356" />
+            <polyline [attr.points]="usagePoints()" />
+          </svg>
+          }
+        </div>
+        } @else {
+        <p class="tp-card-sub">
+          {{ usageError() ? 'Statistiques d’activité momentanément
+          indisponibles.' : 'Chargement du rapport d’activité…' }}
+        </p>
+        }
       </section>
     </div>
 

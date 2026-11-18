@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { LucideChevronRight } from '@lucide/angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdminMockApi } from '../../services/admin-mock-api';
 import { PageHeader } from '../../ui/page-header';
@@ -17,7 +18,14 @@ import { AdminSelect } from '../../ui/admin-select';
 
 @Component({
   selector: 'tp-team-page',
-  imports: [FormsModule, PageHeader, SegmentedTabs, StatusDot, AdminSelect],
+  imports: [
+    FormsModule,
+    PageHeader,
+    SegmentedTabs,
+    StatusDot,
+    AdminSelect,
+    LucideChevronRight,
+  ],
   templateUrl: './team-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

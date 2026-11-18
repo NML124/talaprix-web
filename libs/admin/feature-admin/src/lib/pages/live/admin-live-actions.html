@@ -1,8 +1,10 @@
 <div class="table-actions" aria-label="Actions sur la ligne">
   <button
     class="table-action"
+    [class.is-editing]="editing()"
+    [class.is-updated]="updated()"
     type="button"
-    [disabled]="busy()"
+    [disabled]="busy() || editing()"
     [attr.aria-label]="'Modifier ' + row().title"
     [title]="'Modifier ' + row().title"
     (click)="edit.emit()"

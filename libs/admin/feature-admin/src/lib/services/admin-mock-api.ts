@@ -136,7 +136,7 @@ export class AdminMockApi {
     for (const product of this.productRows) {
       if (product.category === previous) product.category = next;
     }
-    this.record('Catégorie renommée', `${previous} → ${next}`);
+    this.record('Catégorie renommée', `${previous} vers ${next}`);
   }
   async listProposals(): Promise<Proposal[]> {
     await pause();

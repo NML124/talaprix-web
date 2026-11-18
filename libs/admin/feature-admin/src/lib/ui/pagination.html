@@ -7,7 +7,21 @@
       [disabled]="page() === 1"
       (click)="select(page() - 1)"
     >
-      ‹
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        width="16"
+        height="16"
+        fill="none"
+      >
+        <path
+          d="m10 3-5 5 5 5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
     @for (item of visiblePages(); track $index) { @if (item === '…') {
     <span class="muted" aria-hidden="true">…</span>
@@ -27,7 +41,21 @@
       [disabled]="page() === pageCount()"
       (click)="select(page() + 1)"
     >
-      ›
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        width="16"
+        height="16"
+        fill="none"
+      >
+        <path
+          d="m6 3 5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
   </div>
 </nav>

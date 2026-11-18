@@ -56,7 +56,10 @@
             ><span>{{row.shop}} · {{row.contributor}}</span>
             <span aria-hidden="true">|</span>
             <span class="number"
-              >{{currency.format(row.current)}} →
+              >{{currency.format(row.current)}}
+              <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
               {{currency.format(row.proposed)}}</span
             ></small
           ></span

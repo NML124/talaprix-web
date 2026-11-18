@@ -30,6 +30,8 @@ export class AdminLiveActions {
   readonly row = input.required<Row>();
   readonly blocked = input(false);
   readonly busy = input(false);
+  readonly editing = input(false);
+  readonly updated = input(false);
   readonly edit = output<void>();
   readonly action = output<AdminAction>();
 

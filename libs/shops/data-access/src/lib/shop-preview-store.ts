@@ -1,5 +1,6 @@
-import { computed, Service, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { PUBLIC_DESIGN_DATA } from '@talaprix/shared/models';
+import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { countries } from 'countries-list';
 export interface MerchantSignup {
   readonly name: string;
@@ -11,6 +12,7 @@ export interface MerchantSignup {
 }
 @Service()
 export class ShopPreviewStore {
+  readonly #functions = inject(SupabaseFunctions);
   readonly selected = signal('UAC – Gombe');
   readonly category = signal('Toutes');
   readonly commune = signal('Toutes');
@@ -54,6 +56,8 @@ export class ShopPreviewStore {
   readonly merchantOtherCategory = signal('');
   readonly merchantSent = signal(false);
   readonly merchantPhotoName = signal('');
+  readonly merchantPhotoData = signal<string | null>(null);
+  readonly merchantPhotoError = signal('');
   readonly merchantSummary = signal('');
   readonly merchantWhatsAppUrl = computed(
     () =>
@@ -83,6 +87,26 @@ export class ShopPreviewStore {
   selectMerchantPhoto(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     this.merchantPhotoName.set(file?.name ?? '');
+    this.merchantPhotoError.set('');
+    this.merchantPhotoData.set(null);
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      this.merchantPhotoError.set('Choisissez une image JPG, PNG ou WebP.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      this.merchantPhotoError.set('La photo doit faire 5 Mo ou moins.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.merchantPhotoData.set(
+        typeof reader.result === 'string' ? reader.result : null,
+      );
+    };
+    reader.onerror = () =>
+      this.merchantPhotoError.set('Impossible de lire cette image.');
+    reader.readAsDataURL(file);
   }
   merchantDigits(raw: string): string {
     return raw.replace(/\D/g, '').replace(/^0+/, '');
@@ -100,17 +124,44 @@ export class ShopPreviewStore {
   }
   /** GPS position captured with "Utiliser ma position", if any. */
   readonly merchantPosition = signal<{ lat: number; lon: number } | null>(null);
-  completeMerchant(fields: MerchantSignup): void {
+  async completeMerchant(fields: MerchantSignup): Promise<void> {
     const position = this.merchantPosition();
+    if (!position)
+      throw new Error('Choisissez une position GPS pour la boutique.');
+    const address = [
+      fields.number.trim(),
+      fields.street.trim(),
+      fields.district.trim(),
+      this.merchantCommune().trim(),
+      fields.address.trim(),
+      'Kinshasa',
+      'RDC',
+    ]
+      .filter(Boolean)
+      .join(', ');
+    const phone = `${this.phonePrefix()}${this.merchantDigits(fields.phone)}`;
+    const categories = this.merchantCategories().map((name) =>
+      name === 'Autre' && this.merchantOtherCategory().trim()
+        ? `Autre (${this.merchantOtherCategory().trim()})`
+        : name,
+    );
+    await this.#functions.post('request-become-shop', {
+      name: fields.name.trim(),
+      lat: position.lat,
+      lon: position.lon,
+      profile_picture: this.merchantPhotoData(),
+      address,
+      phone_number: phone,
+      categories,
+    });
     this.merchantSummary.set(
       [
         'Bonjour, je souhaite référencer ma boutique sur TalaPrix.',
         `Boutique : ${fields.name}`,
-        `Téléphone : ${this.phonePrefix()}${this.merchantDigits(fields.phone)}`,
-        `Adresse : ${fields.address}`,
-        `Avenue ou rue : ${fields.street}`,
-        `Quartier : ${fields.district}`,
-        `Numéro : ${fields.number || 'Non indiqué'}`,
+        `Téléphone : ${phone}`,
+        `Adresse : ${address}`,
+        `Adresse indiquée : ${fields.address}`,
+        `Coordonnées GPS : ${position.lat.toFixed(6)}, ${position.lon.toFixed(6)}`,
         `Commune : ${this.merchantCommune()}`,
         ...(position
           ? [
