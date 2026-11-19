@@ -17,7 +17,6 @@ import {
   LucideChevronDown,
   LucideChevronRight,
   LucideChevronUp,
-  LucideChevronsUpDown,
   LucideLayoutGrid,
   LucideMegaphone,
   LucideScanSearch,
@@ -59,7 +58,6 @@ interface NavSection {
     LucideChevronDown,
     LucideChevronRight,
     LucideChevronUp,
-    LucideChevronsUpDown,
     LucideLayoutGrid,
     LucideMegaphone,
     LucideScanSearch,
@@ -142,10 +140,7 @@ export class AdminShell {
     {
       label: 'Équipe & accès',
       icon: 'shield',
-      pages: [
-        { label: 'Administrateurs', path: '/admin/equipe' },
-        { label: 'Rôles', path: '/admin/roles' },
-      ],
+      pages: [{ label: 'Administrateurs', path: '/admin/equipe' }],
     },
   ];
 

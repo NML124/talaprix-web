@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LucideChevronRight } from '@lucide/angular';
@@ -17,7 +18,7 @@ interface UserRoles {
 @Component({
   selector: 'tp-admin-recent-sections',
   host: { class: 'grid min-w-0 gap-5' },
-  imports: [RouterLink, LucideChevronRight],
+  imports: [TableView, RouterLink, LucideChevronRight],
   templateUrl: './admin-recent-sections.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

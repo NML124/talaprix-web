@@ -15,9 +15,9 @@
         class="m-0 mt-1 text-[13px] leading-relaxed text-[var(--client-muted)]"
       >
         Nous utilisons le stockage nécessaire à la session et au panier. Avec
-        votre accord, nous mesurons les visites et les pages consultées pour
-        améliorer Talaprix. Vous pouvez changer votre choix depuis le pied de
-        page.
+        votre accord, nous mesurons les visites, recherches et interactions,
+        associées à votre compte si vous êtes connecté, pour améliorer Talaprix.
+        Vous pouvez changer votre choix depuis le pied de page.
         <a
           routerLink="/confidentialite"
           class="font-medium text-[var(--client-action)] underline"
@@ -74,9 +74,10 @@
           </span>
         </div>
         <p class="m-0 mt-1 text-xs leading-relaxed text-[var(--client-muted)]">
-          Mesure des visites et des pages vues sans identifiant publicitaire.
-          @if (!notice.analyticsAvailable) { Les statistiques ne sont pas encore
-          configurées sur cette adresse. Votre choix sera conservé. }
+          Mesure des visites, recherches et interactions sans identifiant
+          publicitaire. @if (!notice.analyticsAvailable) { Les statistiques ne
+          sont pas encore configurées sur cette adresse. Votre choix sera
+          conservé. }
         </p>
         <button
           type="button"

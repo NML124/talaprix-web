@@ -179,6 +179,12 @@
         result.worked_days }} jours travaillés
       </p>
       <div class="workbook-table-wrap tp-grid-scroll">
+        <tp-table-view
+          #view1
+          [rows]="result.weekly"
+          sortKey="week_start"
+          [chronological]="true"
+        />
         <table class="workbook-table tp-grid">
           <thead>
             <tr>
@@ -189,7 +195,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (week of result.weekly; track week.week_start) {
+            @for (week of view1.visible(); track week.week_start) {
             <tr>
               <td>{{ week.week_start }}</td>
               <td>{{ week.shops }}</td>

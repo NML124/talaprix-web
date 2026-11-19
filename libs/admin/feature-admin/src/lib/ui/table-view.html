@@ -1,0 +1,10 @@
+<div class="toolbar flex-wrap">
+  <tp-admin-select
+    [searchable]="false"
+    ariaLabel="Tri des lignes affichées"
+    [options]="['asc','desc']"
+    [displayLabels]="{asc:chronological()?'Plus anciens en premier':sortKey()==='count'?'Plus petits en premier':'A à Z',desc:chronological()?'Plus récents en premier':sortKey()==='count'?'Plus grands en premier':'Z à A'}"
+    [selected]="order()"
+    (changed)="order.set($event)"
+  />
+</div>

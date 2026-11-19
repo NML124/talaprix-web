@@ -11,6 +11,8 @@ export interface Row {
   readonly subtitle: string;
   readonly detail: string;
   readonly state: string;
+  readonly currencyId?: string;
+  readonly gallery?: string[];
   readonly image?: string;
   readonly categoryId?: string;
   readonly parentId?: string;
@@ -52,6 +54,12 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
             : 'Actif',
       archived: number(value['state_id']) === 1,
       paused: number(value['state_id']) === 2,
+      currencyId: String(value['devise_id'] ?? ''),
+      gallery: Array.isArray(value['product_images'])
+        ? value['product_images'].filter(
+            (x): x is string => typeof x === 'string',
+          )
+        : [],
       image: productImage(value['product_picture']),
       categoryId: stringField(value, 'category_id'),
       createdAt: stringField(value, 'created_at'),
@@ -76,6 +84,7 @@ export function mapRow(value: unknown, resource: Resource): Row | null {
       archived: number(value['state_id']) === 1,
       paused: number(value['state_id']) === 2,
       price: number(value['price']) ?? undefined,
+      currencyId: String(value['devise_id'] ?? ''),
       productId: stringField(value, 'product_id'),
       shopId: stringField(value, 'shop_id'),
       createdAt: stringField(value, 'created_at'),

@@ -25,6 +25,7 @@ export class ClientCookieNotice {
       if (
         !this.notice.analytics() ||
         !this.notice.analyticsAvailable ||
+        !/^[a-f0-9]{32}$/i.test(this.#token) ||
         typeof document === 'undefined'
       )
         return;

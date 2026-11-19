@@ -67,6 +67,12 @@
   }
 
   <div class="workbook-table-wrap tp-grid-scroll">
+    <tp-table-view
+      #view1
+      [rows]="rows()"
+      sortKey="source_published_at"
+      [chronological]="true"
+    />
     <table class="workbook-table tp-grid workbook-action-table">
       <thead>
         <tr>
@@ -83,7 +89,7 @@
         <tr>
           <td colspan="6"><span class="workbook-shimmer"></span></td>
         </tr>
-        } } @else { @for (plan of rows(); track plan.plan_id) {
+        } } @else { @for (plan of view1.visible(); track plan.plan_id) {
         <tr>
           <td>
             <a

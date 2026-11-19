@@ -106,6 +106,7 @@
         >Prix<input type="number" min="1" [(ngModel)]="row.price" /></label
       ><label class="field"
         >Devise<tp-admin-select
+          [searchable]="false"
           [options]="['CDF','USD']"
           [selected]="row.currency"
           ariaLabel="Devise de l’offre"

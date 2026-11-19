@@ -1,3 +1,5 @@
+import { actionLabel, screenLabel, platformLabel } from './usage-labels';
+import { AdminSelect } from '../../ui/admin-select';
 import {
   Component,
   signal,
@@ -12,12 +14,13 @@ interface Entry {
   at: string;
   user: string;
   action: string;
+  subject: string;
   screen: string | null;
   platform: string | null;
 }
 @Component({
   selector: 'tp-usage-journal',
-  imports: [RouterLink, PageHeader],
+  imports: [AdminSelect, RouterLink, PageHeader],
   templateUrl: './usage-journal.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tp-admin tp-page' },
@@ -32,6 +35,7 @@ export class UsageJournal {
   readonly rows = signal<Entry[]>([]);
   readonly total = signal(0);
   readonly page = signal(1);
+  readonly sort = signal('newest');
   readonly loading = signal(false);
   readonly error = signal('');
   readonly clock = new Intl.DateTimeFormat('fr-CD', {
@@ -43,6 +47,10 @@ export class UsageJournal {
     return this.clock.format(new Date(at));
   }
   constructor() {
+    void this.load(1);
+  }
+  changeSort(value: string): void {
+    this.sort.set(value);
     void this.load(1);
   }
   async load(page: number) {
@@ -57,10 +65,18 @@ export class UsageJournal {
           days: String(this.days),
           until: this.until,
           page: String(page),
+          sort: this.sort(),
         },
       );
       if (!Array.isArray(data.rows)) throw new Error();
-      this.rows.set(data.rows);
+      this.rows.set(
+        data.rows.map((row) => ({
+          ...row,
+          action: actionLabel(row.action),
+          screen: screenLabel(row.screen),
+          platform: platformLabel(row.platform),
+        })),
+      );
       this.total.set(data.total);
       this.page.set(page);
     } catch {

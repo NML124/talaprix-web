@@ -1,8 +1,14 @@
 <div class="image-list" aria-label="Image sélectionnée">
   @if(image()) {
   <div class="image-tile">
-    <img [src]="imagePath(image())" alt="Aperçu de l’image" />@if (allowClear())
-    {<button
+    <img [src]="imagePath(image())" alt="Aperçu de l’image" /><label
+      class="image-replace"
+      >Remplacer<input
+        type="file"
+        class="sr-only"
+        accept="image/jpeg,image/png,image/webp"
+        (change)="choose($event)" /></label
+    >@if (allowClear()) {<button
       type="button"
       class="image-remove"
       aria-label="Retirer le visuel"
@@ -11,18 +17,15 @@
       ×</button
     >}
   </div>
-  }
+  } @if(!image()){
   <label class="image-add"
-    ><span aria-hidden="true">＋</span
-    ><span>{{image() ? 'Remplacer l’image' : 'Ajouter une image'}}</span
-    ><input
+    ><span aria-hidden="true">＋</span>Ajouter une image<input
       type="file"
       accept="image/jpeg,image/png,image/webp"
-      aria-label="Choisir une image"
-      (change)="choose($event)"
-  /></label>
+      (change)="choose($event)" /></label
+  >}
 </div>
 @if(error()) {
 <p class="image-error" role="alert">{{error()}}</p>
-}
-<small class="muted">Une image · JPG, PNG ou WebP · 5 Mo maximum.</small>
+} @if (showHint()) {<small class="muted">JPG, PNG ou WebP · 5 Mo maximum.</small
+>}

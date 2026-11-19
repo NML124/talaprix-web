@@ -27,11 +27,28 @@
         />
       </label>
     </form>
+    <tp-admin-select
+      [searchable]="false"
+      ariaLabel="Archivage"
+      [options]="['all','current','archived']"
+      [displayLabels]="{all:'Tous les éléments',current:'Non archivés',archived:'Archivés'}"
+      [selected]="archive()"
+      (changed)="filterTable('archive',$event)"
+    />
+    <tp-admin-select
+      [searchable]="false"
+      ariaLabel="Ordre chronologique"
+      [options]="['newest','oldest']"
+      [displayLabels]="{newest:'Plus récents en premier',oldest:'Plus anciens en premier'}"
+      [selected]="sort()"
+      (changed)="filterTable('sort',$event)"
+    />
   </div>
   @if (resource() === 'users' && !teamOnly()) {
   <div class="toolbar">
     <label class="field">
       <tp-admin-select
+        [searchable]="false"
         [options]="roleOptions"
         [displayLabels]="roleLabels"
         [selected]="roleFilter()"
@@ -62,8 +79,17 @@
               <th class="py-3 pr-4">
                 {{ resource() === 'products' ? 'Produit' : 'Nom' }}
               </th>
-              <th class="py-3 pr-4">Contexte</th>
-              <th class="py-3 pr-4">Détail</th>
+              <th class="py-3 pr-4">
+                {{
+                {products:'Catégorie',offers:'Boutique',shops:'Adresse',categories:'Catégorie
+                parente',users:'E-mail',advertisements:'Boutique'}[resource()]
+                }}
+              </th>
+              <th class="py-3 pr-4">
+                {{
+                {products:'Marque',offers:'Prix',shops:'Téléphone',categories:'Informations',users:'Rôle',advertisements:'Fin
+                de diffusion'}[resource()] }}
+              </th>
               <th class="py-3">Statut</th>
               <th class="py-3">Ajouté le</th>
               @if (resource() === 'offers') {
@@ -112,7 +138,8 @@
                 {{ row.subtitle || '—' }}
               </td>
               <td class="py-3 pr-4" [title]="row.detail">
-                {{ row.detail || '—' }}
+                {{ resource() === 'advertisements' && row.detail ? (row.detail |
+                date:'dd/MM/yyyy HH:mm') : (row.detail || '—') }}
               </td>
               <td class="py-3">{{ row.state }}</td>
               <td class="py-3">

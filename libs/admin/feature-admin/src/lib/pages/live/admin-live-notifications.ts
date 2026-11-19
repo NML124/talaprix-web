@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -28,6 +29,7 @@ import { AdminLivePagination } from './admin-live-pagination';
       'tp-admin tp-page tp-admin-notifications grid min-w-0 content-start gap-5',
   },
   imports: [
+    TableView,
     DatePipe,
     PageHeader,
     AdminDialog,

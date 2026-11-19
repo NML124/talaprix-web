@@ -29,8 +29,4 @@ export class AdminDialog {
   protected dismiss(): void {
     this.dialog().nativeElement.close();
   }
-
-  protected dismissBackdrop(event: MouseEvent): void {
-    if (event.target === this.dialog().nativeElement) this.dismiss();
-  }
 }

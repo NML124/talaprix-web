@@ -1,7 +1,7 @@
 <tp-admin-dialog [title]="title()" (closed)="closed.emit()">
   <form
     [attr.inert]="saving() ? '' : null"
-    class="form-stack"
+    class="form-stack catalogue-dialog-form"
     (submit)="$event.preventDefault(); save()"
   >
     @if (error()) {
@@ -38,12 +38,13 @@
         [image]="image()"
         [allowClear]="!row() || image().startsWith('data:')"
         (changed)="image.set($event)"
+        (fileChanged)="imageFile.set($event)"
       />
     </label>
     } @if (resource() === 'products') {
     <tp-admin-edit-field [locked]="!!row()"
       ><label class="field"
-        ><span class="input-caption">Code EAN</span>
+        ><span class="input-caption">Code EAN (facultatif)</span>
         <input
           type="text"
           maxlength="100"
@@ -52,28 +53,28 @@
           name="ean"
         /> </label
     ></tp-admin-edit-field>
-    <tp-admin-edit-field [locked]="!!row()"
-      ><label class="field"
-        ><span class="input-caption">Marque</span>
-        <input
-          type="text"
-          maxlength="100"
-          [ngModel]="brand()"
-          (ngModelChange)="brand.set($event)"
-          name="brand"
-        /> </label
-    ></tp-admin-edit-field>
-    <tp-admin-edit-field [locked]="!!row()"
-      ><label class="field"
-        ><span class="input-caption">Gamme / série</span>
-        <input
-          type="text"
-          maxlength="100"
-          [ngModel]="series()"
-          (ngModelChange)="series.set($event)"
-          name="series"
-        /> </label
-    ></tp-admin-edit-field>
+    <label class="field"
+      ><span class="input-caption">Marque</span>
+      <tp-admin-select
+        [options]="brandOptions()"
+        [selected]="brand()"
+        (queryChanged)="lookup('brand',$event)"
+        (changed)="brand.set($event)"
+        [allowCustom]="false"
+        ariaLabel="Marque"
+      />
+    </label>
+    <label class="field"
+      ><span class="input-caption">Gamme / série</span>
+      <tp-admin-select
+        [options]="seriesOptions()"
+        [selected]="series()"
+        (queryChanged)="lookup('series',$event)"
+        (changed)="series.set($event)"
+        [allowCustom]="true"
+        ariaLabel="Série"
+      />
+    </label>
     <label class="field"
       >Catégorie
       <tp-admin-select
@@ -84,14 +85,33 @@
         (changed)="categoryId.set($event)"
       />
     </label>
-    <label class="field"
-      >Image du produit
-      <tp-admin-single-image-picker
-        [image]="image()"
-        [allowClear]="!row() || image().startsWith('data:')"
-        (changed)="image.set($event)"
-      />
-    </label>
+    <div class="field">
+      <span>Images du produit</span>
+      <div class="catalogue-images">
+        <tp-admin-single-image-picker
+          [image]="image()"
+          [showHint]="false"
+          [allowClear]="!row() || image().startsWith('data:')"
+          (changed)="image.set($event)"
+          (fileChanged)="imageFile.set($event)"
+        />
+        @for (photo of gallery(); track $index; let i = $index) {
+        <tp-admin-single-image-picker
+          [image]="photo.url"
+          [showHint]="false"
+          [allowClear]="false"
+          (picked)="addGallery($event, i)"
+        />
+        } @if (image()) {
+        <tp-admin-single-image-picker
+          image=""
+          [showHint]="false"
+          (picked)="addGallery($event, gallery().length)"
+        />
+        }
+      </div>
+      <small class="muted">JPG, PNG ou WebP · 5 Mo maximum par image.</small>
+    </div>
     } @if (resource() === 'shops') { @if (!row()) {
     <tp-admin-edit-field [locked]="!!row()"
       ><label class="field"
@@ -113,20 +133,12 @@
           type="text"
           autocomplete="street-address"
           [ngModel]="address()"
-          (ngModelChange)="address.set($event)"
+          (ngModelChange)="address.set($event); lookup.suggest($event)"
           name="address"
           required
         /> </label
-    ></tp-admin-edit-field>
-    <tp-admin-edit-field [locked]="!!row()">
-      <tp-admin-location-lookup
-        [query]="address()"
-        (selected)="selectLocation($event)"
+      ><tp-admin-location-lookup #lookup (selected)="selectLocation($event)"
     /></tp-admin-edit-field>
-    <p class="muted small">
-      Vérifiez l’adresse détaillée ci-dessus. Le lieu sélectionné sert à remplir
-      les coordonnées GPS sans remplacer cette adresse.
-    </p>
     <tp-admin-edit-field [locked]="!!row()"
       ><label class="field"
         ><span class="input-caption">Téléphone</span>
@@ -139,38 +151,36 @@
         /> </label
     ></tp-admin-edit-field>
     <div class="grid gap-3 sm:grid-cols-2">
-      <tp-admin-edit-field [locked]="!!row()"
-        ><label class="field"
-          ><span class="input-caption">Latitude</span>
-          <input
-            type="number"
-            step="any"
-            min="-90"
-            max="90"
-            [ngModel]="lat()"
-            (ngModelChange)="lat.set($event)"
-            name="lat"
-            required
-          /> </label
-      ></tp-admin-edit-field>
-      <tp-admin-edit-field [locked]="!!row()"
-        ><label class="field"
-          ><span class="input-caption">Longitude</span>
-          <input
-            type="number"
-            step="any"
-            min="-180"
-            max="180"
-            [ngModel]="lon()"
-            (ngModelChange)="lon.set($event)"
-            name="lon"
-            required
-          /> </label
-      ></tp-admin-edit-field>
+      <label class="field"
+        ><span class="input-caption">Latitude</span>
+        <input
+          type="number"
+          step="any"
+          min="-90"
+          max="90"
+          [ngModel]="lat()"
+          (ngModelChange)="lat.set($event)"
+          name="lat"
+          required
+        />
+      </label>
+      <label class="field"
+        ><span class="input-caption">Longitude</span>
+        <input
+          type="number"
+          step="any"
+          min="-180"
+          max="180"
+          [ngModel]="lon()"
+          (ngModelChange)="lon.set($event)"
+          name="lon"
+          required
+        />
+      </label>
     </div>
     <p class="muted small">
-      Le propriétaire doit déjà avoir un compte TalaPrix. Vérifiez la position
-      avant d’enregistrer.
+      @if (!row()) { Le propriétaire doit déjà avoir un compte TalaPrix. }
+      Vérifiez la position avant d’enregistrer.
     </p>
     } @if (resource() === 'offers') {
     <tp-admin-live-offer-fields
@@ -180,6 +190,10 @@
       [shopLabels]="shopLabels()"
       [productIds]="productIds()"
       [productLabels]="productLabels()"
+      [productImages]="productImages()"
+      [currencyIds]="currencyIds()"
+      [currencies]="currencies()"
+      [(currency)]="currency"
       [(shopId)]="shopId"
       [(productId)]="productId"
       [(productQuery)]="productQuery"
@@ -188,57 +202,56 @@
       (search)="searchProducts()"
     />
     } @if (resource() === 'advertisements') {
-    <tp-admin-edit-field [locked]="!!row()"
-      ><label class="field"
-        >État de la publicité
-        <tp-admin-select
-          [options]="['0', '1', '2']"
-          [displayLabels]="{ '0': 'Inactive', '1': 'Active', '2': 'En attente' }"
-          [selected]="pubStateValue()"
-          ariaLabel="État de la publicité"
-          (changed)="pubState.set(+$event)"
-        /> </label
-    ></tp-admin-edit-field>
-    <tp-admin-edit-field [locked]="!!row()"
-      ><label class="field"
-        >Boutique
-        <tp-admin-select
-          [options]="shopIds()"
-          [displayLabels]="shopLabels()"
-          [selected]="shopId()"
-          ariaLabel="Boutique de la publicité"
-          (changed)="shopId.set($event)"
-        /> </label
-    ></tp-admin-edit-field>
+    <label class="field"
+      >État de la publicité
+      <tp-admin-select
+        [options]="['0', '1', '2']"
+        [displayLabels]="{ '0': 'Inactive', '1': 'Active', '2': 'En attente' }"
+        [selected]="pubStateValue()"
+        ariaLabel="État de la publicité"
+        (changed)="pubState.set(+$event)"
+      />
+    </label>
+    <label class="field"
+      >Boutique
+      <tp-admin-select
+        [options]="shopIds()"
+        [displayLabels]="shopLabels()"
+        [selected]="shopId()"
+        ariaLabel="Boutique de la publicité"
+        (changed)="shopId.set($event)"
+      />
+    </label>
     <label class="field"
       >Visuel de la publicité
       <tp-admin-single-image-picker
         [image]="image()"
         [allowClear]="!row() || image().startsWith('data:')"
         (changed)="image.set($event)"
+        (fileChanged)="imageFile.set($event)"
       />
     </label>
     <div class="grid gap-3 sm:grid-cols-2">
-      <tp-admin-edit-field [locked]="!!row()"
-        ><label class="field"
-          ><span class="input-caption">Priorité</span>
-          <input
-            type="number"
-            min="1"
-            step="1"
-            [ngModel]="priority()"
-            (ngModelChange)="priority.set($event)"
-            name="priority"
-            required
-          /> </label
-      ></tp-admin-edit-field>
-      <tp-admin-edit-field [locked]="!!row()">
-        <tp-admin-date-card
-          label="Date de fin"
-          mode="datetime"
-          [value]="endDate()"
-          (valueChange)="endDate.set($event)"
-      /></tp-admin-edit-field>
+      <label class="field"
+        ><span class="input-caption">Priorité</span>
+        <input
+          type="number"
+          min="1"
+          step="1"
+          [ngModel]="priority()"
+          (ngModelChange)="priority.set($event)"
+          name="priority"
+          required
+        />
+      </label>
+
+      <tp-admin-date-card
+        [compact]="true"
+        label="Date de fin"
+        mode="datetime"
+        [value]="endDate()"
+        (valueChange)="endDate.set($event)"
+      />
     </div>
     }
 

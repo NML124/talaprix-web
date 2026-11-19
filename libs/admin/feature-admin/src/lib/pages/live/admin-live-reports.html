@@ -18,6 +18,88 @@
   <div class="workbook-alert" role="alert">{{ error() }}</div>
   }
 
+  <section class="tp-report-section" aria-labelledby="usage-report-title">
+    <header class="tp-report-section-head">
+      <div>
+        <h2 id="usage-report-title">Utilisation de TalaPrix</h2>
+        <p>
+          Activité agrégée des événements enregistrés, sans identifiants de
+          compte ni de session affichés.
+        </p>
+      </div>
+      <div
+        class="tp-report-period"
+        role="group"
+        aria-label="Période du rapport d’utilisation"
+      >
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 7"
+          [attr.aria-pressed]="usagePeriod() === 7"
+          (click)="setUsagePeriod(7)"
+        >
+          7 jours
+        </button>
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 30"
+          [attr.aria-pressed]="usagePeriod() === 30"
+          (click)="setUsagePeriod(30)"
+        >
+          30 jours
+        </button>
+        <button
+          type="button"
+          [class.is-active]="usagePeriod() === 90"
+          [attr.aria-pressed]="usagePeriod() === 90"
+          (click)="setUsagePeriod(90)"
+        >
+          90 jours
+        </button>
+      </div>
+    </header>
+    @if (usageError()) {
+    <div class="report-unavailable" role="status">
+      <span
+        >Les statistiques d’utilisation sont momentanément indisponibles.</span
+      ><button
+        type="button"
+        class="btn btn-secondary"
+        (click)="setUsagePeriod(usagePeriod())"
+      >
+        Réessayer
+      </button>
+    </div>
+    } @else if (usage(); as report) {
+    <div class="tp-report-grid tp-report-grid--usage">
+      <article class="tp-report-card">
+        <span>Événements enregistrés</span
+        ><strong>{{ report.total_events }}</strong
+        ><small
+          >{{ report.captured_events }} analysés sur {{ report.period_days }}
+          jours</small
+        >
+      </article>
+      <article class="tp-report-card">
+        <span>Sessions distinctes</span
+        ><strong>{{ report.active_sessions }}</strong
+        ><small>Identifiants utilisés uniquement pour le comptage</small>
+      </article>
+      <article class="tp-report-card">
+        <span>Comptes connectés actifs</span
+        ><strong>{{ report.signed_in_users }}</strong
+        ><small>Comptage agrégé, aucun compte affiché</small>
+      </article>
+    </div>
+    @if (report.truncated) {
+    <p class="tp-report-note">
+      Le volume dépasse la limite de calcul du rapport ; les graphiques
+      utilisent les événements les plus récents.
+    </p>
+    }
+    <tp-usage-analysis [report]="report" />
+    }
+  </section>
   <section class="tp-report-section" aria-labelledby="scraping-report-title">
     <header class="tp-report-section-head">
       <div>
@@ -106,6 +188,12 @@
         ></a>
       </div>
       <div class="workbook-table-wrap tp-grid-scroll">
+        <tp-table-view
+          #view1
+          [rows]="recentRuns()"
+          sortKey="imported_at"
+          [chronological]="true"
+        />
         <table class="workbook-table tp-grid">
           <thead>
             <tr>
@@ -121,7 +209,7 @@
             <tr>
               <td colspan="5" role="status">Chargement des exécutions…</td>
             </tr>
-            } @else { @for (run of recentRuns(); track run.run_id) {
+            } @else { @for (run of view1.visible(); track run.run_id) {
             <tr>
               <td>
                 <strong class="workbook-cell-title"
@@ -163,6 +251,12 @@
         ></a>
       </div>
       <div class="workbook-table-wrap tp-grid-scroll">
+        <tp-table-view
+          #view2
+          [rows]="recentObservations()"
+          sortKey="imported_at"
+          [chronological]="true"
+        />
         <table class="workbook-table tp-grid">
           <thead>
             <tr>
@@ -177,7 +271,7 @@
             <tr>
               <td colspan="4" role="status">Chargement des captures…</td>
             </tr>
-            } @else { @for (observation of recentObservations(); track
+            } @else { @for (observation of view2.visible(); track
             observation.run_id + ':' + observation.item_index) {
             <tr>
               <td>
@@ -221,6 +315,12 @@
         </div>
       </div>
       <div class="workbook-table-wrap tp-grid-scroll">
+        <tp-table-view
+          #view3
+          [rows]="metrics()"
+          sortKey="count"
+          [chronological]="false"
+        />
         <table class="workbook-table tp-grid">
           <thead>
             <tr>
@@ -234,7 +334,7 @@
             <tr>
               <td colspan="3" role="status">Chargement…</td>
             </tr>
-            } @else { @for (item of metrics(); track item.label) {
+            } @else { @for (item of view3.visible(); track item.label) {
             <tr>
               <td>
                 <strong class="workbook-cell-title">{{ item.label }}</strong>
@@ -260,6 +360,12 @@
         </div>
       </div>
       <div class="workbook-table-wrap tp-grid-scroll">
+        <tp-table-view
+          #view4
+          [rows]="roles()"
+          sortKey="count"
+          [chronological]="false"
+        />
         <table class="workbook-table tp-grid">
           <thead>
             <tr>
@@ -272,7 +378,7 @@
             <tr>
               <td colspan="2" role="status">Chargement…</td>
             </tr>
-            } @else { @for (item of roles(); track item.label) {
+            } @else { @for (item of view4.visible(); track item.label) {
             <tr>
               <td>{{ item.label }}</td>
               <td class="workbook-number">{{ item.count ?? '—' }}</td>
@@ -283,87 +389,4 @@
       </div>
     </section>
   </div>
-
-  <section class="tp-report-section" aria-labelledby="usage-report-title">
-    <header class="tp-report-section-head">
-      <div>
-        <h2 id="usage-report-title">Utilisation de TalaPrix</h2>
-        <p>
-          Activité agrégée des événements enregistrés, sans identifiants de
-          compte ni de session affichés.
-        </p>
-      </div>
-      <div
-        class="tp-report-period"
-        role="group"
-        aria-label="Période du rapport d’utilisation"
-      >
-        <button
-          type="button"
-          [class.is-active]="usagePeriod() === 7"
-          [attr.aria-pressed]="usagePeriod() === 7"
-          (click)="setUsagePeriod(7)"
-        >
-          7 jours
-        </button>
-        <button
-          type="button"
-          [class.is-active]="usagePeriod() === 30"
-          [attr.aria-pressed]="usagePeriod() === 30"
-          (click)="setUsagePeriod(30)"
-        >
-          30 jours
-        </button>
-        <button
-          type="button"
-          [class.is-active]="usagePeriod() === 90"
-          [attr.aria-pressed]="usagePeriod() === 90"
-          (click)="setUsagePeriod(90)"
-        >
-          90 jours
-        </button>
-      </div>
-    </header>
-    @if (usageError()) {
-    <div class="report-unavailable" role="status">
-      <span
-        >Les statistiques d’utilisation sont momentanément indisponibles.</span
-      ><button
-        type="button"
-        class="btn btn-secondary"
-        (click)="setUsagePeriod(usagePeriod())"
-      >
-        Réessayer
-      </button>
-    </div>
-    } @else if (usage(); as report) {
-    <div class="tp-report-grid tp-report-grid--usage">
-      <article class="tp-report-card">
-        <span>Événements enregistrés</span
-        ><strong>{{ report.total_events }}</strong
-        ><small
-          >{{ report.captured_events }} analysés sur {{ report.period_days }}
-          jours</small
-        >
-      </article>
-      <article class="tp-report-card">
-        <span>Sessions distinctes</span
-        ><strong>{{ report.active_sessions }}</strong
-        ><small>Identifiants utilisés uniquement pour le comptage</small>
-      </article>
-      <article class="tp-report-card">
-        <span>Comptes connectés actifs</span
-        ><strong>{{ report.signed_in_users }}</strong
-        ><small>Comptage agrégé, aucun compte affiché</small>
-      </article>
-    </div>
-    @if (report.truncated) {
-    <p class="tp-report-note">
-      Le volume dépasse la limite de calcul du rapport ; les graphiques
-      utilisent les événements les plus récents.
-    </p>
-    }
-    <tp-usage-analysis [report]="report" />
-    }
-  </section>
 </div>

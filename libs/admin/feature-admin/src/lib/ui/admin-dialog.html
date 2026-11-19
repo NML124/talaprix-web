@@ -4,7 +4,7 @@
   [class.admin-dialog-compact]="size() === 'compact'"
   [attr.aria-label]="title()"
   (close)="closed.emit()"
-  (click)="dismissBackdrop($event)"
+  (cancel)="$event.preventDefault()"
 >
   <div class="admin-dialog-panel">
     <header class="admin-dialog-head">

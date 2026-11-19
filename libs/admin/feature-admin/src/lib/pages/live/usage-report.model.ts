@@ -1,3 +1,19 @@
+import { actionLabel, screenLabel, platformLabel } from './usage-labels';
+
+function groupLabels(
+  rows: UsageReport['event_types'],
+  translate: (key: string) => string,
+) {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const label = translate(row.label);
+    counts.set(label, (counts.get(label) ?? 0) + row.count);
+  }
+  return Array.from(counts, ([label, count]) => ({ label, count })).sort(
+    (a, b) => b.count - a.count,
+  );
+}
+
 export interface UsageReport {
   readonly until: string;
   readonly since: string;
@@ -24,9 +40,9 @@ export interface UsageReport {
 
 export function rankings(r: UsageReport) {
   return [
-    { title: 'Actions', rows: r.event_types },
-    { title: 'Écrans', rows: r.screens },
-    { title: 'Plateformes', rows: r.platforms },
+    { title: 'Actions', rows: groupLabels(r.event_types, actionLabel) },
+    { title: 'Écrans', rows: groupLabels(r.screens, screenLabel) },
+    { title: 'Plateformes', rows: groupLabels(r.platforms, platformLabel) },
     { title: 'Zones', rows: r.zones },
     { title: 'Recherches', rows: r.top_searches },
     {

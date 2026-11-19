@@ -41,6 +41,12 @@
   }
 
   <div class="workbook-table-wrap tp-grid-scroll">
+    <tp-table-view
+      #view1
+      [rows]="runs()"
+      sortKey="imported_at"
+      [chronological]="true"
+    />
     <table class="workbook-table tp-grid workbook-action-table">
       @if (mode() === 'runs') {
       <thead>
@@ -59,7 +65,7 @@
         <tr>
           <td colspan="7"><span class="workbook-shimmer"></span></td>
         </tr>
-        } } @else { @for (run of runs(); track run.run_id) {
+        } } @else { @for (run of view1.visible(); track run.run_id) {
         <tr>
           <td>
             <strong class="workbook-cell-title">{{ run.run_id }}</strong>

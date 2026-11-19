@@ -73,6 +73,12 @@
       >
     </div>
     <div class="workbook-table-wrap tp-grid-scroll">
+      <tp-table-view
+        #view1
+        [rows]="recentOffers()"
+        sortKey="name"
+        [chronological]="false"
+      />
       <table class="workbook-table tp-grid">
         <thead>
           <tr>
@@ -81,7 +87,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (offer of recentOffers(); track offer.id) {
+          @for (offer of view1.visible(); track offer.id) {
           <tr>
             <td><strong>{{ offer.name }}</strong></td>
             <td>{{ offer.detail }}</td>

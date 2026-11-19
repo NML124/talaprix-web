@@ -29,7 +29,25 @@
     [id]="optionId(0) + '-listbox'"
     [attr.aria-label]="ariaLabel()"
   >
-    @for (option of options(); track option; let index = $index) {
+    @if(searchable()){<input
+      type="search"
+      class="w-full rounded-lg bg-[var(--surface-muted)] text-[var(--text)] px-2 py-2"
+      [placeholder]="allowCustom() ? 'Rechercher ou saisir une valeur…' : 'Rechercher…'"
+      [attr.aria-label]="'Rechercher : '+ariaLabel()"
+      [value]="query()"
+      (input)="filter($any($event.target).value)"
+      (keydown.enter)="confirmQuery($event)"
+    />
+    } @if(allowCustom() && query().trim() &&
+    !options().includes(query().trim())){<button
+      type="button"
+      class="btn btn-secondary"
+      (click)="choose(query().trim())"
+    >
+      Utiliser « {{query().trim()}} »</button
+    >} @if(!visible().length){
+    <p class="muted small">Aucun résultat</p>
+    } @for (option of visible(); track option; let index = $index) {
     <button
       type="button"
       class="flex min-h-10 w-full items-center justify-between gap-3 rounded-xl px-3 text-left text-sm text-[var(--text-1)] transition hover:bg-[var(--surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]"
@@ -39,7 +57,7 @@
       (keydown.arrowdown)="moveFocus($event, index)"
       (keydown.arrowup)="moveFocus($event, index)"
       (keydown.home)="focusOption(0)"
-      (keydown.end)="focusOption(options().length - 1)"
+      (keydown.end)="focusOption(visible().length - 1)"
       (click)="choose(option)"
     >
       <span class="truncate">{{ displayLabels()[option] || option }}</span>

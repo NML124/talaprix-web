@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -17,7 +18,7 @@ type JournalView = 'jobs' | 'decisions';
 
 @Component({
   selector: 'tp-scraping-journal-sheet',
-  imports: [DatePipe, ScrapingPagination],
+  imports: [TableView, DatePipe, ScrapingPagination],
   templateUrl: './scraping-journal-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

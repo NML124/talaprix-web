@@ -32,7 +32,20 @@
             class="tp-icon-sm tp-chevron"
             aria-hidden="true"
         /></span>
-        <strong class="tp-figure-xl">{{ stats()?.users ?? '—' }}</strong>
+        <div class="kpi-value-line">
+          <strong class="tp-figure-xl">{{ stats()?.users ?? '—' }}</strong>
+          @if(trends()['users']; as trend) {
+          <span
+            class="tp-badge"
+            [class.tp-badge--teal]="trend.direction>0"
+            [class.tp-badge--red]="trend.direction<0"
+            [class.tp-badge--gray]="trend.direction===0"
+            [title]="trend.hint"
+            [attr.aria-label]="trend.hint"
+            >{{trend.label}} · ajouts 30 j</span
+          >
+          }
+        </div>
         <span class="tp-kpi-foot"
           >{{ stats()?.users == null ? 'Donnée indisponible' : 'Comptes
           enregistrés' }}</span
@@ -47,7 +60,20 @@
             class="tp-icon-sm tp-chevron"
             aria-hidden="true"
         /></span>
-        <strong class="tp-figure-xl">{{ stats()?.shops ?? '—' }}</strong>
+        <div class="kpi-value-line">
+          <strong class="tp-figure-xl">{{ stats()?.shops ?? '—' }}</strong>
+          @if(trends()['shops']; as trend) {
+          <span
+            class="tp-badge"
+            [class.tp-badge--teal]="trend.direction>0"
+            [class.tp-badge--red]="trend.direction<0"
+            [class.tp-badge--gray]="trend.direction===0"
+            [title]="trend.hint"
+            [attr.aria-label]="trend.hint"
+            >{{trend.label}} · ajouts 30 j</span
+          >
+          }
+        </div>
         <span class="tp-kpi-foot"
           >{{ stats()?.shops == null ? 'Donnée indisponible' : 'Référencées'
           }}</span
@@ -62,7 +88,20 @@
             class="tp-icon-sm tp-chevron"
             aria-hidden="true"
         /></span>
-        <strong class="tp-figure-xl">{{ stats()?.products ?? '—' }}</strong>
+        <div class="kpi-value-line">
+          <strong class="tp-figure-xl">{{ stats()?.products ?? '—' }}</strong>
+          @if(trends()['products']; as trend) {
+          <span
+            class="tp-badge"
+            [class.tp-badge--teal]="trend.direction>0"
+            [class.tp-badge--red]="trend.direction<0"
+            [class.tp-badge--gray]="trend.direction===0"
+            [title]="trend.hint"
+            [attr.aria-label]="trend.hint"
+            >{{trend.label}} · ajouts 30 j</span
+          >
+          }
+        </div>
         <span class="tp-kpi-foot"
           >{{ stats()?.products == null ? 'Donnée indisponible' : 'Dans le
           catalogue' }}</span
@@ -77,7 +116,20 @@
             class="tp-icon-sm tp-chevron"
             aria-hidden="true"
         /></span>
-        <strong class="tp-figure-xl">{{ stats()?.offers ?? '—' }}</strong>
+        <div class="kpi-value-line">
+          <strong class="tp-figure-xl">{{ stats()?.offers ?? '—' }}</strong>
+          @if(trends()['offers']; as trend) {
+          <span
+            class="tp-badge"
+            [class.tp-badge--teal]="trend.direction>0"
+            [class.tp-badge--red]="trend.direction<0"
+            [class.tp-badge--gray]="trend.direction===0"
+            [title]="trend.hint"
+            [attr.aria-label]="trend.hint"
+            >{{trend.label}} · ajouts 30 j</span
+          >
+          }
+        </div>
         <span class="tp-kpi-foot"
           >{{ stats()?.offers == null ? 'Donnée indisponible' : 'Référencées'
           }}</span
@@ -152,70 +204,6 @@
     </div>
 
     <div class="tp-row">
-      <section class="tp-card tp-col-2" aria-labelledby="recent-title">
-        <div class="tp-card-head">
-          <div>
-            <h2 class="tp-card-title" id="recent-title">Produits récents</h2>
-          </div>
-          <a
-            class="tp-btn tp-btn--secondary tp-btn--sm"
-            routerLink="/admin/catalogue"
-            >Ouvrir le catalogue</a
-          >
-        </div>
-        <div class="workbook-table-wrap tp-grid-scroll">
-          <table class="workbook-table tp-grid">
-            <thead>
-              <tr>
-                <th>Produit</th>
-                <th>Catégorie</th>
-                <th class="tp-record-link-column">Fiche</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (product of recentProducts(); track product.id) {
-              <tr>
-                <td><strong>{{ product.name }}</strong></td>
-                <td>
-                  <span class="tp-badge tp-badge--gray"
-                    >{{ product.category || 'Non précisée' }}</span
-                  >
-                </td>
-                <td>
-                  <a routerLink="/admin/catalogue"
-                    >Voir
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 16 16"
-                      width="16"
-                      height="16"
-                      fill="none"
-                    >
-                      <path
-                        d="m6 3 5 5-5 5"
-                        stroke="currentColor"
-                        stroke-width="1.7"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      /></svg
-                  ></a>
-                </td>
-              </tr>
-              } @empty {
-              <tr>
-                <td colspan="3">
-                  {{ status() === 'loading' ? 'Chargement des produits…' :
-                  'Aucun produit disponible.' }}
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <div class="tp-row">
       <section
         class="tp-card tp-col-2 tp-overview-usage"
         aria-labelledby="overview-usage-title"
@@ -273,6 +261,76 @@
           indisponibles.' : 'Chargement du rapport d’activité…' }}
         </p>
         }
+      </section>
+    </div>
+
+    <div class="tp-row">
+      <section class="tp-card tp-col-2" aria-labelledby="recent-title">
+        <div class="tp-card-head">
+          <div>
+            <h2 class="tp-card-title" id="recent-title">Produits récents</h2>
+          </div>
+          <a
+            class="tp-btn tp-btn--secondary tp-btn--sm"
+            routerLink="/admin/catalogue"
+            >Ouvrir le catalogue</a
+          >
+        </div>
+        <div class="workbook-table-wrap tp-grid-scroll">
+          <tp-table-view
+            #view1
+            [rows]="recentProducts()"
+            sortKey="name"
+            [chronological]="false"
+          />
+          <table class="workbook-table tp-grid">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th class="tp-record-link-column">Fiche</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of view1.visible(); track product.id) {
+              <tr>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>
+                  <span class="tp-badge tp-badge--gray"
+                    >{{ product.category || 'Non précisée' }}</span
+                  >
+                </td>
+                <td>
+                  <a routerLink="/admin/catalogue"
+                    >Voir
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      width="16"
+                      height="16"
+                      fill="none"
+                    >
+                      <path
+                        d="m6 3 5 5-5 5"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg
+                  ></a>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="3">
+                  {{ status() === 'loading' ? 'Chargement des produits…' :
+                  'Aucun produit disponible.' }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
 

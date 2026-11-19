@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,6 +57,7 @@ interface UsageSnapshot {
 @Component({
   selector: 'tp-admin-live-overview',
   imports: [
+    TableView,
     RouterLink,
     PageHeader,
     AdminRecentSections,
@@ -66,6 +68,9 @@ interface UsageSnapshot {
     LucideTag,
     LucideUsers,
   ],
+  styles: [
+    '.kpi-value-line { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; }',
+  ],
   templateUrl: './admin-live-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -73,6 +78,9 @@ export class AdminLiveOverview {
   readonly #functions = inject(SupabaseFunctions);
   readonly #scraping = inject(ScrapingReviewApi);
   readonly reviewCount = signal<number | null>(null);
+  readonly trends = signal<
+    Record<string, { label: string; hint: string; direction: number }>
+  >({});
   readonly stats = signal<DashboardStats | null>(null);
   readonly recentProducts = signal<readonly RecentProduct[]>([]);
   readonly recentCategories = signal<readonly RecentEntry[]>([]);
@@ -94,10 +102,14 @@ export class AdminLiveOverview {
     void this.loadReviewCount();
     void this.loadUsage();
     try {
-      const response = await this.#functions.get<unknown>('get-dashboard-data');
+      const response = await this.#functions.get<unknown>(
+        'get-dashboard-data',
+        { trends: '1' },
+      );
       if (!isRecord(response) || !isRecord(response['stats'])) {
         throw new Error('Réponse du tableau de bord invalide.');
       }
+      this.trends.set(creationBadges(response['creation_trends']));
       const values = response['stats'];
       this.stats.set({
         users: count(values['users_count']),
@@ -215,4 +227,38 @@ function recent(value: unknown, idKey: string, nameKey: string): RecentEntry[] {
         .filter((item) => item.id && item.name)
         .slice(0, 5)
     : [];
+}
+
+function creationBadges(raw: unknown) {
+  const badges: Record<
+    string,
+    { label: string; hint: string; direction: number }
+  > = {};
+  if (!isRecord(raw)) return badges;
+  const format = new Intl.NumberFormat('fr-FR', {
+    maximumFractionDigits: 1,
+    signDisplay: 'exceptZero',
+  });
+  for (const [key, value] of Object.entries(raw)) {
+    if (!isRecord(value)) continue;
+    const current = value['current'],
+      previous = value['previous'];
+    if (typeof current !== 'number' || typeof previous !== 'number') continue;
+    const delta = current - previous;
+    const label = previous
+      ? format.format((100 * delta) / previous) + ' %'
+      : current
+        ? 'Nouveau'
+        : '0 %';
+    badges[key] = {
+      label,
+      direction: Math.sign(delta),
+      hint:
+        current +
+        ' créations sur les 30 derniers jours, contre ' +
+        previous +
+        ' sur les 30 jours précédents.',
+    };
+  }
+  return badges;
 }

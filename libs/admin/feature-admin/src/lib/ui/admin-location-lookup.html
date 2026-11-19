@@ -1,18 +1,10 @@
 @if (mapbox.enabled) {
 <div class="grid gap-2">
-  <button
-    class="btn btn-secondary"
-    type="button"
-    [disabled]="loading() || query().trim().length < 3"
-    (click)="search()"
-  >
-    {{ loading() ? 'Recherche…' : 'Rechercher cette adresse' }}
-  </button>
-  @if (error()) {
+  @if (loading()) { <span role="status">Recherche…</span> } @if (error()) {
   <p class="muted small" role="status">{{ error() }}</p>
   } @if (results().length) {
   <ul class="grid gap-1" aria-label="Adresses trouvées">
-    @for (place of results(); track place.name) {
+    @for (place of results(); track $index) {
     <li>
       <button class="workbook-row-link" type="button" (click)="choose(place)">
         {{ place.name }}
