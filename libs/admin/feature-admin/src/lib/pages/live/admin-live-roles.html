@@ -25,6 +25,12 @@
     </div>
   </div>
   <div class="workbook-table-wrap tp-grid-scroll">
+    <tp-table-view
+      #view1
+      [rows]="rows()"
+      sortKey="label"
+      [chronological]="false"
+    />
     <table class="workbook-table tp-grid workbook-action-table">
       <thead>
         <tr>
@@ -38,7 +44,7 @@
         <tr>
           <td colspan="3" role="status">Chargement des rôles…</td>
         </tr>
-        } @else { @for (role of rows(); track role.id) {
+        } @else { @for (role of view1.visible(); track role.id) {
         <tr>
           <td><strong class="workbook-cell-title">{{ role.label }}</strong></td>
           <td class="workbook-number">{{ role.count }}</td>

@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -25,7 +26,7 @@ const usdFormatter = new Intl.NumberFormat('fr-FR', {
 
 @Component({
   selector: 'tp-scraping-runs-sheet',
-  imports: [DatePipe, AdminDialog, ScrapingPagination],
+  imports: [TableView, DatePipe, AdminDialog, ScrapingPagination],
   templateUrl: './scraping-runs-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

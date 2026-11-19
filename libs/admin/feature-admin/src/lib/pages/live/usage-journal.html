@@ -11,12 +11,23 @@
   </div>
   }
   <div class="workbook-table-wrap">
+    <div class="toolbar">
+      <tp-admin-select
+        [searchable]="false"
+        [options]="['newest','oldest']"
+        [selected]="sort()"
+        [displayLabels]="{newest:'Plus récents en premier',oldest:'Plus anciens en premier'}"
+        ariaLabel="Tri du journal"
+        (changed)="changeSort($event)"
+      />
+    </div>
     <table class="workbook-table tp-grid">
       <thead>
         <tr>
           <th>Date et heure</th>
           <th>Utilisateur</th>
           <th>Action</th>
+          <th>Produit ou détail</th>
           <th>Écran</th>
           <th>Plateforme</th>
         </tr>
@@ -27,12 +38,13 @@
           <td>{{format(row.at)}}</td>
           <td>{{row.user}}</td>
           <td>{{row.action}}</td>
+          <td>{{row.subject || "—"}}</td>
           <td>{{row.screen||'—'}}</td>
           <td>{{row.platform||'—'}}</td>
         </tr>
         }@empty{
         <tr>
-          <td colspan="5">
+          <td colspan="6">
             {{loading()?'Chargement…':error()?'Données indisponibles':'Aucune
             action sur cette période.'}}
           </td>

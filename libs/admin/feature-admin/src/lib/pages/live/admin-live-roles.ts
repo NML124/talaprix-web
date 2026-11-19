@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,7 +23,7 @@ const roles = [
 
 @Component({
   selector: 'tp-admin-live-roles',
-  imports: [PageHeader, RouterLink],
+  imports: [TableView, PageHeader, RouterLink],
   templateUrl: './admin-live-roles.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
+  DestroyRef,
   output,
   signal,
 } from '@angular/core';
@@ -14,29 +14,47 @@ import { MapboxApi, type PlaceSuggestion } from '@talaprix/shared/data-access';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLocationLookup {
-  readonly query = input('');
+  private timer?: ReturnType<typeof setTimeout>;
+  private revision = 0;
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.timer);
+      this.revision++;
+    });
+  }
+  suggest(query: string) {
+    clearTimeout(this.timer);
+    const revision = ++this.revision;
+    this.results.set([]);
+    this.error.set('');
+    this.loading.set(false);
+    if (this.mapbox.enabled && query.trim().length >= 3)
+      this.timer = setTimeout(() => void this.search(query, revision), 300);
+  }
   readonly selected = output<PlaceSuggestion>();
   protected readonly mapbox = inject(MapboxApi);
   protected readonly results = signal<readonly PlaceSuggestion[]>([]);
   protected readonly loading = signal(false);
   protected readonly error = signal('');
 
-  protected async search(): Promise<void> {
+  private async search(query: string, revision: number): Promise<void> {
     this.error.set('');
     this.loading.set(true);
     try {
-      const places = await this.mapbox.searchPlaces(this.query());
+      const places = await this.mapbox.searchPlaces(query);
+      if (revision !== this.revision) return;
       this.results.set(places);
       if (!places.length)
         this.error.set(
           'Aucune adresse trouvée. Ajustez le texte ou saisissez les coordonnées.',
         );
     } catch (error) {
+      if (revision !== this.revision) return;
       this.error.set(
         error instanceof Error ? error.message : 'Recherche indisponible.',
       );
     } finally {
-      this.loading.set(false);
+      if (revision === this.revision) this.loading.set(false);
     }
   }
 

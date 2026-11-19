@@ -21,6 +21,7 @@
       [ngModel]="query()"
       (ngModelChange)="query.set($event)" /></label
   ><tp-admin-select
+    [searchable]="false"
     [options]="categories()"
     [selected]="category()"
     ariaLabel="Filtrer par catégorie"

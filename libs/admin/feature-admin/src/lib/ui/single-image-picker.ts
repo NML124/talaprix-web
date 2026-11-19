@@ -15,7 +15,10 @@ import { imagePath } from '../mocks/catalogue';
 export class SingleImagePicker {
   readonly image = input.required<string>();
   readonly allowClear = input(true);
+  readonly showHint = input(true);
   readonly changed = output<string>();
+  readonly picked = output<{ url: string; file: File }>();
+  readonly fileChanged = output<File | null>();
   protected readonly error = signal('');
   protected readonly imagePath = imagePath;
   protected async choose(event: Event): Promise<void> {
@@ -32,19 +35,21 @@ export class SingleImagePicker {
       return;
     }
     try {
-      this.changed.emit(
-        await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(String(reader.result));
-          reader.onerror = () => reject(reader.error);
-          reader.readAsDataURL(file);
-        }),
-      );
+      const url = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+      this.changed.emit(url);
+      this.picked.emit({ url, file });
+      this.fileChanged.emit(file);
     } catch {
       this.error.set('Lecture de l’image impossible. Réessayez.');
     }
   }
   protected clear(): void {
+    this.fileChanged.emit(null);
     this.changed.emit('');
   }
 }

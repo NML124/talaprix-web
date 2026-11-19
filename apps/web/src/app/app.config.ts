@@ -16,6 +16,7 @@ import {
   provideSupabaseConfig,
 } from '@talaprix/shared/data-access';
 import {
+  FIRST_PARTY_ANALYTICS,
   AUDIENCE_ANALYTICS_TOKEN,
   provideHomeDataAccess,
 } from '@talaprix/home/data-access';
@@ -55,6 +56,12 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideSupabaseConfig(runtimeConfig),
+    {
+      provide: FIRST_PARTY_ANALYTICS,
+      useValue: Boolean(
+        runtimeConfig.supabaseUrl && runtimeConfig.supabaseAnonKey,
+      ),
+    },
     { provide: AUDIENCE_ANALYTICS_TOKEN, useValue: webAnalyticsToken },
     provideMapboxConfig(mapboxConfig),
     provideHeaderSearch(() =>

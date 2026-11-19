@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,6 +32,7 @@ import { UsageAnalysis } from './usage-analysis';
     class: 'tp-admin tp-page tp-admin-reports grid min-w-0 content-start gap-5',
   },
   imports: [
+    TableView,
     UsageAnalysis,
     DatePipe,
     PageHeader,

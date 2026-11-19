@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -45,7 +46,7 @@ const titles: Record<CandidateMode, { title: string; description: string }> = {
 
 @Component({
   selector: 'tp-scraping-candidates-sheet',
-  imports: [DatePipe, ScrapingReviewDialog, ScrapingPagination],
+  imports: [TableView, DatePipe, ScrapingReviewDialog, ScrapingPagination],
   templateUrl: './scraping-candidates-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

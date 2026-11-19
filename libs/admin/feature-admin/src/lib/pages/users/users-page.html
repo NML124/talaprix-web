@@ -19,6 +19,7 @@
       [ngModel]="query()"
       (ngModelChange)="query.set($event)" /></label
   ><tp-admin-select
+    [searchable]="false"
     [options]="communes"
     [selected]="commune()"
     ariaLabel="Filtrer par commune"

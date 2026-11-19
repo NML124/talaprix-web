@@ -59,6 +59,15 @@ export class AdminLiveList {
   readonly status = signal<'loading' | 'ready' | 'error'>('loading');
   readonly error = signal('');
   readonly resource = signal<Resource>('products');
+  readonly archive = signal('all');
+  readonly sort = signal('newest');
+  filterTable(key: 'archive' | 'sort', value: string) {
+    void this.#router.navigate([], {
+      relativeTo: this.#route,
+      queryParams: { [key]: value, page: null },
+      queryParamsHandling: 'merge',
+    });
+  }
   readonly roleFilter = signal('');
   readonly teamOnly = signal(false);
   readonly q = signal('');
@@ -103,6 +112,8 @@ export class AdminLiveList {
         const resource = data['resource'];
         if (!isResource(resource)) return;
         this.resource.set(resource);
+        this.archive.set(params.get('archive') ?? 'all');
+        this.sort.set(params.get('sort') === 'oldest' ? 'oldest' : 'newest');
         this.teamOnly.set(data['roleFilter'] === 'admin');
         const role = this.teamOnly() ? 'admin' : params.get('role');
         this.roleFilter.set(
@@ -142,6 +153,20 @@ export class AdminLiveList {
               .toLowerCase()
               .includes(this.q().toLowerCase()),
         );
+        values = values.filter(
+          (v) =>
+            this.archive() === 'all' ||
+            Boolean(stringField(v, 'archived_at')) ===
+              (this.archive() === 'archived'),
+        );
+        const direction = this.sort() === 'oldest' ? 1 : -1;
+        values.sort(
+          (a, b) =>
+            direction *
+            stringField(a, 'created_at').localeCompare(
+              stringField(b, 'created_at'),
+            ),
+        );
         total = values.length;
         values = values.slice((this.page() - 1) * 30, this.page() * 30);
       } else {
@@ -150,6 +175,8 @@ export class AdminLiveList {
         const params: Record<string, string> = {
           page: String(this.page()),
           limit: '30',
+          archive: this.archive(),
+          sort: this.sort(),
         };
         if (resource !== 'users') params['resource'] = resource;
         if (resource === 'users' && this.roleFilter())

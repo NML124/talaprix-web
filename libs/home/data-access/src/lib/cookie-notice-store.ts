@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 
-const COOKIE_NAME = 'talaprix_consent_v2';
+const COOKIE_NAME = 'talaprix_consent_v3';
 const COOKIE_AGE_SECONDS = 180 * 24 * 60 * 60;
 
 export const AUDIENCE_ANALYTICS_TOKEN = new InjectionToken<string>(
@@ -14,12 +14,17 @@ export const AUDIENCE_ANALYTICS_TOKEN = new InjectionToken<string>(
   { providedIn: 'root', factory: () => '' },
 );
 
+export const FIRST_PARTY_ANALYTICS = new InjectionToken<boolean>(
+  'TalaPrix page views',
+  { providedIn: 'root', factory: () => false },
+);
+
 /** Essential browser storage remains available when audience measurement is refused. */
 @Service()
 export class CookieNoticeStore {
   readonly #token = inject(AUDIENCE_ANALYTICS_TOKEN);
   readonly analyticsAvailable =
-    /^[a-f0-9]{32}$/i.test(this.#token) &&
+    (inject(FIRST_PARTY_ANALYTICS) || /^[a-f0-9]{32}$/i.test(this.#token)) &&
     (typeof location === 'undefined' ||
       ['talaprix.com', 'www.talaprix.com', 'localhost', '127.0.0.1'].includes(
         location.hostname,
@@ -71,7 +76,14 @@ export class CookieNoticeStore {
       // With cookies disabled, the choice applies only until the page reloads.
     }
     // A loaded analytics script cannot be unloaded reliably; reload on withdrawal.
-    if (shouldStopTracking) location.reload();
+    if (shouldStopTracking) {
+      try {
+        sessionStorage.removeItem('tp_audience_session');
+      } catch {
+        /* Storage unavailable. */
+      }
+      location.reload();
+    }
   }
 }
 

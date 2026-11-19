@@ -115,8 +115,8 @@ export class AdminNotificationStore {
           action === 'read' ? true : action === 'unread' ? false : null;
         const filteredOut =
           action === 'delete' ||
-          (this.filter() === 'unread' && nextRead === false) ||
-          (this.filter() === 'read' && nextRead === true);
+          (this.filter() === 'unread' && nextRead === true) ||
+          (this.filter() === 'read' && nextRead === false);
         if (filteredOut) {
           this.rows.update((rows) =>
             rows.filter((row) => row.notification_id !== id),

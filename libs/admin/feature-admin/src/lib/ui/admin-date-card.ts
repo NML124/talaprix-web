@@ -2,6 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
+  HostListener,
+  inject,
   input,
   output,
   signal,
@@ -20,6 +23,9 @@ interface CalendarDay {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDateCard {
+  private readonly host = inject(ElementRef<HTMLElement>);
+  readonly compact = input(false);
+  readonly open = signal(false);
   readonly label = input.required<string>();
   readonly value = input('');
   readonly mode = input<'date' | 'datetime'>('date');
@@ -62,6 +68,26 @@ export class AdminDateCard {
       };
     });
   });
+
+  toggle(): void {
+    if (!this.open())
+      this.monthCursor.set(monthStart(parseLocal(this.value())));
+    this.open.update((value) => !value);
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeOutside(event: MouseEvent): void {
+    if (
+      event.target instanceof Node &&
+      !this.host.nativeElement.contains(event.target)
+    )
+      this.open.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  closeOnEscape(): void {
+    this.open.set(false);
+  }
 
   moveMonth(amount: number): void {
     const current = this.monthCursor();

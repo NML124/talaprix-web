@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +28,7 @@ interface InterviewerPerformance {
 
 @Component({
   selector: 'tp-admin-live-user',
-  imports: [FormsModule, AdminDialog, AdminDateCard],
+  imports: [TableView, FormsModule, AdminDialog, AdminDateCard],
   templateUrl: './admin-live-user.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

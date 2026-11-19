@@ -1,20 +1,25 @@
+import { TableView } from '../../ui/table-view';
 import {
   Component,
   computed,
   input,
   signal,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
+import { SupabaseFunctions } from '@talaprix/shared/data-access';
+import { LucideDownload } from '@lucide/angular';
 import { RouterLink } from '@angular/router';
 import { AdminDialog } from '../../ui/admin-dialog';
 import { rankings, type UsageReport } from './usage-report.model';
 @Component({
   selector: 'tp-usage-analysis',
-  imports: [AdminDialog, RouterLink],
+  imports: [TableView, LucideDownload, AdminDialog, RouterLink],
   templateUrl: './usage-analysis.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsageAnalysis {
+  private readonly api = inject(SupabaseFunctions);
   readonly report = input.required<UsageReport>();
   protected readonly groups = computed(() => rankings(this.report()));
   protected readonly group = signal<number | null>(null);
@@ -69,9 +74,43 @@ export class UsageAnalysis {
     this.error.set('');
     try {
       const { exportReport } = await import('./usage-export');
-      await exportReport(this.report(), format);
-    } catch {
-      this.error.set('Export impossible. Réessayez.');
+      let journal: {
+        at: string;
+        user: string;
+        actor_key: string;
+        action: string;
+        subject: string;
+        screen: string | null;
+        platform: string | null;
+      }[] = [];
+      if (format === 'xlsx') {
+        const report = this.report();
+        for (let page = 1; ; page++) {
+          const batch = await this.api.get<{
+            rows: typeof journal;
+            total: number;
+          }>('admin-usage-report', {
+            view: 'journal',
+            days: String(report.period_days),
+            until: report.until,
+            page: String(page),
+          });
+          if (!Array.isArray(batch.rows) || batch.total > 10000)
+            throw new Error(
+              'L’export détaillé est limité à 10 000 actions. Réduisez la période.',
+            );
+          journal = journal.concat(batch.rows);
+          if (journal.length >= batch.total) break;
+          if (!batch.rows.length) throw new Error('Journal incomplet.');
+        }
+      }
+      await exportReport(this.report(), format, journal);
+    } catch (error) {
+      this.error.set(
+        error instanceof Error && error.message.includes('10 000')
+          ? error.message
+          : 'Export impossible. Réessayez.',
+      );
     } finally {
       this.busy.set(false);
     }

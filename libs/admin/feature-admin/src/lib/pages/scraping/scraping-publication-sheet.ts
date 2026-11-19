@@ -1,3 +1,4 @@
+import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -14,7 +15,7 @@ type Action = 'approve' | 'publish';
 
 @Component({
   selector: 'tp-scraping-publication-sheet',
-  imports: [DatePipe, ScrapingPagination],
+  imports: [TableView, DatePipe, ScrapingPagination],
   templateUrl: './scraping-publication-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

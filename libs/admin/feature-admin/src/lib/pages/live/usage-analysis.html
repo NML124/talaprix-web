@@ -10,14 +10,14 @@
     [disabled]="busy()"
     (click)="download('pdf')"
   >
-    Exporter en PDF
+    <svg lucideDownload size="16" aria-hidden="true"></svg> Exporter en PDF
   </button>
   <button
     class="btn btn-secondary"
     [disabled]="busy()"
     (click)="download('xlsx')"
   >
-    Exporter en Excel
+    <svg lucideDownload size="16" aria-hidden="true"></svg> Exporter en Excel
   </button>
   @if(error()){<span role="alert">{{error()}}</span>}
 </div>
@@ -101,7 +101,13 @@
 </div>
 @if(group()!==null){@let g=groups()[group()!];
 <tp-admin-dialog [title]="g.title" (closed)="group.set(null)"
-  ><table class="workbook-table">
+  ><tp-table-view
+    #view1
+    [rows]="g.rows.slice(page()*10,page()*10+10)"
+    sortKey="count"
+    [chronological]="false"
+  />
+  <table class="workbook-table">
     <thead>
       <tr>
         <th>Libellé</th>
@@ -109,7 +115,7 @@
       </tr>
     </thead>
     <tbody>
-      @for(item of g.rows.slice(page()*10,page()*10+10);track $index){
+      @for(item of view1.visible();track $index){
       <tr>
         <td>{{item.label}}</td>
         <td>{{item.count}}</td>

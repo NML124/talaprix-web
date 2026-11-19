@@ -74,8 +74,12 @@ export class SupabaseFunctions {
       url.searchParams.set(key, value),
     );
     url.searchParams.sort();
+    const multipart = options.body instanceof FormData ? options.body : null;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
+    const timeout = setTimeout(
+      () => controller.abort(),
+      multipart ? 90_000 : 15_000,
+    );
     const signal = options.signal
       ? AbortSignal.any([options.signal, controller.signal])
       : controller.signal;
@@ -100,12 +104,15 @@ export class SupabaseFunctions {
         signal,
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
+          ...(multipart ? {} : { 'Content-Type': 'application/json' }),
           apikey: config.supabaseAnonKey,
           Authorization: `Bearer ${session?.access_token ?? config.supabaseAnonKey}`,
         },
         body:
-          options.body === undefined ? undefined : JSON.stringify(options.body),
+          multipart ??
+          (options.body === undefined
+            ? undefined
+            : JSON.stringify(options.body)),
       });
       const payload: unknown = await response.json().catch(() => null);
       if (!response.ok)

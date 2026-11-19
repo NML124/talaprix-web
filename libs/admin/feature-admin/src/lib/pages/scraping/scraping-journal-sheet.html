@@ -45,6 +45,12 @@
   </div>
   }
   <div class="workbook-table-wrap tp-grid-scroll">
+    <tp-table-view
+      #view1
+      [rows]="jobs()"
+      sortKey="created_at"
+      [chronological]="true"
+    />
     <table class="workbook-table tp-grid">
       @if (view() === 'jobs') {
       <thead>
@@ -63,7 +69,7 @@
         <tr>
           <td colspan="7"><span class="workbook-shimmer"></span></td>
         </tr>
-        } } @else { @for (job of jobs(); track job.job_id) {
+        } } @else { @for (job of view1.visible(); track job.job_id) {
         <tr>
           <td class="workbook-cell-id">{{ job.job_id }}</td>
           <td><strong>{{ job.job_kind }}</strong></td>

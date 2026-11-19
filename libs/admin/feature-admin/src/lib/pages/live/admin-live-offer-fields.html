@@ -14,50 +14,79 @@
     (changed)="shopId.set($event)"
   />
 </label>
-<div class="field">
-  <label for="offer-product-query">Rechercher un produit existant</label>
-  <div class="flex flex-wrap gap-2">
-    <input
-      id="offer-product-query"
-      class="min-w-0 flex-1"
-      type="search"
-      [ngModel]="productQuery()"
-      (ngModelChange)="productQuery.set($event)"
-      name="productQuery"
-    />
-    <button
-      class="btn btn-secondary"
-      type="button"
-      [disabled]="loading()"
-      (click)="search.emit()"
-    >
-      Rechercher
-    </button>
-  </div>
-  <tp-admin-select
-    [options]="productIds()"
-    [displayLabels]="productLabels()"
-    [selected]="productId()"
-    ariaLabel="Produit de l’offre"
-    placeholder="Sélectionner un résultat"
-    (changed)="productId.set($event)"
+<div
+  class="field relative"
+  (focusout)="!$any($event.currentTarget).contains($event.relatedTarget) && expanded.set(false)"
+>
+  <label for="offer-product-query">Produit</label>
+  <input
+    id="offer-product-query"
+    type="text"
+    autocomplete="off"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-controls="offer-matches"
+    [attr.aria-expanded]="expanded() && !productId()"
+    [attr.aria-activedescendant]="expanded() && active()>=0 ? 'offer-match-'+active():null"
+    placeholder="Rechercher un produit…"
+    [value]="productQuery()"
+    (input)="typeQuery($any($event.target).value)"
+    (focus)="expanded.set(true)"
+    (keydown)="key($event)"
   />
+  @if(expanded() && !productId()){
+  <div
+    id="offer-matches"
+    role="listbox"
+    aria-label="Produits correspondants"
+    class="absolute top-full z-50 w-full max-h-60 overflow-auto rounded-lg border border-[var(--line)] bg-[var(--surface)]"
+  >
+    @for(id of productIds();track id;let i=$index){<button
+      type="button"
+      role="option"
+      [id]="'offer-match-'+i"
+      [attr.aria-selected]="i===active()"
+      [class.bg-base-200]="i===active()"
+      class="offer-search-option w-full px-3 py-2 text-left"
+      (mousedown)="$event.preventDefault()"
+      (click)="choose(id)"
+    >
+      @if(productImages()[id]) {
+      <img [src]="productImages()[id]" alt="" class="offer-search-image" /> }
+      <span>{{productLabels()[id]}}</span></button
+    >} @empty{
+    <p class="p-2 muted small">
+      {{productQuery().trim().length<2?'Saisissez au moins deux
+      caractères.':loading()?'Recherche…':'Aucun produit trouvé.'}}
+    </p>
+    }
+  </div>
+  }
 </div>
 }
-<tp-admin-edit-field [locked]="!!row()"
-  ><label class="field"
-    ><span class="input-caption">Prix</span>
-    <input
-      type="number"
-      min="0.01"
-      step="0.01"
-      [ngModel]="price()"
-      (ngModelChange)="price.set($event)"
-      name="price"
-      required
-    /> </label
-></tp-admin-edit-field>
-<p class="muted small">La devise du produit est reprise automatiquement.</p>
+<label class="field"
+  ><span class="input-caption">Prix</span>
+  <input
+    type="number"
+    min="0.01"
+    step="0.01"
+    [ngModel]="price()"
+    (ngModelChange)="price.set($event)"
+    name="price"
+    required
+  />
+</label>
+<label class="field"
+  >Devise
+  <tp-admin-select
+    [searchable]="false"
+    [options]="currencyIds()"
+    [displayLabels]="currencies()"
+    [selected]="currency()"
+    ariaLabel="Devise de l’offre"
+    (changed)="currency.set($event)"
+  />
+</label>
 <tp-admin-edit-field [locked]="!!row()"
   ><label class="field"
     ><span class="input-caption">Source de l’offre</span>

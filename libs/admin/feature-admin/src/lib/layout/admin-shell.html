@@ -25,16 +25,12 @@
             >TalaPrix</span
           >
         </div>
-        <button
-          class="space-picker"
-          type="button"
-          aria-label="Espace Administration, Kinshasa Global"
-        >
+        <div class="space-picker">
           <span
             ><strong>Administration</strong
             ><small>Kinshasa · Global</small></span
-          ><svg lucideChevronsUpDown size="15" aria-hidden="true"></svg>
-        </button>
+          >
+        </div>
         <div class="nav-groups">
           @for (section of sections; track section.label) {
           <div>
@@ -115,6 +111,7 @@
         <div class="toolbar">
           <tp-admin-select
             class="admin-currency-select"
+            [searchable]="false"
             [options]="['CDF', 'USD']"
             [displayLabels]="{ CDF: 'FC', USD: 'USD' }"
             [selected]="currency.currency()"
@@ -127,6 +124,7 @@
             <tp-admin-select
               [options]="['Système','Clair','Sombre']"
               [selected]="themeLabel()"
+              [searchable]="false"
               ariaLabel="Thème du panneau"
               (changed)="setTheme($event)"
             />

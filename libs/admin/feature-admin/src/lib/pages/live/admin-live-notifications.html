@@ -62,6 +62,12 @@
       </button>
     </nav>
     <div class="workbook-table-wrap tp-grid-scroll">
+      <tp-table-view
+        #view1
+        [rows]="inbox.rows()"
+        sortKey="created_at"
+        [chronological]="true"
+      />
       <table
         class="workbook-table tp-grid workbook-action-table admin-list-grid"
       >
@@ -78,8 +84,8 @@
           <tr>
             <td colspan="4" role="status">Chargement des notifications…</td>
           </tr>
-          } @else { @for (notice of inbox.rows(); track notice.notification_id)
-          {
+          } @else { @for (notice of view1.visible(); track
+          notice.notification_id) {
           <tr
             class="notice-row"
             (click)="openNotice(notice)"
@@ -203,10 +209,6 @@
       <div>
         <dt>Email</dt>
         <dd>{{ shopValue('requester_email') || '—' }}</dd>
-      </div>
-      <div>
-        <dt>Identifiant du demandeur</dt>
-        <dd>{{ shopValue('user_id') || '—' }}</dd>
       </div>
       <div>
         <dt>Téléphone</dt>

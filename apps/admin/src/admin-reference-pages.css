@@ -1225,9 +1225,12 @@
 
 .admin-app .admin-edit-field {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   align-items: center;
+}
+.admin-app .admin-edit-field:has(> .admin-edit-field-toggle) {
+  grid-template-columns: minmax(0, 1fr) auto;
 }
 .admin-app .admin-edit-field > [inert] {
   opacity: 0.75;
@@ -1256,7 +1259,7 @@
   display: block;
   margin-top: 6px;
 }
-.admin-app .admin-edit-field .field > .input-caption {
+.admin-app .admin-edit-field .field:has(> input) > .input-caption {
   position: absolute;
   z-index: 1;
   top: 0;
@@ -1290,4 +1293,118 @@
   padding: 0.85rem 1rem;
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+/* Catalogue forms */
+.admin-app .catalogue-dialog-form,
+.admin-app .catalogue-dialog-form tp-admin-live-offer-fields {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.admin-app .catalogue-dialog-form .field {
+  min-width: 0;
+  gap: 8px;
+}
+.admin-app .catalogue-dialog-form .muted {
+  margin: 0;
+  line-height: 1.5;
+}
+.admin-app .catalogue-dialog-form .dialog-actions {
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.admin-app .catalogue-images {
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.admin-app .catalogue-images > .field {
+  flex: 0 1 auto;
+}
+.admin-app .catalogue-images tp-admin-single-image-picker {
+  min-width: 0;
+}
+
+.admin-app .catalogue-dialog-form tp-admin-date-card {
+  display: block;
+  position: relative;
+  min-width: 0;
+}
+.admin-app .admin-date-picker {
+  display: grid;
+  gap: 8px;
+}
+.admin-app .admin-date-picker__label {
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+.admin-app .admin-date-picker__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.admin-app .admin-date-picker__trigger svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--brand);
+}
+.admin-app .admin-date-card--popup {
+  position: absolute;
+  z-index: 60;
+  right: 0;
+  top: calc(100% + 6px);
+  width: min(300px, 85vw);
+  max-height: min(410px, 55vh);
+  overflow: auto;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+.admin-app .admin-date-picker__done {
+  margin-top: 8px;
+}
+
+.admin-app .admin-dialog-head {
+  z-index: 100;
+  background: var(--surface);
+  isolation: isolate;
+}
+.admin-app .workbook-action-table :is(th, td):last-child {
+  background: var(--surface);
+  background-color: var(--surface);
+  background-clip: padding-box;
+  isolation: isolate;
+  z-index: 4;
+}
+.admin-app .workbook-action-table th:last-child {
+  z-index: 5;
+  background: var(--surface-quiet);
+}
+.admin-app .offer-search-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-app .offer-search-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  flex: none;
 }

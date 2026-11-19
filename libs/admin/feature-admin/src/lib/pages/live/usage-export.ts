@@ -1,6 +1,19 @@
+import { actionLabel, screenLabel, platformLabel } from './usage-labels';
 import { rankings, type UsageReport } from './usage-report.model';
 
-export async function exportReport(r: UsageReport, format: 'pdf' | 'xlsx') {
+export async function exportReport(
+  r: UsageReport,
+  format: 'pdf' | 'xlsx',
+  journal: readonly {
+    at: string;
+    user: string;
+    actor_key: string;
+    action: string;
+    subject: string;
+    screen: string | null;
+    platform: string | null;
+  }[] = [],
+) {
   const date = (iso: string) =>
     new Intl.DateTimeFormat('fr-CD', {
       dateStyle: 'medium',
@@ -13,11 +26,59 @@ export async function exportReport(r: UsageReport, format: 'pdf' | 'xlsx') {
       : r.period_days + ' derniers jours';
   const filename =
     'TalaPrix-utilisation-' + (r.until?.slice(0, 10) ?? 'rapport');
+  const actions = rankings(r)[0].rows;
+  const countFor = (label: string) =>
+    r.platforms.reduce(
+      (sum, row) => sum + (platformLabel(row.label) === label ? row.count : 0),
+      0,
+    );
   const sets: {
     title: string;
     columns: string[];
     rows: (string | number)[][];
   }[] = [
+    {
+      title: 'Lecture du rapport',
+      columns: ['Sujet', 'Interprétation'],
+      rows: [
+        [
+          'Périmètre',
+          r.truncated
+            ? 'Les répartitions portent sur les ' +
+              r.captured_events +
+              ' événements les plus récents parmi ' +
+              r.total_events +
+              ' enregistrés sur la période.'
+            : 'Le rapport couvre les ' +
+              r.captured_events +
+              ' événements enregistrés sur la période.',
+        ],
+        [
+          'App mobile',
+          countFor('App mobile') +
+            ' événements analysés. Chaque recherche, consultation ou autre interaction suivie peut compter séparément.',
+        ],
+        [
+          'App web',
+          countFor('App web') +
+            ' événements analysés. Le site mesure les pages consultées après accord du visiteur. Une absence de mesure ne permet pas de conclure à une absence de visites.',
+        ],
+        [
+          'Action la plus fréquente',
+          actions.length
+            ? actions[0].label + ' (' + actions[0].count + ' événements).'
+            : 'Aucune action enregistrée.',
+        ],
+        [
+          'Sessions et comptes',
+          'Une session regroupe plusieurs actions. Un même compte peut ouvrir plusieurs sessions. Les visites anonymes contribuent aux actions et aux sessions.',
+        ],
+        [
+          'Zones et produits',
+          'Ces classements comptent les événements associés à une zone ou à un produit renseigné. Les totaux peuvent donc être inférieurs au nombre d’événements analysés.',
+        ],
+      ],
+    },
     {
       title: 'Synthèse',
       columns: ['Indicateur', 'Valeur'],
@@ -39,6 +100,57 @@ export async function exportReport(r: UsageReport, format: 'pdf' | 'xlsx') {
       rows: g.rows.map((v) => [v.label, v.count]),
     })),
   ];
+  if (format === 'xlsx') {
+    const counts = new Map<
+      string,
+      { user: string; action: string; subject: string; count: number }
+    >();
+    for (const row of journal) {
+      const action = actionLabel(row.action),
+        subject = row.subject || '—';
+      const key = JSON.stringify([row.actor_key, action, subject]);
+      const existing = counts.get(key);
+      if (existing) existing.count++;
+      else counts.set(key, { user: row.user, action, subject, count: 1 });
+    }
+    sets.push(
+      {
+        title: 'Journal des actions',
+        columns: [
+          'Date et heure (Kinshasa)',
+          'Utilisateur ou visiteur',
+          'Action',
+          'Produit ou détail',
+          'Écran',
+          'Plateforme',
+        ],
+        rows: journal.map((row) => [
+          new Intl.DateTimeFormat('fr-CD', {
+            dateStyle: 'short',
+            timeStyle: 'medium',
+            timeZone: 'Africa/Kinshasa',
+          }).format(new Date(row.at)),
+          row.user,
+          actionLabel(row.action),
+          row.subject || '—',
+          screenLabel(row.screen),
+          platformLabel(row.platform),
+        ]),
+      },
+      {
+        title: 'Actions par utilisateur',
+        columns: [
+          'Utilisateur ou visiteur',
+          'Action',
+          'Produit ou détail',
+          'Nombre',
+        ],
+        rows: [...counts.values()]
+          .sort((a, b) => b.count - a.count)
+          .map((row) => [row.user, row.action, row.subject, row.count]),
+      },
+    );
+  }
   if (format === 'pdf') {
     const [{ jsPDF }, { default: table }] = await Promise.all([
       import('jspdf'),
@@ -119,11 +231,38 @@ export async function exportReport(r: UsageReport, format: 'pdf' | 'xlsx') {
       to: { row: 4, column: section.columns.length },
     };
     sheet.columns.forEach((col, i) => {
-      col.width = i === 0 ? 54 : 18;
+      if (section.title === 'Journal des actions') {
+        col.width = [25, 30, 38, 44, 25, 20][i] ?? 20;
+        return;
+      }
+      if (section.title === 'Actions par utilisateur') {
+        col.width = [30, 38, 44, 14][i] ?? 20;
+        return;
+      }
+      col.width =
+        section.title === 'Lecture du rapport'
+          ? i === 0
+            ? 29
+            : 82
+          : i === 0
+            ? 54
+            : 18;
     });
     for (let i = 5; i <= sheet.rowCount; i++) {
       const row = sheet.getRow(i);
+      if (section.title === 'Lecture du rapport') {
+        row.getCell(2).alignment = { wrapText: true, vertical: 'middle' };
+        row.height = 48;
+      }
       row.getCell(1).alignment = { wrapText: true };
+      if (
+        section.title === 'Journal des actions' ||
+        section.title === 'Actions par utilisateur'
+      ) {
+        row.eachCell(
+          (cell) => (cell.alignment = { vertical: 'middle', wrapText: true }),
+        );
+      }
       if (i % 2 === 0)
         row.eachCell((cell) => {
           cell.fill = {
