@@ -23,6 +23,8 @@ export class ScrapingPilotSheet {
   );
   protected readonly sellerError = signal('');
   protected readonly sellerBusy = signal(false);
+  protected readonly sellerIntake = signal('');
+  protected readonly sellerCampaignId = signal('');
   protected posts = 20;
   protected days = 365;
   protected cap: CampaignLimits['max_charge_per_run_usd'] = '0.08';
@@ -39,7 +41,59 @@ export class ScrapingPilotSheet {
 
   protected selectSellerFile(event: Event): void {
     this.sellerFile = (event.target as HTMLInputElement).files?.[0] ?? null;
+    this.clearSellerPreview();
+  }
+
+  protected clearSellerPreview(): void {
     this.sellerPreview.set(null);
+    this.sellerIntake.set('');
+    this.sellerCampaignId.set('');
+  }
+
+  protected sellerFacebookCount(): number {
+    const sources = this.sellerPreview()?.['sources'];
+    return sources && typeof sources === 'object' && 'facebook' in sources
+      ? Number(sources.facebook) || 0
+      : 0;
+  }
+
+  protected async startSellerCollection(): Promise<void> {
+    if (
+      !this.sellerFile ||
+      !this.sellerSince ||
+      !this.sellerPreview() ||
+      !this.budgetConfirmed
+    )
+      return;
+    this.sellerBusy.set(true);
+    this.sellerError.set('');
+    try {
+      if (!this.sellerIntake()) {
+        const intake = await this.#api.stageSellerWorkbook(
+          this.sellerFile,
+          this.sellerSince,
+        );
+        this.sellerIntake.set(intake.intake_id);
+      }
+      if (!this.sellerCampaignId())
+        this.sellerCampaignId.set(crypto.randomUUID());
+      const result = await this.#api.startSellerCampaign({
+        ...this.limits,
+        intake_id: this.sellerIntake(),
+        campaign_id: this.sellerCampaignId(),
+        available_apify_credit_usd: Number(this.credit),
+        max_text_calls: Number(this.maxTextCalls),
+      });
+      this.campaignInput = result.campaign_id;
+      this.activeId.set(result.campaign_id);
+      await this.readStatus(result.campaign_id);
+    } catch (error) {
+      this.sellerError.set(
+        error instanceof Error ? error.message : 'Collecte indisponible.',
+      );
+    } finally {
+      this.sellerBusy.set(false);
+    }
   }
 
   protected async previewSellerWorkbook(): Promise<void> {

@@ -24,7 +24,7 @@
         class="input"
         type="date"
         [(ngModel)]="sellerSince"
-        (ngModelChange)="sellerPreview.set(null)"
+        (ngModelChange)="clearSellerPreview()"
       />
     </label>
   </div>
@@ -43,7 +43,63 @@
     {{ result['sellers'] }} vendeur(s) valide(s). Aucun lancement de collecte
     n’a encore été effectué.
   </p>
-  }
+  <p>
+    La collecte depuis ce fichier prend actuellement en charge {{
+    sellerFacebookCount() }} lien(s) Facebook. Les autres sources restent
+    enregistrées pour un traitement ultérieur.
+  </p>
+  @if (sellerFacebookCount() > 0) {
+  <div class="workbook-pilot-fields">
+    <label
+      >Publications par canal
+      <input class="input" type="number" min="20" max="100" [(ngModel)]="posts"
+    /></label>
+    <label
+      >Plafond par canal (USD)
+      <tp-admin-select
+        [searchable]="false"
+        [options]="['0.08', '0.10', '0.20', '0.50']"
+        [selected]="cap"
+        ariaLabel="Plafond par canal"
+        (changed)="setCap($event)"
+      />
+    </label>
+    <label
+      >Crédit Apify disponible (USD, maximum 5)
+      <input
+        class="input"
+        type="number"
+        min="0.01"
+        max="5"
+        step="0.01"
+        [(ngModel)]="credit"
+    /></label>
+    <label
+      >Appels texte maximum
+      <input
+        class="input"
+        type="number"
+        min="0"
+        max="500"
+        [(ngModel)]="maxTextCalls"
+    /></label>
+  </div>
+  <p>
+    Réservation maximale : {{ (sellerFacebookCount() * +cap).toFixed(2) }} USD.
+  </p>
+  <label class="workbook-pilot-confirm"
+    ><input type="checkbox" [(ngModel)]="budgetConfirmed" /> Je confirme le
+    budget pour cette collecte Facebook.</label
+  >
+  <button
+    class="btn btn-primary"
+    type="button"
+    [disabled]="sellerBusy() || !budgetConfirmed || credit < sellerFacebookCount() * +cap || credit > 5"
+    (click)="startSellerCollection()"
+  >
+    Lancer la collecte Facebook
+  </button>
+  } }
 </section>
 
 <section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
