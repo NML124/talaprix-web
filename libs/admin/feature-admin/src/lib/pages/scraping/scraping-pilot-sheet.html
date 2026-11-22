@@ -1,3 +1,51 @@
+<section class="workbook-pilot" aria-label="Classeur des vendeurs">
+  <div class="workbook-sheet-heading">
+    <div>
+      <h2>Vérifier un fichier de vendeurs</h2>
+      <p>
+        Dans la feuille « Vendeurs », indiquez le nom et au moins une source
+        Web, TikTok, Instagram ou Facebook.
+      </p>
+    </div>
+  </div>
+  <div class="workbook-pilot-fields">
+    <label
+      >Fichier Excel (.xlsx, 8 Mo maximum)
+      <input
+        class="input"
+        type="file"
+        accept=".xlsx"
+        (change)="selectSellerFile($event)"
+      />
+    </label>
+    <label
+      >Publications depuis le
+      <input
+        class="input"
+        type="date"
+        [(ngModel)]="sellerSince"
+        (ngModelChange)="sellerPreview.set(null)"
+      />
+    </label>
+  </div>
+  <button
+    class="btn btn-secondary"
+    type="button"
+    [disabled]="sellerBusy()"
+    (click)="previewSellerWorkbook()"
+  >
+    {{ sellerBusy() ? 'Vérification…' : 'Vérifier le fichier' }}
+  </button>
+  @if (sellerError()) {
+  <p class="workbook-pilot-error" role="alert">{{ sellerError() }}</p>
+  } @if (sellerPreview(); as result) {
+  <p>
+    {{ result['sellers'] }} vendeur(s) valide(s). Aucun lancement de collecte
+    n’a encore été effectué.
+  </p>
+  }
+</section>
+
 <section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
   <div class="workbook-sheet-heading">
     <div>
@@ -34,6 +82,7 @@
     <label
       >Plafond par collecte (USD)
       <tp-admin-select
+        [searchable]="false"
         [options]="['0.08', '0.10', '0.20', '0.50']"
         [displayLabels]="{ '0.08': '0,08 USD', '0.10': '0,10 USD', '0.20': '0,20 USD', '0.50': '0,50 USD' }"
         [selected]="cap"

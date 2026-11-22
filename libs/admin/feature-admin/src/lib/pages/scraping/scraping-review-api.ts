@@ -23,6 +23,20 @@ import type {
 export class ScrapingReviewApi {
   readonly #functions = inject(SupabaseFunctions);
 
+  previewSellerWorkbook(
+    file: File,
+    since: string,
+  ): Promise<Record<string, unknown>> {
+    const form = new FormData();
+    form.set('resource', 'seller_workbook_preview');
+    form.set('file', file);
+    form.set('since', since);
+    return this.#functions.post<Record<string, unknown>>(
+      'admin-scraping-review',
+      form,
+    );
+  }
+
   overview(): Promise<WorkbookOverview> {
     return this.#functions.get<WorkbookOverview>('admin-scraping-review', {
       resource: 'overview',

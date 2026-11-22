@@ -16,6 +16,13 @@ import { AdminSelect } from '../../ui/admin-select';
 })
 export class ScrapingPilotSheet {
   readonly #api = inject(ScrapingReviewApi);
+  protected sellerFile: File | null = null;
+  protected sellerSince = '';
+  protected readonly sellerPreview = signal<Record<string, unknown> | null>(
+    null,
+  );
+  protected readonly sellerError = signal('');
+  protected readonly sellerBusy = signal(false);
   protected posts = 20;
   protected days = 365;
   protected cap: CampaignLimits['max_charge_per_run_usd'] = '0.08';
@@ -29,6 +36,44 @@ export class ScrapingPilotSheet {
   protected readonly preview = signal<Record<string, unknown> | null>(null);
   protected readonly campaign = signal<Record<string, unknown> | null>(null);
   protected readonly activeId = signal('');
+
+  protected selectSellerFile(event: Event): void {
+    this.sellerFile = (event.target as HTMLInputElement).files?.[0] ?? null;
+    this.sellerPreview.set(null);
+  }
+
+  protected async previewSellerWorkbook(): Promise<void> {
+    this.sellerError.set('');
+    this.sellerPreview.set(null);
+    if (!this.sellerFile || !this.sellerSince) {
+      this.sellerError.set('Choisissez un fichier Excel et une date de début.');
+      return;
+    }
+    if (
+      !this.sellerFile.name.toLowerCase().endsWith('.xlsx') ||
+      this.sellerFile.size > 8 * 1024 * 1024
+    ) {
+      this.sellerError.set('Choisissez un fichier .xlsx de 8 Mo maximum.');
+      return;
+    }
+    this.sellerBusy.set(true);
+    try {
+      this.sellerPreview.set(
+        await this.#api.previewSellerWorkbook(
+          this.sellerFile,
+          this.sellerSince,
+        ),
+      );
+    } catch (error) {
+      this.sellerError.set(
+        error instanceof Error
+          ? error.message
+          : 'Impossible de vérifier le fichier.',
+      );
+    } finally {
+      this.sellerBusy.set(false);
+    }
+  }
 
   protected invalidatePreview(): void {
     this.preview.set(null);
