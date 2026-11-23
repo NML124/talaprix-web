@@ -37,6 +37,32 @@ export class ScrapingReviewApi {
     );
   }
 
+  stageSellerWorkbook(
+    file: File,
+    since: string,
+  ): Promise<{ intake_id: string }> {
+    const form = new FormData();
+    form.set('resource', 'seller_workbook_stage');
+    form.set('file', file);
+    form.set('since', since);
+    return this.#functions.post('admin-scraping-review', form);
+  }
+
+  startSellerCampaign(
+    input: CampaignLimits & {
+      intake_id: string;
+      campaign_id: string;
+      available_apify_credit_usd: number;
+      max_text_calls: number;
+    },
+  ): Promise<{ campaign_id: string }> {
+    return this.#functions.post('admin-scraping-review', {
+      resource: 'seller_campaign_start',
+      ...input,
+      paid_model_budget_confirmed: true,
+    });
+  }
+
   overview(): Promise<WorkbookOverview> {
     return this.#functions.get<WorkbookOverview>('admin-scraping-review', {
       resource: 'overview',

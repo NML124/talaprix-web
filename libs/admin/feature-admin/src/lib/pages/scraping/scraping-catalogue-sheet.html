@@ -1,0 +1,187 @@
+<section class="tp-card tp-grid-card workbook-panel">
+  <header class="workbook-panel-head tp-grid-toolbar">
+    <h2>Publication du catalogue</h2>
+    <button
+      class="btn btn-secondary workbook-refresh"
+      type="button"
+      title="Actualiser"
+      aria-label="Actualiser le catalogue"
+      [disabled]="busy() || loading()"
+      (click)="load(view(),offset())"
+    ></button>
+  </header>
+  <div class="toolbar" role="group" aria-label="État de publication">
+    @for (tab of views; track tab.key) {
+    <button
+      class="btn"
+      [class.btn-primary]="view()===tab.key"
+      type="button"
+      [attr.aria-pressed]="view()===tab.key"
+      [disabled]="busy()"
+      (click)="load(tab.key)"
+    >
+      {{ tab.label }}
+    </button>
+    }
+  </div>
+  @if (error()) {
+  <p class="workbook-alert" role="alert">{{error()}}</p>
+  } @if (selected(); as row) {
+  <section class="notice workbook-publication-confirm">
+    <div>
+      <strong>{{row.product_name}}</strong>
+      <p>
+        {{row.shop_name}} · {{row.category_name || 'Catégorie à vérifier'}} ·
+        {{row.price || '—'}} {{row.currency}}
+      </p>
+      <a [href]="row.source_url" target="_blank" rel="noopener noreferrer"
+        >Consulter la source</a
+      >
+      @if (image(); as url) {
+      <img
+        [src]="url"
+        width="120"
+        height="120"
+        style="object-fit: contain"
+        alt="Visuel du produit à vérifier"
+        (load)="imageSeen.set(true)"
+        (error)="imageSeen.set(false)"
+      />
+      } @if (view()==='draft' && row.has_media) {
+      <label
+        ><input
+          type="checkbox"
+          [checked]="allowed()"
+          [disabled]="!imageSeen() || busy()"
+          (change)="allowed.set(!allowed())"
+        />
+        J’ai vérifié le visuel et son utilisation sur TalaPrix.</label
+      >
+      }
+    </div>
+    <div class="toolbar">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="busy()"
+        (click)="clear()"
+      >
+        Fermer
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="busy() || (view()==='draft' && row.has_media && !(allowed() && imageSeen()))"
+        (click)="confirm()"
+      >
+        {{view()==='draft' ? 'Valider la correspondance' : 'Confirmer la
+        publication'}}
+      </button>
+    </div>
+  </section>
+  } @else if (priceChange(); as check) {
+  <div class="notice workbook-publication-confirm">
+    <p>
+      Appliquer {{check.new_price}} {{check.currency}} à «
+      {{check.product_name}} » ? Le prix actuel est {{check.price}}
+      {{check.currency}}.
+    </p>
+    <div class="toolbar">
+      <button class="btn btn-secondary" [disabled]="busy()" (click)="clear()">
+        Annuler
+      </button>
+      <button class="btn btn-primary" [disabled]="busy()" (click)="confirm()">
+        Confirmer le prix
+      </button>
+    </div>
+  </div>
+  }
+  <div class="workbook-table-wrap tp-grid-scroll">
+    <table class="workbook-table tp-grid">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>{{view()==='watch' ? 'Observation' : 'Boutique'}}</th>
+          <th>Prix</th>
+          <th>Source et date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+        <tr>
+          <td colspan="5">Chargement…</td>
+        </tr>
+        } @else if (view()==='watch') { @for (r of checks(); track r.check_id) {
+        <tr>
+          <td>{{r.product_name}}</td>
+          <td>{{r.applied ? 'Mis à jour' : outcomes[r.outcome]}}</td>
+          <td>
+            {{r.price}} {{r.currency}} @if (r.outcome==='changed') { · Nouveau
+            prix {{r.new_price}} {{r.currency}} }
+          </td>
+          <td>
+            <a [href]="r.source_url" target="_blank" rel="noopener noreferrer"
+              >{{r.observed_at | date:'dd/MM/yyyy HH:mm':'UTC+1'}}</a
+            >
+          </td>
+          <td>
+            @if (r.outcome==='changed' && !r.applied) {
+            <button
+              class="btn btn-secondary"
+              [disabled]="busy()"
+              (click)="priceChange.set(r)"
+            >
+              Examiner
+            </button>
+            }
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5">Aucun contrôle de prix enregistré.</td>
+        </tr>
+        } } @else { @for (r of products(); track r.item_id) {
+        <tr>
+          <td>
+            {{r.product_name}} @if(r.creates_product) {
+            <small>Nouveau produit</small> }
+          </td>
+          <td>{{r.shop_name}}</td>
+          <td>{{r.price || '—'}} {{r.currency}}</td>
+          <td>
+            <a [href]="r.source_url" target="_blank" rel="noopener noreferrer"
+              >@if (r.observed_at) { {{r.observed_at | date:'dd/MM/yyyy
+              HH:mm':'UTC+1'}} } @else { {{r.observed_on | date:'dd/MM/yyyy'}}
+              }</a
+            >
+          </td>
+          <td>
+            @if (view()!=='published') {
+            <button
+              class="btn btn-secondary"
+              [disabled]="busy()"
+              (click)="inspect(r)"
+            >
+              {{view()==='approved' ? 'Publier' : 'Examiner'}}
+            </button>
+            }
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5">Aucune fiche dans cet état.</td>
+        </tr>
+        } }
+      </tbody>
+    </table>
+  </div>
+  <tp-scraping-pagination
+    [offset]="offset()"
+    [pageSize]="25"
+    [count]="view()==='watch' ? checks().length : products().length"
+    [hasNext]="next()"
+    [loading]="loading() || busy()"
+    (pageSelected)="load(view(),$event)"
+  />
+</section>

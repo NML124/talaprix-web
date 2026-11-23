@@ -15,6 +15,7 @@
         class="input"
         type="file"
         accept=".xlsx"
+        [disabled]="sellerBusy()"
         (change)="selectSellerFile($event)"
       />
     </label>
@@ -24,7 +25,8 @@
         class="input"
         type="date"
         [(ngModel)]="sellerSince"
-        (ngModelChange)="sellerPreview.set(null)"
+        [disabled]="sellerBusy()"
+        (ngModelChange)="clearSellerPreview()"
       />
     </label>
   </div>
@@ -40,10 +42,87 @@
   <p class="workbook-pilot-error" role="alert">{{ sellerError() }}</p>
   } @if (sellerPreview(); as result) {
   <p>
-    {{ result['sellers'] }} vendeur(s) valide(s). Aucun lancement de collecte
-    n’a encore été effectué.
+    {{ result['sellers'] }} vendeur(s) · Web {{ sellerSourceCount('website') }}
+    · Facebook {{ sellerSourceCount('facebook') }} · Instagram {{
+    sellerSourceCount('instagram') }} · TikTok {{ sellerSourceCount('tiktok') }}
   </p>
+  @if (!sellerStarted()) {
+  <div class="workbook-pilot-fields">
+    <label
+      >Résultats maximum par source
+      <input
+        class="input"
+        type="number"
+        min="20"
+        max="100"
+        [(ngModel)]="posts"
+        (ngModelChange)="sellerBudgetConfirmed = false"
+        [disabled]="sellerBusy()"
+      />
+    </label>
+    @if (paidSellerSources > 0) {
+    <label
+      >Plafond Apify par profil (USD)
+      <tp-admin-select
+        [searchable]="false"
+        [options]="['0.08', '0.10', '0.20', '0.50']"
+        [selected]="cap"
+        ariaLabel="Plafond Apify par profil"
+        (changed)="setCap($event)"
+      />
+    </label>
+    <label
+      >Crédit Apify disponible (USD, maximum 5)
+      <input
+        class="input"
+        type="number"
+        min="0.01"
+        max="5"
+        step="0.01"
+        [(ngModel)]="credit"
+        (ngModelChange)="sellerBudgetConfirmed = false"
+        [disabled]="sellerBusy()"
+      />
+    </label>
+    <label
+      >Appels d’analyse de texte maximum
+      <input
+        class="input"
+        type="number"
+        min="0"
+        max="500"
+        [(ngModel)]="maxTextCalls"
+        (ngModelChange)="sellerBudgetConfirmed = false"
+        [disabled]="sellerBusy()"
+      />
+    </label>
+    }
+  </div>
+  @if (paidSellerSources > 0) {
+  <label class="workbook-pilot-confirm"
+    ><input
+      type="checkbox"
+      [(ngModel)]="sellerBudgetConfirmed"
+      [disabled]="sellerBusy()"
+    />
+    J’autorise une réservation Apify de {{ (sellerReservationCents /
+    100).toFixed(2) }} USD au maximum.</label
+  >
   }
+  <button
+    class="btn btn-primary"
+    type="button"
+    [disabled]="!canStartSeller()"
+    (click)="startSellerCollection()"
+  >
+    {{ sellerBusy() ? 'Lancement…' : 'Lancer la collecte' }}
+  </button>
+  } @else {
+  <p role="status">
+    Collecte enregistrée. Vous pouvez suivre les tâches dans « Suivre une
+    campagne ».
+  </p>
+  } }
 </section>
 
 <section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
