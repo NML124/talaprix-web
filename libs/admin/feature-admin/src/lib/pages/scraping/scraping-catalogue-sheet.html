@@ -117,8 +117,8 @@
           <td>{{r.product_name}}</td>
           <td>{{r.applied ? 'Mis à jour' : outcomes[r.outcome]}}</td>
           <td>
-            {{r.price}} {{r.currency}} @if (r.outcome==='changed') { →
-            {{r.new_price}} {{r.currency}} }
+            {{r.price}} {{r.currency}} @if (r.outcome==='changed') { · Nouveau
+            prix {{r.new_price}} {{r.currency}} }
           </td>
           <td>
             <a [href]="r.source_url" target="_blank" rel="noopener noreferrer"
@@ -151,7 +151,9 @@
           <td>{{r.price || '—'}} {{r.currency}}</td>
           <td>
             <a [href]="r.source_url" target="_blank" rel="noopener noreferrer"
-              >{{r.observed_at | date:'dd/MM/yyyy HH:mm':'UTC+1'}}</a
+              >@if (r.observed_at) { {{r.observed_at | date:'dd/MM/yyyy
+              HH:mm':'UTC+1'}} } @else { {{r.observed_on | date:'dd/MM/yyyy'}}
+              }</a
             >
           </td>
           <td>

@@ -18,7 +18,8 @@ interface CatalogueItem {
   price: string | null;
   currency: string | null;
   source_url: string;
-  observed_at: string;
+  observed_at: string | null;
+  observed_on: string | null;
   creates_product: boolean;
   has_media: boolean;
   media_origin: string | null;
