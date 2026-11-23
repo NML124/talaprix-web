@@ -27,6 +27,13 @@
 .admin-app .tp-admin .tp-page-inner {
   width: 100%;
 }
+.admin-app .tp-scraping > .tp-page-inner,
+.admin-app .tp-scraping .tp-workbook-sheet > * {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  min-width: 0;
+}
 .admin-app .tp-admin .page-header {
   padding: 0;
   margin: 0 0 4px;
