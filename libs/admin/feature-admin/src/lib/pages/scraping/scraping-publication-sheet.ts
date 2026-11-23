@@ -1,3 +1,4 @@
+import { ScrapingCatalogueSheet } from './scraping-catalogue-sheet';
 import { TableView } from '../../ui/table-view';
 import { DatePipe } from '@angular/common';
 import {
@@ -15,7 +16,7 @@ type Action = 'approve' | 'publish';
 
 @Component({
   selector: 'tp-scraping-publication-sheet',
-  imports: [TableView, DatePipe, ScrapingPagination],
+  imports: [ScrapingCatalogueSheet, TableView, DatePipe, ScrapingPagination],
   templateUrl: './scraping-publication-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
