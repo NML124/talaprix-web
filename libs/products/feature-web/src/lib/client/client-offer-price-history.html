@@ -1,0 +1,44 @@
+<section aria-label="Historique des prix" class="min-w-0">
+  <h4
+    class="m-0 text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--client-muted)]"
+  >
+    Historique des prix
+  </h4>
+  <div class="mt-3 flex justify-between text-[13px]">
+    <span
+      ><span class="block text-[var(--client-muted)]">Plus bas</span
+      ><strong class="tabular-nums">{{ history().low }}</strong></span
+    >
+    <span class="text-right"
+      ><span class="block text-[var(--client-muted)]">Plus haut</span
+      ><strong class="tabular-nums">{{ history().high }}</strong></span
+    >
+  </div>
+  <div
+    class="relative mt-3 h-2 rounded-full bg-gradient-to-r from-[var(--client-action)] via-amber-300 to-[var(--client-error)]"
+    role="img"
+    [attr.aria-label]="'Prix actuel à ' + history().position + ' % entre le plus bas et le plus haut'"
+  >
+    <span
+      class="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white bg-[var(--client-text)]"
+      [style.left.%]="history().position"
+    ></span>
+  </div>
+  @if (history().path) {
+  <svg
+    class="mt-3 h-14 w-full text-[var(--client-action)]"
+    viewBox="0 0 100 32"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path
+      [attr.d]="history().path"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      vector-effect="non-scaling-stroke"
+      stroke-linejoin="round"
+    />
+  </svg>
+  }
+</section>
