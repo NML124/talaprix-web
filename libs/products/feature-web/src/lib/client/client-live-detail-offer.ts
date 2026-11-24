@@ -23,9 +23,11 @@ import {
   whatsappPhone,
   whatsappUrl,
 } from './client-live-detail-format';
+import { ClientOfferPriceHistory } from './client-offer-price-history';
 
 @Component({
   selector: 'tpx-client-live-detail-offer',
+  imports: [ClientOfferPriceHistory],
   templateUrl: './client-live-detail-offer.html',
   host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,7 +104,7 @@ export class ClientLiveDetailOffer {
   readonly history = computed(() => {
     const insight = this.insight();
     const offer = this.offer();
-    if (!insight) return null;
+    if (!insight?.history.length) return null;
     const values = insight.history.map((point) => point.price);
     const low =
       insight.minHistoricalPrice ??
