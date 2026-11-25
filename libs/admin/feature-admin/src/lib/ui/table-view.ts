@@ -9,7 +9,7 @@ import { AdminSelect } from './admin-select';
 @Component({
   selector: 'tp-table-view',
   imports: [AdminSelect],
-  styles: [':host { display: block; margin-block-end: 0.75rem; }'],
+  host: { class: 'block px-4 py-3' },
   templateUrl: './table-view.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
