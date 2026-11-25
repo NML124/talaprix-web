@@ -1,132 +1,13 @@
-<section class="workbook-pilot" aria-label="Classeur des vendeurs">
-  <div class="workbook-sheet-heading">
-    <div>
-      <h2>Vérifier un fichier de vendeurs</h2>
-      <p>
-        Dans la feuille « Vendeurs », indiquez le nom et au moins une source
-        Web, TikTok, Instagram ou Facebook.
-      </p>
-    </div>
-  </div>
-  <div class="workbook-pilot-fields">
-    <label
-      >Fichier Excel (.xlsx, 8 Mo maximum)
-      <input
-        class="input"
-        type="file"
-        accept=".xlsx"
-        [disabled]="sellerBusy()"
-        (change)="selectSellerFile($event)"
-      />
-    </label>
-    <label
-      >Publications depuis le
-      <input
-        class="input"
-        type="date"
-        [(ngModel)]="sellerSince"
-        [disabled]="sellerBusy()"
-        (ngModelChange)="clearSellerPreview()"
-      />
-    </label>
-  </div>
-  <button
-    class="btn btn-secondary"
-    type="button"
-    [disabled]="sellerBusy()"
-    (click)="previewSellerWorkbook()"
-  >
-    {{ sellerBusy() ? 'Vérification…' : 'Vérifier le fichier' }}
-  </button>
-  @if (sellerError()) {
-  <p class="workbook-pilot-error" role="alert">{{ sellerError() }}</p>
-  } @if (sellerPreview(); as result) {
-  <p>
-    {{ result['sellers'] }} vendeur(s) · Web {{ sellerSourceCount('website') }}
-    · Facebook {{ sellerSourceCount('facebook') }} · Instagram {{
-    sellerSourceCount('instagram') }} · TikTok {{ sellerSourceCount('tiktok') }}
-  </p>
-  @if (!sellerStarted()) {
-  <div class="workbook-pilot-fields">
-    <label
-      >Résultats maximum par source
-      <input
-        class="input"
-        type="number"
-        min="20"
-        max="100"
-        [(ngModel)]="posts"
-        (ngModelChange)="sellerBudgetConfirmed = false"
-        [disabled]="sellerBusy()"
-      />
-    </label>
-    @if (paidSellerSources > 0) {
-    <label
-      >Plafond Apify par profil (USD)
-      <tp-admin-select
-        [searchable]="false"
-        [options]="['0.08', '0.10', '0.20', '0.50']"
-        [selected]="cap"
-        ariaLabel="Plafond Apify par profil"
-        (changed)="setCap($event)"
-      />
-    </label>
-    <label
-      >Crédit Apify disponible (USD, maximum 5)
-      <input
-        class="input"
-        type="number"
-        min="0.01"
-        max="5"
-        step="0.01"
-        [(ngModel)]="credit"
-        (ngModelChange)="sellerBudgetConfirmed = false"
-        [disabled]="sellerBusy()"
-      />
-    </label>
-    <label
-      >Appels d’analyse de texte maximum
-      <input
-        class="input"
-        type="number"
-        min="0"
-        max="500"
-        [(ngModel)]="maxTextCalls"
-        (ngModelChange)="sellerBudgetConfirmed = false"
-        [disabled]="sellerBusy()"
-      />
-    </label>
-    }
-  </div>
-  @if (paidSellerSources > 0) {
-  <label class="workbook-pilot-confirm"
-    ><input
-      type="checkbox"
-      [(ngModel)]="sellerBudgetConfirmed"
-      [disabled]="sellerBusy()"
-    />
-    J’autorise une réservation Apify de {{ (sellerReservationCents /
-    100).toFixed(2) }} USD au maximum.</label
-  >
-  }
-  <button
-    class="btn btn-primary"
-    type="button"
-    [disabled]="!canStartSeller()"
-    (click)="startSellerCollection()"
-  >
-    {{ sellerBusy() ? 'Lancement…' : 'Lancer la collecte' }}
-  </button>
-  } @else {
-  <p role="status">
-    Collecte enregistrée. Vous pouvez suivre les tâches dans « Suivre une
-    campagne ».
-  </p>
-  } }
-</section>
+<tp-scraping-seller-workbook (started)="trackCampaign($event)" />
 
-<section class="workbook-pilot" aria-label="Essai contrôlé de collecte">
-  <div class="workbook-sheet-heading">
+<section
+  class="workbook-pilot scraping-collection-card"
+  aria-label="Essai contrôlé de collecte"
+>
+  <div class="workbook-sheet-heading scraping-collection-heading">
+    <span class="scraping-collection-icon"
+      ><svg lucideRadar [size]="20" aria-hidden="true"></svg
+    ></span>
     <div>
       <h2>Préparer un essai de collecte</h2>
       <p>
@@ -170,14 +51,16 @@
       />
     </label>
   </div>
-  <button
-    class="btn btn-secondary"
-    type="button"
-    [disabled]="busy()"
-    (click)="runPreview()"
-  >
-    {{ busy() ? 'Vérification…' : 'Vérifier le prévol' }}
-  </button>
+  <div class="scraping-collection-actions">
+    <button
+      class="btn btn-secondary"
+      type="button"
+      [disabled]="busy()"
+      (click)="runPreview()"
+    >
+      {{ busy() ? 'Vérification…' : 'Vérifier le prévol' }}
+    </button>
+  </div>
 
   @if (error()) {
   <p class="workbook-pilot-error" role="alert">{{ error() }}</p>
@@ -260,6 +143,10 @@
 
   <div class="workbook-pilot-status">
     <h3>Suivre une campagne</h3>
+    <p class="muted small">
+      L’identifiant est rempli au lancement. Vous pouvez aussi retrouver une
+      campagne en saisissant son identifiant.
+    </p>
     <div class="workbook-pilot-status-row">
       <input
         class="input"

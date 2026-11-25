@@ -10,7 +10,11 @@
       (click)="load(view(),offset())"
     ></button>
   </header>
-  <div class="toolbar" role="group" aria-label="État de publication">
+  <div
+    class="toolbar catalogue-review-tabs"
+    role="group"
+    aria-label="État de publication"
+  >
     @for (tab of views; track tab.key) {
     <button
       class="btn"
@@ -27,58 +31,19 @@
   @if (error()) {
   <p class="workbook-alert" role="alert">{{error()}}</p>
   } @if (selected(); as row) {
-  <section class="notice workbook-publication-confirm">
-    <div>
-      <strong>{{row.product_name}}</strong>
-      <p>
-        {{row.shop_name}} · {{row.category_name || 'Catégorie à vérifier'}} ·
-        {{row.price || '—'}} {{row.currency}}
-      </p>
-      <a [href]="row.source_url" target="_blank" rel="noopener noreferrer"
-        >Consulter la source</a
-      >
-      @if (image(); as url) {
-      <img
-        [src]="url"
-        width="120"
-        height="120"
-        style="object-fit: contain"
-        alt="Visuel du produit à vérifier"
-        (load)="imageSeen.set(true)"
-        (error)="imageSeen.set(false)"
-      />
-      } @if (view()==='draft' && row.has_media) {
-      <label
-        ><input
-          type="checkbox"
-          [checked]="allowed()"
-          [disabled]="!imageSeen() || busy()"
-          (change)="allowed.set(!allowed())"
-        />
-        J’ai vérifié le visuel et son utilisation sur TalaPrix.</label
-      >
-      }
-    </div>
-    <div class="toolbar">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        [disabled]="busy()"
-        (click)="clear()"
-      >
-        Fermer
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="busy() || (view()==='draft' && row.has_media && !(allowed() && imageSeen()))"
-        (click)="confirm()"
-      >
-        {{view()==='draft' ? 'Valider la correspondance' : 'Confirmer la
-        publication'}}
-      </button>
-    </div>
-  </section>
+  <tp-scraping-catalogue-inspector
+    [item]="row"
+    [approving]="view()==='draft'"
+    [busy]="busy()"
+    [image]="image()"
+    [imageSeen]="imageSeen()"
+    [imageUnavailable]="imageUnavailable()"
+    [allowed]="allowed()"
+    (closed)="clear()"
+    (confirmed)="confirm()"
+    (imageLoaded)="imageLoaded($event)"
+    (allowedChanged)="allowed.set($event)"
+  />
   } @else if (priceChange(); as check) {
   <div class="notice workbook-publication-confirm">
     <p>
@@ -95,6 +60,14 @@
       </button>
     </div>
   </div>
+  } @if (view()==='watch') {
+  <p class="catalogue-watch-help">
+    Les offres publiées sont inscrites à la veille quotidienne. Les contrôles
+    s’exécutent automatiquement après les tâches de collecte et de traitement,
+    pour les pages web prises en charge. Les sources non prises en charge sont
+    signalées dans le tableau. Un prix différent reste à examiner avant son
+    application.
+  </p>
   }
   <div class="workbook-table-wrap tp-grid-scroll">
     <table class="workbook-table tp-grid">

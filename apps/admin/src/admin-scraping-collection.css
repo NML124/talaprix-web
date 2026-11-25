@@ -1,0 +1,195 @@
+.admin-app .tp-admin .scraping-collection-card {
+  display: block;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  min-width: 0;
+}
+.admin-app .tp-admin .scraping-collection-card .btn:disabled {
+  background: var(--surface-muted);
+  color: var(--text-2);
+  border-color: var(--line);
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.admin-app .tp-admin tp-scraping-workbook-upload {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.admin-app .tp-admin .scraping-collection-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.admin-app .tp-admin .scraping-collection-heading h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.admin-app .tp-admin .scraping-collection-heading p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.admin-app .tp-admin .scraping-collection-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--brand);
+  background: var(--brand-tint);
+  border-radius: 10px;
+}
+.admin-app .tp-admin .scraping-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 150px;
+  padding: 24px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+.admin-app .tp-admin .scraping-dropzone svg,
+.admin-app .tp-admin .scraping-file-selection > svg {
+  color: var(--brand);
+  flex: none;
+}
+.admin-app .tp-admin .scraping-dropzone:hover,
+.admin-app .tp-admin .scraping-dropzone.is-dragover {
+  border-color: var(--brand);
+}
+.admin-app .tp-admin .scraping-dropzone:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.admin-app .tp-admin .scraping-dropzone small,
+.admin-app .tp-admin .scraping-file-selection small {
+  color: var(--text-2);
+  font-size: 12px;
+}
+.admin-app .tp-admin .scraping-file-selection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-muted);
+}
+.admin-app .tp-admin .scraping-file-selection > div {
+  flex: 1;
+  min-width: 0;
+}
+.admin-app .tp-admin .scraping-file-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+.admin-app .tp-admin .scraping-file-selection .btn {
+  min-height: 36px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.admin-app .tp-admin .scraping-collection-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 0 0;
+  padding: 20px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+.admin-app .tp-admin .scraping-collection-actions > .scraping-collection-date {
+  display: block;
+  width: 250px;
+  max-width: 100%;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.admin-app .tp-admin .scraping-collection-actions > .btn:only-child {
+  margin-left: auto;
+}
+.admin-app .tp-admin .scraping-collection-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 16px 0;
+  margin: 12px 0 0;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.admin-app .tp-admin .scraping-collection-card .workbook-pilot-fields {
+  margin-top: 16px;
+  gap: 16px;
+}
+.admin-app .tp-admin .scraping-collection-card .workbook-pilot-fields > label {
+  gap: 8px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.admin-app .tp-admin .scraping-collection-card .workbook-pilot-fields .input {
+  height: 42px;
+  min-width: 0;
+}
+.admin-app .tp-admin .scraping-collection-card .workbook-pilot-status {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  .admin-app .tp-admin .scraping-collection-card {
+    padding: 16px;
+  }
+  .admin-app .tp-admin .scraping-collection-heading h2 {
+    font-size: 16px;
+  }
+  .admin-app .tp-admin .scraping-collection-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .admin-app .tp-admin .scraping-collection-actions > .scraping-collection-date,
+  .admin-app .tp-admin .scraping-collection-actions > .btn {
+    width: 100%;
+  }
+  .admin-app .tp-admin .scraping-file-selection {
+    flex-wrap: wrap;
+  }
+  .admin-app .tp-admin .scraping-file-selection > div {
+    flex-basis: calc(100% - 44px);
+  }
+  .admin-app .tp-admin .scraping-file-selection .btn {
+    flex: 1;
+  }
+  .admin-app .tp-admin .scraping-collection-card .workbook-pilot-status-row {
+    flex-wrap: wrap;
+  }
+  .admin-app
+    .tp-admin
+    .scraping-collection-card
+    .workbook-pilot-status-row
+    > input {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+}
