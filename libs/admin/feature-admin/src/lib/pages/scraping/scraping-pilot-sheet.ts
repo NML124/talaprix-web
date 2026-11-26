@@ -31,6 +31,11 @@ export class ScrapingPilotSheet {
   protected readonly preview = signal<Record<string, unknown> | null>(null);
   protected readonly campaign = signal<Record<string, unknown> | null>(null);
   protected readonly activeId = signal('');
+  protected readonly launchLocked = signal(false);
+  protected readonly launched = signal(false);
+  #launchRequest: Parameters<ScrapingReviewApi['startCampaign']>[0] | null =
+    null;
+  #previewVersion = 0;
 
   protected async trackCampaign(id: string): Promise<void> {
     this.campaignInput = id;
@@ -39,6 +44,8 @@ export class ScrapingPilotSheet {
   }
 
   protected invalidatePreview(): void {
+    if (this.launchLocked()) return;
+    ++this.#previewVersion;
     this.preview.set(null);
     this.budgetConfirmed = false;
   }
@@ -56,6 +63,8 @@ export class ScrapingPilotSheet {
   }
 
   protected canStart(): boolean {
+    if (this.busy() || this.launched()) return false;
+    if (this.#launchRequest) return true;
     return (
       Number(this.preview()?.['facebook_channels']) > 0 &&
       Number(this.preview()?.['unsupported_channels']) === 0 &&
@@ -78,22 +87,34 @@ export class ScrapingPilotSheet {
   }
 
   protected async runPreview(): Promise<void> {
-    this.preview.set(null);
+    if (this.busy() || this.launchLocked()) return;
+    this.#launchRequest = null;
+    this.launched.set(false);
+    this.invalidatePreview();
+    const version = this.#previewVersion;
+    const limits = this.limits;
     this.campaign.set(null);
     await this.run(async () => {
-      this.preview.set(await this.#api.previewCampaign(this.limits));
+      const result = await this.#api.previewCampaign(limits);
+      if (version === this.#previewVersion) this.preview.set(result);
     });
   }
 
   protected async start(): Promise<void> {
     if (!this.canStart()) return;
+    this.#launchRequest ??= Object.freeze({
+      ...this.limits,
+      campaign_id: crypto.randomUUID(),
+      available_apify_credit_usd: Number(this.credit),
+      max_text_calls: Number(this.maxTextCalls),
+    });
+    const request = this.#launchRequest;
+    this.launchLocked.set(true);
+    this.campaignInput = request.campaign_id;
     await this.run(async () => {
-      const result = await this.#api.startCampaign({
-        ...this.limits,
-        campaign_id: crypto.randomUUID(),
-        available_apify_credit_usd: Number(this.credit),
-        max_text_calls: Number(this.maxTextCalls),
-      });
+      const result = await this.#api.startCampaign(request);
+      this.launched.set(true);
+      this.launchLocked.set(false);
       this.activeId.set(result.campaign_id);
       this.campaignInput = result.campaign_id;
       await this.readStatus(result.campaign_id);

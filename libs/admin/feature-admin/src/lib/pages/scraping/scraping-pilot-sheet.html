@@ -25,6 +25,7 @@
         min="20"
         max="100"
         [(ngModel)]="posts"
+        [disabled]="busy() || launchLocked()"
         (ngModelChange)="invalidatePreview()"
       />
     </label>
@@ -36,12 +37,14 @@
         min="30"
         max="730"
         [(ngModel)]="days"
+        [disabled]="busy() || launchLocked()"
         (ngModelChange)="invalidatePreview()"
       />
     </label>
     <label
       >Plafond par collecte (USD)
       <tp-admin-select
+        [disabled]="busy() || launchLocked()"
         [searchable]="false"
         [options]="['0.08', '0.10', '0.20', '0.50']"
         [displayLabels]="{ '0.08': '0,08 USD', '0.10': '0,10 USD', '0.20': '0,20 USD', '0.50': '0,50 USD' }"
@@ -55,7 +58,7 @@
     <button
       class="btn btn-secondary"
       type="button"
-      [disabled]="busy()"
+      [disabled]="busy() || launchLocked()"
       (click)="runPreview()"
     >
       {{ busy() ? 'Vérification…' : 'Vérifier le prévol' }}
@@ -113,6 +116,8 @@
           max="5"
           step="0.01"
           [(ngModel)]="credit"
+          [disabled]="busy() || launchLocked()"
+          (ngModelChange)="budgetConfirmed=false"
         />
       </label>
       <label
@@ -123,11 +128,17 @@
           min="0"
           max="500"
           [(ngModel)]="maxTextCalls"
+          [disabled]="busy() || launchLocked()"
+          (ngModelChange)="budgetConfirmed=false"
         />
       </label>
     </div>
     <label class="workbook-pilot-confirm">
-      <input type="checkbox" [(ngModel)]="budgetConfirmed" />
+      <input
+        type="checkbox"
+        [(ngModel)]="budgetConfirmed"
+        [disabled]="busy() || launchLocked()"
+      />
       J’ai vérifié le budget et je confirme le lancement de cet essai.
     </label>
     <button
@@ -136,7 +147,8 @@
       [disabled]="!canStart()"
       (click)="start()"
     >
-      Démarrer la collecte
+      {{ launched() ? 'Collecte enregistrée' : launchLocked() ? 'Réessayer le
+      lancement' : 'Démarrer la collecte' }}
     </button>
   </div>
   }
