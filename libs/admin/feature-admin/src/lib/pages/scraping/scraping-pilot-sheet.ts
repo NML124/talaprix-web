@@ -65,17 +65,46 @@ export class ScrapingPilotSheet {
   protected canStart(): boolean {
     if (this.busy() || this.launched()) return false;
     if (this.#launchRequest) return true;
-    return (
-      Number(this.preview()?.['facebook_channels']) > 0 &&
-      Number(this.preview()?.['unsupported_channels']) === 0 &&
-      this.budgetConfirmed &&
-      this.credit >= Number(this.preview()?.['reserved_apify_usd']) &&
-      this.credit <= 5 &&
-      Number.isInteger(this.maxTextCalls) &&
-      this.maxTextCalls >= 0 &&
-      this.maxTextCalls <= 500 &&
-      !this.busy()
-    );
+    return this.launchBlocker() === '';
+  }
+
+  protected launchBlocker(): string {
+    if (this.busy())
+      return 'Une vérification est en cours. Patientez un instant.';
+    if (this.launched())
+      return 'Collecte enregistrée. Consultez son état ci-dessous.';
+    if (this.#launchRequest)
+      return 'La réponse du lancement est incertaine. « Réessayer le lancement » vérifie la même demande sans créer de doublon.';
+    const preview = this.preview();
+    if (!preview) return 'Vérifiez d’abord le prévol.';
+    if (
+      !(Number(preview['facebook_channels']) > 0) ||
+      Number(preview['unsupported_channels']) !== 0
+    )
+      return 'Le prévol doit contenir des canaux Facebook éligibles, sans lien non pris en charge.';
+    const reserved = Number(preview['reserved_apify_usd']);
+    if (!Number.isFinite(reserved) || reserved <= 0)
+      return 'Le budget réservé est indisponible. Relancez le prévol.';
+    if (!Number.isFinite(this.credit) || this.credit < 0.01 || this.credit > 5)
+      return 'Renseignez votre crédit Apify réellement disponible, entre 0,01 et 5 USD.';
+    if (this.credit < reserved)
+      return `Crédit insuffisant : ${this.usd(this.credit)} renseigné pour ${this.usd(reserved)} réservés au total. Ne lancez pas cet essai si ce montant dépasse votre budget.`;
+    if (
+      !Number.isInteger(this.maxTextCalls) ||
+      this.maxTextCalls < 0 ||
+      this.maxTextCalls > 500
+    )
+      return 'Renseignez un nombre entier d’appels texte entre 0 et 500 (0 pour ne pas en lancer).';
+    if (!this.budgetConfirmed)
+      return 'Vérifiez la réservation totale ci-dessus, puis cochez l’autorisation pour activer « Démarrer la collecte ».';
+    return '';
+  }
+
+  private usd(value: number): string {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(value);
   }
 
   protected get limits(): CampaignLimits {

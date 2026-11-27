@@ -173,6 +173,27 @@
   padding-top: 20px;
   border-top: 1px solid var(--line);
 }
+.admin-app .tp-admin .scraping-collection-card .workbook-pilot-confirm {
+  min-height: 48px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.admin-app
+  .tp-admin
+  .scraping-collection-card
+  .workbook-pilot-confirm:has(input:disabled) {
+  cursor: not-allowed;
+}
+.admin-app .tp-admin .scraping-collection-card .workbook-launch-feedback {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--text-2);
+  font-size: 14px;
+}
 @media (max-width: 600px) {
   .admin-app .tp-admin .scraping-collection-card {
     padding: 16px;
