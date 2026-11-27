@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
+import type { PriceHistoryChart } from './price-history-chart';
 
 @Component({
   selector: 'tpx-client-offer-price-history',
@@ -7,10 +14,13 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientOfferPriceHistory {
-  readonly history = input.required<{
-    low: string;
-    high: string;
-    position: number;
-    path: string | null;
-  }>();
+  readonly history = input.required<PriceHistoryChart>();
+  readonly selected = signal<number | null>(null);
+  readonly point = computed(() => {
+    const points = this.history().points;
+    return (
+      points[this.selected() ?? points.findIndex((p) => p.current)] ??
+      points[points.length - 1]
+    );
+  });
 }

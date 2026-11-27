@@ -13,6 +13,22 @@
   opacity: 0.65;
   cursor: not-allowed;
 }
+.admin-app .tp-admin .scraping-collection-card .input {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--input-bg, var(--surface));
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+.admin-app .tp-admin .scraping-collection-card .input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
 .admin-app .tp-admin tp-scraping-workbook-upload {
   display: block;
   width: 100%;

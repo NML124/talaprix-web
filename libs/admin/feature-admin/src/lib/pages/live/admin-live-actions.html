@@ -32,10 +32,10 @@
     [class.danger]="!row().archived"
     type="button"
     [disabled]="busy() || blocked()"
-    [attr.aria-label]="(row().archived ? 'Restaurer ' : 'Archiver ') + row().title"
+    [attr.aria-label]="(row().archived ? 'Restaurer ' : 'Supprimer ') + row().title"
     [title]="blocked() ? 'Action indisponible pour un administrateur' :
-      (row().archived ? 'Restaurer ' : 'Archiver ') + row().title"
-    (click)="action.emit(archiveAction())"
+      (row().archived ? 'Restaurer ' : 'Supprimer ') + row().title"
+    (click)="row().archived ? action.emit('restore') : deleteRequested.emit()"
   >
     @if (row().archived) {
     <svg lucideRotateCcw size="16" aria-hidden="true"></svg>
@@ -43,4 +43,16 @@
     <svg lucideTrash2 size="16" aria-hidden="true"></svg>
     }
   </button>
+  @if (row().archived) {
+  <button
+    class="table-action danger"
+    type="button"
+    [disabled]="busy() || blocked()"
+    [attr.aria-label]="'Supprimer ' + row().title"
+    [title]="'Supprimer ' + row().title"
+    (click)="deleteRequested.emit()"
+  >
+    <svg lucideTrash2 size="16" aria-hidden="true"></svg>
+  </button>
+  }
 </div>

@@ -1,44 +1,125 @@
-<section aria-label="Historique des prix" class="min-w-0">
-  <h4
-    class="m-0 text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--client-muted)]"
-  >
-    Historique des prix
-  </h4>
-  <div class="mt-3 flex justify-between text-[13px]">
+<section
+  aria-label="Historique des prix"
+  class="min-w-0 rounded-2xl bg-[var(--client-tile)] p-4"
+>
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h4 class="m-0 text-sm font-semibold text-[var(--client-text)]">
+        Évolution du prix
+      </h4>
+      <p class="m-0 mt-1 text-xs text-[var(--client-muted)]">
+        Les prix relevés chez cette boutique
+      </p>
+    </div>
     <span
-      ><span class="block text-[var(--client-muted)]">Plus bas</span
-      ><strong class="tabular-nums">{{ history().low }}</strong></span
+      class="rounded-full bg-[var(--client-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--client-action)]"
     >
-    <span class="text-right"
-      ><span class="block text-[var(--client-muted)]">Plus haut</span
-      ><strong class="tabular-nums">{{ history().high }}</strong></span
-    >
+      Actuel · {{ history().current }}
+    </span>
   </div>
-  <div
-    class="relative mt-3 h-2 rounded-full bg-gradient-to-r from-[var(--client-action)] via-amber-300 to-[var(--client-error)]"
-    role="img"
-    [attr.aria-label]="'Prix actuel à ' + history().position + ' % entre le plus bas et le plus haut'"
-  >
-    <span
-      class="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white bg-[var(--client-text)]"
-      [style.left.%]="history().position"
-    ></span>
-  </div>
-  @if (history().path) {
   <svg
-    class="mt-3 h-14 w-full text-[var(--client-action)]"
-    viewBox="0 0 100 32"
-    preserveAspectRatio="none"
-    aria-hidden="true"
+    class="mt-4 block w-full overflow-visible"
+    viewBox="0 0 430 198"
+    role="group"
+    aria-label="Graphique des prix au fil du temps"
   >
+    @for (tick of history().ticks; track tick.y) {
+    <line
+      x1="82"
+      x2="408"
+      [attr.y1]="tick.y"
+      [attr.y2]="tick.y"
+      stroke="var(--client-divider)"
+      stroke-dasharray="3 4"
+    />
+    <text
+      x="74"
+      [attr.y]="tick.y + 4"
+      text-anchor="end"
+      font-size="10"
+      fill="var(--client-muted)"
+    >
+      {{ tick.label }}
+    </text>
+    }
     <path
       [attr.d]="history().path"
       fill="none"
-      stroke="currentColor"
-      stroke-width="1.6"
-      vector-effect="non-scaling-stroke"
+      stroke="var(--client-action)"
+      stroke-width="2.5"
       stroke-linejoin="round"
+      vector-effect="non-scaling-stroke"
     />
+    @for (p of history().points; track $index) {
+    <g
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="(p.current ? 'Prix actuel' : p.date) + ' : ' + p.price"
+      (mouseenter)="selected.set($index)"
+      (focus)="selected.set($index)"
+      (click)="selected.set($index)"
+      (keydown.enter)="selected.set($index)"
+      (keydown.space)="$event.preventDefault(); selected.set($index)"
+      class="cursor-pointer"
+    >
+      <title>{{ p.current ? 'Prix actuel' : p.date }} · {{ p.price }}</title>
+      <circle [attr.cx]="p.x" [attr.cy]="p.y" r="12" fill="transparent" />
+      <circle
+        [attr.cx]="p.x"
+        [attr.cy]="p.y"
+        [attr.r]="p.current ? 5 : 3.5"
+        fill="var(--client-action)"
+        stroke="var(--client-surface)"
+        stroke-width="2"
+      />
+    </g>
+    }
+    <text x="82" y="190" font-size="11" fill="var(--client-muted)">
+      {{ history().points[0].current ? 'Actuel' : history().points[0].date }}
+    </text>
+    <text
+      x="408"
+      y="190"
+      text-anchor="end"
+      font-size="11"
+      fill="var(--client-action)"
+    >
+      {{ history().points[history().points.length - 1].current ? 'Actuel' :
+      history().points[history().points.length - 1].date }}
+    </text>
   </svg>
-  }
+  <div
+    class="flex min-h-14 items-center justify-between gap-3 rounded-xl bg-[var(--client-surface)] px-3 py-2"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    <div class="text-xs text-[var(--client-muted)]">
+      <span class="block font-semibold text-[var(--client-text-secondary)]"
+        >{{ point().current ? 'Prix actuel' : 'Prix historique' }}</span
+      >
+      {{ point().date }}
+    </div>
+    <strong class="text-base tabular-nums text-[var(--client-text)]"
+      >{{ point().price }}</strong
+    >
+  </div>
+  <div
+    class="mt-3 flex flex-wrap justify-between gap-2 text-xs text-[var(--client-muted)]"
+  >
+    <span
+      >Plus bas
+      <strong class="text-[var(--client-text-secondary)]"
+        >{{ history().low }}</strong
+      ></span
+    >
+    <span
+      >Plus haut
+      <strong class="text-[var(--client-text-secondary)]"
+        >{{ history().high }}</strong
+      ></span
+    >
+  </div>
+  <p class="m-0 mt-2 text-[11px] text-[var(--client-muted)]">
+    Touchez ou survolez un point pour voir sa date et son prix.
+  </p>
 </section>

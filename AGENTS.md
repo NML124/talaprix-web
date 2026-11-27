@@ -33,6 +33,14 @@ Vitest covers apps and libraries; Playwright covers `web-e2e` and `admin-e2e`. K
 
 ## Commit & Pull Request Guidelines
 
+Never name a branch with the `codex/` prefix. Always use
+`[type]/[ticket-id]-[short-description]`, for example
+`feat/PROJ-123-user-authentication`, `bugfix/PROJ-456-login-validation`,
+`hotfix/PROJ-789-security-patch`, or `chore/PROJ-101-dependency-update`.
+`feature/` may be abbreviated to `feat/`. Use the supplied ticket ID; when none
+is supplied, use a clearly local task reference such as `TP-YYYYMMDD` without
+claiming an external ticket exists.
+
 History uses Conventional Commits such as `chore(root): ...`. Use `type(scope): summary`. PRs should identify affected Nx projects and report lint, test, and build results.
 
 ## Agent Decision Protocol

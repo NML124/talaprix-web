@@ -169,6 +169,7 @@
                   [blocked]="row.adminAccount === true"
                   (edit)="editRow(row)"
                   (action)="confirm(row, $event)"
+                  (deleteRequested)="deleting.set(row)"
                 />
               </td>
             </tr>
@@ -188,7 +189,14 @@
     }
   </div>
 </div>
-@if (pending(); as selection) {
+@if (deleting(); as row) {
+<tp-admin-live-delete
+  [resource]="resource()"
+  [row]="row"
+  (closed)="deleting.set(null)"
+  (deleted)="removed()"
+/>
+} @if (pending(); as selection) {
 <tp-admin-live-confirm
   [selection]="selection"
   [busy]="busy()"

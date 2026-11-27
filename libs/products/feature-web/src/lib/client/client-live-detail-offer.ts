@@ -24,6 +24,7 @@ import {
   whatsappUrl,
 } from './client-live-detail-format';
 import { ClientOfferPriceHistory } from './client-offer-price-history';
+import { priceHistoryChart } from './price-history-chart';
 
 @Component({
   selector: 'tpx-client-live-detail-offer',
@@ -105,43 +106,17 @@ export class ClientLiveDetailOffer {
     const insight = this.insight();
     const offer = this.offer();
     if (!insight?.history.length) return null;
-    const values = insight.history.map((point) => point.price);
-    const low =
-      insight.minHistoricalPrice ??
-      (values.length ? Math.min(...values) : null);
-    const high =
-      insight.maxHistoricalPrice ??
-      (values.length ? Math.max(...values) : null);
-    if (low === null || high === null) return null;
-    const position =
-      high > low
-        ? Math.min(1, Math.max(0, (offer.price - low) / (high - low)))
-        : 0.5;
     const conversion =
       offer.price > 0 ? offer.normalizedPriceCdf / offer.price : null;
     const display = (value: number) =>
       conversion && Number.isFinite(conversion)
         ? this.#preferences.liveMoney(value, offer.currency, value * conversion)
         : formatMoney(value, offer.currency);
-    return {
-      low: display(low),
-      high: display(high),
-      position: Math.round(position * 100),
-      path: sparkline(values),
-    };
+    return priceHistoryChart(
+      insight.history,
+      offer.price,
+      offer.observedOn ?? null,
+      display,
+    );
   });
-}
-
-/** SVG path (viewBox 0 0 100 32) for a small price curve, or null. */
-function sparkline(values: readonly number[]): string | null {
-  if (values.length < 2) return null;
-  const low = Math.min(...values);
-  const span = Math.max(...values) - low || 1;
-  return values
-    .map((value, index) => {
-      const x = (index / (values.length - 1)) * 100;
-      const y = 28 - ((value - low) / span) * 24;
-      return `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
-    })
-    .join(' ');
 }

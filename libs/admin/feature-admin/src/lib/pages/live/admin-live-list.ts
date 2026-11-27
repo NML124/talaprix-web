@@ -21,6 +21,13 @@ import { AdminLiveUser } from './admin-live-user';
 import { AdminLivePagination } from './admin-live-pagination';
 import { AdminLiveActions } from './admin-live-actions';
 import { AdminSelect } from '../../ui/admin-select';
+import { AdminLiveDelete } from './admin-live-delete';
+import { applyAdminLifecycle } from './admin-live-lifecycle';
+import {
+  adminRoleLabels,
+  adminRoleOptions,
+  adminResourceTitles,
+} from './admin-live-labels';
 
 import {
   isNotNull,
@@ -43,6 +50,7 @@ import {
     AdminLivePagination,
     AdminLiveActions,
     AdminSelect,
+    AdminLiveDelete,
     DatePipe,
     LucidePlus,
   ],
@@ -72,6 +80,7 @@ export class AdminLiveList {
   readonly teamOnly = signal(false);
   readonly q = signal('');
   readonly pending = signal<PendingAdminAction | null>(null);
+  readonly deleting = signal<Row | null>(null);
   readonly busy = signal(false);
   readonly actionError = signal('');
   readonly notice = signal('');
@@ -81,23 +90,10 @@ export class AdminLiveList {
   readonly editing = signal<Row | null>(null);
   readonly userEditing = signal<Row | null>(null);
   readonly totalPages = () => Math.max(1, Math.ceil(this.total() / 30));
-  readonly roleOptions = ['', 'user', 'shop', 'interviewer', 'admin'];
-  readonly roleLabels = {
-    '': 'Tous les rôles',
-    user: 'Clients',
-    shop: 'Boutiques',
-    interviewer: 'Enquêteurs',
-    admin: 'Administrateurs',
-  };
+  readonly roleOptions = adminRoleOptions;
+  readonly roleLabels = adminRoleLabels;
   readonly columnCount = () => 6 + Number(this.resource() === 'offers');
-  readonly titles: Record<Resource, string> = {
-    products: 'Catalogue',
-    offers: 'Offres',
-    shops: 'Boutiques',
-    categories: 'Catégories',
-    users: 'Utilisateurs',
-    advertisements: 'Publicités',
-  };
+  readonly titles = adminResourceTitles;
   searchValue = '';
   #request = 0;
   readonly #searchChanged = new Subject<void>();
@@ -258,18 +254,8 @@ export class AdminLiveList {
     this.busy.set(true);
     this.actionError.set('');
     try {
-      await this.#functions.post('admin-catalogue-manage', {
-        resource: this.resource(),
-        id: pending.row.id,
-        action: pending.action,
-      });
       this.notice.set(
-        {
-          pause: 'Élément arrêté.',
-          resume: 'Élément réactivé.',
-          archive: 'Élément archivé.',
-          restore: 'Élément restauré. Réactivez-le pour le rendre visible.',
-        }[pending.action],
+        await applyAdminLifecycle(this.#functions, this.resource(), pending),
       );
       this.pending.set(null);
       await this.load();
@@ -289,6 +275,12 @@ export class AdminLiveList {
     this.editing.set(null);
     this.editingId.set(null);
     this.notice.set('Élément enregistré.');
+    void this.load();
+  }
+
+  removed(): void {
+    this.deleting.set(null);
+    this.notice.set('Élément et données liées supprimés définitivement.');
     void this.load();
   }
 

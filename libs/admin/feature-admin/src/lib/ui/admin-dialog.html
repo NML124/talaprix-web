@@ -4,7 +4,8 @@
   [class.admin-dialog-compact]="size() === 'compact'"
   [attr.aria-label]="title()"
   (close)="closed.emit()"
-  (cancel)="$event.preventDefault()"
+  (cancel)="$event.preventDefault(); dismiss()"
+  (click)="backdrop($event)"
 >
   <div class="admin-dialog-panel">
     <header class="admin-dialog-head">
@@ -13,6 +14,7 @@
         type="button"
         class="btn btn-secondary btn-icon"
         aria-label="Fermer"
+        [disabled]="!dismissible()"
         (click)="dismiss()"
       >
         <svg lucideX size="17" aria-hidden="true"></svg>
