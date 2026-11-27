@@ -1,0 +1,54 @@
+<input
+  #picker
+  class="sr-only"
+  type="file"
+  accept=".xlsx"
+  tabindex="-1"
+  aria-label="Choisir le classeur des vendeurs"
+  [disabled]="disabled()"
+  (change)="choose($event)"
+/>
+@if (file(); as chosen) {
+<div class="scraping-file-selection">
+  <svg lucideFileSpreadsheet [size]="24" aria-hidden="true"></svg>
+  <div>
+    <span class="scraping-file-name" [title]="chosen.name"
+      >{{ chosen.name }}</span
+    ><small>{{ size(chosen) }} · Prêt à vérifier</small>
+  </div>
+  <button
+    class="btn btn-secondary"
+    type="button"
+    [disabled]="disabled()"
+    (click)="picker.click()"
+  >
+    Remplacer
+  </button>
+  <button
+    class="btn btn-secondary"
+    type="button"
+    aria-label="Retirer le fichier"
+    [disabled]="disabled()"
+    (click)="remove()"
+  >
+    <svg lucideX [size]="16" aria-hidden="true"></svg>
+  </button>
+</div>
+} @else {
+<button
+  class="scraping-dropzone"
+  type="button"
+  [class.is-dragover]="dragging()"
+  [disabled]="disabled()"
+  (click)="picker.click()"
+  (dragover)="drag($event,true)"
+  (dragleave)="drag($event,false)"
+  (drop)="drop($event)"
+>
+  <svg lucideUpload [size]="24" aria-hidden="true"></svg>
+  <span>Glissez votre fichier ici ou <u>parcourez</u></span>
+  <small>Excel .xlsx · 8 Mo maximum</small>
+</button>
+} @if (error()) {
+<p class="workbook-pilot-error" role="alert">{{ error() }}</p>
+}

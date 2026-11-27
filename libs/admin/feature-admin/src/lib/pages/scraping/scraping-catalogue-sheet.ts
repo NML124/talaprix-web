@@ -7,23 +7,13 @@ import {
 } from '@angular/core';
 import { SupabaseFunctions } from '@talaprix/shared/data-access';
 import { ScrapingPagination } from './scraping-pagination';
+import {
+  ScrapingCatalogueInspector,
+  type CatalogueReviewItem,
+} from './scraping-catalogue-inspector';
 
 type View = 'draft' | 'approved' | 'published' | 'watch';
-interface CatalogueItem {
-  item_id: string;
-  plan_sha256: string;
-  product_name: string;
-  shop_name: string;
-  category_name: string | null;
-  price: string | null;
-  currency: string | null;
-  source_url: string;
-  observed_at: string | null;
-  observed_on: string | null;
-  creates_product: boolean;
-  has_media: boolean;
-  media_origin: string | null;
-}
+type CatalogueItem = CatalogueReviewItem;
 interface PriceCheck {
   check_id: string;
   product_name: string;
@@ -42,7 +32,7 @@ interface Page<T> {
 
 @Component({
   selector: 'tp-scraping-catalogue-sheet',
-  imports: [DatePipe, ScrapingPagination],
+  imports: [DatePipe, ScrapingPagination, ScrapingCatalogueInspector],
   templateUrl: './scraping-catalogue-sheet.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -75,6 +65,7 @@ export class ScrapingCatalogueSheet {
   protected readonly priceChange = signal<PriceCheck | null>(null);
   protected readonly image = signal('');
   protected readonly imageSeen = signal(false);
+  protected readonly imageUnavailable = signal(false);
   protected readonly allowed = signal(false);
   #generation = 0;
   constructor() {
@@ -125,6 +116,7 @@ export class ScrapingCatalogueSheet {
     this.priceChange.set(null);
     this.image.set('');
     this.imageSeen.set(false);
+    this.imageUnavailable.set(false);
     this.allowed.set(false);
   }
 
@@ -132,7 +124,7 @@ export class ScrapingCatalogueSheet {
     this.clear();
     this.selected.set(row);
     this.error.set('');
-    if (!row.has_media || this.view() !== 'draft') return;
+    if (!row.has_media) return;
     try {
       const result = await this.#api.get<{ url: string }>(this.#endpoint, {
         resource: 'catalogue_item_image',
@@ -140,9 +132,13 @@ export class ScrapingCatalogueSheet {
       });
       if (this.selected() === row) this.image.set(result.url);
     } catch {
-      if (this.selected() === row)
-        this.error.set('Aperçu indisponible. Rouvrez la fiche pour réessayer.');
+      if (this.selected() === row) this.imageUnavailable.set(true);
     }
+  }
+
+  protected imageLoaded(seen: boolean): void {
+    this.imageSeen.set(seen);
+    this.imageUnavailable.set(!seen);
   }
 
   protected async confirm(): Promise<void> {

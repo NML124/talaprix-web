@@ -1,0 +1,116 @@
+<section
+  class="workbook-pilot scraping-collection-card"
+  aria-label="Classeur des vendeurs"
+>
+  <header class="scraping-collection-heading">
+    <span class="scraping-collection-icon"
+      ><svg lucideFileCheck [size]="20" aria-hidden="true"></svg
+    ></span>
+    <div>
+      <h2>Vérifier un fichier de vendeurs</h2>
+      <p>
+        Dans la feuille « Vendeurs », indiquez le nom et au moins une source :
+        Web, TikTok, Instagram ou Facebook.
+      </p>
+    </div>
+  </header>
+  <tp-scraping-workbook-upload
+    [disabled]="busy()"
+    (selected)="select($event)"
+  />
+  <fieldset class="scraping-collection-actions" [disabled]="busy()">
+    <tp-admin-date-card
+      class="scraping-collection-date"
+      [compact]="true"
+      label="Publications depuis le"
+      [value]="since"
+      (valueChange)="date($event)"
+    />
+    <button
+      class="btn btn-primary"
+      type="button"
+      [disabled]="!file || !since || busy()"
+      (click)="verify()"
+    >
+      {{ busy() ? 'Vérification…' : 'Vérifier le fichier' }}
+    </button>
+  </fieldset>
+  @if (error()) {
+  <p class="workbook-pilot-error" role="alert">{{ error() }}</p>
+  } @if (preview(); as result) {
+  <div class="scraping-collection-preview" role="status">
+    <span>{{ result['sellers'] }} vendeur(s)</span
+    ><span>Web {{ sourceCount('website') }}</span
+    ><span>Facebook {{ sourceCount('facebook') }}</span
+    ><span>Instagram {{ sourceCount('instagram') }}</span
+    ><span>TikTok {{ sourceCount('tiktok') }}</span>
+  </div>
+  @if (!launched()) {
+  <div class="workbook-pilot-fields">
+    <label
+      >Résultats maximum par source<input
+        class="input"
+        type="number"
+        min="20"
+        max="100"
+        [(ngModel)]="posts"
+        [disabled]="busy()"
+        (ngModelChange)="budgetConfirmed=false"
+    /></label>
+    @if (paidSources) {
+    <label
+      >Plafond Apify par profil<tp-admin-select
+        [searchable]="false"
+        [disabled]="busy()"
+        [options]="['0.08','0.10','0.20','0.50']"
+        [displayLabels]="{'0.08':'0,08 USD','0.10':'0,10 USD','0.20':'0,20 USD','0.50':'0,50 USD'}"
+        [selected]="cap"
+        ariaLabel="Plafond Apify par profil"
+        (changed)="setCap($event)"
+    /></label>
+    <label
+      >Crédit Apify disponible (USD, maximum 5)<input
+        class="input"
+        type="number"
+        min="0.01"
+        max="5"
+        step="0.01"
+        [(ngModel)]="credit"
+        [disabled]="busy()"
+        (ngModelChange)="budgetConfirmed=false"
+    /></label>
+    <label
+      >Appels d’analyse de texte maximum<input
+        class="input"
+        type="number"
+        min="0"
+        max="500"
+        [(ngModel)]="maxTextCalls"
+        [disabled]="busy()"
+        (ngModelChange)="budgetConfirmed=false"
+    /></label>
+    }
+  </div>
+  @if (paidSources) {
+  <label class="workbook-pilot-confirm"
+    ><input type="checkbox" [(ngModel)]="budgetConfirmed" [disabled]="busy()" />
+    J’autorise une réservation Apify de {{ reservation }} USD au maximum.</label
+  >
+  }
+  <div class="scraping-collection-actions">
+    <button
+      class="btn btn-primary"
+      type="button"
+      [disabled]="!canStart()"
+      (click)="start()"
+    >
+      {{ busy() ? 'Lancement…' : 'Lancer la collecte' }}
+    </button>
+  </div>
+  } @else {
+  <p class="scraping-collection-preview" role="status">
+    Collecte enregistrée. Son avancement est affiché dans « Suivre une campagne
+    ».
+  </p>
+  } }
+</section>

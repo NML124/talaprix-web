@@ -1,0 +1,175 @@
+.admin-app .catalogue-review-tabs {
+  padding: 16px 20px;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+}
+.admin-app .catalogue-review-tabs .btn {
+  min-height: 38px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.admin-app .catalogue-inspector {
+  margin: 16px 20px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+  min-width: 0;
+}
+.admin-app .catalogue-inspector-heading {
+  padding: 20px 20px 0;
+}
+.admin-app .catalogue-inspector-step {
+  color: var(--text-2);
+  font-size: 12px;
+}
+.admin-app .catalogue-inspector-heading h3 {
+  margin: 6px 0;
+  font-size: 17px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.admin-app .catalogue-inspector-heading p,
+.admin-app .catalogue-inspector-actions p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.admin-app .catalogue-inspector-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 20px;
+}
+.admin-app .catalogue-inspector-image {
+  flex: 0 0 160px;
+  margin: 0;
+  text-align: center;
+}
+.admin-app .catalogue-inspector-image img {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.admin-app .catalogue-inspector-image figcaption,
+.admin-app .catalogue-inspector-image > span {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.admin-app .catalogue-inspector-details {
+  flex: 1;
+  min-width: 0;
+}
+.admin-app .catalogue-inspector-details dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 0 0 16px;
+}
+.admin-app .catalogue-inspector-details dt {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 4px;
+}
+.admin-app .catalogue-inspector-details dd {
+  font-size: 14px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.admin-app .catalogue-inspector-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.admin-app .catalogue-inspector-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+.admin-app .catalogue-inspector-consent input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 3px 0 0;
+  accent-color: var(--brand);
+}
+.admin-app .catalogue-inspector-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+}
+.admin-app .catalogue-inspector-actions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.admin-app .catalogue-inspector-actions .btn {
+  min-height: 40px;
+  font-size: 13px;
+  white-space: normal;
+}
+.admin-app .tp-admin .catalogue-inspector-actions .btn:disabled {
+  background: var(--surface-muted);
+  color: var(--text-2);
+  border-color: var(--line);
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.admin-app .catalogue-watch-help {
+  padding: 16px 20px;
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13px;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 600px) {
+  .admin-app .catalogue-review-tabs {
+    padding: 12px;
+    gap: 6px;
+  }
+  .admin-app .catalogue-inspector {
+    margin: 12px;
+  }
+  .admin-app .catalogue-inspector-heading {
+    padding: 16px 16px 0;
+  }
+  .admin-app .catalogue-inspector-body {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+  }
+  .admin-app .catalogue-inspector-image {
+    flex-basis: auto;
+  }
+  .admin-app .catalogue-inspector-details {
+    width: 100%;
+  }
+  .admin-app .catalogue-inspector-details dl {
+    gap: 16px;
+  }
+  .admin-app .catalogue-inspector-actions {
+    padding: 16px;
+  }
+  .admin-app .catalogue-inspector-actions > div {
+    width: 100%;
+  }
+  .admin-app .catalogue-inspector-actions .btn {
+    flex: 1 1 120px;
+  }
+}

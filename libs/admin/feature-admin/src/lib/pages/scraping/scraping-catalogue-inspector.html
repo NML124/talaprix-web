@@ -1,0 +1,114 @@
+<section
+  class="catalogue-inspector"
+  aria-labelledby="catalogue-inspector-title"
+  [attr.aria-busy]="busy()"
+>
+  <header class="catalogue-inspector-heading">
+    <span class="catalogue-inspector-step"
+      >{{ approving() ? 'Vérification de la fiche' : 'Confirmation de
+      publication' }}</span
+    >
+    <h3 id="catalogue-inspector-title">{{ item().product_name }}</h3>
+    <p>
+      {{ item().creates_product ? (item().price ? 'Création d’un produit et de
+      son offre' : 'Création d’un produit sans offre') : 'Offre rattachée à un
+      produit existant' }}
+    </p>
+  </header>
+  <div class="catalogue-inspector-body">
+    @if (item().has_media) {
+    <figure class="catalogue-inspector-image">
+      @if (imageUnavailable()) {
+      <span role="status"
+        >Aperçu indisponible. Fermez puis rouvrez la fiche pour réessayer.</span
+      >
+      } @else if (image(); as url) {
+      <img
+        [src]="url"
+        [alt]="item().product_name"
+        width="160"
+        height="160"
+        (load)="imageLoaded.emit(true)"
+        (error)="imageLoaded.emit(false)"
+      />
+      } @else {
+      <span role="status">Aperçu en cours de chargement…</span>
+      }
+      <figcaption>Visuel proposé pour le catalogue</figcaption>
+    </figure>
+    }
+    <div class="catalogue-inspector-details">
+      <dl>
+        <div>
+          <dt>Boutique</dt>
+          <dd>{{ item().shop_name }}</dd>
+        </div>
+        <div>
+          <dt>Catégorie</dt>
+          <dd>{{ item().category_name || 'À vérifier' }}</dd>
+        </div>
+        <div>
+          <dt>Prix relevé</dt>
+          <dd>{{ price() }} {{ item().currency }}</dd>
+        </div>
+        <div>
+          <dt>Date du relevé</dt>
+          <dd>
+            @if (item().observed_at) { {{ item().observed_at | date:'dd/MM/yyyy
+            HH:mm':'UTC+1' }} · Kinshasa } @else { {{ (item().observed_on |
+            date:'dd/MM/yyyy') || 'Non renseignée' }} }
+          </dd>
+        </div>
+      </dl>
+      <a
+        class="catalogue-inspector-source"
+        [href]="item().source_url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Consulter la source
+        <svg lucideExternalLink [size]="16" aria-hidden="true"></svg>
+      </a>
+      @if (approving() && item().has_media) {
+      <label class="catalogue-inspector-consent">
+        <input
+          type="checkbox"
+          [checked]="allowed()"
+          [disabled]="!imageSeen() || busy()"
+          (change)="changeAllowed($event)"
+        />
+        <span
+          >J’ai vérifié la correspondance du visuel et son utilisation sur
+          TalaPrix.</span
+        >
+      </label>
+      }
+    </div>
+  </div>
+  <footer class="catalogue-inspector-actions">
+    <p>
+      {{ approving() ? 'La validation prépare la fiche. Elle ne la publie pas
+      encore.' : 'Cette action rendra les données approuvées disponibles dans
+      TalaPrix.' }}
+    </p>
+    <div>
+      <button
+        class="btn btn-secondary"
+        type="button"
+        [disabled]="busy()"
+        (click)="closed.emit()"
+      >
+        Fermer
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        [disabled]="busy() || (approving() && item().has_media && !(allowed() && imageSeen()))"
+        (click)="confirmed.emit()"
+      >
+        {{ busy() ? 'Traitement…' : approving() ? 'Valider la correspondance' :
+        'Confirmer la publication' }}
+      </button>
+    </div>
+  </footer>
+</section>
