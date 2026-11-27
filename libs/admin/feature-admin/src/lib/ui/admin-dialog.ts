@@ -18,6 +18,7 @@ import { LucideX } from '@lucide/angular';
 export class AdminDialog {
   readonly title = input.required<string>();
   readonly size = input<'default' | 'compact'>('default');
+  readonly dismissible = input(true);
   readonly closed = output<void>();
   private readonly dialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
@@ -27,6 +28,10 @@ export class AdminDialog {
   }
 
   protected dismiss(): void {
-    this.dialog().nativeElement.close();
+    if (this.dismissible()) this.dialog().nativeElement.close();
+  }
+
+  protected backdrop(event: MouseEvent): void {
+    if (event.target === this.dialog().nativeElement) this.dismiss();
   }
 }

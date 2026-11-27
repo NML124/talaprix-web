@@ -28,6 +28,12 @@
 <section
   class="admin-date-card"
   [class.admin-date-card--popup]="compact()"
+  [attr.role]="compact() ? 'dialog' : null"
+  [style.top]="compact() && above() ? 'auto' : null"
+  [style.bottom]="compact() && above() ? 'calc(100% + 6px)' : null"
+  [style.left]="compact() && alignStart() ? '0' : null"
+  [style.right]="compact() && alignStart() ? 'auto' : null"
+  [style.max-height.px]="compact() ? popupHeight() : null"
   [attr.aria-label]="label()"
 >
   @if (!compact()) {

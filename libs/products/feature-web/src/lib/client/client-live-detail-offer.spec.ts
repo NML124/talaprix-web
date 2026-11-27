@@ -101,7 +101,14 @@ describe('offer price history visibility', () => {
     ).not.toBeNull();
     expect(fixture.nativeElement.textContent).toContain('80 USD');
     expect(
-      fixture.nativeElement.querySelector('svg path[d^="M0.0"]'),
+      fixture.nativeElement.querySelector(
+        'svg[aria-label="Graphique des prix au fil du temps"] path[d]',
+      ),
     ).not.toBeNull();
+    const point = fixture.nativeElement.querySelector('svg g[role="button"]');
+    point.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Prix historique');
+    expect(fixture.nativeElement.textContent).toContain('22 nov. 2026');
   });
 });

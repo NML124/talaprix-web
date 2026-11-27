@@ -20,12 +20,16 @@ interface CalendarDay {
 @Component({
   selector: 'tp-admin-date-card',
   templateUrl: './admin-date-card.html',
+  host: { class: 'relative block min-w-0' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDateCard {
-  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
   readonly compact = input(false);
   readonly open = signal(false);
+  readonly above = signal(false);
+  readonly alignStart = signal(false);
+  readonly popupHeight = signal(410);
   readonly label = input.required<string>();
   readonly value = input('');
   readonly mode = input<'date' | 'datetime'>('date');
@@ -70,9 +74,26 @@ export class AdminDateCard {
   });
 
   toggle(): void {
-    if (!this.open())
+    if (!this.open()) {
       this.monthCursor.set(monthStart(parseLocal(this.value())));
+      const rect = this.host.nativeElement.getBoundingClientRect();
+      const below = window.innerHeight - rect.bottom - 12;
+      const above = below < 320 && rect.top > below;
+      this.above.set(above);
+      this.alignStart.set(rect.right < 316);
+      this.popupHeight.set(
+        Math.min(410, Math.max(96, above ? rect.top - 12 : below)),
+      );
+    }
     this.open.update((value) => !value);
+    if (this.open())
+      requestAnimationFrame(() => {
+        this.host.nativeElement
+          .querySelector<HTMLButtonElement>(
+            '.admin-date-calendar__day.is-selected, .admin-date-calendar__day:not(.is-outside)',
+          )
+          ?.focus({ preventScroll: true });
+      });
   }
 
   @HostListener('document:click', ['$event'])
@@ -86,7 +107,11 @@ export class AdminDateCard {
 
   @HostListener('document:keydown.escape')
   closeOnEscape(): void {
+    if (!this.open()) return;
     this.open.set(false);
+    this.host.nativeElement
+      .querySelector<HTMLButtonElement>('.admin-date-picker__trigger')
+      ?.focus({ preventScroll: true });
   }
 
   moveMonth(amount: number): void {
@@ -100,6 +125,12 @@ export class AdminDateCard {
     const suffix =
       this.mode() === 'datetime' ? this.value().slice(10, 16) || 'T23:59' : '';
     this.valueChange.emit(`${day.key}${suffix}`);
+    if (this.compact() && this.mode() === 'date') {
+      this.open.set(false);
+      this.host.nativeElement
+        .querySelector<HTMLButtonElement>('.admin-date-picker__trigger')
+        ?.focus({ preventScroll: true });
+    }
   }
 
   timePart(part: 'hour' | 'minute'): string {

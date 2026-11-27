@@ -33,6 +33,7 @@ export class AdminLiveActions {
   readonly editing = input(false);
   readonly updated = input(false);
   readonly edit = output<void>();
+  readonly deleteRequested = output<void>();
   readonly action = output<AdminAction>();
 
   readonly stopAction = (): AdminAction =>
