@@ -80,7 +80,7 @@
         ><strong>{{ metric(result, 'max_posts') }}</strong>
       </div>
       <div>
-        <small>Réservation Apify (USD)</small
+        <small>Réservation Apify totale (USD)</small
         ><strong>{{ metric(result, 'reserved_apify_usd') }}</strong>
       </div>
       <div>
@@ -105,6 +105,10 @@
     <p>
       Cette action peut consommer des crédits Apify et OpenAI. Les plafonds sont
       contrôlés côté serveur.
+    </p>
+    <p class="muted small">
+      Le plafond par collecte s’applique à chaque canal. Vérifiez la réservation
+      totale de tous les canaux ci-dessus avant d’autoriser l’essai.
     </p>
     <div class="workbook-pilot-fields">
       <label
@@ -135,16 +139,31 @@
     </div>
     <label class="workbook-pilot-confirm">
       <input
+        class="checkbox checkbox-sm shrink-0"
         type="checkbox"
         [(ngModel)]="budgetConfirmed"
         [disabled]="busy() || launchLocked()"
       />
-      J’ai vérifié le budget et je confirme le lancement de cet essai.
+      J’autorise cet essai dans les limites de budget affichées.
     </label>
+    <p class="muted small">
+      Cocher cette case ne lance rien. Le bouton « Démarrer la collecte » lance
+      l’essai après votre autorisation.
+    </p>
+    @if (launchBlocker(); as reason) {
+    <p
+      id="pilot-launch-feedback"
+      class="workbook-launch-feedback"
+      role="status"
+    >
+      {{ reason }}
+    </p>
+    }
     <button
       class="btn btn-primary"
       type="button"
       [disabled]="!canStart()"
+      [attr.aria-describedby]="launchBlocker() ? 'pilot-launch-feedback' : null"
       (click)="start()"
     >
       {{ launched() ? 'Collecte enregistrée' : launchLocked() ? 'Réessayer le

@@ -170,4 +170,58 @@ describe('Scraping campaign launch safety', () => {
     expect(pilot.preflightResult()).toBeNull();
     expect(api.startCampaign).not.toHaveBeenCalled();
   });
+
+  it('lets the label toggle consent, explains insufficient credit and never launches by checking', async () => {
+    api.previewCampaign.mockResolvedValue({
+      facebook_channels: 47,
+      unsupported_channels: 0,
+      reserved_apify_usd: '3.76',
+    });
+    const fixture = TestBed.createComponent(ScrapingPilotSheet);
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    const preflight = [...root.querySelectorAll('button')].find(
+      (b) => b.textContent?.trim() === 'Vérifier le prévol',
+    )!;
+    preflight.click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const credit = root.querySelector<HTMLInputElement>('input[step="0.01"]')!;
+    const confirmation = root.querySelector<HTMLInputElement>(
+      '.workbook-pilot-confirm input',
+    )!;
+    const start = [...root.querySelectorAll('button')].find(
+      (b) => b.textContent?.trim() === 'Démarrer la collecte',
+    )!;
+    expect(root.querySelector('[role="status"]')?.textContent).toContain(
+      'réellement disponible',
+    );
+    confirmation.closest('label')!.click();
+    fixture.detectChanges();
+    expect(confirmation.checked).toBe(true);
+    expect(start.disabled).toBe(true);
+    expect(api.startCampaign).not.toHaveBeenCalled();
+    credit.value = '1';
+    credit.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(root.querySelector('[role="status"]')?.textContent).toContain(
+      'Crédit insuffisant',
+    );
+    expect(root.querySelector('[role="status"]')?.textContent).toContain(
+      '3,76',
+    );
+    expect(start.disabled).toBe(true);
+    credit.value = '4';
+    credit.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(root.querySelector('[role="status"]')?.textContent).toContain(
+      'cochez l’autorisation',
+    );
+    confirmation.click();
+    fixture.detectChanges();
+    expect(start.disabled).toBe(false);
+    expect(api.startCampaign).not.toHaveBeenCalled();
+    fixture.destroy();
+  });
 });
